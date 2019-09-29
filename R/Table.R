@@ -58,7 +58,6 @@ Athena_write_table <-
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
            partition = NULL, s3.location = NULL, file.type = c("csv", "tsv", "parquet"), ...) {
-    return("Currently not supported")
     # variable checks
     stopifnot(is.character(name),
               is.data.frame(value),
@@ -157,11 +156,8 @@ upload_data <- function(con, x, name, partition = NULL, s3.location= NULL,  file
   else if (s3_info$key == "" && partition == "") {s3_key <- paste(name, Name, sep = "/")}
   else {s3_key <- paste(s3_info$key, name, partition, Name, sep = "/")}
   
-  tryCatch(s3 <- con@ptr$resource("s3"),
-           error = function(e) py_error(e))
-  tryCatch(s3$Bucket(s3_info$bucket)$upload_file(Filename = x, Key = s3_key),
-           error = function(e) py_error(e))
-  
+  obj <- readBin(x, "raw", n = file.size(x))
+  tryCatch(con@ptr$S3$put_object(Body = obj, Bucket = s3_info$bucket,Key = s3_key))
   invisible(TRUE)
 }
 
