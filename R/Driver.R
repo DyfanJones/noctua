@@ -13,11 +13,10 @@ NULL
 #'
 #' Driver for an Athena Boto3 connection.
 #'
-#' @export
 #' @import methods DBI
 #' @return \code{athena()} returns a s4 class. This class is used active Athena method for \code{\link[DBI]{dbConnect}}
 #' @seealso \code{\link{dbConnect}}
-
+#' @export
 athena <- function() {
   new("AthenaDriver")
 }
@@ -118,7 +117,6 @@ setMethod(
 #'  dbDisconnect(con)
 #' }
 #' @seealso \code{\link[DBI]{dbConnect}}
-#' @export\code{\link[DBI]{dbConnect}}
 #' @export
 setMethod(
   "dbConnect", "AthenaDriver",
