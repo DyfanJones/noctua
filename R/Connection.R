@@ -573,9 +573,9 @@ setMethod(
     if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
     info <- dbObj@info
     RegionName <- dbObj@ptr$region_name
-    Boto <- as.character(boto_verison())
+    paws <- as.character(packageVersion("paws"))
     paws.athena <- as.character(packageVersion("paws.athena"))
-    info <- c(info, region_name = RegionName, boto3 = Boto, paws.athena = paws.athena)
+    info <- c(info, region_name = RegionName, paws = paws, paws.athena = paws.athena)
     info
   })
 
