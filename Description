@@ -27,4 +27,5 @@ Collate:
     'Connection.R'
     'DataTypes.R'
     'Result.R'
+    'Table.R'
     'utils.R'
