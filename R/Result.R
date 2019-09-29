@@ -24,26 +24,6 @@ setClass(
   )
 )
 
-#' @rdname dbIsValid
-#' @export
-setMethod(
-  "dbIsValid", "AthenaResult",
-  function(dbObj, ...){
-    resource_active(dbObj)
-  }
-)
-
-#' @rdname dbGetInfo
-#' @inheritParams DBI::dbGetInfo
-#' @export
-setMethod(
-  "dbGetInfo", "AthenaResult",
-  function(dbObj, ...) {
-    if (!dbIsValid(dbObj)) {stop("Result already cleared", call. = FALSE)}
-    info <- dbObj@info
-    info
-  })
-
 #' Clear Results
 #' 
 #' Frees all resources (local and Athena) associated with result set. It does this by removing query output in AWS S3 Bucket,
@@ -196,4 +176,67 @@ setMethod(
     }
     
     return(output)
+  })
+
+
+#' Completion status
+#' 
+#' This method returns if the query has completed. 
+#' @name dbHasCompleted
+#' @inheritParams DBI::dbHasCompleted
+#' @return \code{dbHasCompleted()} returns a logical scalar. \code{TRUE} if the query has completed, \code{FALSE} otherwise.
+#' @seealso \code{\link[DBI]{dbHasCompleted}}
+#' @examples
+#' \donttest{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' 
+#' library(DBI)
+#' 
+#' # Demo connection to Athena using profile name 
+#' con <- dbConnect(paws.athena::athena())
+#' 
+#' # Check if query has completed
+#' res <- dbSendQuery(con, "show databases")
+#' dbHasCompleted(res)
+#'
+#' dbClearResult(res)
+#' 
+#' # Disconnect from Athena
+#' dbDisconnect(con)
+#' }
+#' @docType methods
+NULL
+
+#' @rdname dbHasCompleted
+#' @export
+setMethod(
+  "dbHasCompleted", "AthenaResult",
+  function(res, ...) {
+    if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+    tryCatch(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
+    
+    if(query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED")) TRUE
+    else if (query_execution$QueryExecution$Status$State == "RUNNING") FALSE
+  })
+
+#' @rdname dbIsValid
+#' @export
+setMethod(
+  "dbIsValid", "AthenaResult",
+  function(dbObj, ...){
+    resource_active(dbObj)
+  }
+)
+
+#' @rdname dbGetInfo
+#' @inheritParams DBI::dbGetInfo
+#' @export
+setMethod(
+  "dbGetInfo", "AthenaResult",
+  function(dbObj, ...) {
+    if (!dbIsValid(dbObj)) {stop("Result already cleared", call. = FALSE)}
+    info <- dbObj@info
+    info
   })
