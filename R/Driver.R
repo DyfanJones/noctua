@@ -49,11 +49,76 @@ setMethod(
     AthenaDataType(obj)
   })
 
-#' Connect to Athena using python's sdk boto3
+#' Connect to Athena using R's sdk paws
 #' 
+#' @description 
+#' It is never adviced to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is adviced to use
+#' \code{profile_name} (set up by \href{https://aws.amazon.com/cli/}{AWS Command Line Interface}), 
+#' \href{https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html}{Amazon Resource Name roles} or environmental variables. Here is a list
+#' of supported environment variables:
+#' \itemize{
+#' \item{\strong{AWS_ACCESS_KEY_ID:} is equivalent to the dbConnect parameter - \code{aws_access_key_id}}
+#' \item{\strong{AWS_SECRET_ACCESS_KEY:} is equivalent to the dbConnect parameter - \code{aws_secret_access_key}}
+#' \item{\strong{AWS_SESSION_TOKEN:} is equivalent to the dbConnect parameter - \code{aws_session_token}}
+#' \item{\strong{AWS_ROLE_ARN:} is equivalent to the dbConnect parameter - \code{role_arn}}
+#' \item{\strong{AWS_EXPIRATION:} is equivalent to the dbConnect parameter - \code{duration_seconds}}
+#' \item{\strong{AWS_ATHENA_S3_STAGING_DIR:} is equivalent to the dbConnect parameter - \code{s3_staging_dir}}
+#' }
+#'
+#' @inheritParams DBI::dbConnect
+#' @param aws_access_key_id AWS access key ID
+#' @param aws_secret_access_key AWS secret access key
+#' @param aws_session_token AWS temporary session token
+#' @param schema_name The schema_name to which the connection belongs
+#' @param work_group The name of the \href{https://aws.amazon.com/about-aws/whats-new/2019/02/athena_workgroups/}{work group} to run Athena queries , Currently defaulted to \code{NULL}.
+#' @param poll_interval Amount of time took when checking query execution status. Default set to a random interval between 0.5 - 1 seconds.
+#' @param encryption_option Athena encryption at rest \href{https://docs.aws.amazon.com/athena/latest/ug/encryption.html}{link}. 
+#'                          Supported Amazon S3 Encryption Options ["NULL", "SSE_S3", "SSE_KMS", "CSE_KMS"]. Connection will default to NULL,
+#'                          usually changing this option is not required.
+#' @param kms_key \href{https://docs.aws.amazon.com/kms/latest/developerguide/overview.html}{AWS Key Management Service}, 
+#'                please refer to \href{https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html}{link} for more information around the concept.
+#' @param profile_name The name of a profile to use. If not given, then the default profile is used.
+#'                     To set profile name, the \href{https://aws.amazon.com/cli/}{AWS Command Line Interface} (AWS CLI) will need to be configured.
+#'                     To configure AWS CLI please refer to: \href{https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html}{Configuring the AWS CLI}.
+#' @param role_arn The Amazon Resource Name (ARN) of the role to assume (such as \code{arn:aws:sts::123456789012:assumed-role/role_name/role_session_name})
+#' @param role_session_name An identifier for the assumed role session. By default `RAthena` creates a session name \code{sprintf("RAthena-session-\%s", as.integer(Sys.time()))}
+#' @param duration_seconds The duration, in seconds, of the role session. The value can range from 900 seconds (15 minutes) up to the maximum session duration setting for the role. 
+#'                         This setting can have a value from 1 hour to 12 hours. By default duration is set to 3600 seconds (1 hour). 
+#' @param s3_staging_dir The location in Amazon S3 where your query results are stored, such as \code{s3://path/to/query/bucket/}
+#' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
+#'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
+#' @param botocore_session Use this Botocore session instead of creating a new default one.
+#' @param ... Any other parameter for Boto3 session: \href{https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html}{Boto3 session documentation}
 #' @aliases dbConnect
 #' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
+#' @examples
+#' \dontrun{
+#' # Connect to Athena using your aws access keys
+#'  library(DBI)
+#'  con <- dbConnect(RAthena:athena(),
+#'                   aws_access_key_id='YOUR_ACCESS_KEY_ID', # 
+#'                   aws_secret_access_key='YOUR_SECRET_ACCESS_KEY',
+#'                   s3_staging_dir='s3://path/to/query/bucket/',
+#'                   region_name='us-west-2')
+#'  dbDisconnect(con)
+#'  
+#' # Connect to Athena using your profile name
+#' # Profile name can be created by using AWS CLI
+#'  con <- dbConnect(RAthena::athena(),
+#'                   profile_name = "YOUR_PROFILE_NAME",
+#'                   s3_staging_dir = 's3://path/to/query/bucket/')
+#'  dbDisconnect(con)
+#'  
+#' # Connect to Athena using ARN role
+#'  con <- dbConnect(athena(),
+#'                   profile_name = "YOUR_PROFILE_NAME",
+#'                   role_arn = "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name",
+#'                   s3_staging_dir = 's3://path/to/query/bucket/')
+#'                  
+#'  dbDisconnect(con)
+#' }
 #' @seealso \code{\link[DBI]{dbConnect}}
+#' @export\code{\link[DBI]{dbConnect}}
 #' @export
 setMethod(
   "dbConnect", "AthenaDriver",
