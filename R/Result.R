@@ -8,7 +8,7 @@ AthenaResult <- function(conn,
   stopifnot(is.character(statement))
   Request <- request(conn, statement)
   
-  tryCatch(response <- do.call(con@ptr$Athena$start_query_execution, Request, quote = T))
+  tryCatch(response <- do.call(conn@ptr$Athena$start_query_execution, Request, quote = T))
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
   new("AthenaResult", connection = conn, info = response)
 }
