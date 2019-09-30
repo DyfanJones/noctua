@@ -441,8 +441,10 @@ setMethod(
     } else {dbms.name <- conn@info$dbms.name
     Table <- tolower(name)}
     
-    tryerror <- try(con@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), silent = TRUE)
-    !grepl("table|not|found", tryerror)
+    tryerror <- try(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), silent = TRUE)
+    if(inherits(tryerror, "try-error") && !grepl(".*table.*not.*found.*", tryerror[1], ignore.case = T)){
+      stop(gsub("^Error : ", "", tryerror[1]), call. = F)}
+    !grepl(".*table.*not.*found.*", tryerror[1], ignore.case = T)
   })
 
 #' Remove table from Athena
