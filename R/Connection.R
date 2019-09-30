@@ -36,9 +36,10 @@ AthenaConnection <-
                error = function(e) py_error(e))
     }
     
-    ptr <- list(Athena = Athena,
-                S3 = S3,
-                glue = glue)
+    # return a subset of api function to reduce object size
+    ptr <-list(Athena = Athena[c("start_query_execution", "get_work_group","get_query_execution","stop_query_execution", "get_query_results")],
+                S3 = S3[c("put_object", "get_object","delete_object")],
+                glue = glue[c("get_databases","get_tables","get_table")])
     
     s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
     
