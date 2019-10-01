@@ -67,3 +67,21 @@ athena_test_req4 <-
   list(QueryString = "select * from test_query",
        QueryExecutionContext = list(Database = "default"),
        ResultConfiguration = list(OutputLocation = Sys.getenv("pawsathena_s3_query")))
+
+# helper to delete all objects in prefix folder
+delete_prefix_objects <- function(conn, Prefix, Quiet = F){
+  bucket <- split_s3_uri(conn@info$s3_staging)$bucket
+  content <- conn@ptr$S3$list_objects(Bucket = bucket, 
+                                      Prefix = Prefix)
+  content_list <- lapply(content$Contents, function(x) list(Key= x$Key))
+  conn@ptr$S3$delete_objects(Bucket = bucket,
+                             Delete = list(Objects = content_list, Quiet = Quiet))
+}
+
+delete_prefix_objects_v2 <- function(conn, Prefix){
+  bucket <- split_s3_uri(conn@info$s3_staging)$bucket
+  content <- conn@ptr$S3$list_objects(Bucket = bucket, 
+                                      Prefix = Prefix)
+  content_list <- sapply(content$Contents, function(x) x$Key)
+  sapply(content_list, function(x) conn@ptr$S3$delete_object(Bucket = bucket, Key = x))
+}
