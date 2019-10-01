@@ -8,7 +8,6 @@ context("Disconnect")
 s3.location <- paste0(Sys.getenv("pawsathena_s3_tbl"),"removable_table/")
 
 test_that("Check if dbDisconnect working as intended",{
-  skip_if_no_boto()
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena(),
