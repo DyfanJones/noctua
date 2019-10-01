@@ -141,7 +141,7 @@ setMethod(
       
       output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
       df <- t(sapply(output, function(x) unlist(x)))
-      colnames(df) <- unname(df[1,])
+      colnames(df) <- tolower(unname(df[1,]))
       df <- data.frame(df)[-1,]
       rownames(df) <- NULL
       return(df)
