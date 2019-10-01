@@ -174,6 +174,6 @@ char_log <- function(value, athena_class){
 
 # simple wrapper to correct miss classification
 read_athena <- function(file, athena_class){
-  output <- read.csv(file, stringsAsFactors = F) 
+  output <- read.csv(file, col.names = names(athena_class), stringsAsFactors = F) 
   char_log(output, athena_class)
 }
