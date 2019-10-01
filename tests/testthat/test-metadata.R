@@ -9,12 +9,9 @@ df_col_info <- data.frame(field_name = c("x","y", "z", "timestamp"),
                           type = c("integer", "varchar", "boolean", "varchar"), stringsAsFactors = F)
 
 test_that("Returning meta data from query",{
-  skip_if_no_boto()
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(pawsathena::athena(),
-                   profile_name = "pawsathena",
-                   s3_staging_dir = Sys.getenv("pawsathena_s3_query"))
+  con <- dbConnect(athena())
   
   res <- dbExecute(con, "select * from test_df")
   column_info <- dbColumnInfo(res)

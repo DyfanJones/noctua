@@ -8,7 +8,6 @@ context("Exist/Remove")
 s3.location <- paste0(Sys.getenv("pawsathena_s3_tbl"),"removable_table/")
 
 test_that("Check a table exist and remove table",{
-  skip_if_no_boto()
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena(),

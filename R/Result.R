@@ -240,3 +240,54 @@ setMethod(
     info <- dbObj@info
     info
   })
+
+#' Information about result types
+#' 
+#' Produces a data.frame that describes the output of a query. 
+#' @name dbColumnInfo
+#' @inheritParams DBI::dbColumnInfo
+#' @return \code{dbColumnInfo()} returns a data.frame with as many rows as there are output fields in the result.
+#'         The data.frame has two columns (field_name, type).
+#' @seealso \code{\link[DBI]{dbHasCompleted}}
+#' @examples
+#' \donttest{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
+#' 
+#' library(DBI)
+#' 
+#' # Demo connection to Athena using profile name 
+#' con <- dbConnect(paws.athena::athena())
+#' 
+#' # Get Column information from query
+#' res <- dbSendQuery(con, "select * from information_schema.tables")
+#' dbColumnInfo(res)
+#' dbClearResult(res)
+#'  
+#' # Disconnect from Athena
+#' dbDisconnect(con)
+#' }
+#' @docType methods
+NULL
+
+#' @rdname dbColumnInfo
+#'@export
+setMethod(
+  "dbColumnInfo", "AthenaResult",
+  function(res, ...){
+    if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+    result <- poll(res)
+    if(result$QueryExecution$Status$State == "FAILED") {
+      stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
+    }
+    
+    tryCatch(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
+                                                                   MaxResults = as.integer(1)))
+    
+    Name <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Name)
+    Type <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Type)
+    data.frame(field_name = Name,
+               type = Type, stringsAsFactors = F)
+  }
+)
