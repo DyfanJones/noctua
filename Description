@@ -28,4 +28,5 @@ Collate:
     'DataTypes.R'
     'Result.R'
     'Table.R'
+    'dplyr_integration.R'
     'utils.R'
