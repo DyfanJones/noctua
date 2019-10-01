@@ -141,7 +141,7 @@ setMethod(
       
       output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
       df <- t(sapply(output, function(x) unlist(x)))
-      colnames(df) <- unname(df[1,])
+      colnames(df) <- tolower(unname(df[1,]))
       df <- data.frame(df)[-1,]
       rownames(df) <- NULL
       return(df)
@@ -164,7 +164,7 @@ setMethod(
     Type <- AthenaToRDataType(result_class$ResultSet$ResultSetMetadata$ColumnInfo)
     
     if(grepl("\\.csv$",result_info$key)){
-      if (requireNamespace("data.table", quietly=TRUE)){output <- data.table::fread(File)}
+      if (requireNamespace("data.table", quietly=TRUE)){output <- data.table::fread(File, col.names = names(Type), colClasses = unname(Type))}
       else {output <- read_athena(File, Type)}
     } else{
       file_con <- file(File)
