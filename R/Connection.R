@@ -38,7 +38,7 @@ AthenaConnection <-
     
     # return a subset of api function to reduce object size
     ptr <-list(Athena = Athena[c("start_query_execution", "get_work_group","get_query_execution","stop_query_execution", "get_query_results")],
-                S3 = S3[c("put_object", "get_object","delete_object")],
+                S3 = S3[c("put_object", "get_object","delete_object","delete_objects","list_objects")],
                 glue = glue[c("get_databases","get_tables","get_table")])
     
     s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
@@ -47,8 +47,8 @@ AthenaConnection <-
                                       "or when work_group is defined in `create_work_group()`", call. = F)}
     
     
-    
-    info <- list(profile_name = profile_name, s3_staging = s3_staging_dir,
+    get_profile_name <- pkg_method("get_profile_name", "paws.common")
+    info <- list(profile_name = get_profile_name(), s3_staging = s3_staging_dir,
                  dbms.name = schema_name, work_group = work_group,
                  poll_interval = poll_interval, encryption_option = encryption_option,
                  kms_key = kms_key, expiration = aws_expiration)
@@ -573,8 +573,9 @@ setMethod(
   "dbGetInfo", "AthenaConnection",
   function(dbObj, ...) {
     if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
+    get_region <- pkg_method("get_region", "paws.common")
     info <- dbObj@info
-    RegionName <- dbObj@ptr$region_name
+    RegionName <- get_region()
     paws <- as.character(packageVersion("paws"))
     paws.athena <- as.character(packageVersion("paws.athena"))
     info <- c(info, region_name = RegionName, paws = paws, paws.athena = paws.athena)
