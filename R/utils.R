@@ -1,10 +1,3 @@
-# returns boto3 version
-boto_verison <- function(){
-  ver <- boto$`__version__`
-  ver <- regmatches(ver, regexec("^([0-9\\.]+).*$", ver))[[1]][[2]]
-  package_version(ver)
-}
-
 # split s3 uri
 split_s3_uri <- function(uri) {
   stopifnot(is.s3_uri(uri))
@@ -20,11 +13,6 @@ is.s3_uri <- function(x) {
   if(is.null(x)) return(FALSE)
   regex <- '^s3://[a-z0-9][a-z0-9\\.-]+[a-z0-9](/(.*)?)?$'
   grepl(regex, x)
-}
-
-# basic wrapper to get boto session to athena
-client_athena <- function(botosession){
-  botosession@ptr$client("athena")
 }
 
 # holds functions until athena query competed
@@ -85,8 +73,7 @@ request <- function(conn, statement){
 work_group_config <- function(conn,
                               EnforceWorkGroupConfiguration = FALSE,
                               PublishCloudWatchMetricsEnabled = FALSE,
-                              BytesScannedCutoffPerQuery = 10000000L,
-                              RequesterPaysEnabled = FALSE){
+                              BytesScannedCutoffPerQuery = 10000000L){
   config <- list()
   ResultConfiguration <- list(OutputLocation = conn@info$s3_staging)
   if(!is.null(conn@info$encryption_option)){
@@ -98,7 +85,6 @@ work_group_config <- function(conn,
   config["EnforceWorkGroupConfiguration"] <- EnforceWorkGroupConfiguration
   config["PublishCloudWatchMetricsEnabled"] <- PublishCloudWatchMetricsEnabled
   config["BytesScannedCutoffPerQuery"] <- BytesScannedCutoffPerQuery
-  config["RequesterPaysEnabled"] <- RequesterPaysEnabled
   config
 }
 
@@ -108,8 +94,7 @@ work_group_config_update <-
            RemoveOutputLocation = FALSE,
            EnforceWorkGroupConfiguration = FALSE,
            PublishCloudWatchMetricsEnabled = FALSE,
-           BytesScannedCutoffPerQuery = 10000000L,
-           RequesterPaysEnabled = FALSE){
+           BytesScannedCutoffPerQuery = 10000000L){
     
     ConfigurationUpdates <- list()
     ResultConfigurationUpdates <- list(OutputLocation = conn@info$s3_staging,
@@ -124,7 +109,6 @@ work_group_config_update <-
     ConfigurationUpdates["ResultConfigurationUpdates"] <- list(ResultConfigurationUpdates)
     ConfigurationUpdates["PublishCloudWatchMetricsEnabled"] <- PublishCloudWatchMetricsEnabled
     ConfigurationUpdates["BytesScannedCutoffPerQuery"] <- BytesScannedCutoffPerQuery
-    ConfigurationUpdates["RequesterPaysEnabled"] <- RequesterPaysEnabled
     
     ConfigurationUpdates
   }
