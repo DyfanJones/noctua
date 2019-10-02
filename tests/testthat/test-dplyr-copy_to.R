@@ -7,7 +7,6 @@ context("dplyr copy_to")
 
 library(dplyr)
 test_that("Check pawsathena s3 dplyr copy_to method",{
-  skip_if_no_boto()
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena(),

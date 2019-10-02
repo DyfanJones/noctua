@@ -32,12 +32,12 @@ AthenaConnection <-
               glue <- paws::glue()})
     
     if(is.null(s3_staging_dir) && !is.null(work_group)){
-      tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation,
-               error = function(e) py_error(e))
+      tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation)
     }
     
     # return a subset of api function to reduce object size
-    ptr <-list(Athena = Athena[c("start_query_execution", "get_work_group","get_query_execution","stop_query_execution", "get_query_results")],
+    ptr <-list(Athena = Athena[c("start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
+                                 "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
                 S3 = S3[c("put_object", "get_object","delete_object","delete_objects","list_objects")],
                 glue = glue[c("get_databases","get_tables","get_table")])
     
