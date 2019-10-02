@@ -4,11 +4,11 @@
 \name{paws.athena-package}
 \alias{paws.athena}
 \alias{paws.athena-package}
-\title{paws.athena: Connect to 'AWS Athena' using 'paws' ('DBI' Interface)}
+\title{paws.athena: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)}
 \description{
 Designed to be compatible with the R package 'DBI' (Database Interface)
     when connecting to Amazon Web Service ('AWS') Athena <https://aws.amazon.com/athena/>.
-    To do this 'R' 'paws' Software Development Kit ('SDK')
+    To do the 'R' AWS Software Development Kit ('SDK') 'paws' 
     <https://github.com/paws-r/paws> is used as a driver.
 }
 \seealso{
