@@ -217,6 +217,7 @@ NULL
 setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ...) {
   stopifnot(is.data.frame(value))
   value <- sqlRownamesToColumn(value, row.names)
+  names(value) <- tolower(gsub("\\.", "_", make.names(names(value), unique = TRUE)))
   for(i in seq_along(value)){
     if(is.list(value[[i]])){
       value[[i]] <- sapply(value[[i]], paste, collapse = "|")
@@ -305,7 +306,8 @@ createFields <- function(con, fields, field.types) {
     fields[names(field.types)] <- field.types
   }
   
-  field_names <- gsub("\\.", "_", make.names(names(fields), unique = TRUE))
+  field_names <- tolower(gsub("\\.", "_", make.names(names(fields), unique = TRUE)))
+  message("Info: data.frame names have been converted for Athena DDL naming convertions: \n",paste0(field_names, collapse= ",\n"))
   field.types <- unname(fields)
   paste0(field_names, " ", field.types)
 }
