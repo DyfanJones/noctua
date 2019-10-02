@@ -28,6 +28,7 @@ Collate:
     'DataTypes.R'
     'Result.R'
     'Table.R'
+    'athena_low_api.R'
     'dplyr_integration.R'
     'utils.R'
     'zzz.R'
