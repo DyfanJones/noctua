@@ -5,8 +5,9 @@
 \alias{db_save_query.AthenaConnection}
 \title{S3 implementation of \code{db_save_query} for Athena}
 \usage{
-db_save_query.AthenaConnection(con, sql, name, file_type = c("NULL",
-  "csv", "parquet", "json"), s3_location = NULL, partition = NULL, ...)
+\method{db_save_query}{AthenaConnection}(con, sql, name,
+  file_type = c("NULL", "csv", "parquet", "json"), s3_location = NULL,
+  partition = NULL, ...)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
