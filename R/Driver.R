@@ -182,8 +182,6 @@ setMethod(
     aws_session_token <- aws_session_token %||% get_aws_env("AWS_SESSION_TOKEN")
     role_arn <- role_arn %||% get_aws_env("AWS_ROLE_ARN")
     
-    aws_expiration <- NULL
-    
     con <- AthenaConnection(aws_access_key_id = aws_access_key_id,
                             aws_secret_access_key = aws_secret_access_key ,
                             aws_session_token = aws_session_token,
