@@ -156,6 +156,20 @@ setMethod(
                                 "NULL" = NULL,
                                 match.arg(encryption_option))
     
+    aws_expiration <- NULL
+    if(!is.null(role_arn)) {
+      creds <- assume_role(profile_name = profile_name,
+                           region_name = region_name,
+                           role_arn = role_arn,
+                           role_session_name = role_session_name,
+                           duration_seconds = duration_seconds %||% get_aws_env("AWS_EXPIRATION"))
+      profile_name <- NULL
+      aws_access_key_id <- creds$AccessKeyId
+      aws_secret_access_key <- creds$SecretAccessKey
+      aws_session_token <- creds$SessionToken
+      aws_expiration <- creds$Expiration
+    }
+    
     # temporary solution to change connection method
     set_aws(aws_access_key_id, "AWS_ACCESS_KEY_ID")
     set_aws(aws_secret_access_key, "AWS_SECRET_ACCESS_KEY")
