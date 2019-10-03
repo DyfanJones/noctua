@@ -73,6 +73,33 @@ con <- dbConnect(paws.athena::athena(),
                  s3_staging_dir = 's3://path/to/query/bucket/')
 ```
 
+## Assuming ARN Role for connection
+
+Another method in connecting to Athena is to use Amazon Resource Name (ARN) role.
+
+Setting credentials in environmental variables:
+```r
+library(paws.athena)
+assume_role(profile_name = "YOUR_PROFILE_NAME",
+            role_arn = "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name",
+            set_env = TRUE)
+
+# Connect to Athena using temporary credentials
+con <- dbConnect(athena(),
+                s3_staging_dir = 's3://path/to/query/bucket/')
+```
+Connecting to Athena directly using ARN role:
+
+```r
+library(DBI)
+ con <- dbConnect(athena(),
+                  profile_name = "YOUR_PROFILE_NAME",
+                  role_arn = "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name",
+                  s3_staging_dir = 's3://path/to/query/bucket/')
+```
+To change the duration of ARN role session please change the parameter `duration_seconds`. 
+By default `duration_seconds` is set to 3600 seconds (1 hour).
+
 ## Usage
 
 ### Basic Usage
