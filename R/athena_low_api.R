@@ -188,3 +188,126 @@ update_work_group <- function(conn,
   tryCatch(do.call(conn@ptr$Athena$update_work_group, request, quote = T))
   invisible(NULL)
 }
+
+#' Get Session Tokens for PAWS Connection
+#' 
+#' Returns a set of temporary credentials for an AWS account or IAM user (\href{https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sts.html#STS.Client.get_session_token}{link}).
+#' 
+#' @param profile_name The name of a profile to use. If not given, then the default profile is used.
+#'                     To set profile name, the \href{https://aws.amazon.com/cli/}{AWS Command Line Interface} (AWS CLI) will need to be configured.
+#'                     To configure AWS CLI please refer to: \href{https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html}{Configuring the AWS CLI}.
+#' @param serial_number The identification number of the MFA device that is associated with the IAM user who is making the GetSessionToken call.
+#'                      Specify this value if the IAM user has a policy that requires MFA authentication. The value is either the serial number for a hardware device
+#'                      (such as `GAHT12345678`) or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).
+#' @param token_code The value provided by the MFA device, if MFA is required. If any policy requires the IAM user to submit an MFA code, 
+#'                   specify this value. If MFA authentication is required, the user must provide a code when requesting a set of temporary
+#'                   security credentials. A user who fails to provide the code receives an "access denied" response when requesting resources 
+#'                   that require MFA authentication.
+#' @param duration_seconds The duration, in seconds, that the credentials should remain valid. Acceptable duration for IAM user sessions range
+#'                         from 900 seconds (15 minutes) to 129,600 seconds (36 hours), with 3,600 seconds (1 hour) as the default.
+#' @param set_env If set to \code{TRUE} environmental variables \code{AWS_ACCESS_KEY_ID}, \code{AWS_SECRET_ACCESS_KEY} and \code{AWS_SESSION_TOKEN} will be set.
+#' 
+#' @return \code{get_session_token()} returns a list containing: \code{"AccessKeyId"}, \code{"SecretAccessKey"}, \code{"SessionToken"} and \code{"Expiration"}
+#' 
+#' @examples 
+#' \dontrun{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' 
+#' library(paws.athena)
+#' library(DBI)
+#' 
+#' # Create Temporary Credentials duration 1 hour
+#' get_session_token("YOUR_PROFILE_NAME",
+#'                   serial_number='arn:aws:iam::123456789012:mfa/user',
+#'                   token_code = "531602",
+#'                   set_env = TRUE)
+#'
+#' # Connect to Athena using temporary credentials
+#' con <- dbConnect(athena())
+#' }
+#' @name session_token
+#' @export
+get_session_token <- function(profile_name = NULL,
+                              serial_number = NULL,
+                              token_code = NULL,
+                              duration_seconds = 3600L,
+                              set_env = FALSE){
+  stopifnot(is.null(profile_name) || is.character(profile_name),
+            is.character(serial_number),
+            is.null(token_code) || is.character(token_code),
+            is.numeric(duration_seconds),
+            is.logical(set_env))
+  
+  set_aws(profile_name, "AWS_PROFILE")
+  set_aws(region_name, "AWS_REGION")
+  STS <- paws::sts()
+  
+  args <- list()
+  args$SerialNumber <- serial_number
+  args$TokenCode <- token_code
+  args$DurationSeconds <- as.integer(duration_seconds)
+  
+  tryCatch({response <- do.call(STS$get_session_token, args)})
+  
+  if(set_env) {set_aws_env(response)}
+  response$Credentials
+}
+
+#' Assume AWS ARN Role
+#' 
+#' Returns a set of temporary security credentials that you can use to access AWS resources that you might not normally have access to (\href{https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/sts.html#STS.Client.assume_role}{link}).
+#' These temporary credentials consist of an access key ID, a secret access key, and a security token. Typically, you use AssumeRole within
+#' your account or for cross-account access.
+#' @param profile_name The name of a profile to use. If not given, then the default profile is used.
+#'                     To set profile name, the \href{https://aws.amazon.com/cli/}{AWS Command Line Interface} (AWS CLI) will need to be configured.
+#'                     To configure AWS CLI please refer to: \href{https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html}{Configuring the AWS CLI}.
+#' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
+#'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
+#' @param role_arn The Amazon Resource Name (ARN) of the role to assume (such as \code{arn:aws:sts::123456789012:assumed-role/role_name/role_session_name})
+#' @param role_session_name An identifier for the assumed role session. By default `paws.athena` creates a session name \code{sprintf("paws.athena-session-\%s", as.integer(Sys.time()))}
+#' @param duration_seconds The duration, in seconds, of the role session. The value can range from 900 seconds (15 minutes) up to the maximum session duration setting for the role.
+#'                         This setting can have a value from 1 hour to 12 hours. By default duration is set to 3600 seconds (1 hour). 
+#' @param set_env If set to \code{TRUE} environmental variables \code{AWS_ACCESS_KEY_ID}, \code{AWS_SECRET_ACCESS_KEY} and \code{AWS_SESSION_TOKEN} will be set. 
+#' @return \code{assume_role()} returns a list containing: \code{"AccessKeyId"}, \code{"SecretAccessKey"}, \code{"SessionToken"} and \code{"Expiration"}
+#' @seealso \code{\link{dbConnect}}
+#' @examples
+#' \dontrun{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' 
+#' library(paws.athena)
+#' library(DBI)
+#' 
+#' # Assuming demo ARN role
+#' assume_role(profile_name = "YOUR_PROFILE_NAME",
+#'             role_arn = "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name",
+#'             set_env = TRUE)
+#'             
+#' # Connect to Athena using ARN Role
+#' con <- dbConnect(paws.athena::athena())
+#' }
+#' @export
+assume_role <- function(profile_name = NULL,
+                        region_name = NULL,
+                        role_arn = NULL,
+                        role_session_name= sprintf("paws-athena-session-%s", as.integer(Sys.time())),
+                        duration_seconds = 3600L,
+                        set_env = FALSE){
+  stopifnot(is.null(profile_name) || is.character(profile_name),
+            is.null(region_name) || is.character(region_name),
+            is.character(role_arn),
+            is.numeric(duration_seconds),
+            is.logical(set_env))
+  
+  set_aws(profile_name, "AWS_PROFILE")
+  set_aws(region_name, "AWS_REGION")
+  
+  STS <- paws::sts()
+  
+  tryCatch({response <- STS$assume_role(RoleArn = role_arn,
+                                        RoleSessionName = role_session_name,
+                                        DurationSeconds = as.integer(duration_seconds))})
+  if(set_env) {set_aws_env(response)}
+  response$Credentials
+}
