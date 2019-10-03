@@ -22,4 +22,11 @@ test_that("Check if Athena DDL's are created correctly",{
   expect_equal(expect_ddl2, tbl_ddl$tbl2)
   expect_equal(expect_ddl3, tbl_ddl$tbl3)
   expect_equal(expect_ddl4, tbl_ddl$tbl4)
+  
+  # clean up system environmental variables
+  Sys.unsetenv("AWS_ACCESS_KEY_ID")
+  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
+  Sys.unsetenv("AWS_SESSION_TOKEN")
+  Sys.unsetenv("AWS_PROFILE")
+  Sys.unsetenv("AWS_REGION")
 })

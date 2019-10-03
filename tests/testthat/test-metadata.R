@@ -19,4 +19,11 @@ test_that("Returning meta data from query",{
   dbDisconnect(con)
   
   expect_equal(column_info, df_col_info)
+  
+  # clean up system environmental variables
+  Sys.unsetenv("AWS_ACCESS_KEY_ID")
+  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
+  Sys.unsetenv("AWS_SESSION_TOKEN")
+  Sys.unsetenv("AWS_PROFILE")
+  Sys.unsetenv("AWS_REGION")
 })
