@@ -122,6 +122,13 @@ set_aws_env <- function(x){
   Sys.setenv("AWS_EXPIRATION" = creds$Expiration)
 }
 
+# set individual aws to env
+set_aws <- function(x, y){
+  if(!is.null(x)) {args = list(x)
+  names(args) = y
+  do.call(Sys.setenv, args)}
+}
+
 # Return NULL if System environment variable doesnt exist
 get_aws_env <- function(x) {
   x <- Sys.getenv(x)
