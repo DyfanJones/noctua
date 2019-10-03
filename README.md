@@ -193,7 +193,7 @@ tbl(con, sql("SELECT * FROM iris"))
 ```
 
     # Source:   SQL [?? x 5]
-    # Database: Athena 1.9.210 [eu-west-1/default]
+    # Database: Athena 0.1.4 [eu-west-1/default]
        sepal_length sepal_width petal_length petal_width species
               <dbl>       <dbl>        <dbl>       <dbl> <chr>  
      1          5.1         3.5          1.4         0.2 setosa 
@@ -217,7 +217,7 @@ tbl(con, "iris")
 ```
 
     # Source:   table<iris> [?? x 5]
-    # Database: Athena 1.9.210 [eu-west-1/default]
+    # Database: Athena 0.1.4 [eu-west-1/default]
        sepal_length sepal_width petal_length petal_width species
               <dbl>       <dbl>        <dbl>       <dbl> <chr>  
      1          5.1         3.5          1.4         0.2 setosa 
@@ -246,7 +246,7 @@ tbl(con, "iris")) %>%
 ```
 
     # Source:   lazy query [?? x 5]
-    # Database: Athena 1.9.210 [your_profile@eu-west-1/default]
+    # Database: Athena 0.1.4 [your_profile@eu-west-1/default]
        sepal_length sepal_width petal_length petal_width species
               <dbl>       <dbl>        <dbl>       <dbl> <chr>  
      1          4.7         3.2          1.3         0.2 setosa 
@@ -267,7 +267,7 @@ tbl(con, "iris") %>%
 ```
 
     # Source:   lazy query [?? x 4]
-    # Database: Athena 1.9.210 [your_profile@eu-west-1/default]
+    # Database: Athena 0.1.4 [your_profile@eu-west-1/default]
        sepal_length sepal_width petal_length petal_width
               <dbl>       <dbl>        <dbl>       <dbl>
      1          5.1         3.5          1.4         0.2
@@ -443,7 +443,7 @@ delete_work_group(con, "demo_work_group")
 
   - `AWR.Athena` - A R wrapper of RJDBC for the AWS Athena’s JDBC
     drivers: <https://github.com/nfultz/AWR.Athena>
-  - `RAthena` - A R wrapper of the python package `Boto3` using DBI as the framework: <https://github.com/r-dbi/DBI>
+  - `RAthena` - A R wrapper of the python package `Boto3` using DBI as the framework: <https://github.com/DyfanJones/RAthena>
 
 ## Comparison:
 
