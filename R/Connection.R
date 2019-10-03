@@ -29,7 +29,8 @@ AthenaConnection <-
     
     tryCatch({Athena <- paws::athena()
               S3 <- paws::s3()
-              glue <- paws::glue()})
+              glue <- paws::glue()
+              sts <- paws::sts()})
     
     if(is.null(s3_staging_dir) && !is.null(work_group)){
       tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation)
@@ -39,7 +40,8 @@ AthenaConnection <-
     ptr <-list(Athena = Athena[c("start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
                                  "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
                 S3 = S3[c("put_object", "get_object","delete_object","delete_objects","list_objects")],
-                glue = glue[c("get_databases","get_tables","get_table")])
+                glue = glue[c("get_databases","get_tables","get_table")],
+                STS = sts[c("assume_role", "get_session_token")])
     
     s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
     
