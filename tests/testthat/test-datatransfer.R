@@ -32,4 +32,11 @@ test_that("Testing data transfer between R and athena", {
   test_df2 <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df2 where year = '",format(DATE, "%Y"), "' and month = '",format(DATE, "%m"), "' and day = '", format(DATE, "%d"),"'")))
   expect_equal(test_df,df)
   expect_equal(test_df2,df)
+  
+  # clean up system environmental variables
+  Sys.unsetenv("AWS_ACCESS_KEY_ID")
+  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
+  Sys.unsetenv("AWS_SESSION_TOKEN")
+  Sys.unsetenv("AWS_PROFILE")
+  Sys.unsetenv("AWS_REGION")
 })

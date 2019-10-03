@@ -19,4 +19,6 @@ test_that("Check connection to Athena using ARN",{
   Sys.unsetenv("AWS_ACCESS_KEY_ID")
   Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
   Sys.unsetenv("AWS_SESSION_TOKEN")
+  Sys.unsetenv("AWS_PROFILE")
+  Sys.unsetenv("AWS_REGION")
 })

@@ -18,4 +18,11 @@ test_that("Testing class formation", {
   expect_identical(names(attributes(res)), c("connection", "info", "class"))
   expect_s4_class(con,"AthenaConnection")
   expect_s4_class(res,"AthenaResult")
+  
+  # clean up system environmental variables
+  Sys.unsetenv("AWS_ACCESS_KEY_ID")
+  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
+  Sys.unsetenv("AWS_SESSION_TOKEN")
+  Sys.unsetenv("AWS_PROFILE")
+  Sys.unsetenv("AWS_REGION")
 })
