@@ -37,12 +37,12 @@ The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to 
 \donttest{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # Sending Queries to Athena
 res1 <- dbSendQuery(con, "show databases")

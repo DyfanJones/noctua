@@ -29,7 +29,7 @@ Produces a data.frame that describes the output of a query.
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # Get Column information from query
 res <- dbSendQuery(con, "select * from information_schema.tables")

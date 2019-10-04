@@ -28,12 +28,12 @@ This method tests whether the \code{dbObj} is still valid.
 \donttest{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # Check is connection is valid
 dbIsValid(con)

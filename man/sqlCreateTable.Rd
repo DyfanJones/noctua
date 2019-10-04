@@ -31,7 +31,7 @@ A data frame: field types are generated using
 
 \item{s3.location}{s3 bucket to store Athena table}
 
-\item{file.type}{What file type to store data.frame on s3, paws.athena currently supports ["csv", "tsv", "parquet"]}
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]}
 
 \item{...}{Other arguments used by individual methods.}
 }
@@ -45,12 +45,12 @@ Creates an interface to compose \code{CREATE EXTERNAL TABLE}.
 \donttest{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
                  
 # Create DDL for iris data.frame
 sqlCreateTable(con, "iris", iris, s3.location = "s3://path/to/athena/table")

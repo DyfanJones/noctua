@@ -24,12 +24,12 @@ Returns the unquoted names of Athena tables accessible through this connection.
 \dontrun{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
              
 # Return list of tables in Athena
 dbListTables(con)

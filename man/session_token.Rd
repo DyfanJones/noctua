@@ -38,7 +38,7 @@ Returns a set of temporary credentials for an AWS account or IAM user (\href{htt
 # Note: 
 # - Require AWS Account to run below example.
 
-library(paws.athena)
+library(noctua)
 library(DBI)
 
 # Create Temporary Credentials duration 1 hour
