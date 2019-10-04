@@ -1,4 +1,4 @@
-#' @include paws.athena.R
+#' @include noctua.R
 NULL
 
 #' Athena Driver Methods
