@@ -86,12 +86,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Disconnect conenction
 #' dbDisconnect(con)
@@ -121,12 +121,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'
 #' # Check is connection is valid
 #' dbIsValid(con)
@@ -169,12 +169,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Sending Queries to Athena
 #' res1 <- dbSendQuery(con, "show databases")
@@ -235,7 +235,7 @@ setMethod(
 #' @return \code{dbDataType} returns the Athena type that correspond to the obj argument as an non-empty character string.
 #' @seealso \code{\link[DBI]{dbDataType}}
 #' @examples
-#' library(paws.athena)
+#' library(noctua)
 #' dbDataType(athena(), 1:5)
 #' dbDataType(athena(), 1)
 #' dbDataType(athena(), TRUE)
@@ -244,18 +244,18 @@ setMethod(
 #' dbDataType(athena(), c("x", "abc"))
 #' dbDataType(athena(), list(raw(10), raw(20)))
 #' 
-#' vapply(iris, function(x) dbDataType(paws.athena::athena(), x),
+#' vapply(iris, function(x) dbDataType(noctua::athena(), x),
 #'        FUN.VALUE = character(1), USE.NAMES = TRUE)
 #' 
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Sending Queries to Athena
 #' dbDataType(con, iris)
@@ -318,12 +318,12 @@ setMethod(
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'              
 #' # Return list of tables in Athena
 #' dbListTables(con)
@@ -357,12 +357,12 @@ setMethod(
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Write data.frame to Athena table
 #' dbWriteTable(con, "mtcars", mtcars,
@@ -408,12 +408,12 @@ setMethod("dbListFields", c("AthenaConnection", "character") ,
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Write data.frame to Athena table
 #' dbWriteTable(con, "mtcars", mtcars,
@@ -459,12 +459,12 @@ setMethod(
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Write data.frame to Athena table
 #' dbWriteTable(con, "mtcars", mtcars,
@@ -505,12 +505,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Sending Queries to Athena
 #' dbGetQuery(con, "show databases")
@@ -544,12 +544,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'                  
 #' # Returns metadata from connnection object
 #' metadata <- dbGetInfo(con)
@@ -577,8 +577,8 @@ setMethod(
     info <- dbObj@info
     RegionName <- get_region()
     paws <- as.character(packageVersion("paws"))
-    paws.athena <- as.character(packageVersion("paws.athena"))
-    info <- c(info, region_name = RegionName, paws = paws, paws.athena = paws.athena)
+    noctua <- as.character(packageVersion("noctua"))
+    info <- c(info, region_name = RegionName, paws = paws, noctua = noctua)
     info
   })
 
@@ -593,12 +593,12 @@ setMethod(
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'                  
 #' # write iris table to Athena                  
 #' dbWriteTable(con, "iris",
@@ -607,7 +607,7 @@ setMethod(
 #'              s3.location = "s3://path/to/store/athena/table/")
 #' 
 #' # return table partitions
-#' paws.athena::dbGetPartition(con, "iris")
+#' noctua::dbGetPartition(con, "iris")
 #' 
 #' # disconnect from Athena
 #' dbDisconnect(con)
@@ -646,12 +646,12 @@ setMethod(
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'                  
 #' # write iris table to Athena                  
 #' dbWriteTable(con, "iris",
@@ -660,7 +660,7 @@ setMethod(
 #'              s3.location = "s3://path/to/store/athena/table/")
 #' 
 #' # return table ddl
-#' paws.athena::dbShow(con, "iris")
+#' noctua::dbShow(con, "iris")
 #' 
 #' # disconnect from Athena
 #' dbDisconnect(con)
