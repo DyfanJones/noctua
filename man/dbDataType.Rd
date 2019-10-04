@@ -32,7 +32,7 @@ or \linkS4class{DBIConnection}}
 Returns a character string that describes the Athena SQL data type for the \code{obj} object.
 }
 \examples{
-library(paws.athena)
+library(noctua)
 dbDataType(athena(), 1:5)
 dbDataType(athena(), 1)
 dbDataType(athena(), TRUE)
@@ -41,18 +41,18 @@ dbDataType(athena(), Sys.time())
 dbDataType(athena(), c("x", "abc"))
 dbDataType(athena(), list(raw(10), raw(20)))
 
-vapply(iris, function(x) dbDataType(paws.athena::athena(), x),
+vapply(iris, function(x) dbDataType(noctua::athena(), x),
        FUN.VALUE = character(1), USE.NAMES = TRUE)
 
 \donttest{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # Sending Queries to Athena
 dbDataType(con, iris)

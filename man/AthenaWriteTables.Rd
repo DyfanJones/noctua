@@ -56,7 +56,7 @@ For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
 
 \item{s3.location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 
-\item{file.type}{What file type to store data.frame on s3, paws.athena currently supports ["csv", "tsv", "parquet"].
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
 
 \item{...}{Other arguments used by individual methods.}
@@ -73,12 +73,12 @@ Convenience functions for reading/writing DBMS tables
 \dontrun{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # List existing tables in Athena
 dbListTables(con)

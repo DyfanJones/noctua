@@ -1,4 +1,4 @@
-Package: paws.athena
+Package: noctua
 Type: Package
 Title: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)
 Version: 1.0.0
@@ -25,10 +25,10 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-URL: https://github.com/DyfanJones/paws.athena
-BugReports: https://github.com/DyfanJones/paws.athena/issues
+URL: https://github.com/DyfanJones/noctua
+BugReports: https://github.com/DyfanJones/noctua/issues
 Collate: 
-    'paws.athena.R'
+    'noctua.R'
     'Driver.R'
     'Connection.R'
     'DataTypes.R'

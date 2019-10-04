@@ -97,12 +97,12 @@ Lower level API access, allows user to create and delete Athena Work Groups.
 \donttest{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
-library(paws.athena)
+library(noctua)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # List current work group available
 list_work_groups(con)

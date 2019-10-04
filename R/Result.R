@@ -36,12 +36,12 @@ setClass(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' res <- dbSendQuery(con, "show databases")
 #' dbClearResult(res)
@@ -101,12 +101,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' res <- dbSendQuery(con, "show databases")
 #' dbFetch(res)
@@ -190,12 +190,12 @@ setMethod(
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Check if query has completed
 #' res <- dbSendQuery(con, "show databases")
@@ -258,7 +258,7 @@ setMethod(
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Get Column information from query
 #' res <- dbSendQuery(con, "select * from information_schema.tables")

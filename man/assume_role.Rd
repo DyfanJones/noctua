@@ -18,7 +18,7 @@ AWS region codes (region code example: Region = EU (Ireland)     \code{ region_n
 
 \item{role_arn}{The Amazon Resource Name (ARN) of the role to assume (such as \code{arn:aws:sts::123456789012:assumed-role/role_name/role_session_name})}
 
-\item{role_session_name}{An identifier for the assumed role session. By default `paws.athena` creates a session name \code{sprintf("paws.athena-session-\%s", as.integer(Sys.time()))}}
+\item{role_session_name}{An identifier for the assumed role session. By default `noctua` creates a session name \code{sprintf("noctua-session-\%s", as.integer(Sys.time()))}}
 
 \item{duration_seconds}{The duration, in seconds, of the role session. The value can range from 900 seconds (15 minutes) up to the maximum session duration setting for the role.
 This setting can have a value from 1 hour to 12 hours. By default duration is set to 3600 seconds (1 hour).}
@@ -38,7 +38,7 @@ your account or for cross-account access.
 # Note: 
 # - Require AWS Account to run below example.
 
-library(paws.athena)
+library(noctua)
 library(DBI)
 
 # Assuming demo ARN role
@@ -47,7 +47,7 @@ assume_role(profile_name = "YOUR_PROFILE_NAME",
             set_env = TRUE)
             
 # Connect to Athena using ARN Role
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 }
 }
 \seealso{

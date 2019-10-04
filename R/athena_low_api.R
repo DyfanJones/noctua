@@ -54,12 +54,12 @@
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
-#' library(paws.athena)
+#' library(noctua)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'
 #' # List current work group available
 #' list_work_groups(con)
@@ -214,7 +214,7 @@ update_work_group <- function(conn,
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' 
-#' library(paws.athena)
+#' library(noctua)
 #' library(DBI)
 #' 
 #' # Create Temporary Credentials duration 1 hour
@@ -265,7 +265,7 @@ get_session_token <- function(profile_name = NULL,
 #' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
 #'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
 #' @param role_arn The Amazon Resource Name (ARN) of the role to assume (such as \code{arn:aws:sts::123456789012:assumed-role/role_name/role_session_name})
-#' @param role_session_name An identifier for the assumed role session. By default `paws.athena` creates a session name \code{sprintf("paws.athena-session-\%s", as.integer(Sys.time()))}
+#' @param role_session_name An identifier for the assumed role session. By default `noctua` creates a session name \code{sprintf("noctua-session-\%s", as.integer(Sys.time()))}
 #' @param duration_seconds The duration, in seconds, of the role session. The value can range from 900 seconds (15 minutes) up to the maximum session duration setting for the role.
 #'                         This setting can have a value from 1 hour to 12 hours. By default duration is set to 3600 seconds (1 hour). 
 #' @param set_env If set to \code{TRUE} environmental variables \code{AWS_ACCESS_KEY_ID}, \code{AWS_SECRET_ACCESS_KEY} and \code{AWS_SESSION_TOKEN} will be set. 
@@ -276,7 +276,7 @@ get_session_token <- function(profile_name = NULL,
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' 
-#' library(paws.athena)
+#' library(noctua)
 #' library(DBI)
 #' 
 #' # Assuming demo ARN role
@@ -285,7 +285,7 @@ get_session_token <- function(profile_name = NULL,
 #'             set_env = TRUE)
 #'             
 #' # Connect to Athena using ARN Role
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' }
 #' @export
 assume_role <- function(profile_name = NULL,

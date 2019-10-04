@@ -13,7 +13,7 @@
 #' @param field.types Additional field types used to override derived types.
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
-#' @param file.type What file type to store data.frame on s3, paws.athena currently supports ["csv", "tsv", "parquet"].
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 #' @inheritParams DBI::sqlCreateTable
 #' @return \code{dbWriteTable()} returns \code{TRUE}, invisibly. If the table exists, and both append and overwrite
@@ -24,12 +24,12 @@
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # List existing tables in Athena
 #' dbListTables(con)
@@ -234,19 +234,19 @@ setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ..
 #' @param field.types Additional field types used to override derived types.
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3.location s3 bucket to store Athena table
-#' @param file.type What file type to store data.frame on s3, paws.athena currently supports ["csv", "tsv", "parquet"]
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]
 #' @return \code{sqlCreateTable} returns data.frame's \code{DDL} in the \code{\link[DBI]{SQL}} format.
 #' @seealso \code{\link[DBI]{sqlCreateTable}}
 #' @examples 
 #' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #'                  
 #' # Create DDL for iris data.frame
 #' sqlCreateTable(con, "iris", iris, s3.location = "s3://path/to/athena/table")

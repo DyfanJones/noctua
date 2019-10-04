@@ -17,11 +17,11 @@ db_desc.AthenaConnection <- function(x) {
 #' 
 #' This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
-#' @param table Table name, if left default paws.athena will use the default from \code{dplyr}'s \code{compute} function.
+#' @param table Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
 #' @param sql SQL code to be sent to the data
-#' @param ... passes \code{paws.athena} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
+#' @param ... passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
 #' \itemize{
-#'          \item{\code{file_type:} What file type to store data.frame on s3, paws.athena currently supports ["NULL","csv", "parquet", "json"]. 
+#'          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
 #'                        \code{"NULL"} will let athena set the file_type for you.}
 #'          \item{\code{s3_location:} s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 #'          \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}
@@ -33,13 +33,13 @@ db_desc.AthenaConnection <- function(x) {
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' library(dplyr)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # Write data.frame to Athena table
 #' copy_to(con, mtcars,
@@ -77,8 +77,8 @@ db_compute.AthenaConnection <- function(con,
 #' parameters \code{db_save_query} provided for \code{compute} function.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to the data
-#' @param name Table name if left default paws.athena will use default from 'dplyr''s \code{compute} function.
-#' @param file_type What file type to store data.frame on s3, paws.athena currently supports ["NULL","csv", "parquet", "json"]. 
+#' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
+#' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
 #'                  \code{"NULL"} will let athena set the file_type for you.
 #' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
 #' @param partition Partition Athena table, requires to be a partitioned variable from previous table.
@@ -140,9 +140,9 @@ db_save_query_with <- function(file_type, s3_location,partition){
 #' @param types Additional field types used to override derived types.
 #' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
-#' @param file_type What file type to store data.frame on s3, paws.athena currently supports ["csv", "tsv", "parquet"]. 
+#' @param file_type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]. 
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
-#' @param ... other parameters currently not supported in paws.athena
+#' @param ... other parameters currently not supported in noctua
 #' @name db_copy_to
 #' @seealso \code{\link{AthenaWriteTables}}
 #' @return
@@ -151,13 +151,13 @@ db_save_query_with <- function(file_type, s3_location,partition){
 #' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 #' 
 #' library(DBI)
 #' library(dplyr)
 #' 
 #' # Demo connection to Athena using profile name 
-#' con <- dbConnect(paws.athena::athena())
+#' con <- dbConnect(noctua::athena())
 #' 
 #' # List existing tables in Athena
 #' dbListTables(con)

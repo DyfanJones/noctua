@@ -30,10 +30,10 @@ just any valid bare table name.}
 
 \item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 
-\item{file_type}{What file type to store data.frame on s3, paws.athena currently supports ["csv", "tsv", "parquet"]. 
+\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]. 
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
 
-\item{...}{other parameters currently not supported in paws.athena}
+\item{...}{other parameters currently not supported in noctua}
 }
 \value{
 db_copy_to returns table name
@@ -45,13 +45,13 @@ This is an Athena method for dbplyr function \code{db_copy_to} to create an Athe
 \dontrun{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 library(dplyr)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
 
 # List existing tables in Athena
 dbListTables(con)

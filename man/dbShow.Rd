@@ -28,12 +28,12 @@ Executes a statement to return the data description language (DDL) of the Athena
 \dontrun{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `paws.athena::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
 # Demo connection to Athena using profile name 
-con <- dbConnect(paws.athena::athena())
+con <- dbConnect(noctua::athena())
                  
 # write iris table to Athena                  
 dbWriteTable(con, "iris",
@@ -42,7 +42,7 @@ dbWriteTable(con, "iris",
              s3.location = "s3://path/to/store/athena/table/")
 
 # return table ddl
-paws.athena::dbShow(con, "iris")
+noctua::dbShow(con, "iris")
 
 # disconnect from Athena
 dbDisconnect(con)

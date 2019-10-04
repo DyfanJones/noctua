@@ -1,26 +1,30 @@
 
-# paws.athena
+# noctua
 
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/paws.athena)
+![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/noctua)
 
-The goal of the `paws.athena` package is to provide a DBI-compliant interface
+The goal of the `noctua` package is to provide a DBI-compliant interface
 to Amazon’s Athena (<https://aws.amazon.com/athena/>) using [`paws`](https://github.com/paws-r/paws) SDK.
 This allows for an efficient, easy setup connection to Athena using the
 `paws` SDK as a driver.
 
-**NOTE:** *Before using `paws.athena` you must have an aws account or have
+**NOTE:** *Before using `noctua` you must have an aws account or have
 access to aws account with permissions allowing you to use Athena.*
+
+## Why is the package called noctua
+
+[Athena/Minerva](https://en.wikipedia.org/wiki/Athena) is the Greek/Roman god of wisdom, handicraft, and warfare. One of the main symbols for Athena is the Owl. `Noctua` is the latin word for Owl.
 
 ## Installation:
 
-To install `paws.athena` (currently not on cran):
+To install `noctua` (currently not on cran):
 
 ``` r
 # The development version from Github
-remotes::install_github("dyfanjones/paws.athena")
+remotes::install_github("dyfanjones/noctua")
 ```
 
 ## Connection Methods
@@ -33,7 +37,7 @@ credentials are hard-coded.
 ```r
 library(DBI)
 
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                 aws_access_key_id='YOUR_ACCESS_KEY_ID',
                 aws_secret_access_key='YOUR_SECRET_ACCESS_KEY',
                 s3_staging_dir='s3://path/to/query/bucket/',
@@ -48,7 +52,7 @@ to: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.
 
 ##### Setting up AWS CLI
 
-`paws.athena` is compatible with AWS CLI. This allows your aws credentials to
+`noctua` is compatible with AWS CLI. This allows your aws credentials to
 be stored and not be hard coded in your connection.
 
 To install AWS CLI please refer to:
@@ -62,13 +66,13 @@ only putting the `s3_staging_dir`.
 Using default profile name:
 ``` r
 library(DBI)
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                  s3_staging_dir = 's3://path/to/query/bucket/')
 ```
 Connecting to Athena using profile name other than `default`.
 ``` r
 library(DBI)
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                  profile_name = "your_profile",
                  s3_staging_dir = 's3://path/to/query/bucket/')
 ```
@@ -79,7 +83,7 @@ Another method in connecting to Athena is to use Amazon Resource Name (ARN) role
 
 Setting credentials in environmental variables:
 ```r
-library(paws.athena)
+library(noctua)
 assume_role(profile_name = "YOUR_PROFILE_NAME",
             role_arn = "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name",
             set_env = TRUE)
@@ -110,7 +114,7 @@ Connect to athena, and send a query and return results back to R.
 library(DBI)
 
 # using default profile to connect
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                  s3_staging_dir = 's3://path/to/query/bucket/')
 
 res <- dbExecute(con, "SELECT * FROM one_row")
@@ -156,33 +160,33 @@ query <-
 dbExecute(con, query)
 ```
 
-paws.athena has 2 extra function to return extra information around Athena
+noctua has 2 extra function to return extra information around Athena
 tables: `dbGetParitiions` and `dbShow`
 
 `dbGetPartitions` will return all the partitions (returns data.frame):
 
 ``` r
-paws.athena::dbGetPartition(con, "impressions")
+noctua::dbGetPartition(con, "impressions")
 ```
 
 `dbShow` will return the table’s ddl, so you will able to see how the
 table was constructed in Athena (returns SQL character):
 
 ``` r
-paws.athena::dbShow(con, "impressions")
+noctua::dbShow(con, "impressions")
 ```
 
 ### Advanced Usage
 
 ``` r
 library(DBI)
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                  s3_staging_dir = 's3://path/to/query/bucket/')
 ```
 
 #### Sending data to Athena
 
-paws.athena has created a method to send data.frame from R to Athena.
+noctua has created a method to send data.frame from R to Athena.
 
 ``` r
 # Check existing tables
@@ -211,7 +215,7 @@ Creating a connection to Athena and query and already existing table
 library(DBI)
 library(dplyr)
 
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                 aws_access_key_id='YOUR_ACCESS_KEY_ID',
                 aws_secret_access_key='YOUR_SECRET_ACCESS_KEY',
                 s3_staging_dir='s3://path/to/query/bucket/',
@@ -265,7 +269,7 @@ extra Meta Data is returned in the query to give users extra
 information.
 
 ``` r
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                 profile_name = "your_profile",
                 s3_staging_dir='s3://path/to/query/bucket/')
 tbl(con, "iris")) %>% 
@@ -315,7 +319,7 @@ Upload data using `dplyr` function `copy_to` and `compute`.
 library(DBI)
 library(dplyr)
 
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                 profile_name = "your_profile",
                 s3_staging_dir='s3://path/to/query/bucket/')
 ```
@@ -352,10 +356,10 @@ dbDisconnect(con)
 Creating work group:
 
 ``` r
-library(paws.athena)
+library(noctua)
 library(DBI)
 
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                 profile_name = "your_profile",
                 encryption_option = "SSE_S3",
                 s3_staging_dir='s3://path/to/query/bucket/')
@@ -448,7 +452,7 @@ get_work_group(con, "demo_work_group")
 Connect to Athena using work group:
 
 ``` r
-con <- dbConnect(paws.athena::athena(),
+con <- dbConnect(noctua::athena(),
                 work_group = "demo_work_group")
 ```
 
@@ -474,7 +478,7 @@ delete_work_group(con, "demo_work_group")
 
 ## Comparison:
 
-`paws.athena` is basically exactly the same as `RAthena` however it utilies the R AWS SDK `paws` to achieve the same goal.
+`noctua` is basically the same as `RAthena` however it utilies the R AWS SDK `paws` to achieve the same goal.
 
 # To Do list:
 
