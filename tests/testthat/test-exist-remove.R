@@ -1,11 +1,11 @@
 context("Exist/Remove")
 
 # NOTE System variable format returned for Unit tests:
-# Sys.getenv("pawsathena_arn"): "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"
-# Sys.getenv("pawsathena_s3_query"): "s3://path/to/query/bucket/"
-# Sys.getenv("pawsathena_s3_tbl"): "s3://path/to/bucket/"
+# Sys.getenv("noctua_arn"): "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"
+# Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
+# Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
-s3.location <- paste0(Sys.getenv("pawsathena_s3_tbl"),"removable_table/")
+s3.location <- paste0(Sys.getenv("noctua_s3_tbl"),"removable_table/")
 
 test_that("Check a table exist and remove table",{
   skip_if_no_env()
