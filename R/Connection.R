@@ -339,7 +339,7 @@ setMethod(
   "dbListTables", "AthenaConnection",
   function(conn,...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    tryCatch(Databases <- sapply(con@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))
+    tryCatch(Databases <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))
     tryCatch(output <- lapply(Databases, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
     unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
   }

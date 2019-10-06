@@ -196,6 +196,8 @@ update_work_group <- function(conn,
 #' @param profile_name The name of a profile to use. If not given, then the default profile is used.
 #'                     To set profile name, the \href{https://aws.amazon.com/cli/}{AWS Command Line Interface} (AWS CLI) will need to be configured.
 #'                     To configure AWS CLI please refer to: \href{https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html}{Configuring the AWS CLI}.
+#' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
+#'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
 #' @param serial_number The identification number of the MFA device that is associated with the IAM user who is making the GetSessionToken call.
 #'                      Specify this value if the IAM user has a policy that requires MFA authentication. The value is either the serial number for a hardware device
 #'                      (such as `GAHT12345678`) or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).
@@ -229,6 +231,7 @@ update_work_group <- function(conn,
 #' @name session_token
 #' @export
 get_session_token <- function(profile_name = NULL,
+                              region_name = NULL,
                               serial_number = NULL,
                               token_code = NULL,
                               duration_seconds = 3600L,
