@@ -1,4 +1,4 @@
 library(testthat)
-library(paws.athena)
+library(noctua)
 
-test_check("paws.athena")
+test_check("noctua")
