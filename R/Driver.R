@@ -11,7 +11,7 @@ NULL
 
 #' Athena Driver
 #'
-#' Driver for an Athena Boto3 connection.
+#' Driver for an Athena paws connection.
 #'
 #' @import methods DBI
 #' @return \code{athena()} returns a s4 class. This class is used active Athena method for \code{\link[DBI]{dbConnect}}
@@ -51,7 +51,7 @@ setMethod(
 #' Connect to Athena using R's sdk paws
 #' 
 #' @description 
-#' It is never adviced to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is adviced to use
+#' It is never advised to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is advised to use
 #' \code{profile_name} (set up by \href{https://aws.amazon.com/cli/}{AWS Command Line Interface}), 
 #' \href{https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html}{Amazon Resource Name roles} or environmental variables. Here is a list
 #' of supported environment variables:
@@ -86,8 +86,7 @@ setMethod(
 #' @param s3_staging_dir The location in Amazon S3 where your query results are stored, such as \code{s3://path/to/query/bucket/}
 #' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
 #'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
-#' @param botocore_session Use this Botocore session instead of creating a new default one.
-#' @param ... Any other parameter for Boto3 session: \href{https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html}{Boto3 session documentation}
+#' @param ... other parameters for \code{paws} session
 #' @aliases dbConnect
 #' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
 #' @examples
@@ -134,8 +133,7 @@ setMethod(
            role_session_name= sprintf("paws-athena-session-%s", as.integer(Sys.time())),
            duration_seconds = 3600L,
            s3_staging_dir = NULL,
-           region_name = NULL,
-           botocore_session = NULL, ...) {
+           region_name = NULL, ...) {
     
     # assert checks on parameters
     stopifnot(is.null(aws_access_key_id) || is.character(aws_access_key_id),
@@ -192,7 +190,6 @@ setMethod(
                             kms_key = kms_key,
                             s3_staging_dir = s3_staging_dir,
                             region_name = region_name,
-                            botocore_session = botocore_session,
                             profile_name = profile_name, 
                             aws_expiration = aws_expiration,...)
     con
