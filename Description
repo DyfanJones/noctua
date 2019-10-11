@@ -4,9 +4,9 @@ Title: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)
 Version: 1.0.0
 Authors@R: person("Dyfan", "Jones", email="dyfan.r.jones@gmail.com", 
                   role= c("aut", "cre"))
-Description: Designed to be compatible with the R package 'DBI' (Database Interface)
+Description: Designed to be compatible with the 'R' package 'DBI' (Database Interface)
     when connecting to Amazon Web Service ('AWS') Athena <https://aws.amazon.com/athena/>.
-    To do the 'R' 'AWS' Software Development Kit ('SDK') 'paws' 
+    To do this the 'R' 'AWS' Software Development Kit ('SDK') 'paws' 
     <https://github.com/paws-r/paws> is used as a driver.
 Imports: 
     DBI (>= 0.7),
