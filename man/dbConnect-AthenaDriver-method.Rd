@@ -13,8 +13,7 @@
   kms_key = NULL, profile_name = NULL, role_arn = NULL,
   role_session_name = sprintf("paws-athena-session-\%s",
   as.integer(Sys.time())), duration_seconds = 3600L,
-  s3_staging_dir = NULL, region_name = NULL, botocore_session = NULL,
-  ...)
+  s3_staging_dir = NULL, region_name = NULL, ...)
 }
 \arguments{
 \item{drv}{an object that inherits from \linkS4class{DBIDriver},
@@ -56,15 +55,13 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
 \item{region_name}{Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
 AWS region codes (region code example: Region = EU (Ireland)     \code{ region_name = "eu-west-1"})}
 
-\item{botocore_session}{Use this Botocore session instead of creating a new default one.}
-
-\item{...}{Any other parameter for Boto3 session: \href{https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html}{Boto3 session documentation}}
+\item{...}{other parameters for \code{paws} session}
 }
 \value{
 \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
 }
 \description{
-It is never adviced to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is adviced to use
+It is never advised to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is advised to use
 \code{profile_name} (set up by \href{https://aws.amazon.com/cli/}{AWS Command Line Interface}), 
 \href{https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html}{Amazon Resource Name roles} or environmental variables. Here is a list
 of supported environment variables:
