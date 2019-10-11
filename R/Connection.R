@@ -23,7 +23,6 @@ AthenaConnection <-
     kms_key = NULL,
     s3_staging_dir = NULL,
     region_name = NULL,
-    botocore_session = NULL,
     profile_name = NULL, 
     aws_expiration = NULL,...){
     
