@@ -43,7 +43,7 @@
 
 
 <meta property="og:title" content="Connect to Athena using R's sdk paws — dbConnect,AthenaDriver-method" />
-<meta property="og:description" content="It is never adviced to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is adviced to use
+<meta property="og:description" content="It is never advised to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is advised to use
 profile_name (set up by AWS Command Line Interface), 
 Amazon Resource Name roles or environmental variables. Here is a list
 of supported environment variables:
@@ -103,6 +103,9 @@ AWS_ATHENA_S3_STAGING_DIR: is equivalent to the dbConnect parameter - s3_staging
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -130,7 +133,7 @@ AWS_ATHENA_S3_STAGING_DIR: is equivalent to the dbConnect parameter - s3_staging
     </div>
 
     <div class="ref-description">
-    <p>It is never adviced to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is adviced to use
+    <p>It is never advised to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is advised to use
 <code>profile_name</code> (set up by <a href='https://aws.amazon.com/cli/'>AWS Command Line Interface</a>), 
 <a href='https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html'>Amazon Resource Name roles</a> or environmental variables. Here is a list
 of supported environment variables:</p><ul>
@@ -152,8 +155,7 @@ of supported environment variables:</p><ul>
   <span class='kw'>kms_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"paws-athena-session-%s"</span>,
   <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())), <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
-  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>botocore_session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>)</pre>
+  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -228,12 +230,8 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
 AWS region codes (region code example: Region = EU (Ireland)     <code> region_name = "eu-west-1"</code>)</p></td>
     </tr>
     <tr>
-      <th>botocore_session</th>
-      <td><p>Use this Botocore session instead of creating a new default one.</p></td>
-    </tr>
-    <tr>
       <th>...</th>
-      <td><p>Any other parameter for Boto3 session: <a href='https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html'>Boto3 session documentation</a></p></td>
+      <td><p>other parameters for <code>paws</code> session</p></td>
     </tr>
     </table>
 
