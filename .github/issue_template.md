@@ -19,10 +19,10 @@ https://github.com/tidyverse/reprex#what-is-a-reprex
 
 Example:
   ```r
-library(paws.athena)
+library(noctua)
 library(DBI)
-con <- dbConnect(paws.athena::athena(),
-                 profile_name = "paws.athena")
+con <- dbConnect(noctua::athena(),
+                 profile_name = "noctua")
 
 dbWriteTable(con, "mtcars", mtcars, s3.location = Sys.getenv("my_s3_bucket"))
 
