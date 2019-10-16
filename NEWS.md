@@ -4,7 +4,6 @@
 ## New Features
 
 ### DBI
-* Developed DBI methods for interacting with AWS Athena using the paws SDK package
 * `dbConnect` method can use the following methods:
   * assume role
   * aws profile name
