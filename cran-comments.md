@@ -4,9 +4,13 @@ This the initial submission of the noctua package
 In this version I have:
 
 * Added Explanation to all aliases in package description
-* dplyr integration methods
-* Unit test:
-  * **NOTE:** *System variable format returned for Unit tests:*
+* Built the initial connection methods for DBI base on the 'RAthena' 'R' package
+* Built dplyr integration methods
+* Built method to upload data to Amazon Web Severice ('AWS') Athena
+* Built Unit tests to test connection, transfer of data, disconnect from 'AWS Athena'
+* Added methods to operate work groups in 'AWS Athena'
+* Added method for assuming a role
+* Unit Test system variables format and examples:
   * Sys.getenv("noctua_arn"): "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"
   * Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
   * Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
