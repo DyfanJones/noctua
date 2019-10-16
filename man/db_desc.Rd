@@ -13,7 +13,7 @@ db_desc.AthenaConnection(x)
 \value{
 Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
 
-\code{"Athena <boto3 version> [<profile_name>@region/database]"}
+\code{"Athena <paws version> [<profile_name>@region/database]"}
 }
 \description{
 This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.

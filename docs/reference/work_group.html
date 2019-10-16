@@ -137,15 +137,15 @@ update_work_groupUpdates the workgroup with the specified name (link).
 
     <div class="ref-description">
     <p>Lower level API access, allows user to create and delete Athena Work Groups.</p><dl class='dl-horizontal'>
-<dt>create_work_group</dt><dd><p>Creates a workgroup with the specified name (<a href='https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.create_work_group'>link</a>). 
+<dt>create_work_group</dt><dd><p>Creates a workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/create_work_group.html'>link</a>). 
                          The work group utilises parameters from the <code>dbConnect</code> object, to determine the encryption and output location of the work group.
                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></code></p></dd>
 <dt>tag_options</dt><dd><p>Helper function to create tag options for function <code>create_work_group()</code></p></dd>
-<dt>delete_work_group</dt><dd><p>Deletes the workgroup with the specified name (<a href='https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.delete_work_group'>link</a>). 
+<dt>delete_work_group</dt><dd><p>Deletes the workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/delete_work_group.html'>link</a>). 
                          The primary workgroup cannot be deleted.</p></dd>
-<dt>list_work_groups</dt><dd><p>Lists available workgroups for the account (<a href='https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.list_work_groups'>link</a>).</p></dd>
-<dt>get_work_group</dt><dd><p>Returns information about the workgroup with the specified name (<a href='https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.get_work_group'>link</a>).</p></dd>
-<dt>update_work_group</dt><dd><p>Updates the workgroup with the specified name (<a href='https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.update_work_group'>link</a>). 
+<dt>list_work_groups</dt><dd><p>Lists available workgroups for the account (<a href='https://paws-r.github.io/docs/athena/list_work_groups.html'>link</a>).</p></dd>
+<dt>get_work_group</dt><dd><p>Returns information about the workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/get_work_group.html'>link</a>).</p></dd>
+<dt>update_work_group</dt><dd><p>Updates the workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/update_work_group.html'>link</a>). 
                          The workgroup's name cannot be changed. The work group utilises parameters from the <code>dbConnect</code> object, to determine the encryption and output location of the work group.
                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></code></p></dd>
 
@@ -296,7 +296,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 #&gt; [1] "This is a demo work group"
 #&gt; 
 #&gt; [[1]]$CreationTime
-#&gt; [1] "2019-10-11 11:52:48 GMT"
+#&gt; [1] "2019-10-16 10:26:25 GMT"
 #&gt; 
 #&gt; 
 #&gt; [[2]]
