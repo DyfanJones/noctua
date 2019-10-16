@@ -6,7 +6,7 @@
 #' @return
 #' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
 #' 
-#' \code{"Athena <boto3 version> [<profile_name>@region/database]"}
+#' \code{"Athena <paws version> [<profile_name>@region/database]"}
 db_desc.AthenaConnection <- function(x) {
   info <- dbGetInfo(x)
   profile <- if(!is.null(info$profile_name)) paste0(info$profile_name, "@")
