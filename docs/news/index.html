@@ -123,8 +123,38 @@
 <h1 class="page-header">
 <a href="#noctua-100" class="anchor"></a>noctua 1.0.0</h1>
 <ul>
-<li>Initial RAthena release</li>
+<li><strong>Initial RAthena release</strong></li>
 </ul>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New Features</h2>
+<div id="dbi" class="section level3">
+<h3 class="hasAnchor">
+<a href="#dbi" class="anchor"></a>DBI</h3>
+<ul>
+<li>Developed DBI methods for interacting with AWS Athena using the paws SDK package</li>
+<li>
+<code>dbConnect</code> method can use the following methods:
+<ul>
+<li>assume role</li>
+<li>aws profile name</li>
+<li>hard coded aws credentials</li>
+<li>set credentials in system variables</li>
+</ul>
+</li>
+<li>Enabled method to upload parquet file format into AWS S3 using <code>arrow</code> package</li>
+</ul>
+</div>
+<div id="athena-lower-level-api" class="section level3">
+<h3 class="hasAnchor">
+<a href="#athena-lower-level-api" class="anchor"></a>Athena lower level api</h3>
+<ul>
+<li>
+<code>assume_role</code> developed method for user to assume role when connecting to AWS Athena</li>
+<li>developed methods to create, list, delete and get AWS Athena work groups</li>
+</ul>
+</div>
+</div>
 </div>
   </div>
 
