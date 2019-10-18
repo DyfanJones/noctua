@@ -127,7 +127,6 @@ setMethod(
     # check status of query
     result <- poll(res)
     
-    s3_info <- split_s3_uri(res@connection@info$s3_staging)
     result_info <- split_s3_uri(result$QueryExecution$ResultConfiguration$OutputLocation)
     
     # if query failed stop
