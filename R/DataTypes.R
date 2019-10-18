@@ -27,7 +27,7 @@ AthenaToRDataType <- function(data_type){
            integer = "integer",
            tinyint = "integer",
            smallint = "integer",
-           bigint = "integer",
+           bigint = "integer64",
            float = "double",
            decimal = "double",
            string = "character",
