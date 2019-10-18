@@ -26,9 +26,11 @@ AthenaConnection <-
     profile_name = NULL, 
     aws_expiration = NULL,...){
     
-    tryCatch({Athena <- paws::athena()
-              S3 <- paws::s3()
-              glue <- paws::glue()})
+    config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, profile_name, region_name)
+    
+    tryCatch({Athena <- paws::athena(config)
+              S3 <- paws::s3(config)
+              glue <- paws::glue(config)})
     
     if(is.null(s3_staging_dir) && !is.null(work_group)){
       tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation)
@@ -47,7 +49,7 @@ AthenaConnection <-
     
     
     get_profile_name <- pkg_method("get_profile_name", "paws.common")
-    info <- list(profile_name = get_profile_name(), s3_staging = s3_staging_dir,
+    info <- list(profile_name = get_profile_name(profile_name), s3_staging = s3_staging_dir,
                  dbms.name = schema_name, work_group = work_group,
                  poll_interval = poll_interval, encryption_option = encryption_option,
                  kms_key = kms_key, expiration = aws_expiration)
@@ -574,7 +576,7 @@ setMethod(
     if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
     get_region <- pkg_method("get_region", "paws.common")
     info <- dbObj@info
-    RegionName <- get_region()
+    RegionName <- get_region(info$profile_name)
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
     info <- c(info, region_name = RegionName, paws = paws, noctua = noctua)
