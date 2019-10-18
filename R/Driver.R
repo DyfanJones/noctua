@@ -168,13 +168,6 @@ setMethod(
       aws_expiration <- creds$Expiration
     }
     
-    # temporary solution to change connection method
-    set_aws(aws_access_key_id, "AWS_ACCESS_KEY_ID")
-    set_aws(aws_secret_access_key, "AWS_SECRET_ACCESS_KEY")
-    set_aws(aws_session_token, "AWS_SESSION_TOKEN")
-    set_aws(profile_name, "AWS_PROFILE")
-    set_aws(region_name, "AWS_REGION")
-    
     aws_access_key_id <- aws_access_key_id %||% get_aws_env("AWS_ACCESS_KEY_ID")
     aws_secret_access_key <- aws_secret_access_key %||% get_aws_env("AWS_SECRET_ACCESS_KEY")
     aws_session_token <- aws_session_token %||% get_aws_env("AWS_SESSION_TOKEN")
