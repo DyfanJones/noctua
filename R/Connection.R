@@ -28,7 +28,7 @@ AthenaConnection <-
     
     # get lower level paws methods
     get_region <- pkg_method("get_region", "paws.common")
-    get_profile_name <- pkg_method("get_region", "paws.common")
+    get_profile_name <- pkg_method("get_profile_name", "paws.common")
     
     # get profile_name
     prof_name <- if(!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
