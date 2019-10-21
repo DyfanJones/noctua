@@ -1,7 +1,7 @@
 Package: noctua
 Type: Package
 Title: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)
-Version: 1.0.0
+Version: 1.0.9000
 Authors@R: person("Dyfan", "Jones", email="dyfan.r.jones@gmail.com", 
                   role= c("aut", "cre"))
 Description: Designed to be compatible with the 'R' package 'DBI' (Database Interface)
@@ -9,14 +9,15 @@ Description: Designed to be compatible with the 'R' package 'DBI' (Database Inte
     To do this the 'R' 'AWS' Software Development Kit ('SDK') 'paws' 
     <https://github.com/paws-r/paws> is used as a driver.
 Imports: 
+    data.table,
     DBI (>= 0.7),
     methods,
-    paws,
+    paws (>= 0.1.5),
     stats,
     utils
 Suggests: 
     arrow,
-    data.table,
+    bit64,
     dplyr,
     dbplyr,
     testthat

@@ -45,11 +45,7 @@ resource_active.AthenaResult <- function(dbObj){
 }
 
 # set up athena request call
-request <- function(conn, statement){
-  # creating QueryString and QueryExecutionContext
-  request = list(QueryString = statement,
-                 QueryExecutionContext = list(Database = conn@info$dbms.name))
-  
+ResultConfiguration <- function(conn){
   # creating ResultConfiguration 
   ResultConfiguration = list(OutputLocation = conn@info$s3_staging)
   
@@ -60,13 +56,7 @@ request <- function(conn, statement){
     ResultConfiguration["EncryptionConfiguration"] <- list(EncryptionConfiguration)
   }
   
-  # adding ResultConfiguration
-  request["ResultConfiguration"] <- list(ResultConfiguration)
-  
-  # adding WorkGroup
-  request["WorkGroup"] = conn@info$work_group
-  
-  request
+  ResultConfiguration
 }
 
 # set up work group configuration
@@ -122,13 +112,6 @@ set_aws_env <- function(x){
   Sys.setenv("AWS_EXPIRATION" = creds$Expiration)
 }
 
-# set individual aws to env
-set_aws <- function(x, y){
-  if(!is.null(x)) {args = list(x)
-  names(args) = y
-  do.call(Sys.setenv, args)}
-}
-
 # Return NULL if System environment variable doesnt exist
 get_aws_env <- function(x) {
   x <- Sys.getenv(x)
@@ -174,4 +157,27 @@ char_log <- function(value, athena_class){
 read_athena <- function(file, athena_class){
   output <- read.csv(file, col.names = names(athena_class), stringsAsFactors = F) 
   char_log(output, athena_class)
+}
+
+# set credentials
+cred_set <- function(aws_access_key_id,
+                     aws_secret_access_key,
+                     aws_session_token,
+                     profile_name,
+                     region_name){
+  add_list <-function(x) if(length(x) == 0) NULL else x
+  config <- list()
+  credentials <- list()
+  cred <- list()
+  
+  cred$access_key_id = aws_access_key_id
+  cred$secret_access_key = aws_secret_access_key
+  cred$session_token = aws_session_token
+  
+  credentials$creds <- add_list(cred)
+  credentials$profile <- profile_name
+  config$credentials <- add_list(credentials)
+  config$region <- region_name
+  
+  config
 }

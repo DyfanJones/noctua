@@ -6,9 +6,11 @@ AthenaResult <- function(conn,
                          s3_staging_dir = NULL){
   
   stopifnot(is.character(statement))
-  Request <- request(conn, statement)
-  
-  tryCatch(response <- do.call(conn@ptr$Athena$start_query_execution, Request, quote = T))
+
+  tryCatch(response <- conn@ptr$Athena$start_query_execution(QueryString = statement,
+                                                             QueryExecutionContext = list(Database = conn@info$dbms.name),
+                                                             ResultConfiguration = ResultConfiguration(conn),
+                                                             WorkGroup = conn@info$work_group))
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
   new("AthenaResult", connection = conn, info = response)
 }
@@ -127,7 +129,6 @@ setMethod(
     # check status of query
     result <- poll(res)
     
-    s3_info <- split_s3_uri(res@connection@info$s3_staging)
     result_info <- split_s3_uri(result$QueryExecution$ResultConfiguration$OutputLocation)
     
     # if query failed stop
@@ -164,8 +165,8 @@ setMethod(
     Type <- AthenaToRDataType(result_class$ResultSet$ResultSetMetadata$ColumnInfo)
     
     if(grepl("\\.csv$",result_info$key)){
-      if (requireNamespace("data.table", quietly=TRUE)){output <- data.table::fread(File, col.names = names(Type), colClasses = unname(Type))}
-      else {output <- read_athena(File, Type)}
+      # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
+      output <- data.table::fread(File, col.names = names(Type), colClasses = unname(Type), showProgress = F)
     } else{
       file_con <- file(File)
       output <- suppressWarnings(readLines(file_con))

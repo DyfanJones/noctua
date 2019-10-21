@@ -11,12 +11,18 @@ s3.location2 <- Sys.getenv("noctua_s3_tbl")
 test_that("Testing data transfer between R and athena", {
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(athena())
+  con <- dbConnect(athena(),
+                   s3_staging_dir = Sys.getenv("rathena_s3_query"))
   
   df <- data.frame(x = 1:10,
                    y = letters[1:10], 
                    z = sample(c(TRUE, FALSE), 10, replace = T),
                    stringsAsFactors = F)
+  
+  # testing if bigint is transferred correctly
+  df2 <- data.frame(var1 = sample(letters, 10, replace = T),
+                    var2 = bit64::as.integer64(1:10),
+                    stringsAsFactors = F)
   
   DATE <- Sys.Date()
   dbWriteTable(con, "test_df", df, overwrite = T, partition = c("timesTamp" = format(DATE, "%Y%m%d")), s3.location = s3.location1)
@@ -26,12 +32,15 @@ test_that("Testing data transfer between R and athena", {
                              "month" = format(DATE, "%m"),
                              "DAY" = format(DATE, "%d")),
                s3.location = s3.location2)
+  dbWriteTable(con, "df_bigint", df2, overwrite = T, s3.location = s3.location2)
   
   # if data.table is available in namespace result returned as data.table
-  test_df <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df where timestamp ='",format(Sys.Date(), "%Y%m%d"),"'")))
-  test_df2 <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df2 where year = '",format(DATE, "%Y"), "' and month = '",format(DATE, "%m"), "' and day = '", format(DATE, "%d"),"'")))
+  test_df <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df where timestamp ='", format(Sys.Date(), "%Y%m%d"),"'")))
+  test_df2 <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df2 where year = '", format(DATE, "%Y"), "' and month = '",format(DATE, "%m"), "' and day = '", format(DATE, "%d"),"'")))
+  test_df3 <- as.data.frame(dbGetQuery(con, "select * from df_bigint"))
   expect_equal(test_df,df)
   expect_equal(test_df2,df)
+  expect_equal(test_df3,df2)
   
   # clean up system environmental variables
   Sys.unsetenv("AWS_ACCESS_KEY_ID")
