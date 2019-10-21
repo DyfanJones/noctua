@@ -9,6 +9,7 @@ Description: Designed to be compatible with the 'R' package 'DBI' (Database Inte
     To do this the 'R' 'AWS' Software Development Kit ('SDK') 'paws' 
     <https://github.com/paws-r/paws> is used as a driver.
 Imports: 
+    data.table,
     DBI (>= 0.7),
     methods,
     paws,
@@ -16,7 +17,7 @@ Imports:
     utils
 Suggests: 
     arrow,
-    data.table,
+    bit64,
     dplyr,
     dbplyr,
     testthat
