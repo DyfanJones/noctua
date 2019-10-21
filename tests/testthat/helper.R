@@ -46,27 +46,13 @@ LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'\n;")))
 
 # static Athena Query Request Tests
 athena_test_req1 <-
-  list(QueryString = "select * from test_query",
-       QueryExecutionContext = list(Database = "default"),
-       ResultConfiguration = list(OutputLocation = Sys.getenv("noctua_s3_query"),
-                                  EncryptionConfiguration = list(EncryptionOption = "SSE_S3",
-                                                                 KmsKey = "test_key")),
-       WorkGroup = "test_group")
+         list(OutputLocation = Sys.getenv("noctua_s3_query"),
+              EncryptionConfiguration = list(EncryptionOption = "SSE_S3",
+                                             KmsKey = "test_key"))
 athena_test_req2 <-
-  list(QueryString = "select * from test_query",
-       QueryExecutionContext = list(Database = "default"),
-       ResultConfiguration = list(OutputLocation = Sys.getenv("noctua_s3_query"),
-                                  EncryptionConfiguration = list(EncryptionOption = "SSE_S3")),
-       WorkGroup = "test_group")
-athena_test_req3 <-
-  list(QueryString = "select * from test_query",
-       QueryExecutionContext = list(Database = "default"),
-       ResultConfiguration = list(OutputLocation = Sys.getenv("noctua_s3_query")),
-       WorkGroup = "test_group")
-athena_test_req4 <-
-  list(QueryString = "select * from test_query",
-       QueryExecutionContext = list(Database = "default"),
-       ResultConfiguration = list(OutputLocation = Sys.getenv("noctua_s3_query")))
+       list(OutputLocation = Sys.getenv("noctua_s3_query"),
+            EncryptionConfiguration = list(EncryptionOption = "SSE_S3"))
+athena_test_req3 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 
 # helper to delete all objects in prefix folder
 delete_prefix_objects <- function(conn, Prefix, Quiet = F){
