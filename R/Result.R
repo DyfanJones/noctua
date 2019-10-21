@@ -6,9 +6,11 @@ AthenaResult <- function(conn,
                          s3_staging_dir = NULL){
   
   stopifnot(is.character(statement))
-  Request <- request(conn, statement)
-  
-  tryCatch(response <- do.call(conn@ptr$Athena$start_query_execution, Request, quote = T))
+
+  tryCatch(response <- conn@ptr$Athena$start_query_execution(QueryString = statement,
+                                                            QueryExecutionContext = list(Database = conn@info$dbms.name),
+                                                            ResultConfiguration = ResultConfiguration(conn),
+                                                            WorkGroup = conn@info$work_group))
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
   new("AthenaResult", connection = conn, info = response)
 }
