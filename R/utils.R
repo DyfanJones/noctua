@@ -45,11 +45,7 @@ resource_active.AthenaResult <- function(dbObj){
 }
 
 # set up athena request call
-request <- function(conn, statement){
-  # creating QueryString and QueryExecutionContext
-  request = list(QueryString = statement,
-                 QueryExecutionContext = list(Database = conn@info$dbms.name))
-  
+ResultConfiguration <- function(conn){
   # creating ResultConfiguration 
   ResultConfiguration = list(OutputLocation = conn@info$s3_staging)
   
@@ -60,13 +56,7 @@ request <- function(conn, statement){
     ResultConfiguration["EncryptionConfiguration"] <- list(EncryptionConfiguration)
   }
   
-  # adding ResultConfiguration
-  request["ResultConfiguration"] <- list(ResultConfiguration)
-  
-  # adding WorkGroup
-  request["WorkGroup"] = conn@info$work_group
-  
-  request
+  ResultConfiguration
 }
 
 # set up work group configuration
