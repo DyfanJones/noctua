@@ -26,7 +26,13 @@ AthenaConnection <-
     profile_name = NULL, 
     aws_expiration = NULL,...){
     
-    config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, profile_name, region_name)
+    # get lower level paws methods
+    get_region <- pkg_method("get_region", "paws.common")
+    get_profile_name <- pkg_method("get_region", "paws.common")
+    
+    # get profile_name
+    prof_name <- if(!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
+    config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, prof_name, region_name %||% get_region(profile_name))
     
     tryCatch({Athena <- paws::athena(config)
               S3 <- paws::s3(config)
@@ -47,9 +53,7 @@ AthenaConnection <-
     if(is.null(s3_staging_dir)) {stop("Please set `s3_staging_dir` either in parameter `s3_staging_dir`, evnironmental varaible `AWS_ATHENA_S3_STAGING_DIR`",
                                       "or when work_group is defined in `create_work_group()`", call. = F)}
     
-    
-    get_profile_name <- pkg_method("get_profile_name", "paws.common")
-    info <- list(profile_name = get_profile_name(profile_name), s3_staging = s3_staging_dir,
+    info <- list(profile_name = prof_name, s3_staging = s3_staging_dir,
                  dbms.name = schema_name, work_group = work_group,
                  poll_interval = poll_interval, encryption_option = encryption_option,
                  kms_key = kms_key, expiration = aws_expiration)
