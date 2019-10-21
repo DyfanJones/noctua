@@ -110,15 +110,15 @@ create_work_group <- function(conn,
             is.integer(bytes_scanned_cut_off) || is.infinite(bytes_scanned_cut_off),
             is.character(description))
   
-  request <- list(Name = work_group)
-  request["Configuration"] <- list(work_group_config(conn,
-                                                     EnforceWorkGroupConfiguration = enforce_work_group_config,
-                                                     PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
-                                                     BytesScannedCutoffPerQuery = bytes_scanned_cut_off))
-  request["Description"] <- description
-  request["Tags"] <- tags
-  
-  tryCatch(do.call(conn@ptr$Athena$create_work_group, request, quote = T))
+  Configuration <- list(work_group_config(conn,
+                                          EnforceWorkGroupConfiguration = enforce_work_group_config,
+                                          PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
+                                          BytesScannedCutoffPerQuery = bytes_scanned_cut_off))
+
+  tryCatch(conn@ptr$Athena$create_work_group(Name = work_group,
+                                             Configuration = Configuration,
+                                             Description = description,
+                                             Tags = tags))
   invisible(NULL)
 }
 
@@ -176,16 +176,16 @@ update_work_group <- function(conn,
             is.character(description))
   
   state <- match.arg(state)
-  request <- list(WorkGroup = work_group,
-                  Description = description,
-                  State = state)
-  request["ConfigurationUpdates"] <- list(work_group_config_update(conn,
-                                                                   RemoveOutputLocation = remove_output_location,
-                                                                   EnforceWorkGroupConfiguration = enforce_work_group_config,
-                                                                   PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
-                                                                   BytesScannedCutoffPerQuery = bytes_scanned_cut_off))
+  ConfigurationUpdates <- list(work_group_config_update(conn,
+                                                        RemoveOutputLocation = remove_output_location,
+                                                        EnforceWorkGroupConfiguration = enforce_work_group_config,
+                                                        PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
+                                                        BytesScannedCutoffPerQuery = bytes_scanned_cut_off))
   
-  tryCatch(do.call(conn@ptr$Athena$update_work_group, request, quote = T))
+  tryCatch(conn@ptr$Athena$update_work_group(WorkGroup = work_group,
+                                             Description = description,
+                                             State = state,
+                                             ConfigurationUpdates = ConfigurationUpdates))
   invisible(NULL)
 }
 
@@ -242,16 +242,13 @@ get_session_token <- function(profile_name = NULL,
             is.numeric(duration_seconds),
             is.logical(set_env))
   
-  set_aws(profile_name, "AWS_PROFILE")
-  set_aws(region_name, "AWS_REGION")
-  STS <- paws::sts()
+  config <- cred_set(NULL, NULL, NULL, profile_name, region_name)
   
-  args <- list()
-  args$SerialNumber <- serial_number
-  args$TokenCode <- token_code
-  args$DurationSeconds <- as.integer(duration_seconds)
-  
-  tryCatch({response <- do.call(STS$get_session_token, args)})
+  STS <- paws::sts(config)
+
+  tryCatch({response <- STS$get_session_token(SerialNumber = serial_number,
+                                              TokenCode = token_code,
+                                              DurationSeconds = as.integer(duration_seconds))})
   
   if(set_env) {set_aws_env(response)}
   response$Credentials
@@ -303,10 +300,9 @@ assume_role <- function(profile_name = NULL,
             is.numeric(duration_seconds),
             is.logical(set_env))
   
-  set_aws(profile_name, "AWS_PROFILE")
-  set_aws(region_name, "AWS_REGION")
+  config <- cred_set(NULL, NULL, NULL, profile_name, region_name)
   
-  STS <- paws::sts()
+  STS <- paws::sts(config)
   
   tryCatch({response <- STS$assume_role(RoleArn = role_arn,
                                         RoleSessionName = role_session_name,
