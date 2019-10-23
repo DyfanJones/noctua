@@ -1,6 +1,6 @@
 # noctua 1.1.0
 
-# Minor Change
+## Minor Change
 * Increment package version from dev version to cran
 
 # noctua 1.0.9000
@@ -8,6 +8,9 @@
 ## New Features
 * credentials are now passed through the new `config = list()` parameter is `paws` objects
 * `BigInt` are now passed correctly into `integer64`
+
+## Unit Tests
+* Added `bigint` to `integer64` in data.transfer unit test
 
 ## Minor Change
 * dependcy `paws` version has been set to a minimum of `0.1.5` due to latest change.
