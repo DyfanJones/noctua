@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -119,20 +119,76 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-100" class="section level1">
+    <div id="noctua-110" class="section level1">
 <h1 class="page-header">
-<a href="#noctua-100" class="anchor"></a>noctua 1.0.0</h1>
+<a href="#noctua-110" class="anchor"></a>noctua 1.1.0<small> Unreleased </small>
+</h1>
 <ul>
-<li><strong>Initial RAthena release</strong></li>
+<li>Increment package version from dev version to cran</li>
 </ul>
+</div>
+    <div id="noctua-109000" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-109000" class="anchor"></a>noctua 1.0.9000<small> Unreleased </small>
+</h1>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New Features</h2>
+<ul>
+<li>credentials are now passed through the new <code>config = list()</code> parameter is <code>paws</code> objects</li>
+<li>
+<code>BigInt</code> are now passed correctly into <code>integer64</code>
+</li>
+</ul>
+</div>
+<div id="bug" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug" class="anchor"></a>Bug</h2>
+<ul>
+<li>
+<code>AthenaResult</code> returned: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>. The function <code>do.call</code> was causing the issue, to address this <code>do.call</code> has been removed and the helper function <code>request</code> has been broken down into <code>ResultConfiguration</code> to return a single component of <code>start_query_execution</code>
+</li>
+<li>All functions that utilise <code>do.call</code> have been broken down due to error: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>
+</li>
+</ul>
+</div>
+<div id="unit-tests" class="section level2">
+<h2 class="hasAnchor">
+<a href="#unit-tests" class="anchor"></a>Unit Tests</h2>
+<ul>
+<li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
+</ul>
+</div>
+<div id="minor-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor Change</h2>
+<ul>
+<li>dependcy <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
+</ul>
+</div>
+<div id="major-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-change" class="anchor"></a>Major Change</h2>
+<ul>
+<li>
+<code>data.table</code> is now used as the default file parser <code>fread</code> / <code>fwrite</code>. This isn’t a breaking change as <code>data.table</code> was used before however this change makes <code>data.table</code> to default file parser.</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-100" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-100" class="anchor"></a>noctua 1.0.0<small> 2019-10-20 </small>
+</h1>
+<ul>
+<li><strong>Initial RAthena release</strong></li>
+</ul>
+<div id="new-features-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features-1" class="anchor"></a>New Features</h2>
 <div id="dbi" class="section level3">
 <h3 class="hasAnchor">
 <a href="#dbi" class="anchor"></a>DBI</h3>
 <ul>
-<li>Developed DBI methods for interacting with AWS Athena using the paws SDK package</li>
 <li>
 <code>dbConnect</code> method can use the following methods:
 <ul>
@@ -162,6 +218,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-110">1.1.0</a></li>
+        <li><a href="#noctua-109000">1.0.9000</a></li>
         <li><a href="#noctua-100">1.0.0</a></li>
       </ul>
     </div>
