@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -192,7 +192,7 @@ Field types are unescaped.</p>
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='co'># Create DDL for iris data.frame</span>
-<span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame names have been converted to align with Athena DDL naming convertions: </span>
+<span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame colnames have been converted to align with Athena DDL naming convertions: </span>
 #&gt; <span class='message'>sepal_length,</span>
 #&gt; <span class='message'>sepal_width,</span>
 #&gt; <span class='message'>petal_length,</span>
@@ -213,7 +213,7 @@ Field types are unescaped.</p>
 <span class='co'># Create DDL for iris data.frame with partition</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
                <span class='kw'>partition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"timestamp"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
-               <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame names have been converted to align with Athena DDL naming convertions: </span>
+               <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame colnames have been converted to align with Athena DDL naming convertions: </span>
 #&gt; <span class='message'>sepal_length,</span>
 #&gt; <span class='message'>sepal_width,</span>
 #&gt; <span class='message'>petal_length,</span>
@@ -225,7 +225,7 @@ Field types are unescaped.</p>
 #&gt;   petal_width DOUBLE,
 #&gt;   species STRING
 #&gt; )
-#&gt; PARTITIONED BY (20191016 STRING)
+#&gt; PARTITIONED BY (20191023 STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY ','
 #&gt; 	ESCAPED BY '\\'
@@ -236,7 +236,7 @@ Field types are unescaped.</p>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
                <span class='kw'>partition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"timestamp"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
                <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>,
-               <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"parquet"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame names have been converted to align with Athena DDL naming convertions: </span>
+               <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"parquet"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame colnames have been converted to align with Athena DDL naming convertions: </span>
 #&gt; <span class='message'>sepal_length,</span>
 #&gt; <span class='message'>sepal_width,</span>
 #&gt; <span class='message'>petal_length,</span>
@@ -248,7 +248,7 @@ Field types are unescaped.</p>
 #&gt;   petal_width DOUBLE,
 #&gt;   species STRING
 #&gt; )
-#&gt; PARTITIONED BY (20191016 STRING)
+#&gt; PARTITIONED BY (20191023 STRING)
 #&gt; STORED AS PARQUET
 #&gt; LOCATION 's3://path/to/athena/table/iris/'
 #&gt; ;</div><div class='input'>

@@ -487,8 +487,3 @@ delete_work_group(con, "demo_work_group")
 ## Comparison:
 
 `noctua` is basically the same as `RAthena` however it utilises the R AWS SDK `paws` to achieve the same goal.
-
-# To Do list:
-
-  - Upload package to cran
-  - Add a logo (as everyone loves a logo)
