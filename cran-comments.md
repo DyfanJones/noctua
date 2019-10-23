@@ -8,7 +8,7 @@ In this version I have:
 
 * Enabled and fixed connection parameters to pass through the new `config = list()` in `paws` objects
 * Correctly pass Amazon Web Service ('AWS') Athena `bigint` to R `integer64` class.
-* data.table has been made a dependency as `fread` and `fwrite` have been made the default file parsers to transfer data to and from 'AWS Athena'
+* data.table has been made a dependency as `fread` and `fwrite` have been made the default file reader and writer to transfer data to and from 'AWS Athena'
 
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
