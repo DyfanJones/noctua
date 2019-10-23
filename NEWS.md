@@ -15,10 +15,10 @@
 * Added `bigint` to `integer64` in data.transfer unit test
 
 ## Minor Change
-* dependcy `paws` version has been set to a minimum of `0.1.5` due to latest change.
+* dependency `paws` version has been set to a minimum of `0.1.5` due to latest change.
 
 ## Major Change
-* `data.table` is now used as the default file parser `fread` / `fwrite`. This isn't a breaking change as `data.table` was used before however this change makes `data.table` to default file parser.
+* `data.table` is now used as the default file parser `data.table::fread` / `data.table::fwrite`. This isn't a breaking change as `data.table` was used before however this change makes `data.table` to default file parser.
 
 
 # noctua 1.0.0

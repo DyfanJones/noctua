@@ -248,7 +248,7 @@
 <a class="sourceLine" id="cb15-6" title="6">                <span class="dt">aws_secret_access_key=</span><span class="st">'YOUR_SECRET_ACCESS_KEY'</span>,</a>
 <a class="sourceLine" id="cb15-7" title="7">                <span class="dt">s3_staging_dir=</span><span class="st">'s3://path/to/query/bucket/'</span>,</a>
 <a class="sourceLine" id="cb15-8" title="8">                <span class="dt">region_name=</span><span class="st">'eu-west-1'</span>)</a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span>(con, <span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/sql.html">sql</a></span>(<span class="st">"SELECT * FROM iris"</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb15-9" title="9"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(con, <span class="kw"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span>(<span class="st">"SELECT * FROM iris"</span>))</a></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># Source:   SQL [?? x 5]</span></a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb16-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
@@ -264,8 +264,8 @@
 <a class="sourceLine" id="cb16-13" title="13"> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
 <a class="sourceLine" id="cb16-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </a>
 <a class="sourceLine" id="cb16-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
-<p>dplyr provides lazy querying with allows to short hand <code><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl(con, sql("SELECT * FROM iris"))</a></code> to <code><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl(con, "iris")</a></code>. For more information please look at <a href="https://db.rstudio.com/dplyr/" class="uri">https://db.rstudio.com/dplyr/</a>.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span>(con, <span class="st">"iris"</span>)</a></code></pre></div>
+<p>dplyr provides lazy querying with allows to short hand <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl(con, sql("SELECT * FROM iris"))</a></code> to <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl(con, "iris")</a></code>. For more information please look at <a href="https://db.rstudio.com/dplyr/" class="uri">https://db.rstudio.com/dplyr/</a>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(con, <span class="st">"iris"</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co"># Source:   table&lt;iris&gt; [?? x 5]</span></a>
 <a class="sourceLine" id="cb18-2" title="2"><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb18-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
@@ -285,8 +285,8 @@
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">con &lt;-<span class="st"> </span><span class="kw"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(noctua<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/noctua/man/athena.html">athena</a></span>(),</a>
 <a class="sourceLine" id="cb19-2" title="2">                <span class="dt">profile_name =</span> <span class="st">"your_profile"</span>,</a>
 <a class="sourceLine" id="cb19-3" title="3">                <span class="dt">s3_staging_dir=</span><span class="st">'s3://path/to/query/bucket/'</span>)</a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span>(con, <span class="st">"iris"</span>)<span class="er">)</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb19-5" title="5"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span>(petal_length <span class="op">&lt;</span><span class="st"> </span><span class="fl">1.3</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb19-4" title="4"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(con, <span class="st">"iris"</span>)<span class="er">)</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(petal_length <span class="op">&lt;</span><span class="st"> </span><span class="fl">1.3</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># Source:   lazy query [?? x 5]</span></a>
 <a class="sourceLine" id="cb20-2" title="2"><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb20-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
@@ -302,8 +302,8 @@
 <a class="sourceLine" id="cb20-13" title="13"> <span class="dv">9</span>          <span class="dv">5</span>           <span class="fl">3.5</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </a>
 <a class="sourceLine" id="cb20-14" title="14"><span class="dv">10</span>          <span class="fl">4.5</span>         <span class="fl">2.3</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </a>
 <a class="sourceLine" id="cb20-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span>(con, <span class="st">"iris"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/reexports.html">contains</a></span>(<span class="st">"sepal"</span>), <span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/reexports.html">contains</a></span>(<span class="st">"petal"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(con, <span class="st">"iris"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"sepal"</span>), <span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"petal"</span>))</a></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Source:   lazy query [?? x 4]</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb22-3" title="3">   sepal_length sepal_width petal_length petal_width</a>
@@ -327,16 +327,16 @@
 <a class="sourceLine" id="cb23-5" title="5">                <span class="dt">profile_name =</span> <span class="st">"your_profile"</span>,</a>
 <a class="sourceLine" id="cb23-6" title="6">                <span class="dt">s3_staging_dir=</span><span class="st">'s3://path/to/query/bucket/'</span>)</a></code></pre></div>
 <p>Write data.frame to Athena table</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/copy_to.html">copy_to</a></span>(con, mtcars,</a>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(con, mtcars,</a>
 <a class="sourceLine" id="cb24-2" title="2">        <span class="dt">s3_location =</span> <span class="st">"s3://mybucket/data/"</span>)</a></code></pre></div>
 <p>Write Athena table from tbl_sql</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">athena_mtcars &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span>(con, <span class="st">"mtcars"</span>)</a>
-<a class="sourceLine" id="cb25-2" title="2">mtcars_filter &lt;-<span class="st"> </span>athena_mtcars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span>(gear <span class="op">&gt;=</span><span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">athena_mtcars &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(con, <span class="st">"mtcars"</span>)</a>
+<a class="sourceLine" id="cb25-2" title="2">mtcars_filter &lt;-<span class="st"> </span>athena_mtcars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(gear <span class="op">&gt;=</span><span class="dv">4</span>)</a></code></pre></div>
 <p>Create athena with unique table name</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">mtcars_filer <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/compute.html">compute</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">mtcars_filer <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span>()</a></code></pre></div>
 <p>Create athena with specified name and s3 location</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">mtcars_filer <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/compute.html">compute</a></span>(<span class="st">"mtcars_filer"</span>,</a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span>(<span class="st">"mtcars_filer"</span>,</a>
 <a class="sourceLine" id="cb27-3" title="3">          <span class="dt">s3_location =</span> <span class="st">"s3://mybucket/mtcars_filer/"</span>)</a>
 <a class="sourceLine" id="cb27-4" title="4"></a>
 <a class="sourceLine" id="cb27-5" title="5"><span class="co"># Disconnect from Athena</span></a>
