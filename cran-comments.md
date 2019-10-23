@@ -23,6 +23,8 @@ In this version I have:
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ## R devtools::check_rhub() results
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
+
 checking CRAN incoming feasibility ... NOTE
   Maintainer: 'Dyfan Jones <dyfan.r.jones@gmail.com>'
   
