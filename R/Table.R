@@ -271,7 +271,6 @@ setMethod("sqlCreateTable", "AthenaConnection",
                       is.data.frame(fields),
                       is.null(field.types) || is.character(field.types),
                       is.null(partition) || is.character(partition) || is.list(partition),
-                      is.null(field.types) || is.character(field.types),
                       is.s3_uri(s3.location))
             
             field <- createFields(con, fields, field.types = field.types)
