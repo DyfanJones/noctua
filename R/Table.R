@@ -301,7 +301,8 @@ createFields <- function(con, fields, field.types) {
   }
   
   field_names <- tolower(gsub("\\.", "_", make.names(names(fields), unique = TRUE)))
-  message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(field_names, collapse= ",\n"))
+  DIFF <- setdiff(field_names, names(fields))
+  if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
   field.types <- unname(fields)
   paste0(field_names, " ", field.types)
 }
