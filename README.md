@@ -4,7 +4,7 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/noctua)]https://CRAN.R-project.org/package=noctua)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/noctua)](https://CRAN.R-project.org/package=noctua)
 ![downloads](https://cranlogs.r-pkg.org/badges/noctua)
 
 The goal of the `noctua` package is to provide a DBI-compliant interface
