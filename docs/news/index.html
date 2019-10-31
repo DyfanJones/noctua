@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -119,9 +119,30 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-1109000" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1109000" class="anchor"></a>noctua 1.1.0.9000<small> Unreleased </small>
+</h1>
+<div id="new-feature" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-feature" class="anchor"></a>New Feature</h3>
+<ul>
+<li>GZIP compression is now supported for “csv” and “tsv” file format in <code>dbWriteTable</code>
+</li>
+</ul>
+</div>
+<div id="minor-change" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor Change</h3>
+<ul>
+<li>
+<code>sqlCreateTable</code> info message will now only inform user if colnames have changed and display the colname that have changed</li>
+</ul>
+</div>
+</div>
     <div id="noctua-110" class="section level1">
 <h1 class="page-header">
-<a href="#noctua-110" class="anchor"></a>noctua 1.1.0<small> Unreleased </small>
+<a href="#noctua-110" class="anchor"></a>noctua 1.1.0<small> 2019-10-23 </small>
 </h1>
 <ul>
 <li>Increment package version from dev version to cran</li>
@@ -159,9 +180,9 @@
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>
 </div>
-<div id="minor-change" class="section level2">
+<div id="minor-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-1" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>dependency <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
 </ul>
@@ -218,6 +239,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-1109000">1.1.0.9000</a></li>
         <li><a href="#noctua-110">1.1.0</a></li>
         <li><a href="#noctua-109000">1.0.9000</a></li>
         <li><a href="#noctua-100">1.0.0</a></li>
