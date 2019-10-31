@@ -8,7 +8,8 @@
 \usage{
 \S4method{sqlCreateTable}{AthenaConnection}(con, table = NULL,
   fields = NULL, field.types = NULL, partition = NULL,
-  s3.location = NULL, file.type = c("csv", "tsv", "parquet"), ...)
+  s3.location = NULL, file.type = c("csv", "tsv", "parquet"),
+  compress = FALSE, ...)
 }
 \arguments{
 \item{con}{A database connection.}
@@ -29,9 +30,12 @@ A data frame: field types are generated using
 
 \item{partition}{Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}}
 
-\item{s3.location}{s3 bucket to store Athena table}
+\item{s3.location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").}
 
 \item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]}
+
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
+Currently parquet compression isn't supported.}
 
 \item{...}{Other arguments used by individual methods.}
 }
