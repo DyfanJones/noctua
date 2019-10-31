@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -128,7 +128,8 @@
     <pre class="usage"><span class='co'># S4 method for AthenaConnection</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fields</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>field.types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>), <span class='no'>...</span>)</pre>
+  <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>),
+  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,11 +162,16 @@ Field types are unescaped.</p>
     </tr>
     <tr>
       <th>s3.location</th>
-      <td><p>s3 bucket to store Athena table</p></td>
+      <td><p>s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").</p></td>
     </tr>
     <tr>
       <th>file.type</th>
       <td><p>What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]</p></td>
+    </tr>
+    <tr>
+      <th>compress</th>
+      <td><p><code>FALSE | TRUE</code> To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
+Currently parquet compression isn't supported.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -225,7 +231,7 @@ Field types are unescaped.</p>
 #&gt;   petal_width DOUBLE,
 #&gt;   species STRING
 #&gt; )
-#&gt; PARTITIONED BY (20191023 STRING)
+#&gt; PARTITIONED BY (20191031 STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY ','
 #&gt; 	ESCAPED BY '\\'
@@ -248,7 +254,7 @@ Field types are unescaped.</p>
 #&gt;   petal_width DOUBLE,
 #&gt;   species STRING
 #&gt; )
-#&gt; PARTITIONED BY (20191023 STRING)
+#&gt; PARTITIONED BY (20191031 STRING)
 #&gt; STORED AS PARQUET
 #&gt; LOCATION 's3://path/to/athena/table/iris/'
 #&gt; ;</div><div class='input'>
