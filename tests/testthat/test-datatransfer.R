@@ -24,6 +24,9 @@ test_that("Testing data transfer between R and athena", {
                     var2 = bit64::as.integer64(1:10),
                     stringsAsFactors = F)
   
+  mtcars2 <- mtcars
+  row.names(mtcars2) <- NULL
+  
   DATE <- Sys.Date()
   dbWriteTable(con, "test_df", df, overwrite = T, partition = c("timesTamp" = format(DATE, "%Y%m%d")), s3.location = s3.location1)
   dbWriteTable(con, "test_df2", df, 
@@ -33,14 +36,17 @@ test_that("Testing data transfer between R and athena", {
                              "DAY" = format(DATE, "%d")),
                s3.location = s3.location2)
   dbWriteTable(con, "df_bigint", df2, overwrite = T, s3.location = s3.location2)
+  dbWriteTable(con, "mtcars2", mtcars2, overwrite = T, compress = T)
   
   # if data.table is available in namespace result returned as data.table
   test_df <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df where timestamp ='", format(Sys.Date(), "%Y%m%d"),"'")))
   test_df2 <- as.data.frame(dbGetQuery(con, paste0("select x, y, z from test_df2 where year = '", format(DATE, "%Y"), "' and month = '",format(DATE, "%m"), "' and day = '", format(DATE, "%d"),"'")))
   test_df3 <- as.data.frame(dbGetQuery(con, "select * from df_bigint"))
+  test_df4 <- as.data.frame(dbGetQuery(con, "select * from mtcars2"))
   expect_equal(test_df,df)
   expect_equal(test_df2,df)
   expect_equal(test_df3,df2)
+  expect_equal(test_df4, mtcars2)
   
   # clean up system environmental variables
   Sys.unsetenv("AWS_ACCESS_KEY_ID")

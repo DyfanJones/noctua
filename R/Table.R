@@ -12,7 +12,8 @@
 #'   `TRUE` if `overwrite` is also `TRUE`.
 #' @param field.types Additional field types used to override derived types.
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
-#' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
+#' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
+#'        By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.
 #' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 #' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
@@ -50,6 +51,18 @@
 #' # Checking if uploaded table exists in Athena
 #' dbExistsTable(con, "mtcars")
 #'
+#' # using default s3.location
+#' dbWriteTable(con, "iris", iris)
+#' 
+#' # Read entire table from Athena
+#' dbReadTable(con, "iris")
+#'
+#' # List all tables in Athena after uploading new table to Athena
+#' dbListTables(con)
+#' 
+#' # Checking if uploaded table exists in Athena
+#' dbExistsTable(con, "iris")
+#' 
 #' # Disconnect from Athena
 #' dbDisconnect(con)
 #' }
@@ -66,7 +79,7 @@ Athena_write_table <-
               is.data.frame(value),
               is.logical(overwrite),
               is.logical(append),
-              is.s3_uri(s3.location),
+              is.null(s3.location) || is.s3_uri(s3.location),
               is.null(partition) || is.character(partition) || is.list(partition),
               is.logical(compress))
     
@@ -74,6 +87,9 @@ Athena_write_table <-
       stop("partition ", x, " is a variable in data.frame ", deparse(substitute(value)), call. = FALSE)}})
     
     file.type = match.arg(file.type)
+    
+    # use default s3_staging directory is s3.location isn't provided
+    if (is.null(s3.location)) s3.location <- conn@info$s3_staging
     
     # made everything lower case due to aws Athena issue: https://aws.amazon.com/premiumsupport/knowledge-center/athena-aws-glue-msck-repair-table/
     name <- tolower(name)
@@ -145,24 +161,28 @@ Athena_write_table <-
 
 # send data to s3 is Athena registered location
 upload_data <- function(con, x, name, partition = NULL, s3.location= NULL,  file.type = NULL, compress = NULL) {
+  # formatting s3 partitions
   partition <- unlist(partition)
   partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
+  if (partition != "") partition <- paste0(partition, "/")
   
+  # s3_file name
   FileType <- if(compress) Compress(file.type, compress) else file.type
-  Name <- paste(name, FileType, sep = ".")
+  FileName <- paste(name, FileType, sep = ".")
+  
+  # s3 bucket and key split
   s3_info <- split_s3_uri(s3.location)
   s3_info$key <- gsub("/$", "", s3_info$key)
   split_key <- unlist(strsplit(s3_info$key,"/"))
   
   if(split_key[length(split_key)] == name || length(split_key) == 0) split_key[length(split_key)] <- ""
   s3_info$key <- paste(split_key, collapse = "/")
+  if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
   
-  if(s3_info$key != "" && partition == ""){s3_key <- paste(s3_info$key,name, Name, sep = "/")}
-  else if (s3_info$key == "" && partition != "") {s3_key <- paste(name, partition, Name, sep = "/")}
-  else if (s3_info$key == "" && partition == "") {s3_key <- paste(name, Name, sep = "/")}
-  else if (split_key[length(split_key)] != name || length(split_key) != 0) {
-    s3_key <- paste(s3_info$key, partition, Name, sep = "/")}
-  else {s3_key <- paste(s3_info$key, name, partition, Name, sep = "/")}
+  # s3 folder
+  name <- paste0(name, "/")
+  
+  s3_key <- sprintf("%s%s%s%s", s3_info$key, name, partition, FileName)
   
   obj <- readBin(x, "raw", n = file.size(x))
   tryCatch(con@ptr$S3$put_object(Body = obj, Bucket = s3_info$bucket,Key = s3_key))
@@ -228,7 +248,10 @@ NULL
 setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ...) {
   stopifnot(is.data.frame(value))
   value <- sqlRownamesToColumn(value, row.names)
-  names(value) <- tolower(gsub("\\.", "_", make.names(names(value), unique = TRUE)))
+  field_names <- tolower(gsub("\\.", "_", make.names(names(value), unique = TRUE)))
+  DIFF <- setdiff(field_names, names(value))
+  names(value) <- field_names
+  if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
   for(i in seq_along(value)){
     if(is.list(value[[i]])){
       value[[i]] <- sapply(value[[i]], paste, collapse = "|")
@@ -245,6 +268,7 @@ setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ..
 #' @param field.types Additional field types used to override derived types.
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/"). 
+#'        By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.
 #' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]
 #' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
 #'        Currently parquet compression isn't supported.
@@ -290,11 +314,14 @@ setMethod("sqlCreateTable", "AthenaConnection",
               is.data.frame(fields),
               is.null(field.types) || is.character(field.types),
               is.null(partition) || is.character(partition) || is.list(partition),
-              is.s3_uri(s3.location),
+              is.null(s3.location) || is.s3_uri(s3.location),
               is.logical(compress))
     
     field <- createFields(con, fields, field.types = field.types)
     file.type <- match.arg(file.type)
+    
+    # use default s3_staging directory is s3.location isn't provided
+    if (is.null(s3.location)) s3.location <- con@info$s3_staging
 
     table1 <- gsub(".*\\.", "", table)
     
