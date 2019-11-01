@@ -1,16 +1,11 @@
 ## Release Summary
-This is a quick release due to the changes in the dependent package `paws`. `paws` has enabled connection credentials to be passed through to `paws` objects, causing an error in several wrapping functions for example: `dbSendQuery`. In this release the bugs are addressed plus it contains new feature updates: 
-
-* Setting `data.table` as the default file parser
-* Handling of 'AWS Athena' `bigint` classes
+This is a feature updated, focusing on methods to compress flat files before submitting them to `Amazon Web Service S3`. 
 
 In this version I have:
+* created a new parameter in `dbWriteTable` called `compress` that enables compression method `gzip` to be utilised when sending data to AWS S3.
 
-* **BUG FIX:** all wrapper functions with error: `Error in call[[2]] : object of type 'closure' is not subsettable` have been fixed by the removal of `do.call`
-* Enabled connection parameters to pass through the new `config = list()` in `paws` objects
-* Correctly pass Amazon Web Service ('AWS') Athena `bigint` to R `integer64` class.
-* data.table has been made a dependency as `fread` and `fwrite` have been made the default file reader and writer to transfer data to and from 'AWS Athena'
-
+**Bug Fix**
+* Fixed minor bug of s3_uri being incorrectly built
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
 * All R examples with `\dontrun` have a dummy `AWS S3 Bucket uri` example and won't run until user replace the `AWS S3 bucket uri`.
@@ -23,18 +18,10 @@ In this version I have:
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ## R devtools::check_rhub() results
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
-checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Dyfan Jones <dyfan.r.jones@gmail.com>'
-  
-  Days since last update: 3
-  
-### Author notes:
-Due to the update in the dependency `paws` a bug has developed in several wrapper functions. This release addresses these bugs.
 
 ## unit tests (using testthat) results
-* OK:       36
+* OK:       37
 * Failed:   0
 * Warnings: 0
 * Skipped:  0
