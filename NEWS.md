@@ -1,3 +1,6 @@
+# noctua 1.2.0
+Updated package version for cran release
+
 # noctua 1.1.0.9001
 ### Minor Change
 * `s3.location` parameter is `dbWriteTable` can now be made nullable
