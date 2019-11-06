@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -119,6 +119,52 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-120" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-120" class="anchor"></a>noctua 1.2.0<small> Unreleased </small>
+</h1>
+<p>Updated package version for cran release</p>
+</div>
+    <div id="noctua-1109001" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1109001" class="anchor"></a>noctua 1.1.0.9001<small> Unreleased </small>
+</h1>
+<div id="minor-change" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor Change</h3>
+<ul>
+<li>
+<code>s3.location</code> parameter is <code>dbWriteTable</code> can now be made nullable</li>
+</ul>
+</div>
+<div id="backend-change" class="section level3">
+<h3 class="hasAnchor">
+<a href="#backend-change" class="anchor"></a>Backend Change</h3>
+<ul>
+<li>helper function <code>upload_data</code> has been rebuilt and removed the old “horrible” if statement with <code>paste</code> now the function relies on <code>sprintf</code> to construct the s3 location path. This method now is alot clearer in how the s3 location is created plus it enables a <code>dbWriteTable</code> to be simplified. <code>dbWriteTable</code> can now upload data to the default s3_staging directory created in <code>dbConnect</code> this simplifies <code>dbWriteTable</code> to :</li>
+</ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+
+con &lt;- dbConnect(noctua:athena())
+
+dbWrite(con, "iris", iris)</a></code></pre>
+</div>
+<div id="bug-fix" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug Fix</h3>
+<ul>
+<li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
+</ul>
+</div>
+<div id="unit-tests" class="section level3">
+<h3 class="hasAnchor">
+<a href="#unit-tests" class="anchor"></a>Unit Tests</h3>
+<ul>
+<li>
+<code>data transfer</code> test now tests compress, and default s3.location when transfering data</li>
+</ul>
+</div>
+</div>
     <div id="noctua-1109000" class="section level1">
 <h1 class="page-header">
 <a href="#noctua-1109000" class="anchor"></a>noctua 1.1.0.9000<small> Unreleased </small>
@@ -131,9 +177,9 @@
 </li>
 </ul>
 </div>
-<div id="minor-change" class="section level3">
+<div id="minor-change-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#minor-change" class="anchor"></a>Minor Change</h3>
+<a href="#minor-change-1" class="anchor"></a>Minor Change</h3>
 <ul>
 <li>
 <code>sqlCreateTable</code> info message will now only inform user if colnames have changed and display the colname that have changed</li>
@@ -173,16 +219,16 @@
 </li>
 </ul>
 </div>
-<div id="unit-tests" class="section level2">
+<div id="unit-tests-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-1" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>
 </div>
-<div id="minor-change-1" class="section level2">
+<div id="minor-change-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-1" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>dependency <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
 </ul>
@@ -239,6 +285,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-120">1.2.0</a></li>
+        <li><a href="#noctua-1109001">1.1.0.9001</a></li>
         <li><a href="#noctua-1109000">1.1.0.9000</a></li>
         <li><a href="#noctua-110">1.1.0</a></li>
         <li><a href="#noctua-109000">1.0.9000</a></li>
