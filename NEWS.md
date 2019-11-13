@@ -1,21 +1,24 @@
+# noctua 1.2.0
+Updated package version for cran release
+
 # noctua 1.1.0.9001
 ### Minor Change
 * `s3.location` parameter is `dbWriteTable` can now be made nullable
 
 ### Backend Change
-* helper function `upload_data` has been rebuilt and removed the old "horrible" if statement with `paste` now the function relies on `sprintf` to construct the s3 location path. This method now is alot clearer in how the s3 location is created plus it enables a `dbWriteTable` to be simplified. `dbWriteTable` can now upload data to the default s3_staging directory created in `dbConnect` this simplifies `dbWriteTable` to :
+* helper function `upload_data` has been rebuilt and removed the old "horrible" if statement with `paste` now the function relies on `sprintf` to construct the s3 location path. This method now is a lot clearer in how the s3 location is created plus it enables a `dbWriteTable` to be simplified. `dbWriteTable` can now upload data to the default s3_staging directory created in `dbConnect` this simplifies `dbWriteTable` to :
 ```
 library(DBI)
 
-con <- dbConnect(noctua:athena())
+con <- dbConnect(noctua::athena())
 
-dbWrite(con, "iris", iris)
+dbWriteTable(con, "iris", iris)
 ```
 ### Bug Fix
 * Info message wasn't being return when colnames needed changing for Athena DDL
 
 ### Unit Tests
-* `data transfer` test now tests compress, and default s3.location when transfering data
+* `data transfer` test now tests compress, and default s3.location when transferring data
 
 # noctua 1.1.0.9000
 ### New Feature
