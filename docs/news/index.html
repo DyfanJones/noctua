@@ -141,13 +141,13 @@
 <h3 class="hasAnchor">
 <a href="#backend-change" class="anchor"></a>Backend Change</h3>
 <ul>
-<li>helper function <code>upload_data</code> has been rebuilt and removed the old “horrible” if statement with <code>paste</code> now the function relies on <code>sprintf</code> to construct the s3 location path. This method now is alot clearer in how the s3 location is created plus it enables a <code>dbWriteTable</code> to be simplified. <code>dbWriteTable</code> can now upload data to the default s3_staging directory created in <code>dbConnect</code> this simplifies <code>dbWriteTable</code> to :</li>
+<li>helper function <code>upload_data</code> has been rebuilt and removed the old “horrible” if statement with <code>paste</code> now the function relies on <code>sprintf</code> to construct the s3 location path. This method now is a lot clearer in how the s3 location is created plus it enables a <code>dbWriteTable</code> to be simplified. <code>dbWriteTable</code> can now upload data to the default s3_staging directory created in <code>dbConnect</code> this simplifies <code>dbWriteTable</code> to :</li>
 </ul>
 <pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
 
-con &lt;- dbConnect(noctua:athena())
+con &lt;- dbConnect(noctua::athena())
 
-dbWrite(con, "iris", iris)</a></code></pre>
+dbWriteTable(con, "iris", iris)</a></code></pre>
 </div>
 <div id="bug-fix" class="section level3">
 <h3 class="hasAnchor">
@@ -161,7 +161,7 @@ dbWrite(con, "iris", iris)</a></code></pre>
 <a href="#unit-tests" class="anchor"></a>Unit Tests</h3>
 <ul>
 <li>
-<code>data transfer</code> test now tests compress, and default s3.location when transfering data</li>
+<code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
 </ul>
 </div>
 </div>

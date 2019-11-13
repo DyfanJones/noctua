@@ -12,7 +12,7 @@ library(DBI)
 
 con <- dbConnect(noctua::athena())
 
-dbWrite(con, "iris", iris)
+dbWriteTable(con, "iris", iris)
 ```
 ### Bug Fix
 * Info message wasn't being return when colnames needed changing for Athena DDL
