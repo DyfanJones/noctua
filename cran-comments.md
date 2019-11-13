@@ -18,7 +18,7 @@ In this version I have:
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ## R devtools::check_rhub() results
-
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ## unit tests (using testthat) results
 * OK:       37
