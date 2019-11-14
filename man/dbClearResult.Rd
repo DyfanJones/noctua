@@ -18,7 +18,7 @@
 }
 \description{
 Frees all resources (local and Athena) associated with result set. It does this by removing query output in AWS S3 Bucket,
-stopping query execution if still runnning and removed the connection resource locally.
+stopping query execution if still running and removed the connection resource locally.
 }
 \examples{
 \donttest{
