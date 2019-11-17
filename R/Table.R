@@ -16,8 +16,8 @@
 #'        By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.
 #' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
-#'        Currently parquet compression isn't supported.
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used., for file type "parquet" 
+#'                 "snappy" compression is used.
 #' @inheritParams DBI::sqlCreateTable
 #' @return \code{dbWriteTable()} returns \code{TRUE}, invisibly. If the table exists, and both append and overwrite
 #'         arguments are unset, or append = TRUE and the data frame with the new data has different column names,
