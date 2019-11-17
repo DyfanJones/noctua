@@ -118,7 +118,8 @@ Athena_write_table <-
     if(file.type == "parquet"){
       if(!requireNamespace("arrow", quietly=TRUE))
         stop("The package arrow is required for R to utilise Apache Arrow to create parquet files.", call. = FALSE)
-      else {arrow::write_parquet(value, FileLocation)}
+      else {cp <- if(compress) "snappy" else NULL
+            arrow::write_parquet(value, FileLocation, compress = cp)}
     }
     
     # writes out csv/tsv, uses data.table for extra speed
@@ -373,7 +374,7 @@ header <- function(obj, compress){
   compress <- if(!compress) "" else{switch(obj,
                                            csv = ",\n\t\t'compressionType'='gzip'",
                                            tsv = ",\n\t\t'compressionType'='gzip'",
-                                           parquet = stop("Compression is currently not supported for parquet file type", call. = F) #'tblproperties ("parquet.compress"="SNAPPY")'
+                                           parquet = 'tblproperties ("parquet.compress"="SNAPPY")'
   )}
   switch(obj,
          csv = paste0('TBLPROPERTIES ("skip.header.line.count"="1"',compress,');'),
@@ -386,6 +387,6 @@ Compress <- function(file.type, compress){
     switch(file.type,
            "csv" = paste(file.type, "gz", sep = "."),
            "tsv" = paste(file.type, "gz", sep = "."),
-           "parquet" = stop("Compression is currently not supported for parquet file type"))
+           "parquet" = paste("snappy", file.type, sep = "."))
   } else {file.type}
 }
