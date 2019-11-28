@@ -38,7 +38,7 @@ con <- dbConnect(noctua::athena())
 # write iris table to Athena                  
 dbWriteTable(con, "iris",
              iris,
-             partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
+             partition = c("timestamp" = format(Sys.Date(), "\%Y\%m\%d")),
              s3.location = "s3://path/to/store/athena/table/")
 
 # return table ddl

@@ -10,34 +10,26 @@
 \alias{update_work_group}
 \title{Athena Work Groups}
 \usage{
-create_work_group(
-  conn,
-  work_group = NULL,
+create_work_group(conn, work_group = NULL,
   enforce_work_group_config = FALSE,
   publish_cloud_watch_metrics = FALSE,
-  bytes_scanned_cut_off = 10000000L,
-  description = NULL,
-  tags = tag_options(key = NULL, value = NULL)
-)
+  bytes_scanned_cut_off = 10000000L, description = NULL,
+  tags = tag_options(key = NULL, value = NULL))
 
 tag_options(key = NULL, value = NULL)
 
-delete_work_group(conn, work_group = NULL, recursive_delete_option = FALSE)
+delete_work_group(conn, work_group = NULL,
+  recursive_delete_option = FALSE)
 
 list_work_groups(conn)
 
 get_work_group(conn, work_group = NULL)
 
-update_work_group(
-  conn,
-  work_group = NULL,
-  remove_output_location = FALSE,
-  enforce_work_group_config = FALSE,
+update_work_group(conn, work_group = NULL,
+  remove_output_location = FALSE, enforce_work_group_config = FALSE,
   publish_cloud_watch_metrics = FALSE,
-  bytes_scanned_cut_off = 10000000L,
-  description = NULL,
-  state = c("ENABLED", "DISABLED")
-)
+  bytes_scanned_cut_off = 10000000L, description = NULL,
+  state = c("ENABLED", "DISABLED"))
 }
 \arguments{
 \item{conn}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
