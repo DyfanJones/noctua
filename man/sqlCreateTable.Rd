@@ -6,10 +6,9 @@
 \alias{sqlCreateTable,AthenaConnection-method}
 \title{Creates query to create a simple Athena table}
 \usage{
-\S4method{sqlCreateTable}{AthenaConnection}(con, table = NULL,
-  fields = NULL, field.types = NULL, partition = NULL,
-  s3.location = NULL, file.type = c("csv", "tsv", "parquet"),
-  compress = FALSE, ...)
+\S4method{sqlCreateTable}{AthenaConnection}(con, table, fields,
+  field.types = NULL, partition = NULL, s3.location = NULL,
+  file.type = c("csv", "tsv", "parquet"), compress = FALSE, ...)
 }
 \arguments{
 \item{con}{A database connection.}

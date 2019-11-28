@@ -145,7 +145,7 @@ Athena_write_table <-
     upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress)
     
     if (!append) {
-      sql <- sqlCreateTable(conn, Name, value, field.types = field.types, 
+      sql <- sqlCreateTable(conn, table = Name, fields = value, field.types = field.types, 
                             partition = names(partition),
                             s3.location = s3.location, file.type = file.type,
                             compress = compress)
@@ -308,7 +308,7 @@ NULL
 #' @rdname sqlCreateTable
 #' @export
 setMethod("sqlCreateTable", "AthenaConnection",
-  function(con, table = NULL, fields = NULL, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("csv", "tsv", "parquet"),
+  function(con, table, fields, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("csv", "tsv", "parquet"),
            compress = FALSE, ...){
     if (!dbIsValid(con)) {stop("Connection already closed.", call. = FALSE)}
     stopifnot(is.character(table),
@@ -318,7 +318,7 @@ setMethod("sqlCreateTable", "AthenaConnection",
               is.null(s3.location) || is.s3_uri(s3.location),
               is.logical(compress))
     
-    field <- createFields(con, fields, field.types = field.types)
+    field <- createFields(con, fields = fields, field.types = field.types)
     file.type <- match.arg(file.type)
     
     # use default s3_staging directory is s3.location isn't provided
