@@ -5,9 +5,18 @@
 \alias{db_copy_to.AthenaConnection}
 \title{S3 implementation of \code{db_copy_to} for Athena}
 \usage{
-db_copy_to.AthenaConnection(con, table, values, overwrite = FALSE,
-  append = FALSE, types = NULL, partition = NULL,
-  s3_location = NULL, file_type = c("csv", "tsv", "parquet"), ...)
+db_copy_to.AthenaConnection(
+  con,
+  table,
+  values,
+  overwrite = FALSE,
+  append = FALSE,
+  types = NULL,
+  partition = NULL,
+  s3_location = NULL,
+  file_type = c("csv", "tsv", "parquet"),
+  ...
+)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
@@ -65,7 +74,7 @@ dbExistsTable(con, "mtcars")
 
 # Write Athena table from tbl_sql
 athena_mtcars <- tbl(con, "mtcars")
-mtcars_filter <- athena_mtcars \%>\% filter(gear >=4)
+mtcars_filter <- athena_mtcars %>% filter(gear >=4)
 
 copy_to(con, mtcars_filter)
 

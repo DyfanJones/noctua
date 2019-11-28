@@ -45,14 +45,14 @@ copy_to(con, mtcars,
              
 # Write Athena table from tbl_sql
 athena_mtcars <- tbl(con, "mtcars")
-mtcars_filter <- athena_mtcars \%>\% filter(gear >=4)
+mtcars_filter <- athena_mtcars %>% filter(gear >=4)
 
 # create athena with unique table name
-mtcars_filer \%>\% 
+mtcars_filer %>% 
   compute()
 
 # create athena with specified name and s3 location
-mtcars_filer \%>\% 
+mtcars_filer %>% 
     compute("mtcars_filer",
             s3_location = "s3://mybucket/mtcars_filer/")
 

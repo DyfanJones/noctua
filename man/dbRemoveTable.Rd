@@ -35,7 +35,7 @@ con <- dbConnect(noctua::athena())
 
 # Write data.frame to Athena table
 dbWriteTable(con, "mtcars", mtcars,
-             partition=c("TIMESTAMP" = format(Sys.Date(), "\%Y\%m\%d")),
+             partition=c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
              s3.location = "s3://mybucket/data/")
              
 # Remove Table from Athena
