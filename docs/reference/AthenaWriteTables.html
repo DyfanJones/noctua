@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
       </span>
     </div>
 
@@ -201,8 +201,8 @@ By default s3.location is set s3 staging directory from <code><a href='AthenaCon
     </tr>
     <tr>
       <th>compress</th>
-      <td><p><code>FALSE | TRUE</code> To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
-Currently parquet compression isn't supported.</p></td>
+      <td><p><code>FALSE | TRUE</code> To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used., for file type "parquet" 
+"snappy" compression is used.</p></td>
     </tr>
     <tr>
       <th>...</th>

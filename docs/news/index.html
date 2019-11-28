@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
       </span>
     </div>
 
@@ -119,9 +119,28 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-121" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-121" class="anchor"></a>noctua 1.2.1<small> Unreleased </small>
+</h1>
+<div id="new-features" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New Features:</h3>
+<ul>
+<li>Parquet file type can now be compress using snappy compression when writting data to S3.</li>
+</ul>
+</div>
+<div id="bug-fixed" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixed" class="anchor"></a>Bug fixed</h3>
+<ul>
+<li>Older versions of R are returning errors when function <code>dbWriteTable</code> is called. The bug is due to function <code>sqlCreateTable</code> which <code>dbWriteTable</code> calls. Parameters <code>table</code> and <code>fields</code> were set to <code>NULL</code>. This has now been fixed.</li>
+</ul>
+</div>
+</div>
     <div id="noctua-120" class="section level1">
 <h1 class="page-header">
-<a href="#noctua-120" class="anchor"></a>noctua 1.2.0<small> Unreleased </small>
+<a href="#noctua-120" class="anchor"></a>noctua 1.2.0<small> 2019-11-14 </small>
 </h1>
 <p>Updated package version for cran release</p>
 </div>
@@ -198,9 +217,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <h1 class="page-header">
 <a href="#noctua-109000" class="anchor"></a>noctua 1.0.9000<small> Unreleased </small>
 </h1>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New Features</h2>
+<a href="#new-features-1" class="anchor"></a>New Features</h2>
 <ul>
 <li>credentials are now passed through the new <code>config = list()</code> parameter is <code>paws</code> objects</li>
 <li>
@@ -249,9 +268,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <ul>
 <li><strong>Initial RAthena release</strong></li>
 </ul>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New Features</h2>
+<a href="#new-features-2" class="anchor"></a>New Features</h2>
 <div id="dbi" class="section level3">
 <h3 class="hasAnchor">
 <a href="#dbi" class="anchor"></a>DBI</h3>
@@ -285,6 +304,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-121">1.2.1</a></li>
         <li><a href="#noctua-120">1.2.0</a></li>
         <li><a href="#noctua-1109001">1.1.0.9001</a></li>
         <li><a href="#noctua-1109000">1.1.0.9000</a></li>
