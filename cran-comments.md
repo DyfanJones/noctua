@@ -1,11 +1,11 @@
 ## Release Summary
-This is a feature updated, focusing on methods to compress flat files before submitting them to `Amazon Web Service S3`. 
-
-In this version I have:
-* created a new parameter in `dbWriteTable` called `compress` that enables compression method `gzip` to be utilised when sending data to AWS S3.
+This is update focuses on fixing a bug with `dbWriteTable`.
 
 **Bug Fix**
-* Fixed minor bug of s3_uri being incorrectly built in helper function `upload_data`
+The helper function `sqlCreateTable` had it's generic parameters `table` and `fields` set to NULL. For more recent versions of R this is not an issue however for older versions of R this raises an error.
+
+**New Feature**
+parquet file format now can be compressed using snappy compression when uploading to amazon s3
 
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
