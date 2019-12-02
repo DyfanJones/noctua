@@ -17,3 +17,14 @@
 Implementations of pure virtual functions defined in the `DBI` package
 for AthenaConnection objects.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{ptr}}{a list of connecting objects from the SDK paws package.}
+
+\item{\code{info}}{a list of metadata}
+
+\item{\code{connection}}{contains the \code{AthenaConnection} class object}
+}}
+
+\keyword{internal}
