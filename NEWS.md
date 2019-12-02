@@ -1,3 +1,10 @@
+# RAthena 1.2.1.9000
+### Bug Fixed
+Thanks to @OssiLehtinen for identifying issue around `sql_translate_env`. Previously `noctua` would take the default `dplyr::sql_translate_env`, now `noctua` has a custom method that uses Data types from: https://docs.aws.amazon.com/athena/latest/ug/data-types.html and window functions from: https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html
+
+### Unit tests
+* `dplyr sql_translate_env` tests if R functions are correct translated in to Athena sql syntax.
+
 # noctua 1.2.1
 ### New Features:
 * Parquet file type can now be compress using snappy compression when writting data to S3.
