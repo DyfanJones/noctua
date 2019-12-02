@@ -5,7 +5,11 @@ NULL
 #'
 #' Implementations of pure virtual functions defined in the `DBI` package
 #' for AthenaConnection objects.
+#' @slot ptr a list of connecting objects from the SDK paws package.
+#' @slot info a list of metadata objects
+#' @slot connection contains the \code{AthenaConnection} class object
 #' @name AthenaConnection
+#' @keywords internal
 #' @inheritParams methods::show
 NULL
 
