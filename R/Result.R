@@ -141,11 +141,10 @@ setMethod(
       tryCatch(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, MaxResults = n))
       
       output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
-      df <- t(sapply(output, function(x) unlist(x)))
-      colnames(df) <- tolower(unname(df[1,]))
-      df <- data.frame(df)[-1,]
-      rownames(df) <- NULL
-      return(df)
+      dt <- rbindlist(output)
+      colnames(dt) <- tolower(unname(dt[1,]))
+      rownames(dt) <- NULL
+      return(dt[-1,])
     }
     
     #create temp file
