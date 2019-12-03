@@ -8,6 +8,7 @@ NULL
 #' @slot ptr a list of connecting objects from the SDK paws package.
 #' @slot info a list of metadata objects
 #' @slot connection contains the \code{AthenaConnection} class object
+#' @slot quote syntax to quote sql query when creating athena ddl
 #' @name AthenaConnection
 #' @keywords internal
 #' @inheritParams methods::show
@@ -62,7 +63,7 @@ AthenaConnection <-
                  poll_interval = poll_interval, encryption_option = encryption_option,
                  kms_key = kms_key, expiration = aws_expiration)
     
-    res <- new("AthenaConnection",  ptr = ptr, info = info)
+    res <- new("AthenaConnection",  ptr = ptr, info = info, quote = "`")
   }
 
 #' @rdname AthenaConnection
@@ -72,7 +73,8 @@ setClass(
   contains = "DBIConnection",
   slots = list(
     ptr = "list",
-    info = "list")
+    info = "list",
+    quote = "character")
 )
 
 #' @rdname AthenaConnection
