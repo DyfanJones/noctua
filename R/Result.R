@@ -161,11 +161,15 @@ setMethod(
     tryCatch(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
                                                                          MaxResults = as.integer(1)))
     
-    Type <- AthenaToRDataType(result_class$ResultSet$ResultSetMetadata$ColumnInfo)
+    Type2 <- Type <- AthenaToRDataType(result_class$ResultSet$ResultSetMetadata$ColumnInfo)
+    # Type2 is to handle issue with data.table fread 
+    Type2[Type2 %in% "POSIXct"] <- "character"
     
     if(grepl("\\.csv$",result_info$key)){
       # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
-      output <- data.table::fread(File, col.names = names(Type), colClasses = unname(Type), showProgress = F)
+      output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), showProgress = F, na.strings="")
+      # formatting POSIXct: from string to POSIXct
+      for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]]))
     } else{
       file_con <- file(File)
       output <- suppressWarnings(readLines(file_con))
