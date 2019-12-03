@@ -22,9 +22,11 @@ for AthenaConnection objects.
 \describe{
 \item{\code{ptr}}{a list of connecting objects from the SDK paws package.}
 
-\item{\code{info}}{a list of metadata}
+\item{\code{info}}{a list of metadata objects}
 
 \item{\code{connection}}{contains the \code{AthenaConnection} class object}
+
+\item{\code{quote}}{syntax to quote sql query when creating athena ddl}
 }}
 
 \keyword{internal}
