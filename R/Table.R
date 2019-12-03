@@ -264,7 +264,7 @@ setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ..
   # create timestamp in athena format: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
   for (col in posixct_cols) set(Value, j=col, value=strftime(Value[[col]], format="%Y-%m-%d %H:%M:%OS3"))
   
-  # preprosing list format
+  # preprocessing list format
   list_cols <- names(Value)[sapply(col_types, function(x) "list" %in% x)]
   for (col in list_cols) set(Value, j=col, value=sapply(Value[[col]], paste, collapse = "|"))
   
