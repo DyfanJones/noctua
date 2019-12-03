@@ -14,7 +14,7 @@ test_that("Testing class formation", {
   DBI::dbClearResult(res)
 
   # testing components of s4 class
-  expect_identical(names(attributes(con)), c("ptr", "info","class"))
+  expect_identical(names(attributes(con)), c("ptr", "info","quote","class"))
   expect_identical(names(attributes(res)), c("connection", "info", "class"))
   expect_s4_class(con,"AthenaConnection")
   expect_s4_class(res,"AthenaResult")

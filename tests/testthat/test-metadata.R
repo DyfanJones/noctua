@@ -5,8 +5,8 @@ context("Athena Metadata")
 # Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
 # Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
-df_col_info <- data.frame(field_name = c("x","y", "z", "timestamp"),
-                          type = c("integer", "varchar", "boolean", "varchar"), stringsAsFactors = F)
+df_col_info <- data.frame(field_name = c("w","x","y", "z", "timestamp"),
+                          type = c("timestamp", "integer", "varchar", "boolean", "varchar"), stringsAsFactors = F)
 
 test_that("Returning meta data from query",{
   skip_if_no_env()

@@ -109,6 +109,8 @@ Athena_write_table <-
     on.exit({unlink(t)
       if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
     
+    # return original Athena Types
+    if(is.null(field.types)) field.types <- dbDataType(conn, value)
     value <- sqlData(conn, value, row.names = row.names)
     
     # compress file
@@ -248,17 +250,25 @@ NULL
 #' @export
 setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ...) {
   stopifnot(is.data.frame(value))
-  value <- sqlRownamesToColumn(value, row.names)
-  field_names <- tolower(gsub("\\.", "_", make.names(names(value), unique = TRUE)))
-  DIFF <- setdiff(field_names, names(value))
-  names(value) <- field_names
+  Value <- copy(value)
+  Value <- sqlRownamesToColumn(Value, row.names)
+  field_names <- tolower(gsub("\\.", "_", make.names(names(Value), unique = TRUE)))
+  DIFF <- setdiff(field_names, names(Value))
+  names(Value) <- field_names
   if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
-  for(i in seq_along(value)){
-    if(is.list(value[[i]])){
-      value[[i]] <- sapply(value[[i]], paste, collapse = "|")
-    }
-  }
-  value
+  # get R col types
+  col_types <- sapply(Value, class)
+  
+  # preprosing proxict format
+  posixct_cols<- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
+  # create timestamp in athena format: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
+  for (col in posixct_cols) set(Value, j=col, value=strftime(Value[[col]], format="%Y-%m-%d %H:%M:%OS3"))
+  
+  # preprocessing list format
+  list_cols <- names(Value)[sapply(col_types, function(x) "list" %in% x)]
+  for (col in list_cols) set(Value, j=col, value=sapply(Value[[col]], paste, collapse = "|"))
+  
+  Value
 })
 
 #' Creates query to create a simple Athena table
@@ -325,6 +335,7 @@ setMethod("sqlCreateTable", "AthenaConnection",
     if (is.null(s3.location)) s3.location <- con@info$s3_staging
 
     table1 <- gsub(".*\\.", "", table)
+    table <- quote_identifier(con, table)
     
     s3.location <- gsub("/$", "", s3.location)
     if(grepl(table1, s3.location)){s3.location <- gsub(paste0("/", table1,"$"), "", s3.location)}
@@ -352,6 +363,8 @@ createFields <- function(con, fields, field.types) {
   field_names <- tolower(gsub("\\.", "_", make.names(names(fields), unique = TRUE)))
   DIFF <- setdiff(field_names, names(fields))
   if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
+  
+  field_names <- quote_identifier(con, field_names)
   field.types <- unname(fields)
   paste0(field_names, " ", field.types)
 }
@@ -389,4 +402,18 @@ Compress <- function(file.type, compress){
            "tsv" = paste(file.type, "gz", sep = "."),
            "parquet" = paste("snappy", file.type, sep = "."))
   } else {file.type}
+}
+
+# helper function to format column and table name
+quote_identifier <- function(conn, x, ...) {
+  if (length(x) == 0L) {
+    return(DBI::SQL(character()))
+  }
+  if (any(is.na(x))) {
+    stop("Cannot pass NA to dbQuoteIdentifier()", call. = FALSE)
+  }
+  if (nzchar(conn@quote)) {
+    x <- gsub(conn@quote, paste0(conn@quote, conn@quote), x, fixed = TRUE)
+  }
+  DBI::SQL(paste(conn@quote, encodeString(x), conn@quote, sep = ""))
 }

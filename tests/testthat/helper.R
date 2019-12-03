@@ -9,9 +9,9 @@ skip_if_no_env <- function(){
 # expected athena ddl's
 tbl_ddl <- 
   list(tbl1 = 
-DBI::SQL(paste0("CREATE EXTERNAL TABLE test_df (
-  x INT,
-  y STRING
+DBI::SQL(paste0("CREATE EXTERNAL TABLE `test_df` (
+  `x` INT,
+  `y` STRING
 )
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ','
@@ -20,9 +20,9 @@ ROW FORMAT DELIMITED
 "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl2 = 
-DBI::SQL(paste0("CREATE EXTERNAL TABLE test_df (
-  x INT,
-  y STRING
+DBI::SQL(paste0("CREATE EXTERNAL TABLE `test_df` (
+  `x` INT,
+  `y` STRING
 )
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY '\t'
@@ -31,14 +31,14 @@ ROW FORMAT DELIMITED
            "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")), 
 tbl3 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE test_df (
-  x INT,
-  y STRING
+DBI::SQL(paste0("CREATE EXTERNAL TABLE `test_df` (
+  `x` INT,
+  `y` STRING
 )
 STORED AS PARQUET
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'\n;")),
 tbl4 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE test_df (\n  x INT,\n  y STRING\n)
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `test_df` (\n  `x` INT,\n  `y` STRING\n)
 PARTITIONED BY (timestamp STRING)
 STORED AS PARQUET
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'\n;")))
