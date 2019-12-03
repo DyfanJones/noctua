@@ -1,3 +1,12 @@
+# noctua 1.2.1.9002
+### Bug Fixed
+* Thanks to @OssiLehtinen for identifying issue around uploading class `POSIXct` to Athena. This class was convert incorrectly and AWS Athena would return NA instead. `noctua` will now correctly convert `POSIXct` to timestamp but will also correct read in timestamp into `POSIXct`
+
+* Thanks to @OssiLehtinen for discovering an issue with `NA` in string format. Before `noctua` would return `NA` in string class as `""` this has now been fixed.
+
+### Unit tests
+* `POSIXct` class has now been added to data transfer unit test
+
 # noctua 1.2.1.9001
 ### Bug Fixed
 When returning a single column data.frame from Athena, `noctua` would translate output into a vector with current the method `dbFetch` n = 0.
