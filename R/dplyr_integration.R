@@ -93,8 +93,9 @@ db_save_query.AthenaConnection <- function(con, sql, name ,
                                            ...){
   stopifnot(is.null(s3_location) || is.s3_uri(s3_location))
   file_type = match.arg(file_type)
-  tt_sql <- paste0("CREATE TABLE ",name, " ", db_save_query_with(file_type, s3_location, partition), "AS ",
-                   sql, ";")
+  tt_sql <- SQL(paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
+                       " ", db_save_query_with(file_type, s3_location, partition), "AS ",
+                       sql, ";"))
   res <- dbExecute(con, tt_sql)
   # check if execution failed
   query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId)
