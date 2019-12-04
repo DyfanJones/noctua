@@ -335,7 +335,7 @@ setMethod("sqlCreateTable", "AthenaConnection",
     if (is.null(s3.location)) s3.location <- con@info$s3_staging
 
     table1 <- gsub(".*\\.", "", table)
-    table <- quote_identifier(con, table)
+    table <- paste0(quote_identifier(con,  unlist(strsplit(table,"\\."))), collapse = ".")
     
     s3.location <- gsub("/$", "", s3.location)
     if(grepl(table1, s3.location)){s3.location <- gsub(paste0("/", table1,"$"), "", s3.location)}
@@ -357,6 +357,7 @@ createFields <- function(con, fields, field.types) {
     fields <- vapply(fields, function(x) DBI::dbDataType(con, x), character(1))
   }
   if (!is.null(field.types)) {
+    names(field.types) <- tolower(gsub("\\.", "_", make.names(names(field.types), unique = TRUE)))
     fields[names(field.types)] <- field.types
   }
   
@@ -410,7 +411,7 @@ quote_identifier <- function(conn, x, ...) {
     return(DBI::SQL(character()))
   }
   if (any(is.na(x))) {
-    stop("Cannot pass NA to dbQuoteIdentifier()", call. = FALSE)
+    stop("Cannot pass NA to sqlCreateTable()", call. = FALSE)
   }
   if (nzchar(conn@quote)) {
     x <- gsub(conn@quote, paste0(conn@quote, conn@quote), x, fixed = TRUE)
