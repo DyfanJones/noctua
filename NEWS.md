@@ -1,3 +1,7 @@
+# noctua 1.2.1.9003
+### Bug Fixed
+* Fixed bug in regards to Athena DDL being created incorrectly when passed from `dbWriteTable`
+
 # noctua 1.2.1.9002
 ### Bug Fixed
 * Thanks to @OssiLehtinen for identifying issue around uploading class `POSIXct` to Athena. This class was convert incorrectly and AWS Athena would return NA instead. `noctua` will now correctly convert `POSIXct` to timestamp but will also correct read in timestamp into `POSIXct`
