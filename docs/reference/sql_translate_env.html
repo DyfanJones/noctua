@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Athena Connection Methods — AthenaConnection • noctua</title>
+<title>AWS Athena backend dbplyr — sql_translate_env • noctua</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,10 @@
 
 
 
-<meta property="og:title" content="Athena Connection Methods — AthenaConnection" />
-<meta property="og:description" content="Implementations of pure virtual functions defined in the `DBI` package
-for AthenaConnection objects." />
+<meta property="og:title" content="AWS Athena backend dbplyr — sql_translate_env" />
+<meta property="og:description" content="Create s3 implementation of sql_translate_env for AWS Athena sql translate envirnoment based off
+Athena Data Types and 
+DML Queries, Functions, and Operators" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -117,49 +118,35 @@ for AthenaConnection objects." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Athena Connection Methods</h1>
-    <small class="dont-index">Source: <a href='https://github.com/DyfanJones/noctua/blob/master/R/Connection.R'><code>R/Connection.R</code></a>, <a href='https://github.com/DyfanJones/noctua/blob/master/R/Result.R'><code>R/Result.R</code></a></small>
-    <div class="hidden name"><code>AthenaConnection.Rd</code></div>
+    <h1>AWS Athena backend dbplyr</h1>
+    <small class="dont-index">Source: <a href='https://github.com/DyfanJones/noctua/blob/master/R/sql_translate_env.R'><code>R/sql_translate_env.R</code></a></small>
+    <div class="hidden name"><code>sql_translate_env.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Implementations of pure virtual functions defined in the `DBI` package
-for AthenaConnection objects.</p>
+    <p>Create s3 implementation of <code>sql_translate_env</code> for AWS Athena sql translate envirnoment based off
+<a href='https://docs.aws.amazon.com/athena/latest/ug/data-types.html'>Athena Data Types</a> and 
+<a href='https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html'>DML Queries, Functions, and Operators</a></p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for AthenaConnection</span>
-<span class='fu'>show</span>(<span class='no'>object</span>)</pre>
+    <pre class="usage"><span class='fu'>sql_translate_env.AthenaConnection</span>(<span class='no'>con</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>Any R object</p></td>
+      <th>con</th>
+      <td><p>An <code><a href='AthenaConnection.html'>AthenaConnection</a></code> object, produced by
+[DBI::dbConnect()]</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
-
-    
-
-<dl class='dl-horizontal'>
-<dt><code>ptr</code></dt><dd><p>a list of connecting objects from the SDK paws package.</p></dd>
-
-<dt><code>info</code></dt><dd><p>a list of metadata objects</p></dd>
-
-<dt><code>connection</code></dt><dd><p>contains the <code>AthenaConnection</code> class object</p></dd>
-
-<dt><code>quote</code></dt><dd><p>syntax to quote sql query when creating athena ddl</p></dd>
-
-</dl>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#slots">Slots</a></li>
     </ul>
 
   </div>

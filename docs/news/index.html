@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -119,9 +119,126 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-130" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-130" class="anchor"></a>noctua 1.3.0<small> Unreleased </small>
+</h1>
+<p>Updated package version for cran release</p>
+</div>
+    <div id="noctua-1219004" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1219004" class="anchor"></a>noctua 1.2.1.9004<small> Unreleased </small>
+</h1>
+<div id="major-change" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-change" class="anchor"></a>Major Change</h3>
+<ul>
+<li>
+<code>dbWriteTable</code> now will split <code>gzip</code> compressed files to improve AWS Athena performance. By default <code>gzip</code> compressed files will be split into 20.</li>
+</ul>
+<p>Performance results</p>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+X &lt;- 1e8
+df &lt;- data.frame(w =runif(X),
+                 x = 1:X,
+                 y = sample(letters, X, replace = T), 
+                 z = sample(c(TRUE, FALSE), X, replace = T))
+con &lt;- dbConnect(noctua::athena())
+# upload dataframe with different splits
+dbWriteTable(con, "test_split1", df, compress = T, max.batch = nrow(df), overwrite = T) # no splits
+dbWriteTable(con, "test_split2", df, compress = T, max.batch = 0.05 * nrow(df), overwrite = T) # 20 splits
+dbWriteTable(con, "test_split3", df, compress = T, max.batch = 0.1 * nrow(df), overwrite = T) # 10 splits</a></code></pre>
+<p>AWS Athena performance results from AWS console (query executed: <code>select count(*) from ....</code> ):</p>
+<ul>
+<li>test_split1: (Run time: 38.4 seconds, Data scanned: 1.16 GB)</li>
+<li>test_split2: (Run time: 3.73 seconds, Data scanned: 1.16 GB)</li>
+<li>test_split3: (Run time: 5.47 seconds, Data scanned: 1.16 GB)</li>
+</ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+X &lt;- 1e8
+df &lt;- data.frame(w =runif(X),
+                 x = 1:X,
+                 y = sample(letters, X, replace = T), 
+                 z = sample(c(TRUE, FALSE), X, replace = T))
+con &lt;- dbConnect(noctua::athena())
+dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will now split compressed file into 20 equal size files.</a></code></pre>
+<p>Added information message to inform user about what files have been added to S3 location if user is overwritting an Athena table.</p>
+</div>
+<div id="minor-change" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor Change</h3>
+<ul>
+<li>
+<code>copy_to</code> method now supports compress and max_batch, to align with <code>dbWriteTable</code>
+</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-1219003" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1219003" class="anchor"></a>noctua 1.2.1.9003<small> Unreleased </small>
+</h1>
+<div id="bug-fixed" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixed" class="anchor"></a>Bug Fixed</h3>
+<ul>
+<li>Fixed bug in regards to Athena DDL being created incorrectly when passed from <code>dbWriteTable</code>
+</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-1219002" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1219002" class="anchor"></a>noctua 1.2.1.9002<small> Unreleased </small>
+</h1>
+<div id="bug-fixed-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixed-1" class="anchor"></a>Bug Fixed</h3>
+<ul>
+<li><p>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for identifying issue around uploading class <code>POSIXct</code> to Athena. This class was convert incorrectly and AWS Athena would return NA instead. <code>noctua</code> will now correctly convert <code>POSIXct</code> to timestamp but will also correct read in timestamp into <code>POSIXct</code></p></li>
+<li><p>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for discovering an issue with <code>NA</code> in string format. Before <code>noctua</code> would return <code>NA</code> in string class as <code>""</code> this has now been fixed.</p></li>
+</ul>
+</div>
+<div id="unit-tests" class="section level3">
+<h3 class="hasAnchor">
+<a href="#unit-tests" class="anchor"></a>Unit tests</h3>
+<ul>
+<li>
+<code>POSIXct</code> class has now been added to data transfer unit test</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-1219001" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1219001" class="anchor"></a>noctua 1.2.1.9001<small> Unreleased </small>
+</h1>
+<div id="bug-fixed-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixed-2" class="anchor"></a>Bug Fixed</h3>
+<p>When returning a single column data.frame from Athena, <code>noctua</code> would translate output into a vector with current the method <code>dbFetch</code> n = 0.</p>
+</div>
+</div>
+    <div id="noctua-1219000" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1219000" class="anchor"></a>noctua 1.2.1.9000<small> Unreleased </small>
+</h1>
+<div id="bug-fixed-3" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixed-3" class="anchor"></a>Bug Fixed</h3>
+<p>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for identifying issue around <code>sql_translate_env</code>. Previously <code>noctua</code> would take the default <code><a href="https://dplyr.tidyverse.org/reference/backend_dbplyr.html">dplyr::sql_translate_env</a></code>, now <code>noctua</code> has a custom method that uses Data types from: <a href="https://docs.aws.amazon.com/athena/latest/ug/data-types.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/data-types.html</a> and window functions from: <a href="https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html</a></p>
+</div>
+<div id="unit-tests-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#unit-tests-1" class="anchor"></a>Unit tests</h3>
+<ul>
+<li>
+<code>dplyr sql_translate_env</code> tests if R functions are correct translated in to Athena sql syntax.</li>
+</ul>
+</div>
+</div>
     <div id="noctua-121" class="section level1">
 <h1 class="page-header">
-<a href="#noctua-121" class="anchor"></a>noctua 1.2.1<small> Unreleased </small>
+<a href="#noctua-121" class="anchor"></a>noctua 1.2.1<small> 2019-11-28 </small>
 </h1>
 <div id="new-features" class="section level3">
 <h3 class="hasAnchor">
@@ -130,9 +247,9 @@
 <li>Parquet file type can now be compress using snappy compression when writting data to S3.</li>
 </ul>
 </div>
-<div id="bug-fixed" class="section level3">
+<div id="bug-fixed-4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixed" class="anchor"></a>Bug fixed</h3>
+<a href="#bug-fixed-4" class="anchor"></a>Bug fixed</h3>
 <ul>
 <li>Older versions of R are returning errors when function <code>dbWriteTable</code> is called. The bug is due to function <code>sqlCreateTable</code> which <code>dbWriteTable</code> calls. Parameters <code>table</code> and <code>fields</code> were set to <code>NULL</code>. This has now been fixed.</li>
 </ul>
@@ -148,9 +265,9 @@
 <h1 class="page-header">
 <a href="#noctua-1109001" class="anchor"></a>noctua 1.1.0.9001<small> Unreleased </small>
 </h1>
-<div id="minor-change" class="section level3">
+<div id="minor-change-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#minor-change" class="anchor"></a>Minor Change</h3>
+<a href="#minor-change-1" class="anchor"></a>Minor Change</h3>
 <ul>
 <li>
 <code>s3.location</code> parameter is <code>dbWriteTable</code> can now be made nullable</li>
@@ -175,9 +292,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
 </div>
-<div id="unit-tests" class="section level3">
+<div id="unit-tests-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#unit-tests" class="anchor"></a>Unit Tests</h3>
+<a href="#unit-tests-2" class="anchor"></a>Unit Tests</h3>
 <ul>
 <li>
 <code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
@@ -196,9 +313,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </li>
 </ul>
 </div>
-<div id="minor-change-1" class="section level3">
+<div id="minor-change-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#minor-change-1" class="anchor"></a>Minor Change</h3>
+<a href="#minor-change-2" class="anchor"></a>Minor Change</h3>
 <ul>
 <li>
 <code>sqlCreateTable</code> info message will now only inform user if colnames have changed and display the colname that have changed</li>
@@ -238,23 +355,23 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </li>
 </ul>
 </div>
-<div id="unit-tests-1" class="section level2">
+<div id="unit-tests-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-1" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-3" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>
 </div>
-<div id="minor-change-2" class="section level2">
+<div id="minor-change-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-3" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>dependency <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
 </ul>
 </div>
-<div id="major-change" class="section level2">
+<div id="major-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-change" class="anchor"></a>Major Change</h2>
+<a href="#major-change-1" class="anchor"></a>Major Change</h2>
 <ul>
 <li>
 <code>data.table</code> is now used as the default file parser <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">data.table::fread</a></code> / <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html">data.table::fwrite</a></code>. This isn’t a breaking change as <code>data.table</code> was used before however this change makes <code>data.table</code> to default file parser.</li>
@@ -304,6 +421,12 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-130">1.3.0</a></li>
+        <li><a href="#noctua-1219004">1.2.1.9004</a></li>
+        <li><a href="#noctua-1219003">1.2.1.9003</a></li>
+        <li><a href="#noctua-1219002">1.2.1.9002</a></li>
+        <li><a href="#noctua-1219001">1.2.1.9001</a></li>
+        <li><a href="#noctua-1219000">1.2.1.9000</a></li>
         <li><a href="#noctua-121">1.2.1</a></li>
         <li><a href="#noctua-120">1.2.0</a></li>
         <li><a href="#noctua-1109001">1.1.0.9001</a></li>
