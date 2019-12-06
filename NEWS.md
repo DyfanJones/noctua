@@ -1,4 +1,7 @@
-# noctua 1.4.1.9004
+# noctua 1.3.0
+Updated package version for cran release
+
+# noctua 1.2.1.9004
 ### Major Change
 * `dbWriteTable` now will split `gzip` compressed files to improve AWS Athena performance. By default `gzip` compressed files will be split into 20.
 

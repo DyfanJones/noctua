@@ -1,5 +1,12 @@
 ## Release Summary
-TBC 
+This release is a feature relase, focusing on:
+
+**New Features**
+* `dplyr::sql_translate_env` method for noctua
+* Rebuilt backend of `dbWriteTable` when uploading compressed `gzip` files to Amazon Web Service (AWS) S3. Now `gzip` files are split, to increase AWS Athena performance (initial tests show an improvement of x10). This may cause issues when overwriting existing tables in AWS Athena, an information message has been created to inform users to check s3 the files have be replaced correctly.
+
+**Bug Fix**
+* Issue with creating DDL, tables created with special characters would fail due to different quotation syntax needed.
 
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
