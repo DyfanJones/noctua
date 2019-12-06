@@ -1,3 +1,43 @@
+# noctua 1.4.1.9004
+### Major Change
+* `dbWriteTable` now will split `gzip` compressed files to improve AWS Athena performance. By default `gzip` compressed files will be split into 20.
+
+Performance results
+```
+library(DBI)
+X <- 1e8
+df <- data.frame(w =runif(X),
+                 x = 1:X,
+                 y = sample(letters, X, replace = T), 
+                 z = sample(c(TRUE, FALSE), X, replace = T))
+con <- dbConnect(noctua::athena())
+# upload dataframe with different splits
+dbWriteTable(con, "test_split1", df, compress = T, max.batch = nrow(df), overwrite = T) # no splits
+dbWriteTable(con, "test_split2", df, compress = T, max.batch = 0.05 * nrow(df), overwrite = T) # 20 splits
+dbWriteTable(con, "test_split3", df, compress = T, max.batch = 0.1 * nrow(df), overwrite = T) # 10 splits
+```
+AWS Athena performance results from AWS console (query executed: `select count(*) from ....` ):
+
+* test_split1: (Run time: 38.4 seconds, Data scanned: 1.16 GB)
+* test_split2: (Run time: 3.73 seconds, Data scanned: 1.16 GB)
+* test_split3: (Run time: 5.47 seconds, Data scanned: 1.16 GB)
+
+```
+library(DBI)
+X <- 1e8
+df <- data.frame(w =runif(X),
+                 x = 1:X,
+                 y = sample(letters, X, replace = T), 
+                 z = sample(c(TRUE, FALSE), X, replace = T))
+con <- dbConnect(noctua::athena())
+dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will now split compressed file into 20 equal size files.
+```
+
+Added information message to inform user about what files have been added to S3 location if user is overwritting an Athena table.
+
+### Minor Change
+* `copy_to` method now supports compress and max_batch, to align with `dbWriteTable`
+
 # noctua 1.2.1.9003
 ### Bug Fixed
 * Fixed bug in regards to Athena DDL being created incorrectly when passed from `dbWriteTable`
