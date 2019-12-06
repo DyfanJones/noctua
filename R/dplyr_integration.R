@@ -143,6 +143,12 @@ db_save_query_with <- function(file_type, s3_location,partition){
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param file_type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]. 
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
+#'                 "snappy" compression is used.
+#' @param max_batch Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
+#'                  is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the 
+#'                  performance of AWS Athena when working with files compressed in "gzip" format. \code{max.batch} will not split the data.frame 
+#'                  when loading file in parquet format. For more information please go to \href{https://github.com/DyfanJones/RAthena/issues/36}{link}
 #' @param ... other parameters currently not supported in noctua
 #' @name db_copy_to
 #' @seealso \code{\link{AthenaWriteTables}}
@@ -187,7 +193,9 @@ db_copy_to.AthenaConnection <- function(con, table, values,
                                         overwrite = FALSE, append = FALSE,
                                         types = NULL, partition = NULL,
                                         s3_location = NULL, 
-                                        file_type = c("csv", "tsv", "parquet"), ...){
+                                        file_type = c("csv", "tsv", "parquet"), 
+                                        compress = FALSE,
+                                        max_batch = Inf, ...){
   
   types <- types %||% dbDataType(con, values)
   names(types) <- names(values)
@@ -196,7 +204,9 @@ db_copy_to.AthenaConnection <- function(con, table, values,
   dbWriteTable(conn = con, name = table, value = values,
                overwrite = overwrite, append = append,
                field.types = types, partition = partition,
-               s3.location = s3_location, file.type = file_type)
+               s3.location = s3_location, file.type = file_type,
+               compress = compress,
+               max.batch = max_batch)
   table
 }
 

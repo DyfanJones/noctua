@@ -7,7 +7,8 @@
 \usage{
 db_copy_to.AthenaConnection(con, table, values, overwrite = FALSE,
   append = FALSE, types = NULL, partition = NULL,
-  s3_location = NULL, file_type = c("csv", "tsv", "parquet"), ...)
+  s3_location = NULL, file_type = c("csv", "tsv", "parquet"),
+  compress = FALSE, max_batch = Inf, ...)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
@@ -32,6 +33,14 @@ just any valid bare table name.}
 
 \item{file_type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]. 
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
+
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
+"snappy" compression is used.}
+
+\item{max_batch}{Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
+is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the 
+performance of AWS Athena when working with files compressed in "gzip" format. \code{max.batch} will not split the data.frame 
+when loading file in parquet format. For more information please go to \href{https://github.com/DyfanJones/RAthena/issues/36}{link}}
 
 \item{...}{other parameters currently not supported in noctua}
 }
