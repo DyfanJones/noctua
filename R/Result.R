@@ -142,7 +142,7 @@ setMethod(
       
       output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
       dt <- rbindlist(output)
-      colnames(dt) <- tolower(unname(dt[1,]))
+      colnames(dt) <- as.character(unname(dt[1,]))
       rownames(dt) <- NULL
       return(dt[-1,])
     }

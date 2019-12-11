@@ -18,7 +18,7 @@ AthenaDataType <-
 
 
 AthenaToRDataType <- function(data_type){
-  Names <- tolower(sapply(data_type, function(x) x$Name))
+  Names <- sapply(data_type, function(x) x$Name)
   Types <- tolower(sapply(data_type, function(x) x$Type))
   athena_to_r <- function(x){
     switch(x,
