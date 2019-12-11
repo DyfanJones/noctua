@@ -1,3 +1,17 @@
+# noctua 1.3.0.9000
+### Minor Change
+* Removed tolower conversion due to request https://github.com/DyfanJones/RAthena/issues/41
+
+### Bug fixed
+* Fixed issue where row.names not being correctly catered and returning NA in column names https://github.com/DyfanJones/RAthena/issues/41
+* Fixed issue with `INTEGER` being incorrectly translated in `sql_translate_env.R`
+* Fixed issue where `as.character` was getting wrongly translated https://github.com/DyfanJones/RAthena/issues/45
+
+### Unit Tests
+* Added row.names to unit test data transfer
+* Updated dplyr sql_translate_env until test to cater bug fix
+
+
 # noctua 1.3.0
 Updated package version for cran release
 
