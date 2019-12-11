@@ -282,7 +282,7 @@ setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ..
   stopifnot(is.data.frame(value))
   Value <- copy(value)
   Value <- sqlRownamesToColumn(Value, row.names)
-  field_names <- tolower(gsub("\\.", "_", make.names(names(Value), unique = TRUE)))
+  field_names <- gsub("\\.", "_", make.names(names(Value), unique = TRUE))
   DIFF <- setdiff(field_names, names(Value))
   names(Value) <- field_names
   if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
@@ -387,11 +387,11 @@ createFields <- function(con, fields, field.types) {
     fields <- vapply(fields, function(x) DBI::dbDataType(con, x), character(1))
   }
   if (!is.null(field.types)) {
-    names(field.types) <- tolower(gsub("\\.", "_", make.names(names(field.types), unique = TRUE)))
+    names(field.types) <- gsub("\\.", "_", make.names(names(field.types), unique = TRUE))
     fields[names(field.types)] <- field.types
   }
   
-  field_names <- tolower(gsub("\\.", "_", make.names(names(fields), unique = TRUE)))
+  field_names <- gsub("\\.", "_", make.names(names(fields), unique = TRUE))
   DIFF <- setdiff(field_names, names(fields))
   if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
   
