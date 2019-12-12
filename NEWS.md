@@ -1,3 +1,7 @@
+# noctua 1.3.0.9001
+### Minor Change
+* Added AWS_ATHENA_WORK_GROUP envrionmental variable support
+
 # noctua 1.3.0.9000
 ### Minor Change
 * Removed tolower conversion due to request https://github.com/DyfanJones/RAthena/issues/41
