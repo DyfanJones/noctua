@@ -66,12 +66,13 @@ It is never advised to hard-code credentials when making a connection to Athena 
 \href{https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html}{Amazon Resource Name roles} or environmental variables. Here is a list
 of supported environment variables:
 \itemize{
-\item{\strong{AWS_ACCESS_KEY_ID:} is equivalent to the dbConnect parameter - \code{aws_access_key_id}}
-\item{\strong{AWS_SECRET_ACCESS_KEY:} is equivalent to the dbConnect parameter - \code{aws_secret_access_key}}
-\item{\strong{AWS_SESSION_TOKEN:} is equivalent to the dbConnect parameter - \code{aws_session_token}}
-\item{\strong{AWS_ROLE_ARN:} is equivalent to the dbConnect parameter - \code{role_arn}}
-\item{\strong{AWS_EXPIRATION:} is equivalent to the dbConnect parameter - \code{duration_seconds}}
-\item{\strong{AWS_ATHENA_S3_STAGING_DIR:} is equivalent to the dbConnect parameter - \code{s3_staging_dir}}
+\item{\strong{AWS_ACCESS_KEY_ID:} is equivalent to the \code{dbConnect} parameter - \code{aws_access_key_id}}
+\item{\strong{AWS_SECRET_ACCESS_KEY:} is equivalent to the \code{dbConnect} parameter - \code{aws_secret_access_key}}
+\item{\strong{AWS_SESSION_TOKEN:} is equivalent to the \code{dbConnect} parameter - \code{aws_session_token}}
+\item{\strong{AWS_ROLE_ARN:} is equivalent to the \code{dbConnect} parameter - \code{role_arn}}
+\item{\strong{AWS_EXPIRATION:} is equivalent to the \code{dbConnect} parameter - \code{duration_seconds}}
+\item{\strong{AWS_ATHENA_S3_STAGING_DIR:} is equivalent to the \code{dbConnect} parameter - \code{s3_staging_dir}}
+\item{\strong{AWS_ATHENA_WORK_GROUP:} is equivalent to \code{dbConnect} paramater - \code{work_group}}
 }
 }
 \examples{

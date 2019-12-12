@@ -56,12 +56,13 @@ setMethod(
 #' \href{https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html}{Amazon Resource Name roles} or environmental variables. Here is a list
 #' of supported environment variables:
 #' \itemize{
-#' \item{\strong{AWS_ACCESS_KEY_ID:} is equivalent to the dbConnect parameter - \code{aws_access_key_id}}
-#' \item{\strong{AWS_SECRET_ACCESS_KEY:} is equivalent to the dbConnect parameter - \code{aws_secret_access_key}}
-#' \item{\strong{AWS_SESSION_TOKEN:} is equivalent to the dbConnect parameter - \code{aws_session_token}}
-#' \item{\strong{AWS_ROLE_ARN:} is equivalent to the dbConnect parameter - \code{role_arn}}
-#' \item{\strong{AWS_EXPIRATION:} is equivalent to the dbConnect parameter - \code{duration_seconds}}
-#' \item{\strong{AWS_ATHENA_S3_STAGING_DIR:} is equivalent to the dbConnect parameter - \code{s3_staging_dir}}
+#' \item{\strong{AWS_ACCESS_KEY_ID:} is equivalent to the \code{dbConnect} parameter - \code{aws_access_key_id}}
+#' \item{\strong{AWS_SECRET_ACCESS_KEY:} is equivalent to the \code{dbConnect} parameter - \code{aws_secret_access_key}}
+#' \item{\strong{AWS_SESSION_TOKEN:} is equivalent to the \code{dbConnect} parameter - \code{aws_session_token}}
+#' \item{\strong{AWS_ROLE_ARN:} is equivalent to the \code{dbConnect} parameter - \code{role_arn}}
+#' \item{\strong{AWS_EXPIRATION:} is equivalent to the \code{dbConnect} parameter - \code{duration_seconds}}
+#' \item{\strong{AWS_ATHENA_S3_STAGING_DIR:} is equivalent to the \code{dbConnect} parameter - \code{s3_staging_dir}}
+#' \item{\strong{AWS_ATHENA_WORK_GROUP:} is equivalent to \code{dbConnect} paramater - \code{work_group}}
 #' }
 #'
 #' @inheritParams DBI::dbConnect
@@ -172,6 +173,7 @@ setMethod(
     aws_secret_access_key <- aws_secret_access_key %||% get_aws_env("AWS_SECRET_ACCESS_KEY")
     aws_session_token <- aws_session_token %||% get_aws_env("AWS_SESSION_TOKEN")
     role_arn <- role_arn %||% get_aws_env("AWS_ROLE_ARN")
+    work_group <- work_group %||% get_aws_env("AWS_ATHENA_WORK_GROUP")
     
     con <- AthenaConnection(aws_access_key_id = aws_access_key_id,
                             aws_secret_access_key = aws_secret_access_key ,
