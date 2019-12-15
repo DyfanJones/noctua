@@ -1,3 +1,10 @@
+# noctua 1.3.0.9003
+### Bug fix
+* Due to issue highlighted by @OssiLehtinen in https://github.com/DyfanJones/RAthena/issues/50, special characters have issue being processed when using flat file in the backend.
+
+### Unit Tests
+* Special characters have been added to unit test `data-transfer`
+
 # noctua 1.3.0.9002
 ### New Feature
 * Due to help from @OssiLehtinen, `dbRemoveTable` can now remove S3 files for AWS Athena table being removed.
