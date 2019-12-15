@@ -6,7 +6,8 @@
 \alias{sqlData,AthenaConnection-method}
 \title{Converts data frame into suitable format to be uploaded to Athena}
 \usage{
-\S4method{sqlData}{AthenaConnection}(con, value, row.names = NA, ...)
+\S4method{sqlData}{AthenaConnection}(con, value, row.names = NA,
+  file.type = c("csv", "tsv", "parquet"), ...)
 }
 \arguments{
 \item{con}{A database connection.}
@@ -23,6 +24,9 @@ A string is equivalent to \code{TRUE}, but allows you to override the
 default name.
 
 For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
+
+\item{file.type}{What file type to store data.frame on s3, RAthena currently supports ["csv", "tsv", "parquet"].
+\strong{Note:} This parameter is used for format any special characters that clash with file type separator.}
 
 \item{...}{Other arguments used by individual methods.}
 }
