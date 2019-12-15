@@ -15,7 +15,6 @@ DBI::SQL(paste0("CREATE EXTERNAL TABLE `test_df` (
 )
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ','
-	ESCAPED BY '\\\\'
 	LINES TERMINATED BY ", gsub("_","","'\\_n'"),
 "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
@@ -26,7 +25,6 @@ DBI::SQL(paste0("CREATE EXTERNAL TABLE `test_df` (
 )
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY '\t'
-	ESCAPED BY '\\\\'
 	LINES TERMINATED BY ", gsub("_","","'\\_n'"),
            "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")), 
