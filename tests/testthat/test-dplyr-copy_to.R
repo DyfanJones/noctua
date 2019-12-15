@@ -22,8 +22,8 @@ test_that("Check noctua s3 dplyr copy_to method",{
   result2 <- dbExistsTable(con, "mtcars_filter")
   
   # clean up athena
-  dbRemoveTable(con, "mtcars")
-  dbRemoveTable(con, "mtcars_filter")
+  dbRemoveTable(con, "mtcars", confirm = TRUE)
+  dbRemoveTable(con, "mtcars_filter", confirm = TRUE)
   
   expect_true(tbl_result)
   expect_true(result1)

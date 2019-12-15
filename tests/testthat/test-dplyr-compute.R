@@ -18,11 +18,8 @@ test_that("Check noctua s3 dplyr compute method",{
   result2 <- dbExistsTable(con, "compute_tbl2")
   
   # clean up athena
-  dbRemoveTable(con, "compute_tbl1")
-  dbRemoveTable(con, "compute_tbl2")
-  
-  # clean s3: Athena is unable to clean up s3
-  delete_prefix_objects_v2(con, "compute_tbl/")
+  dbRemoveTable(con, "compute_tbl1", confirm = TRUE)
+  dbRemoveTable(con, "compute_tbl2", confirm = TRUE)
   
   expect_equal(result1, TRUE)
   expect_equal(result2, TRUE)
