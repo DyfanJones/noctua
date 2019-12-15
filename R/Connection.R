@@ -500,6 +500,8 @@ setMethod(
   "dbRemoveTable", c("AthenaConnection", "character"),
   function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    stopifnot(is.logical(delete_data),
+              is.logical(confirm))
     
     if (grepl("\\.", name)) {
       dbms.name <- gsub("\\..*", "" , name)
