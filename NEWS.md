@@ -1,3 +1,10 @@
+# noctua 1.3.0.9002
+### New Feature
+* Due to help from @OssiLehtinen, `dbRemoveTable` can now remove S3 files for AWS Athena table being removed.
+
+### Unit Tests
+* `dbRemoveTable` new parameters are added in unit test
+
 # noctua 1.3.0.9001
 ### Minor Change
 * Added AWS_ATHENA_WORK_GROUP envrionmental variable support
