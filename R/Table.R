@@ -137,10 +137,6 @@ Athena_write_table <-
       FileLocation <- split_data(value, max.batch = max.batch, compress = compress, file.type = file.type, sep = "\t")
     }
     
-    # switch(file.type,
-    #        "csv" = data.table::fwrite(value, FileLocation, showProgress = F),
-    #        "tsv" = data.table::fwrite(value, FileLocation, sep = "\t", showProgress = F))
-    
     found <- dbExistsTable(conn, Name)
     if (found && !overwrite && !append) {
       stop("Table ", Name, " exists in database, and both overwrite and",
@@ -152,11 +148,11 @@ Athena_write_table <-
     }
     
     if (found && overwrite) {
-      suppressMessages(dbRemoveTable(conn, Name)) # suppressing info message
+      dbRemoveTable(conn, Name, confirm = TRUE)
     }
     
     # send data over to s3 bucket
-    s3_uri <- upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress)
+    upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress)
     
     if (!append) {
       sql <- sqlCreateTable(conn, table = Name, fields = value, field.types = field.types, 
@@ -170,17 +166,6 @@ Athena_write_table <-
     # Repair table
     res <- dbExecute(conn, paste0("MSCK REPAIR TABLE ", Name))
     dbClearResult(res)
-    
-    # Warn users to check if table that has been overwrite has been correctly overwritten.
-    if(compress && overwrite && file.type %in% c("csv", "tsv")){
-      s3_bucket <- split_s3_uri(s3.location)$bucket
-      s3.location <- gsub("/$", "", s3.location)
-      if(grepl(name, s3.location)){s3.location <- gsub(paste0("/", name,"$"), "", s3.location)}
-      s3.location <- paste0("'",s3.location,"/", name,"/'")
-      
-      message("Info: Please check that all files in ", s3.location," have been replaces with:\n",
-              paste0("s3://",s3_bucket, "/", s3_uri, collapse = "\n"))
-    }
     
     on.exit({lapply(FileLocation, unlink)
       if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
@@ -218,8 +203,8 @@ upload_data <- function(con, x, name, partition = NULL, s3.location= NULL,  file
   for (i in 1:length(x)){
     obj <- readBin(x[i], "raw", n = file.size(x[i]))
     tryCatch(con@ptr$S3$put_object(Body = obj, Bucket = s3_info$bucket, Key = s3_key[i]))}
-  
-  s3_key
+
+  invisible(NULL)
 }
 
 #' @rdname AthenaWriteTables

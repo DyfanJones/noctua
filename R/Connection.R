@@ -465,6 +465,9 @@ setMethod(
 #' @name dbRemoveTable
 #' @return \code{dbRemoveTable()} returns \code{TRUE}, invisibly.
 #' @inheritParams DBI::dbRemoveTable
+#' @param delete_data Deletes S3 files linking to AWS Athena table
+#' @param confirm Allows for S3 files to be deleted without the prompt check. It is recommend to leave this set to \code{FALSE}
+#'                   to avoid deleting other S3 files when the table's definition points to the root of S3 bucket.
 #' @seealso \code{\link[DBI]{dbRemoveTable}}
 #' @examples
 #' \dontrun{
@@ -495,14 +498,47 @@ NULL
 #' @export
 setMethod(
   "dbRemoveTable", c("AthenaConnection", "character"),
-  function(conn, name, ...) {
+  function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    stopifnot(is.logical(delete_data),
+              is.logical(confirm))
     
-    if(!grepl("\\.", name)) name <- paste(conn@info$dbms.name, name, sep = ".")
+    if (grepl("\\.", name)) {
+      dbms.name <- gsub("\\..*", "" , name)
+      Table <- gsub(".*\\.", "" , name)
+    } else {
+      dbms.name <- conn@info$dbms.name
+      Table <- name}
     
-    res <- dbExecute(conn, paste("DROP TABLE ", name, ";"))
+    if(delete_data){
+      nobjects <- 1000 # Only 1000 objects at a time
+      while(nobjects >= 1000) {
+        tryCatch(
+          s3_path <- split_s3_uri(conn@ptr$glue$get_table(DatabaseName = dbms.name,
+                                                          Name = Table)$Table$StorageDescriptor$Location))
+        tryCatch(
+          objects <- conn@ptr$S3$list_objects(Bucket=s3_path$bucket, Prefix=paste0(s3_path$key, "/"))$Contents)
+        
+        nobjects <- length(objects)
+        all_keys <- sapply(objects, function(x) x$Key)
+        
+        message(paste0("Info: The S3 objects in prefix will be deleted:\n",
+                       paste0("s3://", s3_path$bucket, "/", s3_path$key)))
+        if(!confirm) {
+          confirm <- readline(prompt = "Delete files (y/n)?: ")
+          if(confirm != "y") {
+            message("Info: Table deletion aborted.")
+            return(NULL)}
+        }
+        
+        sapply(all_keys, function(x) conn@ptr$S3$delete_object(Bucket = s3_path$bucket, Key = x))
+      }
+    }
+    
+    res <- dbExecute(conn, paste("DROP TABLE ", paste(dbms.name, Table, sep = "."), ";"))
     dbClearResult(res)
-    message("Info: Only Athena table has been removed, Athena cannot remove s3 data from your account.")
+    
+    if(!delete_data) message("Info: Only Athena table has been removed.")
     invisible(TRUE)
   })
 
