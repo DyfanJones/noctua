@@ -256,6 +256,8 @@ setMethod(
 #' This method converts data.frame columns into the correct format so that it can be uploaded Athena.
 #' @name sqlData
 #' @inheritParams DBI::sqlData
+#' @param file.type What file type to store data.frame on s3, RAthena currently supports ["csv", "tsv", "parquet"].
+#'                  \strong{Note:} This parameter is used for format any special characters that clash with file type separator.
 #' @return \code{sqlData} returns a dataframe formatted for Athena. Currently converts \code{list} variable types into \code{character}
 #'         split by \code{'|'}, similar to how \code{data.table} writes out to files.
 #' @seealso \code{\link[DBI]{sqlData}}
@@ -263,8 +265,10 @@ NULL
 
 #' @rdname sqlData
 #' @export
-setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ...) {
+setMethod("sqlData", "AthenaConnection", 
+          function(con, value, row.names = NA, file.type = c("csv", "tsv", "parquet"),...) {
   stopifnot(is.data.frame(value))
+  file.type = match.arg(file.type)
   Value <- copy(value)
   Value <- sqlRownamesToColumn(Value, row.names)
   field_names <- gsub("\\.", "_", make.names(names(Value), unique = TRUE))
@@ -275,13 +279,23 @@ setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ..
   col_types <- sapply(Value, class)
   
   # preprosing proxict format
-  posixct_cols<- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
+  posixct_cols <- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
   # create timestamp in athena format: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
   for (col in posixct_cols) set(Value, j=col, value=strftime(Value[[col]], format="%Y-%m-%d %H:%M:%OS3"))
   
   # preprocessing list format
   list_cols <- names(Value)[sapply(col_types, function(x) "list" %in% x)]
   for (col in list_cols) set(Value, j=col, value=sapply(Value[[col]], paste, collapse = "|"))
+  
+  # handle special characters in character and factor column types
+  special_char <- names(Value)[col_types %in% c("character", "factor")]
+  switch(file.type,
+         csv = {# changed special character from "," to "." to avoid issue with parsing delimited files
+           for (col in special_char) set(Value, j=col, value=gsub("," , "\\.", Value[[col]]))
+           message("Info: Special character \",\" has been converted to \".\" to help with Athena reading file format csv")},
+         tsv = {# changed special character from "\t" to " " to avoid issue with parsing delimited files
+           for (col in special_char) set(Value, j=col, value=gsub("\t" , " ", Value[[col]]))
+           message("Info: Special characters \"\t\" has been converted to \" \" to help with Athena reading file format tsv")})
   
   Value
 })
@@ -394,8 +408,8 @@ partitioned <- function(obj = NULL){
 
 FileType <- function(obj){
   switch(obj,
-         csv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY ','\n\tESCAPED BY '\\\\'\n\tLINES TERMINATED BY '\\_n'"),
-         tsv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY '\t'\n\tESCAPED BY '\\\\'\n\tLINES TERMINATED BY '\\_n'"),
+         csv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY ','\n\tLINES TERMINATED BY '\\_n'"),
+         tsv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY '\t'\n\tLINES TERMINATED BY '\\_n'"),
          parquet = SQL("STORED AS PARQUET"))
 }
 
