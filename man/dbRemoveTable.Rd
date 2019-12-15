@@ -6,13 +6,19 @@
 \alias{dbRemoveTable,AthenaConnection,character-method}
 \title{Remove table from Athena}
 \usage{
-\S4method{dbRemoveTable}{AthenaConnection,character}(conn, name, ...)
+\S4method{dbRemoveTable}{AthenaConnection,character}(conn, name,
+  delete_data = TRUE, confirm = FALSE, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
 \code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{name}{A character string specifying a DBMS table name.}
+
+\item{delete_data}{Deletes S3 files linking to AWS Athena table}
+
+\item{confirm}{Allows for S3 files to be deleted without the prompt check. It is recommend to leave this set to \code{FALSE}
+to avoid deleting other S3 files when the table's definition points to the root of S3 bucket.}
 
 \item{...}{Other parameters passed on to methods.}
 }
