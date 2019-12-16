@@ -7,7 +7,7 @@
 \title{Converts data frame into suitable format to be uploaded to Athena}
 \usage{
 \S4method{sqlData}{AthenaConnection}(con, value, row.names = NA,
-  file.type = c("csv", "tsv", "parquet"), ...)
+  file.type = c("tsv", "csv", "parquet"), ...)
 }
 \arguments{
 \item{con}{A database connection.}
