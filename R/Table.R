@@ -1,20 +1,21 @@
 #' Convenience functions for reading/writing DBMS tables
 #'
-#' @param conn An \code{\linkS4class{AthenaConnection}} object, produced by
-#'   [DBI::dbConnect()]
+#' @param conn An \code{\linkS4class{AthenaConnection}} object, produced by [DBI::dbConnect()]
 #' @param name A character string specifying a table name. Names will be
 #'   automatically quoted so you can use any sequence of characters, not
 #'   just any valid bare table name.
 #' @param value A data.frame to write to the database.
-#' @param overwrite Allow overwriting the destination table. Cannot be
-#'   `TRUE` if `append` is also `TRUE`.
-#' @param append Allow appending to the destination table. Cannot be
-#'   `TRUE` if `overwrite` is also `TRUE`.
+#' @param overwrite Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.
+#' @param append Allow appending to the destination table. Cannot be \code{TRUE} if \code{overwrite} is also \code{TRUE}. Existing Athena DDL file type will be retained
+#'               and used when uploading data to AWS Athena. If parameter \code{file.type} doesn't match AWS Athena DDL file type a warning message will be created 
+#'               notifying user and \code{noctua} will use the file type for the Athena DDL. 
 #' @param field.types Additional field types used to override derived types.
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
 #'        By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.
-#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+#'                  of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
+#'                  Athena due to the separating value ",". This would cause issues with AWS Athena. 
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 #' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used., for file type "parquet" 
 #'                 "snappy" compression is used.
@@ -76,7 +77,7 @@ NULL
 Athena_write_table <-
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("csv", "tsv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
            compress = FALSE, max.batch = Inf, ...) {
     # variable checks
     stopifnot(is.character(name),
@@ -95,7 +96,7 @@ Athena_write_table <-
     if(max.batch < 0) stop("`max.batch` has to be greater than 0", call. = F)
     
     if(!is.infinite(max.batch) && file.type == "parquet") message("Info: parquet format is splittable and AWS Athena can read parquet format ",
-                                                                  "in parrel. `max.batch` is used for compressed `gzip` format which is not splittable.")
+                                                                  "in parrellel. `max.batch` is used for compressed `gzip` format which is not splittable.")
     
     # use default s3_staging directory is s3.location isn't provided
     if (is.null(s3.location)) s3.location <- conn@info$s3_staging
@@ -114,13 +115,65 @@ Athena_write_table <-
     
     if(append && is.null(partition)) stop("Athena requires the table to be partitioned to append", call. = FALSE)
     
+    # Check if table already exists in the database
+    found <- dbExistsTable(conn, Name)
+    
+    if (found && !overwrite && !append) {
+      stop("Table ", Name, " exists in database, and both overwrite and",
+           " append are FALSE", call. = FALSE)
+    }
+    
+    if(!found && append){
+      stop("Table ", Name, " does not exist in database and append is set to TRUE", call. = T)
+    }
+    
+    if (found && overwrite) {
+      dbRemoveTable(conn, Name, confirm = TRUE)
+    }
+    
+    # Check file format if appending
+    if(found && append){
+      dbms.name <- gsub("\\..*", "" , Name)
+      Table <- gsub(".*\\.", "" , Name)
+      
+      tryCatch(
+      tbl_info <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
+                                 Name = Table)$Table)
+      
+      # Return correct file format when appending onto existing AWS Athena table
+      File.Type <- switch(tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary, 
+                          "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe" = switch(tbl_info$StorageDescriptor$SerdeInfo$Parameters$field.delim, 
+                                                                                        "," = "csv",
+                                                                                        "\t" = "tsv",
+                                                                                        stop("noctua currently only supports csv and tsv delimited format")),
+                          "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe" = "parquet",
+                          stop("Unable to append onto table: ", Name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
+                               ": Is currently not supported by noctua", call. = F))
+      
+      # Return if existing files are compressed or not
+      compress = switch(file.type,
+                        "parquet" = {if(is.null(tbl_info$Parameters$parquet.compress)) FALSE else {
+                          if(tolower(tbl_info$Parameters$parquet.compress) == "snappy") TRUE else 
+                            stop("noctua currently only supports SNAPPY compression for parquet", call. = F)}
+                        },
+                        "tsv" = {if(is.null(tbl_info$Parameters$compressionType)) FALSE else {
+                          if(tolower(tbl_info$Parameters$compressionType) == "gzip") TRUE else
+                            stop("noctua currently only supports gzip compression for tsv", call. = F)}},
+                        "csv" = {if(is.null(tbl_info$Parameters$compressionType)) FALSE else {
+                          if(tolower(tbl_info$Parameters$compressionType) == "gzip") TRUE else
+                            stop("noctua currently only supports gzip compression for csv", call. = F)}})
+      if(file.type != File.Type) warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
+      file.type <- File.Type
+    }
+    
     # return original Athena Types
     if(is.null(field.types)) field.types <- dbDataType(conn, value)
-    value <- sqlData(conn, value, row.names = row.names)
+    value <- sqlData(conn, value, row.names = row.names, file.type = file.type)
     
     # check if arrow is installed before attempting to create parquet
     if(file.type == "parquet"){
       # compress file
+      t <- tempfile()
       FileLocation <- paste(t, Compress(file.type, compress), sep =".")
       if(!requireNamespace("arrow", quietly=TRUE))
         stop("The package arrow is required for R to utilise Apache Arrow to create parquet files.", call. = FALSE)
@@ -135,20 +188,6 @@ Athena_write_table <-
     
     if (file.type == "tsv"){
       FileLocation <- split_data(value, max.batch = max.batch, compress = compress, file.type = file.type, sep = "\t")
-    }
-    
-    found <- dbExistsTable(conn, Name)
-    if (found && !overwrite && !append) {
-      stop("Table ", Name, " exists in database, and both overwrite and",
-           " append are FALSE", call. = FALSE)
-    }
-    
-    if(!found && append){
-      stop("Table ", Name, " does not exist in database and append is set to TRUE", call. = T)
-    }
-    
-    if (found && overwrite) {
-      dbRemoveTable(conn, Name, confirm = TRUE)
     }
     
     # send data over to s3 bucket
@@ -214,7 +253,7 @@ setMethod(
   "dbWriteTable", c("AthenaConnection", "character", "data.frame"),
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("csv", "tsv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
            compress = FALSE, max.batch = Inf, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     Athena_write_table(conn, name, value, overwrite, append,
@@ -228,7 +267,7 @@ setMethod(
   "dbWriteTable", c("AthenaConnection", "Id", "data.frame"),
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("csv", "tsv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
            compress = FALSE, max.batch = Inf, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     Athena_write_table(conn, name, value, overwrite, append,
@@ -242,7 +281,7 @@ setMethod(
   "dbWriteTable", c("AthenaConnection", "SQL", "data.frame"),
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("csv", "tsv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
            compress = FALSE, max.batch = Inf, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     Athena_write_table(conn, name, value, overwrite, append,
@@ -256,6 +295,8 @@ setMethod(
 #' This method converts data.frame columns into the correct format so that it can be uploaded Athena.
 #' @name sqlData
 #' @inheritParams DBI::sqlData
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
+#'                  \strong{Note:} This parameter is used for format any special characters that clash with file type separator.
 #' @return \code{sqlData} returns a dataframe formatted for Athena. Currently converts \code{list} variable types into \code{character}
 #'         split by \code{'|'}, similar to how \code{data.table} writes out to files.
 #' @seealso \code{\link[DBI]{sqlData}}
@@ -263,8 +304,10 @@ NULL
 
 #' @rdname sqlData
 #' @export
-setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ...) {
+setMethod("sqlData", "AthenaConnection", 
+          function(con, value, row.names = NA, file.type = c("tsv", "csv", "parquet"),...) {
   stopifnot(is.data.frame(value))
+  file.type = match.arg(file.type)
   Value <- copy(value)
   Value <- sqlRownamesToColumn(Value, row.names)
   field_names <- gsub("\\.", "_", make.names(names(Value), unique = TRUE))
@@ -275,13 +318,23 @@ setMethod("sqlData", "AthenaConnection", function(con, value, row.names = NA, ..
   col_types <- sapply(Value, class)
   
   # preprosing proxict format
-  posixct_cols<- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
+  posixct_cols <- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
   # create timestamp in athena format: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
   for (col in posixct_cols) set(Value, j=col, value=strftime(Value[[col]], format="%Y-%m-%d %H:%M:%OS3"))
   
   # preprocessing list format
   list_cols <- names(Value)[sapply(col_types, function(x) "list" %in% x)]
   for (col in list_cols) set(Value, j=col, value=sapply(Value[[col]], paste, collapse = "|"))
+  
+  # handle special characters in character and factor column types
+  special_char <- names(Value)[col_types %in% c("character", "factor")]
+  switch(file.type,
+         csv = {# changed special character from "," to "." to avoid issue with parsing delimited files
+           for (col in special_char) set(Value, j=col, value=gsub("," , "\\.", Value[[col]]))
+           message("Info: Special character \",\" has been converted to \".\" to help with Athena reading file format csv")},
+         tsv = {# changed special character from "\t" to " " to avoid issue with parsing delimited files
+           for (col in special_char) set(Value, j=col, value=gsub("\t" , " ", Value[[col]]))
+           message("Info: Special characters \"\\t\" has been converted to \" \" to help with Athena reading file format tsv")})
   
   Value
 })
@@ -333,7 +386,7 @@ NULL
 #' @rdname sqlCreateTable
 #' @export
 setMethod("sqlCreateTable", "AthenaConnection",
-  function(con, table, fields, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("csv", "tsv", "parquet"),
+  function(con, table, fields, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("tsv", "csv", "parquet"),
            compress = FALSE, ...){
     if (!dbIsValid(con)) {stop("Connection already closed.", call. = FALSE)}
     stopifnot(is.character(table),
@@ -394,8 +447,8 @@ partitioned <- function(obj = NULL){
 
 FileType <- function(obj){
   switch(obj,
-         csv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY ','\n\tESCAPED BY '\\\\'\n\tLINES TERMINATED BY '\\_n'"),
-         tsv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY '\t'\n\tESCAPED BY '\\\\'\n\tLINES TERMINATED BY '\\_n'"),
+         csv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY ','\n\tLINES TERMINATED BY '\\_n'"),
+         tsv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY '\t'\n\tLINES TERMINATED BY '\\_n'"),
          parquet = SQL("STORED AS PARQUET"))
 }
 

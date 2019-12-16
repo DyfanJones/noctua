@@ -167,9 +167,11 @@ setMethod(
     
     if(grepl("\\.csv$",result_info$key)){
       # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
-      output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), showProgress = F, na.strings="")
+      output <- data.table::fread(File, col.names = names(Type2), sep = ",", colClasses = unname(Type2), showProgress = F, na.strings="")
       # formatting POSIXct: from string to POSIXct
       for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]]))
+      # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
+      for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
     } else{
       file_con <- file(File)
       output <- suppressWarnings(readLines(file_con))

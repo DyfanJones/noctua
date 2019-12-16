@@ -1,3 +1,17 @@
+# noctua 1.3.0.9003
+### Major Change
+* Default delimited file uploaded to AWS Athena changed from "csv" to "tsv" this is due to separating value "," in character variables. By using "tsv" file type JSON/Array objects can be passed to Athena through character types. To prevent this becoming a breaking change `dbWriteTable` `append` parameter checks and uses existing AWS Athena DDL file type. If `file.type` doesn't match Athena DDL file type then user will recieve a warning message:
+
+```
+warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
+```
+
+### Bug fix
+* Due to issue highlighted by @OssiLehtinen in https://github.com/DyfanJones/RAthena/issues/50, special characters have issue being processed when using flat file in the backend.
+
+### Unit Tests
+* Special characters have been added to unit test `data-transfer`
+
 # noctua 1.3.0.9002
 ### New Feature
 * Due to help from @OssiLehtinen, `dbRemoveTable` can now remove S3 files for AWS Athena table being removed.

@@ -8,7 +8,7 @@
 \usage{
 \S4method{sqlCreateTable}{AthenaConnection}(con, table, fields,
   field.types = NULL, partition = NULL, s3.location = NULL,
-  file.type = c("csv", "tsv", "parquet"), compress = FALSE, ...)
+  file.type = c("tsv", "csv", "parquet"), compress = FALSE, ...)
 }
 \arguments{
 \item{con}{A database connection.}
