@@ -305,7 +305,7 @@ NULL
 #' @rdname sqlData
 #' @export
 setMethod("sqlData", "AthenaConnection", 
-          function(con, value, row.names = NA, file.type = c("csv", "tsv", "parquet"),...) {
+          function(con, value, row.names = NA, file.type = c("tsv", "csv", "parquet"),...) {
   stopifnot(is.data.frame(value))
   file.type = match.arg(file.type)
   Value <- copy(value)
