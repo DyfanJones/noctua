@@ -12,8 +12,8 @@
 \S4method{dbQuoteIdentifier}{AthenaConnection,SQL}(conn, x, ...)
 }
 \arguments{
-\item{conn}{A subclass of \linkS4class{DBIConnection}, representing
-an active connection to an DBMS.}
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[=dbConnect]{dbConnect()}}.}
 
 \item{x}{A character vector to quote as string.}
 

@@ -12,7 +12,7 @@ sql_translate_env.AthenaConnection(con)
 [DBI::dbConnect()]}
 }
 \description{
-Create s3 implementation of \code{sql_translate_env} for AWS Athena sql translate envirnoment based off
+Create s3 implementation of \code{sql_translate_env} for AWS Athena sql translate environment based off
 \href{https://docs.aws.amazon.com/athena/latest/ug/data-types.html}{Athena Data Types} and 
 \href{https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html}{DML Queries, Functions, and Operators}
 }

@@ -24,7 +24,7 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 
 # noctua 1.3.0.9001
 ### Minor Change
-* Added AWS_ATHENA_WORK_GROUP envrionmental variable support
+* Added AWS_ATHENA_WORK_GROUP environmental variable support
 
 # noctua 1.3.0.9000
 ### Minor Change
@@ -78,7 +78,7 @@ con <- dbConnect(noctua::athena())
 dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will now split compressed file into 20 equal size files.
 ```
 
-Added information message to inform user about what files have been added to S3 location if user is overwritting an Athena table.
+Added information message to inform user about what files have been added to S3 location if user is overwriting an Athena table.
 
 ### Minor Change
 * `copy_to` method now supports compress and max_batch, to align with `dbWriteTable`
@@ -109,7 +109,7 @@ Thanks to @OssiLehtinen for identifying issue around `sql_translate_env`. Previo
 
 # noctua 1.2.1
 ### New Features:
-* Parquet file type can now be compress using snappy compression when writting data to S3.
+* Parquet file type can now be compress using snappy compression when writing data to S3.
 
 ### Bug fixed
 * Older versions of R are returning errors when function `dbWriteTable` is called. The bug is due to function `sqlCreateTable` which `dbWriteTable` calls. Parameters `table` and `fields` were set to `NULL`. This has now been fixed.

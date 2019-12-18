@@ -62,7 +62,7 @@ setMethod(
 #' \item{\strong{AWS_ROLE_ARN:} is equivalent to the \code{dbConnect} parameter - \code{role_arn}}
 #' \item{\strong{AWS_EXPIRATION:} is equivalent to the \code{dbConnect} parameter - \code{duration_seconds}}
 #' \item{\strong{AWS_ATHENA_S3_STAGING_DIR:} is equivalent to the \code{dbConnect} parameter - \code{s3_staging_dir}}
-#' \item{\strong{AWS_ATHENA_WORK_GROUP:} is equivalent to \code{dbConnect} paramater - \code{work_group}}
+#' \item{\strong{AWS_ATHENA_WORK_GROUP:} is equivalent to \code{dbConnect} parameter - \code{work_group}}
 #' }
 #'
 #' @inheritParams DBI::dbConnect
