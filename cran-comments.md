@@ -1,12 +1,21 @@
 ## Release Summary
-This release is a feature relase, focusing on:
+This release is a feature release, focusing on:
+
+**Major Change**
+* Convert default delimited file from `csv` to `tsv`. This is to enable array and json to be pushed to `AWS Athena` from `R`. To prevent this from becoming a breaking change, `dbWriteTable` now checks existing file type in `Athena` Data Definition Language (`DDL`) and utilises that file type when appending to existing tables. User will be returned with a warning message:
+
+```
+warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
+```
 
 **New Features**
-* `dplyr::sql_translate_env` method for noctua
-* Rebuilt backend of `dbWriteTable` when uploading compressed `gzip` files to Amazon Web Service (AWS) S3. Now `gzip` files are split, to increase AWS Athena performance (initial tests show an improvement of x10). This may cause issues when overwriting existing tables in AWS Athena, an information message has been created to inform users to check s3 the files have be replaced correctly.
+*  Support environment variable `AWS_ATHENA_WORK_GROUP`
+* Added append checker to `dbWriteTable`. This checks what file type is currently being used, utilities file type when pushing new data to existing `AWS Athena Table`.
+* `dbRemoveTable` to be able to delete Athena table s3 files
 
 **Bug Fix**
-* Issue with creating DDL, tables created with special characters would fail due to different quotation syntax needed.
+* Special character incorrectly passed to `AWS Athena`
+* `translate_sql_env` wrongly translated `integer`
 
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
