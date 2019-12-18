@@ -1,3 +1,6 @@
+# noctua 1.4.0
+Updated package version for cran release
+
 # noctua 1.3.0.9003
 ### Major Change
 * Default delimited file uploaded to AWS Athena changed from "csv" to "tsv" this is due to separating value "," in character variables. By using "tsv" file type JSON/Array objects can be passed to Athena through character types. To prevent this becoming a breaking change `dbWriteTable` `append` parameter checks and uses existing AWS Athena DDL file type. If `file.type` doesn't match Athena DDL file type then user will recieve a warning message:
