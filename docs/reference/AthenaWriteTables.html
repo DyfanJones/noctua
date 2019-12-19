@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -129,21 +129,21 @@
 <span class='fu'>dbWriteTable</span>(<span class='no'>conn</span>, <span class='no'>name</span>,
   <span class='no'>value</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>append</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>field.types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsv"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>max.batch</span> <span class='kw'>=</span> <span class='fl'>Inf</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for AthenaConnection,Id,data.frame</span>
 <span class='fu'>dbWriteTable</span>(<span class='no'>conn</span>, <span class='no'>name</span>, <span class='no'>value</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>append</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>field.types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsv"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>max.batch</span> <span class='kw'>=</span> <span class='fl'>Inf</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for AthenaConnection,SQL,data.frame</span>
 <span class='fu'>dbWriteTable</span>(<span class='no'>conn</span>, <span class='no'>name</span>, <span class='no'>value</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>append</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>field.types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsv"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>max.batch</span> <span class='kw'>=</span> <span class='fl'>Inf</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -151,8 +151,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>conn</th>
-      <td><p>An <code><a href='AthenaConnection.html'>AthenaConnection</a></code> object, produced by
-[DBI::dbConnect()]</p></td>
+      <td><p>An <code><a href='AthenaConnection.html'>AthenaConnection</a></code> object, produced by [DBI::dbConnect()]</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -166,13 +165,13 @@ just any valid bare table name.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>Allow overwriting the destination table. Cannot be
-`TRUE` if `append` is also `TRUE`.</p></td>
+      <td><p>Allows overwriting the destination table. Cannot be <code>TRUE</code> if <code>append</code> is also <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>append</th>
-      <td><p>Allow appending to the destination table. Cannot be
-`TRUE` if `overwrite` is also `TRUE`.</p></td>
+      <td><p>Allow appending to the destination table. Cannot be <code>TRUE</code> if <code>overwrite</code> is also <code>TRUE</code>. Existing Athena DDL file type will be retained
+and used when uploading data to AWS Athena. If parameter <code>file.type</code> doesn't match AWS Athena DDL file type a warning message will be created 
+notifying user and <code>noctua</code> will use the file type for the Athena DDL.</p></td>
     </tr>
     <tr>
       <th>row.names</th>
@@ -199,7 +198,9 @@ By default s3.location is set s3 staging directory from <code><a href='AthenaCon
     </tr>
     <tr>
       <th>file.type</th>
-      <td><p>What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
+      <td><p>What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+of <code>noctua (=&lt; 1.4.0)</code> file type "csv" was used as default. The reason for the change is that columns containing <code>Array/JSON</code> format cannot be written to 
+Athena due to the separating value ",". This would cause issues with AWS Athena. 
 <strong>Note:</strong> "parquet" format is supported by the <code>arrow</code> package and it will need to be installed to utilise the "parquet" format.</p></td>
     </tr>
     <tr>
@@ -222,12 +223,12 @@ when loading file in parquet format. For more information please go to <a href='
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable()</a></code> returns <code>TRUE</code>, invisibly. If the table exists, and both append and overwrite
+    <p><code><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable()</a></code> returns <code>TRUE</code>, invisibly. If the table exists, and both append and overwrite
         arguments are unset, or append = TRUE and the data frame with the new data has different column names,
         an error is raised; the remote table remains unchanged.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></code></p></div>
+    <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -244,12 +245,12 @@ when loading file in parquet format. For more information please go to <a href='
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
 
 <span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
              <span class='kw'>partition</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"TIMESTAMP"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
              <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/data/"</span>)
 
 <span class='co'># Read entire table from Athena</span>
-<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
 
 <span class='co'># List all tables in Athena after uploading new table to Athena</span>
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
@@ -258,10 +259,10 @@ when loading file in parquet format. For more information please go to <a href='
 <span class='fu'><a href='dbExistsTable.html'>dbExistsTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
 
 <span class='co'># using default s3.location</span>
-<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>)
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>)
 
 <span class='co'># Read entire table from Athena</span>
-<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>)
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>)
 
 <span class='co'># List all tables in Athena after uploading new table to Athena</span>
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
