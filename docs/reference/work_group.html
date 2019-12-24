@@ -91,7 +91,7 @@ update_work_groupUpdates the workgroup with the specified name (link).
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9000</span>
       </span>
     </div>
 
@@ -153,26 +153,34 @@ update_work_groupUpdates the workgroup with the specified name (link).
 
     </div>
 
-    <pre class="usage"><span class='fu'>create_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>create_work_group</span>(
+  <span class='no'>conn</span>,
+  <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>enforce_work_group_config</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>publish_cloud_watch_metrics</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bytes_scanned_cut_off</span> <span class='kw'>=</span> <span class='fl'>10000000L</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='fu'>tag_options</span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>))
+  <span class='kw'>bytes_scanned_cut_off</span> <span class='kw'>=</span> <span class='fl'>10000000L</span>,
+  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='fu'>tag_options</span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+)
 
 <span class='fu'>tag_options</span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>delete_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>recursive_delete_option</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>delete_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>recursive_delete_option</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>list_work_groups</span>(<span class='no'>conn</span>)
 
 <span class='fu'>get_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>update_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>remove_output_location</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>enforce_work_group_config</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+<span class='fu'>update_work_group</span>(
+  <span class='no'>conn</span>,
+  <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>remove_output_location</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>enforce_work_group_config</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>publish_cloud_watch_metrics</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bytes_scanned_cut_off</span> <span class='kw'>=</span> <span class='fl'>10000000L</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENABLED"</span>, <span class='st'>"DISABLED"</span>))</pre>
+  <span class='kw'>bytes_scanned_cut_off</span> <span class='kw'>=</span> <span class='fl'>10000000L</span>,
+  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>state</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENABLED"</span>, <span class='st'>"DISABLED"</span>)
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -296,7 +304,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 #&gt; [1] "This is a demo work group"
 #&gt; 
 #&gt; [[1]]$CreationTime
-#&gt; [1] "2019-12-18 18:40:17 GMT"
+#&gt; [1] "2019-12-24 11:01:10 GMT"
 #&gt; 
 #&gt; 
 #&gt; [[2]]

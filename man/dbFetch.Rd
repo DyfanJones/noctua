@@ -10,7 +10,7 @@
 }
 \arguments{
 \item{res}{An object inheriting from \linkS4class{DBIResult}, created by
-\code{\link[=dbSendQuery]{dbSendQuery()}}.}
+\code{\link[DBI:dbSendQuery]{dbSendQuery()}}.}
 
 \item{n}{maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
 Some implementations may recognize other special values. Currently chunk sizes range from 0 to 999, 
