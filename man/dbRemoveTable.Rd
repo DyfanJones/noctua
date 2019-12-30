@@ -6,12 +6,11 @@
 \alias{dbRemoveTable,AthenaConnection,character-method}
 \title{Remove table from Athena}
 \usage{
-\S4method{dbRemoveTable}{AthenaConnection,character}(conn, name,
-  delete_data = TRUE, confirm = FALSE, ...)
+\S4method{dbRemoveTable}{AthenaConnection,character}(conn, name, delete_data = TRUE, confirm = FALSE, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{name}{A character string specifying a DBMS table name.}
 

@@ -79,7 +79,7 @@ parameters db_save_query provided for compute function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9000</span>
       </span>
     </div>
 
@@ -129,8 +129,15 @@ Users won't be required to access and run this function. However users may find 
 parameters <code>db_save_query</code> provided for <code>compute</code> function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>db_save_query.AthenaConnection</span>(<span class='no'>con</span>, <span class='no'>sql</span>, <span class='no'>name</span>, <span class='kw'>file_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>,
-  <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>), <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>db_save_query.AthenaConnection</span>(
+  <span class='no'>con</span>,
+  <span class='no'>sql</span>,
+  <span class='no'>name</span>,
+  <span class='kw'>file_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>),
+  <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

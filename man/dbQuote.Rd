@@ -13,7 +13,7 @@
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{x}{A character vector to quote as string.}
 
