@@ -79,7 +79,7 @@ your account or for cross-account access." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9002</span>
       </span>
     </div>
 
@@ -129,9 +129,14 @@ These temporary credentials consist of an access key ID, a secret access key, an
 your account or for cross-account access.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>assume_role</span>(<span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"paws-athena-session-%s"</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())), <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>, <span class='kw'>set_env</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>assume_role</span>(
+  <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"paws-athena-session-%s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())),
+  <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
+  <span class='kw'>set_env</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

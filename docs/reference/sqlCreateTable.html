@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9002</span>
       </span>
     </div>
 
@@ -126,9 +126,17 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaConnection</span>
-<span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='no'>table</span>, <span class='no'>fields</span>,
-  <span class='kw'>field.types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsv"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>), <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>sqlCreateTable</span>(
+  <span class='no'>con</span>,
+  <span class='no'>table</span>,
+  <span class='no'>fields</span>,
+  <span class='kw'>field.types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tsv"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>),
+  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,16 +148,16 @@
     <tr>
       <th>table</th>
       <td><p>Name of the table. Escaped with
-<code>dbQuoteIdentifier()</code>.</p></td>
+<code><a href='https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html'>dbQuoteIdentifier()</a></code>.</p></td>
     </tr>
     <tr>
       <th>fields</th>
       <td><p>Either a character vector or a data frame.</p>
 <p>A named character vector: Names are column names, values are types.
-Names are escaped with <code>dbQuoteIdentifier()</code>.
+Names are escaped with <code><a href='https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html'>dbQuoteIdentifier()</a></code>.
 Field types are unescaped.</p>
 <p>A data frame: field types are generated using
-<code><a href='dbDataType.html'>dbDataType()</a></code>.</p></td>
+<code><a href='https://dbi.r-dbi.org/reference/dbDataType.html'>dbDataType()</a></code>.</p></td>
     </tr>
     <tr>
       <th>field.types</th>
@@ -228,7 +236,7 @@ Currently parquet compression isn't supported.</p></td>
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20191218 STRING)
+#&gt; PARTITIONED BY (20200103 STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY '	'
 #&gt; 	LINES TERMINATED BY '\n'
@@ -249,7 +257,7 @@ Currently parquet compression isn't supported.</p></td>
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20191218 STRING)
+#&gt; PARTITIONED BY (20200103 STRING)
 #&gt; STORED AS PARQUET
 #&gt; LOCATION 's3://path/to/athena/table/iris/'
 #&gt; ;</div><div class='input'>

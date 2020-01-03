@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9002</span>
       </span>
     </div>
 
@@ -125,9 +125,14 @@
     <p>Returns a set of temporary credentials for an AWS account or IAM user (<a href='https://paws-r.github.io/docs/sts/get_session_token.html'>link</a>).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_session_token</span>(<span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>serial_number</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>token_code</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
-  <span class='kw'>set_env</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>get_session_token</span>(
+  <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>serial_number</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>token_code</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
+  <span class='kw'>set_env</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

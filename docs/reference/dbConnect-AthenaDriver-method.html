@@ -89,7 +89,7 @@ AWS_ATHENA_WORK_GROUP: is equivalent to dbConnect parameter - work_group
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9002</span>
       </span>
     </div>
 
@@ -150,14 +150,24 @@ of supported environment variables:</p><ul>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaDriver</span>
-<span class='fu'>dbConnect</span>(<span class='no'>drv</span>, <span class='kw'>aws_access_key_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>aws_secret_access_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>aws_session_token</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>schema_name</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>poll_interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>dbConnect</span>(
+  <span class='no'>drv</span>,
+  <span class='kw'>aws_access_key_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>aws_secret_access_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>aws_session_token</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>schema_name</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
+  <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>poll_interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>encryption_option</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>, <span class='st'>"SSE_S3"</span>, <span class='st'>"SSE_KMS"</span>, <span class='st'>"CSE_KMS"</span>),
-  <span class='kw'>kms_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"paws-athena-session-%s"</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())), <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
-  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>kms_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"noctua-session-%s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())),
+  <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
+  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
