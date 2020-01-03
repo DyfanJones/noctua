@@ -5,10 +5,20 @@
 \alias{db_copy_to.AthenaConnection}
 \title{S3 implementation of \code{db_copy_to} for Athena}
 \usage{
-db_copy_to.AthenaConnection(con, table, values, overwrite = FALSE,
-  append = FALSE, types = NULL, partition = NULL,
-  s3_location = NULL, file_type = c("csv", "tsv", "parquet"),
-  compress = FALSE, max_batch = Inf, ...)
+db_copy_to.AthenaConnection(
+  con,
+  table,
+  values,
+  overwrite = FALSE,
+  append = FALSE,
+  types = NULL,
+  partition = NULL,
+  s3_location = NULL,
+  file_type = c("csv", "tsv", "parquet"),
+  compress = FALSE,
+  max_batch = Inf,
+  ...
+)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}

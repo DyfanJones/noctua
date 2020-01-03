@@ -4,9 +4,14 @@
 \alias{assume_role}
 \title{Assume AWS ARN Role}
 \usage{
-assume_role(profile_name = NULL, region_name = NULL, role_arn = NULL,
-  role_session_name = sprintf("paws-athena-session-\%s",
-  as.integer(Sys.time())), duration_seconds = 3600L, set_env = FALSE)
+assume_role(
+  profile_name = NULL,
+  region_name = NULL,
+  role_arn = NULL,
+  role_session_name = sprintf("paws-athena-session-\%s", as.integer(Sys.time())),
+  duration_seconds = 3600L,
+  set_env = FALSE
+)
 }
 \arguments{
 \item{profile_name}{The name of a profile to use. If not given, then the default profile is used.

@@ -10,7 +10,7 @@
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{name}{a character string with the name of the remote table.}
 

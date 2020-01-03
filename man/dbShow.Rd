@@ -12,7 +12,7 @@ dbShow(conn, name, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{name}{A character string specifying a DBMS table name.}
 

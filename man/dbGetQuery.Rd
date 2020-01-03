@@ -6,12 +6,11 @@
 \alias{dbGetQuery,AthenaConnection,character-method}
 \title{Send query, retrieve results and then clear result set}
 \usage{
-\S4method{dbGetQuery}{AthenaConnection,character}(conn, statement = NULL,
-  ...)
+\S4method{dbGetQuery}{AthenaConnection,character}(conn, statement = NULL, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[=dbConnect]{dbConnect()}}.}
+\code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{statement}{a character string containing SQL.}
 
