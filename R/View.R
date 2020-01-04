@@ -269,7 +269,9 @@ AthenaConnectionActions <- function(connection) {
               paste("-- !preview conn=", varname, sep = ""),
               "",
               if (length(tables) > 0)
-                paste("SELECT * FROM \"", tables[[1]], "\" LIMIT 100", sep = "")
+                paste("SELECT * FROM \"", tables[[1]], "\"\nLIMIT 100", 
+                      "\n\n-- Note: Please utilise LIMIT to restrict Data Scanned by AWS Athena",
+                      sep = "")
               else
                 "SELECT 1",
               "",
