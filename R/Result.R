@@ -149,7 +149,7 @@ setMethod(
     }
     
     # Added data scan information when returning data from athena
-    message("INFO: (Data scanned: ",data_scanned(result$QueryExecution$Statistics$DataScannedInBytes),")")
+    message("Info: (Data scanned: ",data_scanned(result$QueryExecution$Statistics$DataScannedInBytes),")")
     
     #create temp file
     File <- tempfile()
