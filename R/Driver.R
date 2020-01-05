@@ -187,5 +187,7 @@ setMethod(
                             region_name = region_name,
                             profile_name = profile_name, 
                             aws_expiration = aws_expiration,...)
+    # integrate with RStudio
+    on_connection_opened(con)
     con
   })

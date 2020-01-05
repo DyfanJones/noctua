@@ -200,3 +200,15 @@ write_batch <- function(split_vec, dt, max.batch, max_row, path, sep, compress, 
   fwrite(sample, path, quote = FALSE, sep = sep, showProgress = FALSE)
   path
 }
+
+# Format DataScannedInBytes to a more readable format: 
+data_scanned <- 
+  function (x) {
+    standard <- "legacy"
+    base <- 1024
+    units_map <- c("B", "KB", "MB", "GB", "TB", "PB")
+    power <- if (x <= 0) 0L else min(as.integer(log(x, base = base)), length(units_map) - 1L)
+    unit <- units_map[power + 1L]
+    if (power == 0 && standard == "legacy") unit <- "Bytes"
+    paste(round(x/base^power, digits = 2), unit)
+  }

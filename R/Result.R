@@ -138,14 +138,18 @@ setMethod(
     
     if(n >= 0 && n !=Inf){
       n = as.integer(n + 1)
+      if (n > 1000){n = 1000L; message("Info: n has been restricted to 1000 due to AWS Athena limitation")}
       tryCatch(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, MaxResults = n))
       
       output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
-      dt <- rbindlist(output)
+      dt <- rbindlist(output, fill = TRUE)
       colnames(dt) <- as.character(unname(dt[1,]))
       rownames(dt) <- NULL
       return(dt[-1,])
     }
+    
+    # Added data scan information when returning data from athena
+    message("Info: (Data scanned: ",data_scanned(result$QueryExecution$Statistics$DataScannedInBytes),")")
     
     #create temp file
     File <- tempfile()

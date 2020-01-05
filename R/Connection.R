@@ -117,7 +117,9 @@ setMethod(
   function(conn, ...) {
     if (!dbIsValid(conn)) {
       warning("Connection already closed.", call. = FALSE)
-    } else {eval.parent(substitute(conn@ptr <- list()))}
+    } else {
+      on_connection_closed(conn)
+      eval.parent(substitute(conn@ptr <- list()))}
     invisible(NULL)
   })
 
@@ -322,6 +324,8 @@ setMethod(
 #' Returns the unquoted names of Athena tables accessible through this connection.
 #' @name dbListTables
 #' @inheritParams DBI::dbListTables
+#' @param schema Athena schema, default set to NULL to return all tables from all Athena schemas.
+#'               Note: The use of DATABASE and SCHEMA is interchangeable within Athena.
 #' @aliases dbListTables
 #' @return \code{dbListTables()} returns a character vector with all the tables from Athena.
 #' @seealso \code{\link[DBI]{dbListTables}}
@@ -348,10 +352,11 @@ NULL
 #' @export
 setMethod(
   "dbListTables", "AthenaConnection",
-  function(conn,...){
+  function(conn, schema = NULL, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    tryCatch(Databases <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))
-    tryCatch(output <- lapply(Databases, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
+    if(is.null(schema)){
+      tryCatch(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
+    tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
     unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
   }
 )
@@ -510,7 +515,9 @@ setMethod(
       dbms.name <- conn@info$dbms.name
       Table <- name}
     
-    if(delete_data){
+    TableType <- conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$TableType
+    
+    if(delete_data && TableType == "EXTERNAL_TABLE"){
       nobjects <- 1000 # Only 1000 objects at a time
       while(nobjects >= 1000) {
         tryCatch(
@@ -539,6 +546,7 @@ setMethod(
     dbClearResult(res)
     
     if(!delete_data) message("Info: Only Athena table has been removed.")
+    on_connection_updated(conn, Table)
     invisible(TRUE)
   })
 
