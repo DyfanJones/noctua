@@ -5,13 +5,14 @@
 \alias{dbListTables,AthenaConnection-method}
 \title{List Athena Tables}
 \usage{
-\S4method{dbListTables}{AthenaConnection}(conn, database = NULL, ...)
+\S4method{dbListTables}{AthenaConnection}(conn, schema = NULL, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
 \code{\link[DBI:dbConnect]{dbConnect()}}.}
 
-\item{database}{Athena database, default set to NULL to return all tables from all Athena databases}
+\item{schema}{Athena schema, default set to NULL to return all tables from all Athena schemas.
+Note: The use of DATABASE and SCHEMA is interchangeable within Athena.}
 
 \item{...}{Other parameters passed on to methods.}
 }
