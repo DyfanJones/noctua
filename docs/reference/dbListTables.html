@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaConnection</span>
-<span class='fu'>dbListTables</span>(<span class='no'>conn</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>dbListTables</span>(<span class='no'>conn</span>, <span class='kw'>schema</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -135,6 +135,11 @@
       <th>conn</th>
       <td><p>A DBIConnection object, as returned by
 <code><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>schema</th>
+      <td><p>Athena schema, default set to NULL to return all tables from all Athena schemas.
+Note: The use of DATABASE and SCHEMA is interchangeable within Athena.</p></td>
     </tr>
     <tr>
       <th>...</th>
