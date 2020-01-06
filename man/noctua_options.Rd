@@ -10,7 +10,7 @@ noctua_options(file_parser = c("data.table", "vroom"))
 \item{file_parser}{Method to read and write tables to Athena, currently defaults to data.table}
 }
 \value{
-\code{noctua_options()} returns \code{TRUE}, invisibly.
+\code{noctua_options()} returns \code{NULL}, invisibly.
 }
 \description{
 A method to change noctua backend file parser.
