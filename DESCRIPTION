@@ -33,6 +33,8 @@ Collate:
     'Driver.R'
     'Connection.R'
     'DataTypes.R'
+    'File_Parser.R'
+    'Options.R'
     'Result.R'
     'Table.R'
     'View.R'

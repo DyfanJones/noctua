@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -119,6 +119,35 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-150" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-150" class="anchor"></a>noctua 1.5.0<small> Unreleased </small>
+</h1>
+<p>Updated package version for cran release</p>
+</div>
+    <div id="noctua-1409001" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1409001" class="anchor"></a>noctua 1.4.0.9001<small> Unreleased </small>
+</h1>
+<div id="new-feature" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-feature" class="anchor"></a>New Feature</h3>
+<ul>
+<li>Added integration into Rstudio connections tab</li>
+<li>Added information message of amount of data scanned by aws athena</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-1409000" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1409000" class="anchor"></a>noctua 1.4.0.9000<small> Unreleased </small>
+</h1>
+<div id="documentation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#documentation" class="anchor"></a>Documentation</h3>
+<p>Updated rdocumentation to roxygen2 7.0.2</p>
+</div>
+</div>
     <div id="noctua-140" class="section level1">
 <h1 class="page-header">
 <a href="#noctua-140" class="anchor"></a>noctua 1.4.0<small> 2019-12-19 </small>
@@ -157,9 +186,9 @@
 <h1 class="page-header">
 <a href="#noctua-1309002" class="anchor"></a>noctua 1.3.0.9002<small> Unreleased </small>
 </h1>
-<div id="new-feature" class="section level3">
+<div id="new-feature-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#new-feature" class="anchor"></a>New Feature</h3>
+<a href="#new-feature-1" class="anchor"></a>New Feature</h3>
 <ul>
 <li>Due to help from <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a>, <code>dbRemoveTable</code> can now remove S3 files for AWS Athena table being removed.</li>
 </ul>
@@ -404,9 +433,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <h1 class="page-header">
 <a href="#noctua-1109000" class="anchor"></a>noctua 1.1.0.9000<small> Unreleased </small>
 </h1>
-<div id="new-feature-1" class="section level3">
+<div id="new-feature-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#new-feature-1" class="anchor"></a>New Feature</h3>
+<a href="#new-feature-2" class="anchor"></a>New Feature</h3>
 <ul>
 <li>GZIP compression is now supported for “csv” and “tsv” file format in <code>dbWriteTable</code>
 </li>
@@ -433,19 +462,18 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <h1 class="page-header">
 <a href="#noctua-109000" class="anchor"></a>noctua 1.0.9000<small> Unreleased </small>
 </h1>
-<div id="new-features-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New Features</h2>
+<div id="new-features-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-features-1" class="anchor"></a>New Features</h3>
 <ul>
 <li>credentials are now passed through the new <code>config = list()</code> parameter is <code>paws</code> objects</li>
 <li>
 <code>BigInt</code> are now passed correctly into <code>integer64</code>
 </li>
 </ul>
-</div>
-<div id="bug" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bug" class="anchor"></a>Bug</h2>
+<div id="bug" class="section level4">
+<h4 class="hasAnchor">
+<a href="#bug" class="anchor"></a>Bug</h4>
 <ul>
 <li>
 <code>AthenaResult</code> returned: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>. The function <code>do.call</code> was causing the issue, to address this <code>do.call</code> has been removed and the helper function <code>request</code> has been broken down into <code>ResultConfiguration</code> to return a single component of <code>start_query_execution</code>
@@ -454,23 +482,24 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </li>
 </ul>
 </div>
-<div id="unit-tests-6" class="section level2">
-<h2 class="hasAnchor">
-<a href="#unit-tests-6" class="anchor"></a>Unit Tests</h2>
+</div>
+<div id="unit-tests-6" class="section level3">
+<h3 class="hasAnchor">
+<a href="#unit-tests-6" class="anchor"></a>Unit Tests</h3>
 <ul>
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>
 </div>
-<div id="minor-change-5" class="section level2">
-<h2 class="hasAnchor">
-<a href="#minor-change-5" class="anchor"></a>Minor Change</h2>
+<div id="minor-change-5" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-change-5" class="anchor"></a>Minor Change</h3>
 <ul>
 <li>dependency <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
 </ul>
 </div>
-<div id="major-change-2" class="section level2">
-<h2 class="hasAnchor">
-<a href="#major-change-2" class="anchor"></a>Major Change</h2>
+<div id="major-change-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-change-2" class="anchor"></a>Major Change</h3>
 <ul>
 <li>
 <code>data.table</code> is now used as the default file parser <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">data.table::fread</a></code> / <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html">data.table::fwrite</a></code>. This isn’t a breaking change as <code>data.table</code> was used before however this change makes <code>data.table</code> to default file parser.</li>
@@ -484,12 +513,12 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <ul>
 <li><strong>Initial RAthena release</strong></li>
 </ul>
-<div id="new-features-2" class="section level2">
-<h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>New Features</h2>
-<div id="dbi" class="section level3">
+<div id="new-features-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#dbi" class="anchor"></a>DBI</h3>
+<a href="#new-features-2" class="anchor"></a>New Features</h3>
+<div id="dbi" class="section level4">
+<h4 class="hasAnchor">
+<a href="#dbi" class="anchor"></a>DBI</h4>
 <ul>
 <li>
 <code>dbConnect</code> method can use the following methods:
@@ -503,9 +532,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <li>Enabled method to upload parquet file format into AWS S3 using <code>arrow</code> package</li>
 </ul>
 </div>
-<div id="athena-lower-level-api" class="section level3">
-<h3 class="hasAnchor">
-<a href="#athena-lower-level-api" class="anchor"></a>Athena lower level api</h3>
+<div id="athena-lower-level-api" class="section level4">
+<h4 class="hasAnchor">
+<a href="#athena-lower-level-api" class="anchor"></a>Athena lower level api</h4>
 <ul>
 <li>
 <code>assume_role</code> developed method for user to assume role when connecting to AWS Athena</li>
@@ -520,6 +549,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-150">1.5.0</a></li>
+        <li><a href="#noctua-1409001">1.4.0.9001</a></li>
+        <li><a href="#noctua-1409000">1.4.0.9000</a></li>
         <li><a href="#noctua-140">1.4.0</a></li>
         <li><a href="#noctua-1309003">1.3.0.9003</a></li>
         <li><a href="#noctua-1309002">1.3.0.9002</a></li>
