@@ -32,7 +32,7 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ## unit tests (using testthat) results
-* OK:       52
+* OK:       56
 * Failed:   0
 * Warnings: 0
 * Skipped:  0
