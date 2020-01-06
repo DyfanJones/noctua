@@ -167,10 +167,7 @@ if entire dataframe is required use <code>n = -1</code> or <code>n = Inf</code>.
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
-<span class='fu'>dbFetch</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt;       var1
-#&gt; 1  default
-#&gt; 2 sampledb
-#&gt; 3     temp</div><div class='input'><span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
+<span class='fu'>dbFetch</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt; <span class='error'>Error: NoSuchKey: The specified key does not exist.</span></div><div class='input'><span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
 
 <span class='co'># Disconnect from Athena</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
