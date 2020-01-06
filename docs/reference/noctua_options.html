@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Remove table from Athena — dbRemoveTable • noctua</title>
+<title>A method to change noctua backend file parser. — noctua_options • noctua</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,8 @@
 
 
 
-<meta property="og:title" content="Remove table from Athena — dbRemoveTable" />
-<meta property="og:description" content="Removes Athena table but does not remove the data from Amazon S3 bucket." />
+<meta property="og:title" content="A method to change noctua backend file parser. — noctua_options" />
+<meta property="og:description" content="A method to change noctua backend file parser." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -116,81 +116,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Remove table from Athena</h1>
-    <small class="dont-index">Source: <a href='https://github.com/DyfanJones/noctua/blob/master/R/Connection.R'><code>R/Connection.R</code></a></small>
-    <div class="hidden name"><code>dbRemoveTable.Rd</code></div>
+    <h1>A method to change noctua backend file parser.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/DyfanJones/noctua/blob/master/R/Options.R'><code>R/Options.R</code></a></small>
+    <div class="hidden name"><code>noctua_options.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Removes Athena table but does not remove the data from Amazon S3 bucket.</p>
+    <p>A method to change noctua backend file parser.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for AthenaConnection,character</span>
-<span class='fu'>dbRemoveTable</span>(<span class='no'>conn</span>, <span class='no'>name</span>, <span class='kw'>delete_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>confirm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>noctua_options</span>(<span class='kw'>file_parser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"data.table"</span>, <span class='st'>"vroom"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>conn</th>
-      <td><p>A DBIConnection object, as returned by
-<code><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>A character string specifying a DBMS table name.</p></td>
-    </tr>
-    <tr>
-      <th>delete_data</th>
-      <td><p>Deletes S3 files linking to AWS Athena table</p></td>
-    </tr>
-    <tr>
-      <th>confirm</th>
-      <td><p>Allows for S3 files to be deleted without the prompt check. It is recommend to leave this set to <code>FALSE</code>
-to avoid deleting other S3 files when the table's definition points to the root of S3 bucket.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Other parameters passed on to methods.</p></td>
+      <th>file_parser</th>
+      <td><p>Method to read and write tables to Athena, currently defaults to data.table</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>dbRemoveTable()</code> returns <code>TRUE</code>, invisibly.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbRemoveTable.html'>dbRemoveTable</a></code></p></div>
+    <p><code>noctua_options()</code> returns <code>TRUE</code>, invisibly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='co'># Note: </span>
-<span class='co'># - Require AWS Account to run below example.</span>
-<span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>noctua</span>)
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>DBI</span>)
-
-<span class='co'># Demo connection to Athena using profile name </span>
-<span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
-
-<span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
-             <span class='kw'>partition</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"TIMESTAMP"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
-             <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/data/"</span>)
-
-<span class='co'># Remove Table from Athena</span>
-<span class='fu'>dbRemoveTable</span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
-
-<span class='co'># Disconnect conenction</span>
-<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-}</div></pre>
+<span class='co'># change file parser from default data.table to vroom</span>
+<span class='fu'>noctua_options</span>(<span class='st'>"vroom"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
