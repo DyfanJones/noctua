@@ -6,9 +6,15 @@ Updated package version for cran release
 * Added integration into Rstudio connections tab
 * Added information message of amount of data scanned by aws athena
 
+# noctua 1.4.0.9001
+### New Feature
+* Added integration into Rstudio connections tab
+* Added information message of amount of data scanned by aws athena
+* Added method to change backend file parser so user can change file parser from `data.table` to `vroom`
+
 # noctua 1.4.0.9000
 ### Documentation
-Updated rdocumentation to roxygen2 7.0.2
+* Updated rdocumentation to roxygen2 7.0.2
 
 # noctua 1.4.0
 Updated package version for cran release
