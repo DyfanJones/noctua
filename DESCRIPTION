@@ -20,7 +20,8 @@ Suggests:
     bit64,
     dplyr (>= 0.7.0),
     dbplyr,
-    testthat
+    testthat,
+    vroom
 Depends: R (>= 3.2.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
