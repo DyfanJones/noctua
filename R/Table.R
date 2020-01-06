@@ -183,11 +183,11 @@ Athena_write_table <-
     
     # writes out csv/tsv, uses data.table for extra speed
     if (file.type == "csv"){
-      FileLocation <- split_data(value, max.batch = max.batch, compress = compress, file.type = file.type)
+      FileLocation <- split_data(athena_option_env$file_parser, value, max.batch = max.batch, compress = compress, file.type = file.type)
     }
     
     if (file.type == "tsv"){
-      FileLocation <- split_data(value, max.batch = max.batch, compress = compress, file.type = file.type, sep = "\t")
+      FileLocation <- split_data(athena_option_env$file_parser, value, max.batch = max.batch, compress = compress, file.type = file.type, sep = "\t")
     }
     
     # send data over to s3 bucket
