@@ -27,12 +27,12 @@ athena_read.athena_vroom <-
     Type2 <- Type <- AthenaToRDataType(method, athena_types)
     
     # Type2 is to bigint
-    Type2[Type2 %in% "i64"] <- "n"
+    Type2[Type2 %in% "I"] <- "n"
     
     output <- vroom(File, delim = ",", col_types = Type2, progress = FALSE,trim_ws = FALSE, altrep_opts = TRUE)
     
     # convert numeric class to integer64 to match athena's bigint
-    for (var in names(Type[Type %in% "i64"])) output[[var]] <- as.integer64(output[[var]])
+    for (var in names(Type[Type %in% "I"])) output[[var]] <- as.integer64(output[[var]])
     
     output
   }
