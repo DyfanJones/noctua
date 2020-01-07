@@ -361,6 +361,51 @@ setMethod(
   }
 )
 
+#' List Athena Schema, Tables and TableTypes
+#'
+#' Method to get Athena schema, tables and table types return as a data.frame
+#' @name dbGetTables
+#' @inheritParams DBI::dbListTables
+#' @param schema Athena schema, default set to NULL to return all tables from all Athena schemas.
+#'               Note: The use of DATABASE and SCHEMA is interchangeable within Athena.
+#' @aliases dbGetTables
+#' @return \code{dbGetTables()} returns a data.frame.
+#' @examples 
+#' \dontrun{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
+#' 
+#' library(DBI)
+#' library(noctua)
+#' 
+#' # Demo connection to Athena using profile name 
+#' con <- dbConnect(noctua::athena())
+#'              
+#' # Return hierarchy of tables in Athena
+#' dbGetTables(con)
+#' 
+#' # Disconnect conenction
+#' dbDisconnect(con)
+#' }
+NULL
+
+#' @rdname dbGetTables
+#' @export
+setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
+
+#' @rdname dbGetTables
+#' @export
+setMethod("dbGetTables", "AthenaConnection",
+          function(conn, schema = NULL, ...){
+  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+  if(is.null(schema)){
+    tryCatch(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
+  tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
+  rbindlist(lapply(output, function(x) rbindlist(lapply(x, function(y) data.frame(Schema = y$DatabaseName,
+                                                                                  TableName=y$Name,
+                                                                                  TableType = y$TableType)))))
+})
 
 #' List Field names of Athena table
 #'
