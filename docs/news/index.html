@@ -135,8 +135,14 @@
 <ul>
 <li>Added integration into Rstudio connections tab</li>
 <li>Added information message of amount of data scanned by aws athena</li>
-<li>Added method to change backend file parser so user can change file parser from <code>data.table</code> to <code>vroom</code>
-</li>
+<li>Added method to change backend file parser so user can change file parser from <code>data.table</code> to <code>vroom</code>. From now on it is possible to change file parser using <code>noctua_options</code> for example:</li>
+</ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(noctua)
+
+noctua_options("vroom")
+</a></code></pre>
+<ul>
+<li>new function <code>dbGetTables</code> that returns Athena hierarchy as a data.frame</li>
 </ul>
 </div>
 <div id="unit-tests" class="section level3">

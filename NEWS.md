@@ -5,7 +5,16 @@ Updated package version for cran release
 ### New Feature
 * Added integration into Rstudio connections tab
 * Added information message of amount of data scanned by aws athena
-* Added method to change backend file parser so user can change file parser from `data.table` to `vroom`
+* Added method to change backend file parser so user can change file parser from `data.table` to `vroom`. From now on it is possible to change file parser using `noctua_options` for example:
+
+```
+library(noctua)
+
+noctua_options("vroom")
+
+```
+
+* new function `dbGetTables` that returns Athena hierarchy as a data.frame
 
 ### Unit tests
 * Added datatransfer unit test for backend file parser vroom

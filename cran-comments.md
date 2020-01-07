@@ -4,6 +4,7 @@ This release is a feature release, focusing on:
 **New Features**
 * Integration into rstudio connections tab
 * Method to allow users change backend file parser
+* Method to return `AWS Athena` hierarchy `dbGetTables`
 
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
