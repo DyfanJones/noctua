@@ -26,6 +26,9 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t13 <- translate_sql(is.finite("var1"), con = con)
   t14 <- translate_sql(is.infinite("var1"), con = con)
   t15 <- translate_sql(is.nan("var1"), con = con)
+  t16 <- translate_sql(paste("hi","bye"), con = con)
+  t17 <- translate_sql(paste("hi","bye", sep = "-"), con = con)
+  t18 <- translate_sql(paste0("hi","bye"), con = con)
   
   expect_equal(t1 ,sql("CAST(1.0 AS VARCHAR)"))
   expect_equal(t2 ,sql("CAST('1' AS DOUBLE)"))
@@ -42,4 +45,7 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t13 ,sql("IS_FINITE('var1')"))
   expect_equal(t14 ,sql("IS_FINITE('var1')"))
   expect_equal(t15 ,sql("IS_NAN('var1')"))
+  expect_equal(t16 ,sql("('hi'||' '||'bye')"))
+  expect_equal(t17 ,sql("('hi'||'-'||'bye')"))
+  expect_equal(t18 ,sql("CONCAT('hi', 'bye')"))
 })
