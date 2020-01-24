@@ -3,13 +3,21 @@
 \name{sql_translate_env}
 \alias{sql_translate_env}
 \alias{sql_translate_env.AthenaConnection}
+\alias{sql_escape_string.AthenaConnection}
 \title{AWS Athena backend dbplyr}
 \usage{
 sql_translate_env.AthenaConnection(con)
+
+sql_escape_string.AthenaConnection(con, x)
 }
 \arguments{
 \item{con}{An \code{\linkS4class{AthenaConnection}} object, produced by
 [DBI::dbConnect()]}
+
+\item{x}{An object to escape. Existing sql vectors will be left as is,
+character vectors are escaped with single quotes, numeric vectors have
+trailing `.0` added if they're whole numbers, identifiers are
+escaped with double quotes.}
 }
 \description{
 Create s3 implementation of \code{sql_translate_env} for AWS Athena sql translate environment based off
