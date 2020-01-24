@@ -3,6 +3,16 @@
 * `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
 * `dbGetQuery` has new parameter `statistics` to print out `dbStatistics` before returning Athena results.
 
+### Bug Fix
+* Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: https://github.com/DyfanJones/RAthena/issues/44)
+
+```
+# Before
+translate_sql("2019-01-01", con = con) -> '2019-01-01'
+# Now
+translate_sql("2019-01-01", con = con) -> DATE '2019-01-01'
+```
+
 # noctua 1.5.0.9000
 ### Bug Fix
 * R functions `paste`/`paste0` would use default `dplyr:sql-translate-env` (`concat_ws`). `paste0` now uses Presto's `concat` function and `paste` now uses pipes to get extra flexible for custom separating values.
