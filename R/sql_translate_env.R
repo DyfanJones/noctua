@@ -89,3 +89,13 @@ athena_paste <- function(..., sep = " ", con) {
   pieces <- vapply(list(...), escape, con = con,collapse = sep, character(1))
   sql(paste(pieces))
 }
+
+# Athena specifc S3 method for converting date variables and iso formateed date strings to date literals
+sql_escape_string.AthenaConnection <- function(con, x) {
+  all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x)
+  if(all_dates & !is.na(all_dates)) {
+    paste0('DATE ', DBI::dbQuoteString(con, x))
+  } else {
+    DBI::dbQuoteString(con, x)
+  }
+}
