@@ -292,3 +292,52 @@ setMethod(
                type = Type, stringsAsFactors = F)
   }
 )
+
+#' Show AWS Athena Statistics
+#' 
+#' @description Returns AWS Athena Statistics from execute queries \code{\link{dbSendQuery}}
+#' @inheritParams DBI::dbColumnInfo
+#' @name dbStatistics
+#' @return \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
+#' @examples 
+#' \dontrun{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
+#' 
+#' library(DBI)
+#' library(noctua)
+#' 
+#' # Demo connection to Athena using profile name 
+#' con <- dbConnect(noctua::athena())
+#' 
+#' res <- dbSendQuery(con, "show databases")
+#' dbStatistics(res)
+#' 
+#' # Clean up
+#' dbClearResult(res)
+#' 
+#' }
+#' @docType methods
+NULL
+
+#' @rdname dbStatistics
+#' @export
+setGeneric("dbStatistics",
+           def = function(res, ...) standardGeneric("dbStatistics"))
+
+#' @rdname dbStatistics
+#'@export
+setMethod("dbStatistics", "AthenaResult",
+          function(res, ...){
+            if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+            # check status of query
+            result <- poll(res)
+            
+            # if query failed stop
+            if(result$QueryExecution$Status$State == "FAILED") {
+              stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
+            }
+            
+            result$QueryExecution$Statistics
+          })

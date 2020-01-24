@@ -599,6 +599,7 @@ setMethod(
 #'
 #' @name dbGetQuery
 #' @inheritParams DBI::dbGetQuery
+#' @param statistics If set to \code{TRUE} will print out AWS Athena statistics of query.
 #' @return \code{dbGetQuery()} returns a dataframe.
 #' @seealso \code{\link[DBI]{dbGetQuery}}
 #' @examples
@@ -626,10 +627,13 @@ NULL
 setMethod(
   "dbGetQuery", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL, ...){
+           statement = NULL, 
+           statistics = FALSE, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    stopifnot(is.logical(statistics))
     rs <- dbSendQuery(conn, statement = statement)
     on.exit(dbClearResult(rs))
+    if(statistics) print(dbStatistics(rs))
     dbFetch(res = rs, n = -1, ...)
   })
 

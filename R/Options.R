@@ -18,6 +18,14 @@ class(athena_option_env$file_parser) <- "athena_data.table"
 #' @export
 noctua_options <- function(file_parser = c("data.table", "vroom")) {
   file_parser = match.arg(file_parser)
+  
+  if (!requireNamespace(file_parser, quietly = TRUE)) 
+    stop('Please install ', file_parser, ' package and try again', call. = F)
+  
+  switch(file_parser,
+         "vroom" = if(packageVersion(file_parser) < '1.2.0')  
+           stop("Please update `vroom` to  `1.2.0` or later", call. = FALSE))
+  
   class(athena_option_env$file_parser) <- paste("athena", file_parser, sep = "_")
   invisible(NULL)
 } 

@@ -1,3 +1,33 @@
+# noctua 1.5.0.9001
+### New Feature
+* `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
+* `dbGetQuery` has new parameter `statistics` to print out `dbStatistics` before returning Athena results.
+* `RAthena_options`
+  * Now checks if desired file parser is installed before changed file_parser method
+  * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to vroom api
+
+### Bug Fix
+* Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: https://github.com/DyfanJones/RAthena/issues/44)
+* Dependency data.table now restricted to (>=1.12.4) due to file compression being added to fwrite (>=1.12.4) https://github.com/Rdatatable/data.table/blob/master/NEWS.md
+
+```
+# Before
+translate_sql("2019-01-01", con = con) -> '2019-01-01'
+# Now
+translate_sql("2019-01-01", con = con) -> DATE '2019-01-01'
+```
+
+# noctua 1.5.0.9000
+### Bug Fix
+* R functions `paste`/`paste0` would use default `dplyr:sql-translate-env` (`concat_ws`). `paste0` now uses Presto's `concat` function and `paste` now uses pipes to get extra flexible for custom separating values.
+
+```
+# R code:
+paste("hi", "bye", sep = "-")
+# SQL translation:
+('hi'||'-'||'bye')
+```
+
 # noctua 1.5.0
 Updated package version for cran release
 
