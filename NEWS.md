@@ -1,3 +1,19 @@
+# noctua 1.5.0.9001
+### New Feature
+* `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
+* `dbGetQuery` has new parameter `statistics` to print out `dbStatistics` before returning Athena results.
+
+# noctua 1.5.0.9000
+### Bug Fix
+* R functions `paste`/`paste0` would use default `dplyr:sql-translate-env` (`concat_ws`). `paste0` now uses Presto's `concat` function and `paste` now uses pipes to get extra flexible for custom separating values.
+
+```
+# R code:
+paste("hi", "bye", sep = "-")
+# SQL translation:
+('hi'||'-'||'bye')
+```
+
 # noctua 1.5.0
 Updated package version for cran release
 
