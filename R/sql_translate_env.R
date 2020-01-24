@@ -8,6 +8,10 @@ NULL
 #' \href{https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html}{DML Queries, Functions, and Operators}
 #' @param con An \code{\linkS4class{AthenaConnection}} object, produced by
 #'   [DBI::dbConnect()]
+#' @param x An object to escape. Existing sql vectors will be left as is,
+#'   character vectors are escaped with single quotes, numeric vectors have
+#'   trailing `.0` added if they're whole numbers, identifiers are
+#'   escaped with double quotes.
 #' @name sql_translate_env
 NULL
 
@@ -91,6 +95,8 @@ athena_paste <- function(..., sep = " ", con) {
 }
 
 # Athena specifc S3 method for converting date variables and iso formateed date strings to date literals
+#' @rdname sql_translate_env
+#' @export
 sql_escape_string.AthenaConnection <- function(con, x) {
   all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x)
   if(all_dates & !is.na(all_dates)) {
