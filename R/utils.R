@@ -187,5 +187,6 @@ write_bin <- function(
   con <- file(filename, "a+b")
   on.exit(close(con))
   
-  sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
+  if (length(split_vec) == 1) writeBin(value,con) else sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
+  invisible(TRUE)
 }
