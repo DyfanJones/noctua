@@ -1,3 +1,6 @@
+# noctua 1.5.1
+Updated package version for cran release
+
 # noctua 1.5.0.9002
 #### Bug Fix
 * `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. A faster option would be preferred however current implementation seem effient.
@@ -6,7 +9,7 @@
 ### New Feature
 * `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
 * `dbGetQuery` has new parameter `statistics` to print out `dbStatistics` before returning Athena results.
-* `RAthena_options`
+* `noctua_options`
   * Now checks if desired file parser is installed before changed file_parser method
   * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to vroom api
 
