@@ -179,16 +179,13 @@ data_scanned <-
 write_bin <- function(
   value,
   filename,
-  chunk_size = 2L^20L
-) {
+  chunk_size = 2L ^ 20L) {
+  
   total_size <- length(value)
-  start_byte <- 0L
-  while(start_byte < total_size) {
-    end_byte <- min(start_byte + chunk_size, total_size) - 1L
-    this_chunk <- value[seq(start_byte, end_byte, by = 1)]
-    con <- file(filename, "a+b")
-    writeBin(this_chunk, con)
-    close(con)
-    start_byte <- start_byte + chunk_size
-  }
+  split_vec <- seq(1, total_size, chunk_size)
+  
+  con <- file(filename, "a+b")
+  on.exit(close(con))
+  
+  sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
 }
