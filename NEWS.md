@@ -3,7 +3,7 @@ Updated package version for cran release
 
 # noctua 1.5.0.9002
 #### Bug Fix
-* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. A faster option would be preferred however current implementation seem effient.
+* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. A faster option would be preferred however current implementation seem efficient.
 
 # noctua 1.5.0.9001
 ### New Feature
@@ -11,11 +11,11 @@ Updated package version for cran release
 * `dbGetQuery` has new parameter `statistics` to print out `dbStatistics` before returning Athena results.
 * `noctua_options`
   * Now checks if desired file parser is installed before changed file_parser method
-  * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to vroom api
+  * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to `vroom` api
 
 ### Bug Fix
 * Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: https://github.com/DyfanJones/RAthena/issues/44)
-* Dependency data.table now restricted to (>=1.12.4) due to file compression being added to fwrite (>=1.12.4) https://github.com/Rdatatable/data.table/blob/master/NEWS.md
+* Dependency data.table now restricted to (>=1.12.4) due to file compression being added to `fwrite` (>=1.12.4) https://github.com/Rdatatable/data.table/blob/master/NEWS.md
 
 ```
 # Before
@@ -41,7 +41,7 @@ Updated package version for cran release
 # noctua 1.4.0.9001
 ### New Feature
 * Added integration into Rstudio connections tab
-* Added information message of amount of data scanned by aws athena
+* Added information message of amount of data scanned by AWS Athena
 * Added method to change backend file parser so user can change file parser from `data.table` to `vroom`. From now on it is possible to change file parser using `noctua_options` for example:
 
 ```
@@ -54,11 +54,11 @@ noctua_options("vroom")
 * new function `dbGetTables` that returns Athena hierarchy as a data.frame
 
 ### Unit tests
-* Added datatransfer unit test for backend file parser vroom
+* Added data transfer unit test for backend file parser `vroom`
 
 # noctua 1.4.0.9000
 ### Documentation
-* Updated rdocumentation to roxygen2 7.0.2
+* Updated R documentation to `roxygen2` 7.0.2
 
 # noctua 1.4.0
 Updated package version for cran release
@@ -90,7 +90,7 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 
 # noctua 1.3.0.9000
 ### Minor Change
-* Removed tolower conversion due to request https://github.com/DyfanJones/RAthena/issues/41
+* Removed `tolower` conversion due to request https://github.com/DyfanJones/RAthena/issues/41
 
 ### Bug fixed
 * Fixed issue where row.names not being correctly catered and returning NA in column names https://github.com/DyfanJones/RAthena/issues/41
@@ -99,7 +99,7 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 
 ### Unit Tests
 * Added row.names to unit test data transfer
-* Updated dplyr sql_translate_env until test to cater bug fix
+* Updated dplyr `sql_translate_env` until test to cater bug fix
 
 
 # noctua 1.3.0
@@ -167,7 +167,7 @@ When returning a single column data.frame from Athena, `noctua` would translate 
 Thanks to @OssiLehtinen for identifying issue around `sql_translate_env`. Previously `noctua` would take the default `dplyr::sql_translate_env`, now `noctua` has a custom method that uses Data types from: https://docs.aws.amazon.com/athena/latest/ug/data-types.html and window functions from: https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html
 
 ### Unit tests
-* `dplyr sql_translate_env` tests if R functions are correct translated in to Athena sql syntax.
+* `dplyr sql_translate_env` tests if R functions are correct translated in to Athena `sql` syntax.
 
 # noctua 1.2.1
 ### New Features:
@@ -203,7 +203,7 @@ dbWriteTable(con, "iris", iris)
 * GZIP compression is now supported for "csv" and "tsv" file format in `dbWriteTable`
 
 ### Minor Change
-* `sqlCreateTable` info message will now only inform user if colnames have changed and display the colname that have changed
+* `sqlCreateTable` info message will now only inform user if colnames have changed and display the column name that have changed
 
 # noctua 1.1.0
 * Increment package version from dev version to cran

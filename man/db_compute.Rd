@@ -17,7 +17,7 @@ db_compute.AthenaConnection(con, table, sql, ...)
 \item{...}{passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
 \itemize{
          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
-                       \code{"NULL"} will let athena set the file_type for you.}
+                       \code{"NULL"} will let Athena set the file_type for you.}
          \item{\code{s3_location:} s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
          \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}}
 }

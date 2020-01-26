@@ -3,7 +3,7 @@
 \name{dbGetTables}
 \alias{dbGetTables}
 \alias{dbGetTables,AthenaConnection-method}
-\title{List Athena Schema, Tables and TableTypes}
+\title{List Athena Schema, Tables and Table Types}
 \usage{
 dbGetTables(conn, ...)
 
