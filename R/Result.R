@@ -159,7 +159,7 @@ setMethod(
     # download athena output
     tryCatch(obj <- res@connection@ptr$S3$get_object(Bucket = result_info$bucket, Key = result_info$key))
     
-    writeBin(obj$Body, con = File)
+    write_bin(obj$Body, File)
     
     # return metadata of athena data types
     tryCatch(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,

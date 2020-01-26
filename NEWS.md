@@ -1,3 +1,7 @@
+# noctua 1.5.0.9002
+#### Bug Fix
+* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. A faster option would be preferred however current implementation seem effient.
+
 # noctua 1.5.0.9001
 ### New Feature
 * `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
