@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
       </span>
     </div>
 
@@ -227,17 +227,17 @@ when loading file in parquet format. For more information please go to <a href='
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
 
 <span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>con</span>, <span class='no'>mtcars</span>,
+<span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/copy_to.html'>copy_to</a></span>(<span class='no'>con</span>, <span class='no'>mtcars</span>,
         <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/data/"</span>)
 
 <span class='co'># Checking if uploaded table exists in Athena</span>
 <span class='fu'><a href='dbExistsTable.html'>dbExistsTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
 
 <span class='co'># Write Athena table from tbl_sql</span>
-<span class='no'>athena_mtcars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/tbl.html'>tbl</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
-<span class='no'>mtcars_filter</span> <span class='kw'>&lt;-</span> <span class='no'>athena_mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>gear</span> <span class='kw'>&gt;=</span><span class='fl'>4</span>)
+<span class='no'>athena_mtcars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/tbl.html'>tbl</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
+<span class='no'>mtcars_filter</span> <span class='kw'>&lt;-</span> <span class='no'>athena_mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span>(<span class='no'>gear</span> <span class='kw'>&gt;=</span><span class='fl'>4</span>)
 
-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>con</span>, <span class='no'>mtcars_filter</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/copy_to.html'>copy_to</a></span>(<span class='no'>con</span>, <span class='no'>mtcars_filter</span>)
 
 <span class='co'># Checking if uploaded table exists in Athena</span>
 <span class='fu'><a href='dbExistsTable.html'>dbExistsTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars_filter"</span>)

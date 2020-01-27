@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaConnection,character</span>
-<span class='fu'>dbGetQuery</span>(<span class='no'>conn</span>, <span class='kw'>statement</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>dbGetQuery</span>(<span class='no'>conn</span>, <span class='kw'>statement</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>statistics</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,6 +139,10 @@
     <tr>
       <th>statement</th>
       <td><p>a character string containing SQL.</p></td>
+    </tr>
+    <tr>
+      <th>statistics</th>
+      <td><p>If set to <code>TRUE</code> will print out AWS Athena statistics of query.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -165,7 +169,10 @@
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='co'># Sending Queries to Athena</span>
-<span class='fu'>dbGetQuery</span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt; <span class='error'>Error: NoSuchKey: The specified key does not exist.</span></div><div class='input'>
+<span class='fu'>dbGetQuery</span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt;       var1
+#&gt; 1  default
+#&gt; 2 sampledb
+#&gt; 3     temp</div><div class='input'>
 <span class='co'># Disconnect conenction</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
 <span class='co'># }</span></div></pre>

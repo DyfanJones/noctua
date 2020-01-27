@@ -79,7 +79,7 @@ DML Queries, Functions, and Operators" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
       </span>
     </div>
 
@@ -129,7 +129,9 @@ DML Queries, Functions, and Operators" />
 <a href='https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html'>DML Queries, Functions, and Operators</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>sql_translate_env.AthenaConnection</span>(<span class='no'>con</span>)</pre>
+    <pre class="usage"><span class='fu'>sql_translate_env.AthenaConnection</span>(<span class='no'>con</span>)
+
+<span class='fu'>sql_escape_string.AthenaConnection</span>(<span class='no'>con</span>, <span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,6 +140,13 @@ DML Queries, Functions, and Operators" />
       <th>con</th>
       <td><p>An <code><a href='AthenaConnection.html'>AthenaConnection</a></code> object, produced by
 [DBI::dbConnect()]</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>An object to escape. Existing sql vectors will be left as is,
+character vectors are escaped with single quotes, numeric vectors have
+trailing `.0` added if they're whole numbers, identifiers are
+escaped with double quotes.</p></td>
     </tr>
     </table>
 

@@ -300,7 +300,7 @@ setMethod(
 #' @name dbStatistics
 #' @return \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
