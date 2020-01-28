@@ -185,17 +185,15 @@ write_bin <- function(
   if (requireNamespace("readr", quietly = TRUE)) {
     write_file <- pkg_method("write_file", "readr")
     write_file(value, filename)
-    return(invisible(TRUE))
-  } else {
-    message("Info: For extra speed please install `readr`.")
-    total_size <- length(value)
-    split_vec <- seq(1, total_size, chunk_size)
-    
-    con <- file(filename, "a+b")
-    on.exit(close(con))
-    
-    if (length(split_vec) == 1) writeBin(value,con) 
-    else sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
-    invisible(TRUE)
-  }
+    return(invisible(TRUE))}
+  
+  total_size <- length(value)
+  split_vec <- seq(1, total_size, chunk_size)
+  
+  con <- file(filename, "a+b")
+  on.exit(close(con))
+  
+  if (length(split_vec) == 1) writeBin(value,con) 
+  else sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
+  invisible(TRUE)
 }
