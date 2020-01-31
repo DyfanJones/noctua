@@ -98,7 +98,8 @@ athena_paste <- function(..., sep = " ", con) {
 #' @rdname sql_translate_env
 #' @export
 sql_escape_string.AthenaConnection <- function(con, x) {
-  all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x)
+  # Added string restiction to prevent timestamps wrongly added to date format
+  all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x) & all(nchar(x) == 10)
   if(all_dates & !is.na(all_dates)) {
     paste0('DATE ', DBI::dbQuoteString(con, x))
   } else {
