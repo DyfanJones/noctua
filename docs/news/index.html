@@ -129,7 +129,7 @@
 <ul>
 <li>
 <code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. A faster option would be preferred however current implementation seem efficient.</li>
-<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for fixing date variables being incorrectly translated by <code>sql_translate_env</code> (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/44" class="uri">https://github.com/DyfanJones/RAthena/issues/44</a>)</li>
+<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for fixing date variables being incorrectly translated by <code>sql_translate_env</code> (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/44"># 44</a>)</li>
 </ul>
 <pre><code># Before
 translate_sql("2019-01-01", con = con) -&gt; '2019-01-01'
@@ -144,6 +144,19 @@ translate_sql("2019-01-01", con = con) -&gt; DATE '2019-01-01'</code></pre>
 paste("hi", "bye", sep = "-")
 # SQL translation:
 ('hi'||'-'||'bye')</a></code></pre>
+<ul>
+<li>If table exists and parameter <code>append</code> set to <code>TRUE</code> then existing s3.location will be utilised (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/73"># 73</a>)</li>
+<li>
+<code>db_compute</code> returned table name, however when a user wished to write table to another location (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/74"># 74</a>) i.e.</li>
+</ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+library(dplyr)
+
+con &lt;- dbConnect(RAthena::athena())
+
+tbl(con, "iris") %&gt;%
+  compute(name = "temp.iris")</a></code></pre>
+<p>An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code></p>
 </div>
 <div id="new-feature" class="section level2">
 <h2 class="hasAnchor">
@@ -215,13 +228,11 @@ noctua_options("vroom")
 <h2 class="hasAnchor">
 <a href="#bug-fix-1" class="anchor"></a>Bug fix</h2>
 <ul>
-<li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in <a href="https://github.com/DyfanJones/RAthena/issues/50" class="uri">https://github.com/DyfanJones/RAthena/issues/50</a>, special characters have issue being processed when using flat file in the backend.</li>
-<li>Fixed issue where row.names not being correctly catered and returning NA in column names <a href="https://github.com/DyfanJones/RAthena/issues/41" class="uri">https://github.com/DyfanJones/RAthena/issues/41</a>
-</li>
+<li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/50"># 50</a>), special characters have issue being processed when using flat file in the backend.</li>
+<li>Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
 <li>Fixed issue with <code>INTEGER</code> being incorrectly translated in <code>sql_translate_env.R</code>
 </li>
-<li>Fixed issue where <code>as.character</code> was getting wrongly translated <a href="https://github.com/DyfanJones/RAthena/issues/45" class="uri">https://github.com/DyfanJones/RAthena/issues/45</a>
-</li>
+<li>Fixed issue where <code>as.character</code> was getting wrongly translated (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/45"># 45</a>)</li>
 </ul>
 </div>
 <div id="unit-tests-1" class="section level2">
@@ -248,8 +259,7 @@ noctua_options("vroom")
 <a href="#minor-change" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>Added AWS_ATHENA_WORK_GROUP environmental variable support</li>
-<li>Removed <code>tolower</code> conversion due to request <a href="https://github.com/DyfanJones/RAthena/issues/41" class="uri">https://github.com/DyfanJones/RAthena/issues/41</a>
-</li>
+<li>Removed <code>tolower</code> conversion due to request (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
 </ul>
 </div>
 </div>

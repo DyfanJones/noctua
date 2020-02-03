@@ -1,7 +1,7 @@
 # noctua 1.5.1
 ## Bug Fix
 * `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. A faster option would be preferred however current implementation seem efficient.
-* Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: https://github.com/DyfanJones/RAthena/issues/44)
+* Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: [# 44](https://github.com/DyfanJones/RAthena/issues/44))
 
 ```
 # Before
@@ -19,6 +19,20 @@ paste("hi", "bye", sep = "-")
 # SQL translation:
 ('hi'||'-'||'bye')
 ```
+
+* If table exists and parameter `append` set to `TRUE` then existing s3.location will be utilised (RAthena: [# 73](https://github.com/DyfanJones/RAthena/issues/73))
+* `db_compute` returned table name, however when a user wished to write table to another location (RAthena: [# 74](https://github.com/DyfanJones/RAthena/issues/74)) i.e.
+```
+library(DBI)
+library(dplyr)
+
+con <- dbConnect(RAthena::athena())
+
+tbl(con, "iris") %>%
+  compute(name = "temp.iris")
+```
+
+An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist` This has now been fixed with db_compute returning `dbplyr::in_schema`
 
 ## New Feature
 * `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
@@ -57,10 +71,10 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 ```
 
 ## Bug fix
-* Due to issue highlighted by @OssiLehtinen in https://github.com/DyfanJones/RAthena/issues/50, special characters have issue being processed when using flat file in the backend.
-* Fixed issue where row.names not being correctly catered and returning NA in column names https://github.com/DyfanJones/RAthena/issues/41
+* Due to issue highlighted by @OssiLehtinen in (RAthena: [# 50](https://github.com/DyfanJones/RAthena/issues/50)), special characters have issue being processed when using flat file in the backend.
+* Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: [# 41](https://github.com/DyfanJones/RAthena/issues/41))
 * Fixed issue with `INTEGER` being incorrectly translated in `sql_translate_env.R`
-* Fixed issue where `as.character` was getting wrongly translated https://github.com/DyfanJones/RAthena/issues/45
+* Fixed issue where `as.character` was getting wrongly translated (RAthena: [# 45](https://github.com/DyfanJones/RAthena/issues/45))
 
 ## Unit Tests
 * Special characters have been added to unit test `data-transfer`
@@ -73,7 +87,7 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 
 ## Minor Change
 * Added AWS_ATHENA_WORK_GROUP environmental variable support
-* Removed `tolower` conversion due to request https://github.com/DyfanJones/RAthena/issues/41
+* Removed `tolower` conversion due to request (RAthena: [# 41](https://github.com/DyfanJones/RAthena/issues/41))
 
 # noctua 1.3.0
 ## Major Change
