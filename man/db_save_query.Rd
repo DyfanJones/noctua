@@ -23,7 +23,7 @@ db_save_query.AthenaConnection(
 \item{name}{Table name if left default noctua will use default from 'dplyr''s \code{compute} function.}
 
 \item{file_type}{What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
-\code{"NULL"} will let athena set the file_type for you.}
+\code{"NULL"} will let Athena set the file_type for you.}
 
 \item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 

@@ -8,7 +8,7 @@ NULL
 #' @slot ptr a list of connecting objects from the SDK paws package.
 #' @slot info a list of metadata objects
 #' @slot connection contains the \code{AthenaConnection} class object
-#' @slot quote syntax to quote sql query when creating athena ddl
+#' @slot quote syntax to quote sql query when creating Athena ddl
 #' @name AthenaConnection
 #' @keywords internal
 #' @inheritParams methods::show
@@ -361,7 +361,7 @@ setMethod(
   }
 )
 
-#' List Athena Schema, Tables and TableTypes
+#' List Athena Schema, Tables and Table Types
 #'
 #' Method to get Athena schema, tables and table types return as a data.frame
 #' @name dbGetTables

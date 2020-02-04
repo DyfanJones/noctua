@@ -26,7 +26,7 @@ for AthenaConnection objects.
 
 \item{\code{connection}}{contains the \code{AthenaConnection} class object}
 
-\item{\code{quote}}{syntax to quote sql query when creating athena ddl}
+\item{\code{quote}}{syntax to quote sql query when creating Athena ddl}
 }}
 
 \keyword{internal}

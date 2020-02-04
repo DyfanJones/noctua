@@ -1,10 +1,15 @@
 ## Release Summary
-This release is a feature release, focusing on:
+This release addresses several bugs identified by the community:
+
+** Bug Fix**
+* `sql_translate_env` now correctly translates `paste`/`paste0` into `AWS Athena` sql
+* `dplyr::sql_escape_string` now has a custom s3 method to take into account `date` classes when translating R code to sql
+* `dbFetch` would fail due to large raw vectors exceeding `2^31 bytes`
+* `noctua_options` will now check if file parser is installed, and if it is a compatible version
+* Dependency `data.table` has been restricted to version (>=1.12.4), due `data.table::fwrite` adding file compression in version (>=1.12.4)
 
 **New Features**
-* Integration into rstudio connections tab
-* Method to allow users change backend file parser
-* Method to return `AWS Athena` hierarchy `dbGetTables`
+* New function `dbStatistics` returns `AWS Athena` query information 
 
 ## Examples Note:
 * All R examples with `\dontrun` & `\donttest` have been given a note warning users that `AWS credentials` are required to run
@@ -18,10 +23,16 @@ This release is a feature release, focusing on:
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## R devtools::check_rhub() results
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  Maintainer: 'Dyfan Jones <dyfan.r.jones@gmail.com>'
+  
+  Number of updates in past 6 months: 7
+
+0 errors ✓ | 0 warnings ✓ | 1 note x
+
+* Apologies for the fast re-submission: however this release is to address bugs that have been identified by the community.
 
 ## unit tests (using testthat) results
-* OK:       56
+* OK:       65
 * Failed:   0
 * Warnings: 0
 * Skipped:  0
