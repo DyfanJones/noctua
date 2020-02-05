@@ -52,50 +52,7 @@ athena_test_req2 <-
             EncryptionConfiguration = list(EncryptionOption = "SSE_S3"))
 athena_test_req3 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 
-# test function to test the s3 upload location
-test_s3_upload_location <- function(x, 
-                               schema, 
-                               name,
-                               partition = NULL,
-                               s3.location= NULL,
-                               file.type = NULL,
-                               compress = NULL,
-                               append = FALSE){
-  # formatting s3 partitions
-  partition <- unlist(partition)
-  partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
-  
-  # s3_file name
-  FileType <- if(compress) noctua:::Compress(file.type, compress) else file.type
-  FileName <- paste(if (length(x) > 1) paste0(name,"_", 1:length(x)) else name, FileType, sep = ".")
-  
-  # s3 bucket and key split
-  s3_info <- noctua:::split_s3_uri(s3.location)
-  s3_info$key <- gsub("/$", "", s3_info$key)
-  
-  # Append data to existing s3 location
-  if(append) {return(paste(s3_info$key, partition, FileName, sep = "/"))}
-  
-  if (partition != "") partition <- paste0(partition, "/")
-  split_key <- unlist(strsplit(s3_info$key,"/"))
-  
-  # remove name from s3 key
-  if(split_key[length(split_key)] == name || length(split_key) == 0)  split_key <- split_key[-length(split_key)]
-  
-  # remove schema from s3 key
-  if(any(schema == split_key))  split_key <- split_key[-which(schema == split_key)]
-  
-  s3_info$key <- paste(split_key, collapse = "/")
-  if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
-  
-  # s3 folder
-  schema <- paste0(schema, "/")
-  name <- paste0(name, "/")
-  
-  # S3 new syntax #73
-  sprintf("%s%s%s%s%s", s3_info$key, schema, name, partition, FileName)
-}
-
+# static s3 path location
 s3_loc <- list(exp_s3_1 = "path/to/file/test/dummy_file/dummy_file.csv",
                exp_s3_2 = "path/to/file/YEAR=2000/dummy_file.csv.gz",
                exp_s3_3 = c("path/to/test/dummy_file/YEAR=2000/dummy_file_1.tsv", "path/to/test/dummy_file/YEAR=2000/dummy_file_2.tsv"),
