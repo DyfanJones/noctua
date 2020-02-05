@@ -224,43 +224,12 @@ upload_data <- function(con, x, name, partition = NULL, s3.location= NULL,  file
     schema <- con@info$dbms.name
     name <- name}
   
-  # formatting s3 partitions
-  partition <- unlist(partition)
-  partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
-
-  # s3_file name
-  FileType <- if(compress) Compress(file.type, compress) else file.type
-  FileName <- paste(if (length(x) > 1) paste0(name,"_", 1:length(x)) else name, FileType, sep = ".")
-  
-  # s3 bucket and key split
-  s3_info <- split_s3_uri(s3.location)
-  s3_info$key <- gsub("/$", "", s3_info$key)
-  
-  # Append data to existing s3 location
-  if(append) {s3_key <- paste(s3_info$key, partition, FileName, sep = "/")}
-  else{
-    if (partition != "") partition <- paste0(partition, "/")
-    split_key <- unlist(strsplit(s3_info$key,"/"))
-    
-    # remove name from s3 key
-    if(split_key[length(split_key)] == name || length(split_key) == 0)  split_key <- split_key[-length(split_key)]
-    
-    # remove schema from s3 key
-    if(any(schema == split_key))  split_key <- split_key[-which(schema == split_key)]
-    
-    s3_info$key <- paste(split_key, collapse = "/")
-    if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
-    
-    # s3 folder
-    schema <- paste0(schema, "/")
-    name <- paste0(name, "/")
-    
-    # S3 new syntax #73
-    s3_key <- sprintf("%s%s%s%s%s", s3_info$key, schema, name, partition, FileName)}
+  # create s3 location components
+  s3_key <- s3_upload_location(x, schema, name, partition, s3.location, file.type, compress, append)
   
   for (i in 1:length(x)){
     obj <- readBin(x[i], "raw", n = file.size(x[i]))
-    tryCatch(con@ptr$S3$put_object(Body = obj, Bucket = s3_info$bucket, Key = s3_key[i]))}
+    tryCatch(con@ptr$S3$put_object(Body = obj, Bucket = s3_key[[1]], Key = s3_key[[2]][i]))}
 
   invisible(NULL)
 }
@@ -510,4 +479,50 @@ quote_identifier <- function(conn, x, ...) {
     x <- gsub(conn@quote, paste0(conn@quote, conn@quote), x, fixed = TRUE)
   }
   DBI::SQL(paste(conn@quote, encodeString(x), conn@quote, sep = ""))
+}
+
+# moved s3 component builder to separate helper function to allow for unit tests
+s3_upload_location <- function(x, 
+         schema, 
+         name,
+         partition = NULL,
+         s3.location= NULL,
+         file.type = NULL,
+         compress = NULL,
+         append = FALSE){
+  # formatting s3 partitions
+  partition <- unlist(partition)
+  partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
+  
+  # s3_file name
+  FileType <- if(compress) Compress(file.type, compress) else file.type
+  FileName <- paste(if (length(x) > 1) paste0(name,"_", 1:length(x)) else name, FileType, sep = ".")
+  
+  # s3 bucket and key split
+  s3_info <- split_s3_uri(s3.location)
+  s3_info$key <- gsub("/$", "", s3_info$key)
+  
+  # Append data to existing s3 location
+  if(append) {return(list(s3_info$bucket,
+                          paste(s3_info$key, partition, FileName, sep = "/")))}
+  
+  if (partition != "") partition <- paste0(partition, "/")
+  split_key <- unlist(strsplit(s3_info$key,"/"))
+  
+  # remove name from s3 key
+  if(split_key[length(split_key)] == name || length(split_key) == 0)  split_key <- split_key[-length(split_key)]
+  
+  # remove schema from s3 key
+  if(any(schema == split_key))  split_key <- split_key[-which(schema == split_key)]
+  
+  s3_info$key <- paste(split_key, collapse = "/")
+  if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
+  
+  # s3 folder
+  schema <- paste0(schema, "/")
+  name <- paste0(name, "/")
+  
+  # S3 new syntax #73
+  list(s3_info$bucket,
+       sprintf("%s%s%s%s%s", s3_info$key, schema, name, partition, FileName))
 }

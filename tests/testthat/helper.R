@@ -51,3 +51,11 @@ athena_test_req2 <-
        list(OutputLocation = Sys.getenv("noctua_s3_query"),
             EncryptionConfiguration = list(EncryptionOption = "SSE_S3"))
 athena_test_req3 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
+
+# static s3 path location
+s3_loc <- list(exp_s3_1 = "path/to/file/test/dummy_file/dummy_file.csv",
+               exp_s3_2 = "path/to/file/YEAR=2000/dummy_file.csv.gz",
+               exp_s3_3 = c("path/to/test/dummy_file/YEAR=2000/dummy_file_1.tsv", "path/to/test/dummy_file/YEAR=2000/dummy_file_2.tsv"),
+               exp_s3_4 = c("path/to/test/dummy_file/YEAR=2000/dummy_file_1.tsv.gz","path/to/test/dummy_file/YEAR=2000/dummy_file_2.tsv.gz"),
+               exp_s3_5 = "path/to/test/dummy_file/dummy_file.parquet",
+               exp_s3_6 = "path/to/dummy_file/YEAR=2000/dummy_file.snappy.parquet")

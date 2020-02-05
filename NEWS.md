@@ -40,6 +40,10 @@ An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.d
 * `noctua_options`
   * Now checks if desired file parser is installed before changed file_parser method
   * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to `vroom` api
+  
+## Unit test
+* `dplyr` sql_translate_env: expected results have now been updated to take into account bug fix with date fields
+* S3 upload location: Test if the created s3 location is in the correct location
 
 # noctua 1.5.0
 ## New Feature
