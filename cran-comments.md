@@ -30,7 +30,7 @@ This release addresses several bugs identified by the community:
 0 errors ✓ | 0 warnings ✓ | 1 note x
 
 **Author's Notes**
-* Apologies for the fast re-submission of this package. However, this release is to address key bugs that have been identified by the community.
+* Apologies for the fast re-submission of this package. However, this release is to address key bugs that have been identified by the community. Extra unit tests have been created to address highlighted issues.
 
 ## unit tests (using testthat) results
 * OK:       71
