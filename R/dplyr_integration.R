@@ -27,7 +27,7 @@ db_desc.AthenaConnection <- function(x) {
 #'          \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}
 #' @name db_compute
 #' @return
-#' db_compute returns table name
+#' \code{db_compute} returns table name
 #' @seealso \code{\link{db_save_query}}
 #' @examples 
 #' \dontrun{
@@ -79,22 +79,26 @@ db_compute.AthenaConnection <- function(con,
   in_schema(schema, table)
 }
 
-#' S3 implementation of \code{db_save_query} for Athena
+#' Athena S3 implementation of dbplyr backend functions
 #' 
-#' This is a backend method for dplyr function \code{db_save_query} to creating tables from \code{tbl} using \code{compute} function.
-#' Users won't be required to access and run this function. However users may find it useful to know the extra
-#' parameters \code{db_save_query} provided for \code{compute} function.
+#' These functions are used to build the different types of SQL queries. 
+#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
+#' utilies AWS Glue to speed up sql query execution.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
-#' @param sql SQL code to be sent to the data
+#' @param sql SQL code to be sent to AWS Athena
 #' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
 #' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
 #'                  \code{"NULL"} will let Athena set the file_type for you.
 #' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
 #' @param partition Partition Athena table, requires to be a partitioned variable from previous table.
 #' @param ... other parameters, currently not implemented
-#' @name db_save_query
+#' @name backend_dbplyr
 #' @return
-#' db_save_query returns table name
+#' \describe{
+#' \item{db_save_query}{Returns table name}
+#' \item{db_explain}{Raises an \code{error} as AWS Athena does not support \code{EXPLAIN} queries \href{https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html}{Athena Limitations}}
+#' \item{db_query_fields}{Returns sql query column names}
+#' }
 db_save_query.AthenaConnection <- function(con, sql, name , 
                                            file_type = c("NULL","csv", "parquet", "json"),
                                            s3_location = NULL,
@@ -221,15 +225,13 @@ db_copy_to.AthenaConnection <- function(con, table, values,
   table
 }
 
-#' @rdname db_save_query
-#' @export
+#' @rdname backend_dbplyr
 db_explain.AthenaConnection <- function(con, sql, ...){
   # AWS Athena does not support Explain statements https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html
   stop("Athena does not support EXPLAIN statements.", call. = FALSE)
 }
 
-#' @rdname db_save_query
-#' @export
+#' @rdname backend_dbplyr
 db_query_fields.AthenaConnection <- function(con, sql, ...) {
   
   # Test if we have a subquery or a direct table definition
