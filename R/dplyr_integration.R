@@ -28,7 +28,7 @@ db_desc.AthenaConnection <- function(x) {
 #' @name db_compute
 #' @return
 #' \code{db_compute} returns table name
-#' @seealso \code{\link{db_save_query}}
+#' @seealso \code{\link{backend_dbplyr}}
 #' @examples 
 #' \dontrun{
 #' # Note: 
@@ -234,10 +234,10 @@ db_explain.AthenaConnection <- function(con, sql, ...){
 #' @rdname backend_dbplyr
 db_query_fields.AthenaConnection <- function(con, sql, ...) {
   
-  # Test if we have a subquery or a direct table definition
-  is_direct <- grepl('^"?[a-å]+"?\\.?"?[a-å]+"?$', trimws(tolower(sql)))
+  # check if sql is dbplyr ident
+  is_ident <- inherits(sql, "ident")
   
-  if(is_direct) { # If a direct definiton, get the fields from Glue
+  if(is_ident) { # If ident, get the fields from Glue
     
     if (grepl("\\.", sql)) {
       dbms.name <- gsub("\\..*", "" , sql)
