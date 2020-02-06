@@ -22,7 +22,7 @@ db_compute.AthenaConnection(con, table, sql, ...)
          \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}}
 }
 \value{
-db_compute returns table name
+\code{db_compute} returns table name
 }
 \description{
 This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
