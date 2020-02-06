@@ -61,5 +61,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\code{\link{db_save_query}}
+\code{\link{backend_dbplyr}}
 }
