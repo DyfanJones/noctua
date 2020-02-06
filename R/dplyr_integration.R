@@ -221,4 +221,45 @@ db_copy_to.AthenaConnection <- function(con, table, values,
   table
 }
 
+#' @rdname db_save_query
+#' @export
+db_explain.AthenaConnection <- function(con, sql, ...){
+  # AWS Athena does not support Explain statements https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html
+  stop("Athena does not support EXPLAIN statements.", call. = FALSE)
+}
 
+#' @rdname db_save_query
+#' @export
+db_query_fields.AthenaConnection <- function(con, sql, ...) {
+  
+  # Test if we have a subquery or a direct table definition
+  is_direct <- grepl('^"?[a-å]+"?\\.?"?[a-å]+"?$', trimws(tolower(sql)))
+  
+  if(is_direct) { # If a direct definiton, get the fields from Glue
+    
+    if (grepl("\\.", sql)) {
+      dbms.name <- gsub("\\..*", "" , sql)
+      Table <- gsub(".*\\.", "" , sql)
+    } else {
+      dbms.name <- con@info$dbms.name
+      Table <- sql}
+    
+    tryCatch(
+      output <- con@ptr$glue$get_table(DatabaseName = dbms.name,
+                                       Name = Table)$Table$StorageDescriptor$Columns)
+    
+    sapply(output, function(y) y$Name)
+  } else { # If a subquery, query Athena for the fields
+    # return dplyr methods
+    sql_select <- pkg_method("sql_select", "dplyr")
+    sql_subquery <- pkg_method("sql_subquery", "dplyr")
+    dplyr_sql <- pkg_method("sql", "dplyr")
+    
+    sql <- sql_select(con, dplyr_sql("*"), sql_subquery(con, sql), where = dplyr_sql("0 = 1"))
+    qry <- dbSendQuery(con, sql)
+    on.exit(dbClearResult(qry))
+    
+    res <- dbFetch(qry, 0)
+    names(res)
+  }
+}
