@@ -128,7 +128,53 @@
 <a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. A faster option would be preferred however current implementation seem efficient.</li>
+<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
+</ul>
+<pre><code>library(readr)
+library(microbenchmark)
+
+# creating some dummy data for testing
+X &lt;- 1e8
+df &lt;- 
+  data.frame(
+    w = runif(X),
+    x = 1:X,
+    y = sample(letters, X, replace = T), 
+    z = sample(c(TRUE, FALSE), X, replace = T))
+write_csv(df, "test.csv")
+
+# read in text file into raw format
+obj &lt;- readBin("test.csv", what = "raw", n = file.size("test.csv"))
+
+format(object.size(obj), units = "auto")
+# 3.3 Gb
+
+# writeBin in a loop
+write_bin &lt;- function(
+  value,
+  filename,
+  chunk_size = 2L ^ 20L) {
+  
+  total_size &lt;- length(value)
+  split_vec &lt;- seq(1, total_size, chunk_size)
+  
+  con &lt;- file(filename, "a+b")
+  on.exit(close(con))
+  
+  sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
+  invisible(TRUE)
+}
+
+
+microbenchmark(writeBin_loop = write_bin(obj, tempfile()),
+               readr = write_file(obj, tempfile()),
+               times = 5)
+
+Unit: seconds
+expr       min       lq      mean    median        uq       max neval
+R_loop 41.463273 41.62077 42.265778 41.908908 42.022042 44.313893     5
+readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5</code></pre>
+<ul>
 <li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for fixing date variables being incorrectly translated by <code>sql_translate_env</code> (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/44"># 44</a>)</li>
 </ul>
 <pre><code># Before
@@ -147,7 +193,7 @@ paste("hi", "bye", sep = "-")
 <ul>
 <li>If table exists and parameter <code>append</code> set to <code>TRUE</code> then existing s3.location will be utilised (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/73"># 73</a>)</li>
 <li>
-<code>db_compute</code> returned table name, however when a user wished to write table to another location (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/74"># 74</a>) i.e.</li>
+<code>db_compute</code> returned table name, however when a user wished to write table to another location (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/74"># 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code>.</li>
 </ul>
 <pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
 library(dplyr)
@@ -156,7 +202,6 @@ con &lt;- dbConnect(RAthena::athena())
 
 tbl(con, "iris") %&gt;%
   compute(name = "temp.iris")</a></code></pre>
-<p>An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code></p>
 </div>
 <div id="new-feature" class="section level2">
 <h2 class="hasAnchor">
@@ -173,6 +218,34 @@ tbl(con, "iris") %&gt;%
 <li>File parser <code>vroom</code> has been restricted to &gt;= 1.2.0 due to integer64 support and changes to <code>vroom</code> api</li>
 </ul>
 </li>
+<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for improving the speed of <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">dplyr::tbl</a></code> when calling Athena when using the ident method (<a href='https://github.com/DyfanJones/noctua/issues/64'>#64</a>):</li>
+</ul>
+<pre><code>library(DBI)
+library(dplyr)
+
+con &lt;- dbConnect(noctua::athena())
+
+# ident method:
+t1 &lt;- system.time(tbl(con, "iris"))
+
+# sub query method:
+t2 &lt;- system.time(tbl(con, sql("select * from iris")))
+
+# ident method
+user  system elapsed 
+0.082   0.012   0.288 
+
+# sub query method
+user  system elapsed 
+0.993   0.138   3.660 </code></pre>
+</div>
+<div id="unit-test" class="section level2">
+<h2 class="hasAnchor">
+<a href="#unit-test" class="anchor"></a>Unit test</h2>
+<ul>
+<li>
+<code>dplyr</code> sql_translate_env: expected results have now been updated to take into account bug fix with date fields</li>
+<li>S3 upload location: Test if the created s3 location is in the correct location</li>
 </ul>
 </div>
 </div>
