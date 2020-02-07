@@ -79,6 +79,9 @@ con <- dbConnect(RAthena::athena())
 tbl(con, "iris") %>%
   compute(name = "temp.iris")
 ```
+* `dbListFields` didn't display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.
+* RStudio connections tab didn't display any partitioned columns, this has been fixed in the same manner as `dbListFields`
+
 ## New Feature
 * `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
 * `dbGetQuery` has new parameter `statistics` to print out `dbStatistics` before returning Athena results.

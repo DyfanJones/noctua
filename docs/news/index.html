@@ -202,6 +202,12 @@ con &lt;- dbConnect(RAthena::athena())
 
 tbl(con, "iris") %&gt;%
   compute(name = "temp.iris")</a></code></pre>
+<ul>
+<li>
+<code>dbListFields</code> didn’t display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.</li>
+<li>RStudio connections tab didn’t display any partitioned columns, this has been fixed in the same manner as <code>dbListFields</code>
+</li>
+</ul>
 </div>
 <div id="new-feature" class="section level2">
 <h2 class="hasAnchor">
