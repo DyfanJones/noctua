@@ -6,6 +6,8 @@
   register_s3_method("dbplyr", "db_copy_to", "AthenaConnection")
   register_s3_method("dbplyr", "sql_translate_env", "AthenaConnection")
   register_s3_method("dbplyr", "sql_escape_string", "AthenaConnection")
+  register_s3_method("dbplyr", "db_explain", "AthenaConnection")
+  register_s3_method("dbplyr", "db_query_fields", "AthenaConnection")
 }
 
 register_s3_method <- function(pkg, generic, class, fun = NULL) {

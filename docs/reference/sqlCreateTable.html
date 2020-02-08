@@ -210,7 +210,7 @@ Currently parquet compression isn't supported.</p></td>
 #&gt; <span class='message'>Sepal_Length,</span>
 #&gt; <span class='message'>Sepal_Width,</span>
 #&gt; <span class='message'>Petal_Length,</span>
-#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `iris` (
+#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `default`.`iris` (
 #&gt;   `Sepal_Length` DOUBLE,
 #&gt;   `Sepal_Width` DOUBLE,
 #&gt;   `Petal_Length` DOUBLE,
@@ -220,7 +220,7 @@ Currently parquet compression isn't supported.</p></td>
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY '	'
 #&gt; 	LINES TERMINATED BY '\n'
-#&gt; LOCATION 's3://path/to/athena/table/iris/'
+#&gt; LOCATION 's3://path/to/athena/table/default/iris/'
 #&gt; TBLPROPERTIES ("skip.header.line.count"="1");</div><div class='input'>
 <span class='co'># Create DDL for iris data.frame with partition</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
@@ -229,18 +229,18 @@ Currently parquet compression isn't supported.</p></td>
 #&gt; <span class='message'>Sepal_Length,</span>
 #&gt; <span class='message'>Sepal_Width,</span>
 #&gt; <span class='message'>Petal_Length,</span>
-#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `iris` (
+#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `default`.`iris` (
 #&gt;   `Sepal_Length` DOUBLE,
 #&gt;   `Sepal_Width` DOUBLE,
 #&gt;   `Petal_Length` DOUBLE,
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20200127 STRING)
+#&gt; PARTITIONED BY (20200206 STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY '	'
 #&gt; 	LINES TERMINATED BY '\n'
-#&gt; LOCATION 's3://path/to/athena/table/iris/'
+#&gt; LOCATION 's3://path/to/athena/table/default/iris/'
 #&gt; TBLPROPERTIES ("skip.header.line.count"="1");</div><div class='input'>
 <span class='co'># Create DDL for iris data.frame with partition and file.type parquet</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
@@ -250,16 +250,16 @@ Currently parquet compression isn't supported.</p></td>
 #&gt; <span class='message'>Sepal_Length,</span>
 #&gt; <span class='message'>Sepal_Width,</span>
 #&gt; <span class='message'>Petal_Length,</span>
-#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `iris` (
+#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `default`.`iris` (
 #&gt;   `Sepal_Length` DOUBLE,
 #&gt;   `Sepal_Width` DOUBLE,
 #&gt;   `Petal_Length` DOUBLE,
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20200127 STRING)
+#&gt; PARTITIONED BY (20200206 STRING)
 #&gt; STORED AS PARQUET
-#&gt; LOCATION 's3://path/to/athena/table/iris/'
+#&gt; LOCATION 's3://path/to/athena/table/default/iris/'
 #&gt; ;</div><div class='input'>
 <span class='co'># Disconnect from Athena</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)

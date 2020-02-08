@@ -155,10 +155,10 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>db_compute returns table name</p>
+    <p><code>db_compute</code> returns table name</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='db_save_query.html'>db_save_query</a></code></p></div>
+    <div class='dont-index'><p><code><a href='backend_dbplyr.html'>backend_dbplyr</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -173,20 +173,20 @@
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/copy_to.html'>copy_to</a></span>(<span class='no'>con</span>, <span class='no'>mtcars</span>,
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>con</span>, <span class='no'>mtcars</span>,
         <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/data/"</span>)
 
 <span class='co'># Write Athena table from tbl_sql</span>
-<span class='no'>athena_mtcars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/tbl.html'>tbl</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
-<span class='no'>mtcars_filter</span> <span class='kw'>&lt;-</span> <span class='no'>athena_mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span>(<span class='no'>gear</span> <span class='kw'>&gt;=</span><span class='fl'>4</span>)
+<span class='no'>athena_mtcars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/tbl.html'>tbl</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
+<span class='no'>mtcars_filter</span> <span class='kw'>&lt;-</span> <span class='no'>athena_mtcars</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>gear</span> <span class='kw'>&gt;=</span><span class='fl'>4</span>)
 
 <span class='co'># create athena with unique table name</span>
 <span class='no'>mtcars_filer</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/compute.html'>compute</a></span>()
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/compute.html'>compute</a></span>()
 
 <span class='co'># create athena with specified name and s3 location</span>
 <span class='no'>mtcars_filer</span> <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/compute.html'>compute</a></span>(<span class='st'>"mtcars_filer"</span>,
+    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/compute.html'>compute</a></span>(<span class='st'>"mtcars_filer"</span>,
             <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/mtcars_filer/"</span>)
 
 <span class='co'># Disconnect from Athena</span>

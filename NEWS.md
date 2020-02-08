@@ -1,6 +1,54 @@
 # noctua 1.5.1
 ## Bug Fix
-* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. A faster option would be preferred however current implementation seem efficient.
+* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. If `readr` is avialable on system then `readr::write_file` is used for extra speed.
+
+```
+library(readr)
+library(microbenchmark)
+
+# creating some dummy data for testing
+X <- 1e8
+df <- 
+  data.frame(
+    w = runif(X),
+    x = 1:X,
+    y = sample(letters, X, replace = T), 
+    z = sample(c(TRUE, FALSE), X, replace = T))
+write_csv(df, "test.csv")
+
+# read in text file into raw format
+obj <- readBin("test.csv", what = "raw", n = file.size("test.csv"))
+
+format(object.size(obj), units = "auto")
+# 3.3 Gb
+
+# writeBin in a loop
+write_bin <- function(
+  value,
+  filename,
+  chunk_size = 2L ^ 20L) {
+  
+  total_size <- length(value)
+  split_vec <- seq(1, total_size, chunk_size)
+  
+  con <- file(filename, "a+b")
+  on.exit(close(con))
+  
+  sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
+  invisible(TRUE)
+}
+
+
+microbenchmark(writeBin_loop = write_bin(obj, tempfile()),
+               readr = write_file(obj, tempfile()),
+               times = 5)
+
+Unit: seconds
+expr       min       lq      mean    median        uq       max neval
+R_loop 41.463273 41.62077 42.265778 41.908908 42.022042 44.313893     5
+readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5
+```
+
 * Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: [# 44](https://github.com/DyfanJones/RAthena/issues/44))
 
 ```
@@ -21,7 +69,7 @@ paste("hi", "bye", sep = "-")
 ```
 
 * If table exists and parameter `append` set to `TRUE` then existing s3.location will be utilised (RAthena: [# 73](https://github.com/DyfanJones/RAthena/issues/73))
-* `db_compute` returned table name, however when a user wished to write table to another location (RAthena: [# 74](https://github.com/DyfanJones/RAthena/issues/74)) i.e.
+* `db_compute` returned table name, however when a user wished to write table to another location (RAthena: [# 74](https://github.com/DyfanJones/RAthena/issues/74)). An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist` This has now been fixed with db_compute returning `dbplyr::in_schema`.
 ```
 library(DBI)
 library(dplyr)
@@ -31,8 +79,8 @@ con <- dbConnect(RAthena::athena())
 tbl(con, "iris") %>%
   compute(name = "temp.iris")
 ```
-
-An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist` This has now been fixed with db_compute returning `dbplyr::in_schema`
+* `dbListFields` didn't display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.
+* RStudio connections tab didn't display any partitioned columns, this has been fixed in the same manner as `dbListFields`
 
 ## New Feature
 * `dbStatistics` is a wrapper around `paws` `get_query_execution` to return statistics for `noctua::dbSendQuery` results
@@ -40,6 +88,27 @@ An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.d
 * `noctua_options`
   * Now checks if desired file parser is installed before changed file_parser method
   * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to `vroom` api
+* Thanks to @OssiLehtinen for improving the speed of `dplyr::tbl` when calling Athena when using the ident method (#64): 
+```
+library(DBI)
+library(dplyr)
+
+con <- dbConnect(noctua::athena())
+
+# ident method:
+t1 <- system.time(tbl(con, "iris"))
+
+# sub query method:
+t2 <- system.time(tbl(con, sql("select * from iris")))
+
+# ident method
+user  system elapsed 
+0.082   0.012   0.288 
+
+# sub query method
+user  system elapsed 
+0.993   0.138   3.660 
+```
   
 ## Unit test
 * `dplyr` sql_translate_env: expected results have now been updated to take into account bug fix with date fields
