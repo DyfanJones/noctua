@@ -453,7 +453,7 @@ setMethod("dbListFields", c("AthenaConnection", "character") ,
               Table <- name}
             
             tryCatch(
-              output <- con@ptr$glue$get_table(DatabaseName = dbms.name,
+              output <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
                                                Name = Table)$Table)
             col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
             partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
