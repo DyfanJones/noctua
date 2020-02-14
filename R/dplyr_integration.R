@@ -83,7 +83,7 @@ db_compute.AthenaConnection <- function(con,
 #' 
 #' These functions are used to build the different types of SQL queries. 
 #' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
-#' utilies AWS Glue to speed up sql query execution.
+#' utilise AWS Glue to speed up sql query execution.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
 #' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
