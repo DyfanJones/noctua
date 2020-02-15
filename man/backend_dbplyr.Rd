@@ -47,5 +47,5 @@ db_query_fields.AthenaConnection(con, sql, ...)
 \description{
 These functions are used to build the different types of SQL queries. 
 The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
-utilies AWS Glue to speed up sql query execution.
+utilise AWS Glue to speed up sql query execution.
 }
