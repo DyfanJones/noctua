@@ -6,7 +6,7 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version-ago/noctua)](https://CRAN.R-project.org/package=noctua)
 ![downloads](https://cranlogs.r-pkg.org/badges/noctua)
-  [![Codecov test coverage](https://codecov.io/gh/DyfanJones/noctua/branch/master/graph/badge.svg)](https://codecov.io/gh/DyfanJones/noctua?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/DyfanJones/noctua/branch/master/graph/badge.svg)](https://codecov.io/gh/DyfanJones/noctua?branch=master)
 
 The goal of the `noctua` package is to provide a DBI-compliant interface
 to Amazon’s Athena (<https://aws.amazon.com/athena/>) using [`paws`](https://github.com/paws-r/paws) SDK.
