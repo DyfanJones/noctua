@@ -86,7 +86,9 @@ For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
 \item{partition}{Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}}
 
 \item{s3.location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
-By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.}
+By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object. \strong{Note:}
+When creating a table for the first time \code{s3.location} will be formatted to the following syntax \code{"s3://{mybucket}/{schema}/{table}/{parition}/"} 
+this is to support tables with the same name but existing in different schemas. If schema isn't specified in \code{name} parameter then schema from \code{dbConnect} is used instead.}
 
 \item{file.type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
 of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
