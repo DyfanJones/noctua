@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1.9000</span>
       </span>
     </div>
 
@@ -224,7 +224,10 @@ default name.</p>
     <tr>
       <th>s3.location</th>
       <td><p>s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
-By default s3.location is set s3 staging directory from <code><a href='AthenaConnection.html'>AthenaConnection</a></code> object.</p></td>
+By default, the s3.location is set to s3 staging directory from <code><a href='AthenaConnection.html'>AthenaConnection</a></code> object. <strong>Note:</strong>
+When creating a table for the first time <code>s3.location</code> will be formatted from <code>"s3://mybucket/data/"</code> to the following 
+syntax <code>"s3://{mybucket/data}/{schema}/{table}/{parition}/"</code> this is to support tables with the same name but existing in different 
+schemas. If schema isn't specified in <code>name</code> parameter then the schema from <code>dbConnect</code> is used instead.</p></td>
     </tr>
     <tr>
       <th>file.type</th>

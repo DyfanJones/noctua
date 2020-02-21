@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1.9000</span>
       </span>
     </div>
 
@@ -162,11 +162,7 @@
 
 <span class='co'># Get Column information from query</span>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"select * from information_schema.tables"</span>)
-<span class='fu'>dbColumnInfo</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;      field_name    type
-#&gt; 1 table_catalog varchar
-#&gt; 2  table_schema varchar
-#&gt; 3    table_name varchar
-#&gt; 4    table_type varchar</div><div class='input'><span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
+<span class='fu'>dbColumnInfo</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; <span class='error'>Error: InvalidRequestException: Could not find results</span></div><div class='input'><span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
 
 <span class='co'># Disconnect from Athena</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
