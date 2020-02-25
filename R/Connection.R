@@ -684,7 +684,7 @@ setMethod(
     info <- dbObj@info
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
-    info <- c(info, region_name = RegionName, paws = paws, noctua = noctua)
+    info <- c(info, paws = paws, noctua = noctua)
     info
   })
 
