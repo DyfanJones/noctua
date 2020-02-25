@@ -61,7 +61,8 @@ AthenaConnection <-
     info <- list(profile_name = prof_name, s3_staging = s3_staging_dir,
                  dbms.name = schema_name, work_group = work_group,
                  poll_interval = poll_interval, encryption_option = encryption_option,
-                 kms_key = kms_key, expiration = aws_expiration)
+                 kms_key = kms_key, expiration = aws_expiration,
+                 region_name = region_name %||% get_region(profile_name))
     
     res <- new("AthenaConnection",  ptr = ptr, info = info, quote = "`")
   }
@@ -680,9 +681,7 @@ setMethod(
   "dbGetInfo", "AthenaConnection",
   function(dbObj, ...) {
     if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
-    get_region <- pkg_method("get_region", "paws.common")
     info <- dbObj@info
-    RegionName <- get_region(info$profile_name)
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
     info <- c(info, region_name = RegionName, paws = paws, noctua = noctua)
