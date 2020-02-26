@@ -27,7 +27,7 @@ athena_option_env$cache_dt <-  cache_dt
 noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0) {
   file_parser = match.arg(file_parser)
   
-  if(cache_size < 0 && cache_size > 50) stop("noctua currently only caches up to 50 queries", call. = F)
+  if(cache_size < 0 && cache_size >= 50) stop("noctua currently only caches up to 50 queries", call. = F)
   
   if (!requireNamespace(file_parser, quietly = TRUE)) 
     stop('Please install ', file_parser, ' package and try again', call. = F)
