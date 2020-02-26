@@ -197,3 +197,20 @@ write_bin <- function(
   else sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
   invisible(TRUE)
 }
+
+# caching function to added metadata to cache data.table
+cache_query = function(poll_result){
+  cache_append = data.table(QueryId = poll_result$QueryExecution$QueryExecutionId,
+                            Query = poll_result$QueryExecution$Query,
+                            State= poll_result$QueryExecution$Status$State,
+                            StatementType= poll_result$QueryExecution$StatementType,
+                            WorkGroup = poll_result$QueryExecution$WorkGroup,
+                            timestamp = as.integer(Sys.time()))
+  athena_option_env$cache_dt = head(rbind(athena_option_env$cache_dt, cache_append)[order(-timestamp)], athena_option_env$cache_size)
+}
+
+# check cached query ids
+check_cache = function(query, work_group){
+  query_id = test_env$cache_dt[Query == query & State == "SUCCEEDED" && StatementType == "DML" && WorkGroup == work_group, QueryId]
+  if(length(query_id) == 0) return(NULL) else return(query_id[1])
+}
