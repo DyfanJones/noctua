@@ -14,11 +14,4 @@ test_that("Check connection to Athena using ARN",{
   
   output <- dbGetQuery(con, "show Databases")
   expect_equal(any(grepl("default", output)), TRUE)
-  
-  # clean up system environmental variables
-  Sys.unsetenv("AWS_ACCESS_KEY_ID")
-  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
-  Sys.unsetenv("AWS_SESSION_TOKEN")
-  Sys.unsetenv("AWS_PROFILE")
-  Sys.unsetenv("AWS_REGION")
 })
