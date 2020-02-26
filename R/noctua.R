@@ -15,7 +15,7 @@
 #' without needing hard code any credentials.
 #'
 #' @import paws
-#' @importFrom utils packageVersion
+#' @importFrom utils packageVersion head
 #' @importFrom stats runif
 #' @import data.table
 #' @import DBI
