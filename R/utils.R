@@ -200,17 +200,17 @@ write_bin <- function(
 
 # caching function to added metadata to cache data.table
 cache_query = function(poll_result){
-  cache_append = data.table(QueryId = poll_result$QueryExecution$QueryExecutionId,
-                            Query = poll_result$QueryExecution$Query,
-                            State= poll_result$QueryExecution$Status$State,
-                            StatementType= poll_result$QueryExecution$StatementType,
-                            WorkGroup = poll_result$QueryExecution$WorkGroup)
+  cache_append = data.table("QueryId" = poll_result$QueryExecution$QueryExecutionId,
+                            "Query" = poll_result$QueryExecution$Query,
+                            "State"= poll_result$QueryExecution$Status$State,
+                            "StatementType"= poll_result$QueryExecution$StatementType,
+                            "WorkGroup" = poll_result$QueryExecution$WorkGroup)
   new_query = fsetdiff(cache_append, athena_option_env$cache_dt, all = TRUE)
   if(nrow(new_query) > 0) athena_option_env$cache_dt = head(rbind(cache_append, athena_option_env$cache_dt), athena_option_env$cache_size)
 }
 
 # check cached query ids
 check_cache = function(query, work_group){
-  query_id = athena_option_env$cache_dt[Query == query & State == "SUCCEEDED" & StatementType == "DML" & WorkGroup == work_group, QueryId]
+  query_id = athena_option_env$cache_dt[get("Query") == query & get("State") == "SUCCEEDED" & get("StatementType") == "DML" & get("WorkGroup") == work_group, get("QueryId")]
   if(length(query_id) == 0) return(NULL) else return(query_id[1])
 }
