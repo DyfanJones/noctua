@@ -211,6 +211,6 @@ cache_query = function(poll_result){
 
 # check cached query ids
 check_cache = function(query, work_group){
-  query_id = test_env$cache_dt[Query == query & State == "SUCCEEDED" && StatementType == "DML" && WorkGroup == work_group, QueryId]
+  query_id = athena_option_env$cache_dt[Query == query & State == "SUCCEEDED" && StatementType == "DML" && WorkGroup == work_group, QueryId]
   if(length(query_id) == 0) return(NULL) else return(query_id[1])
 }
