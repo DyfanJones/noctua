@@ -204,11 +204,9 @@ cache_query = function(poll_result){
                             Query = poll_result$QueryExecution$Query,
                             State= poll_result$QueryExecution$Status$State,
                             StatementType= poll_result$QueryExecution$StatementType,
-                            WorkGroup = poll_result$QueryExecution$WorkGroup,
-                            timestamp = as.integer(Sys.time()))
-  
-  new_query = fsetdiff(cache_append[,-6], athena_option_env$cache_dt[,-6], all = TRUE)
-  if(nrow(new_query) > 0) athena_option_env$cache_dt = head(rbind(athena_option_env$cache_dt, cache_append)[order(-timestamp)], athena_option_env$cache_size)
+                            WorkGroup = poll_result$QueryExecution$WorkGroup)
+  new_query = fsetdiff(cache_append, athena_option_env$cache_dt, all = TRUE)
+  if(nrow(new_query) > 0) athena_option_env$cache_dt = head(rbind(cache_append, athena_option_env$cache_dt), athena_option_env$cache_size)
 }
 
 # check cached query ids
