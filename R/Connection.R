@@ -64,7 +64,7 @@ AthenaConnection <-
                                       "or when work_group is defined in `create_work_group()`", call. = F)}
     
     info <- list(profile_name = prof_name, s3_staging = s3_staging_dir,
-                 dbms.name = schema_name, work_group = work_group,
+                 dbms.name = schema_name, work_group = work_group %||% "primary",
                  poll_interval = poll_interval, encryption_option = encryption_option,
                  kms_key = kms_key, expiration = aws_expiration,
                  region_name = RegionName)
@@ -241,7 +241,11 @@ setMethod(
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
-    poll(res)
+    poll_result <- poll(res)
+    
+    # cache query metadata if caching is enabled
+    if (athena_option_env$cache_size > 0) cache_query(poll_result)
+    
     res
   }
 )
