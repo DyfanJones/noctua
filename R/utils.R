@@ -206,11 +206,13 @@ cache_query = function(poll_result){
                             StatementType= poll_result$QueryExecution$StatementType,
                             WorkGroup = poll_result$QueryExecution$WorkGroup,
                             timestamp = as.integer(Sys.time()))
-  athena_option_env$cache_dt = head(rbind(athena_option_env$cache_dt, cache_append)[order(-timestamp)], athena_option_env$cache_size)
+  
+  new_query = fsetdiff(cache_append[,-6], athena_option_env$cache_dt[,-6], all = TRUE)
+  if(nrow(new_query) > 0) athena_option_env$cache_dt = head(rbind(athena_option_env$cache_dt, cache_append)[order(-timestamp)], athena_option_env$cache_size)
 }
 
 # check cached query ids
 check_cache = function(query, work_group){
-  query_id = athena_option_env$cache_dt[Query == query & State == "SUCCEEDED" && StatementType == "DML" && WorkGroup == work_group, QueryId]
+  query_id = athena_option_env$cache_dt[Query == query & State == "SUCCEEDED" & StatementType == "DML" & WorkGroup == work_group, QueryId]
   if(length(query_id) == 0) return(NULL) else return(query_id[1])
 }
