@@ -35,23 +35,28 @@ AthenaConnection <-
     get_region <- pkg_method("get_region", "paws.common")
     get_profile_name <- pkg_method("get_profile_name", "paws.common")
     
+    # get region name
+    RegionName <- region_name %||% get_region(profile_name)
+    
     # get profile_name
     prof_name <- if(!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
-    config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, prof_name, region_name %||% get_region(profile_name))
     
-    tryCatch({Athena <- paws::athena(config)
-              S3 <- paws::s3(config)
-              glue <- paws::glue(config)})
+    # format credentials to pass to paws sdk
+    Config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, prof_name, RegionName)
+    
+    tryCatch({Athena <- paws::athena(config = Config)
+              S3 <- paws::s3(config = Config)
+              glue <- paws::glue(config = Config)})
     
     if(is.null(s3_staging_dir) && !is.null(work_group)){
       tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation)
     }
     
     # return a subset of api function to reduce object size
-    ptr <-list(Athena = Athena[c("start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
+    ptr <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
                                  "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
-                S3 = S3[c("put_object", "get_object","delete_object","delete_objects","list_objects")],
-                glue = glue[c("get_databases","get_tables","get_table")])
+                S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects")],
+                glue = glue[c(".internal", "get_databases","get_tables","get_table")])
     
     s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
     
@@ -61,7 +66,8 @@ AthenaConnection <-
     info <- list(profile_name = prof_name, s3_staging = s3_staging_dir,
                  dbms.name = schema_name, work_group = work_group,
                  poll_interval = poll_interval, encryption_option = encryption_option,
-                 kms_key = kms_key, expiration = aws_expiration)
+                 kms_key = kms_key, expiration = aws_expiration,
+                 region_name = RegionName)
     
     res <- new("AthenaConnection",  ptr = ptr, info = info, quote = "`")
   }
@@ -680,12 +686,10 @@ setMethod(
   "dbGetInfo", "AthenaConnection",
   function(dbObj, ...) {
     if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
-    get_region <- pkg_method("get_region", "paws.common")
     info <- dbObj@info
-    RegionName <- get_region(info$profile_name)
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
-    info <- c(info, region_name = RegionName, paws = paws, noctua = noctua)
+    info <- c(info, paws = paws, noctua = noctua)
     info
   })
 

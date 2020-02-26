@@ -24,11 +24,4 @@ test_that("Check if dbDisconnect working as intended",{
   expect_error(dbSendQuery(con, "select * removable_table"))
   expect_error(dbExecute(con, "select * removable_table"))
   expect_error(dbGetQuery(con, "select * reomovable_table"))
-  
-  # clean up system environmental variables
-  Sys.unsetenv("AWS_ACCESS_KEY_ID")
-  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
-  Sys.unsetenv("AWS_SESSION_TOKEN")
-  Sys.unsetenv("AWS_PROFILE")
-  Sys.unsetenv("AWS_REGION")
 })

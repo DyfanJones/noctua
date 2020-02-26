@@ -29,11 +29,4 @@ test_that("Check if Athena Request created correctly",{
   expect_equal(R1, athena_test_req1)
   expect_equal(R2, athena_test_req2)
   expect_equal(R3, athena_test_req3)
-  
-  # clean up system environmental variables
-  Sys.unsetenv("AWS_ACCESS_KEY_ID")
-  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
-  Sys.unsetenv("AWS_SESSION_TOKEN")
-  Sys.unsetenv("AWS_PROFILE")
-  Sys.unsetenv("AWS_REGION")
 })

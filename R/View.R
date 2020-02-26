@@ -112,17 +112,15 @@ AthenaListObjects.default <- function(connection, database = NULL, name = NULL, 
 
 # given a connection, returns its "host name" (a unique string which identifies it)
 computeHostName <- function(connection) {
-  get_region <- pkg_method("get_region", "paws.common")
   paste(collapse = "_",c(
     connection@info$profile_name,
     "Athena",
-    get_region(connection@info$profile_name)
+    connection@info$region_name
   ))
 }
 
 computeDisplayName <- function(connection) {
-  get_region <- pkg_method("get_region", "paws.common")
-  paste0("AWS Region: ", get_region(connection@info$profile_name))
+  paste0("AWS Region: ", connection@info$region_name)
 }
 
 # selects the table or view from arguments

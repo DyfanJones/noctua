@@ -48,11 +48,4 @@ test_that("Testing data transfer between R and athena datatable", {
   expect_equal(test_df2,sqlData(con, df))
   expect_equal(test_df3,df2)
   expect_equal(test_df4, sqlData(con, mtcars))
-  
-  # clean up system environmental variables
-  Sys.unsetenv("AWS_ACCESS_KEY_ID")
-  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
-  Sys.unsetenv("AWS_SESSION_TOKEN")
-  Sys.unsetenv("AWS_PROFILE")
-  Sys.unsetenv("AWS_REGION")
 })
