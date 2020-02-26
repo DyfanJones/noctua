@@ -51,6 +51,7 @@ athena_test_req2 <-
        list(OutputLocation = Sys.getenv("noctua_s3_query"),
             EncryptionConfiguration = list(EncryptionOption = "SSE_S3"))
 athena_test_req3 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
+athena_test_req4 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 
 # static s3 path location
 s3_loc <- list(exp_s3_1 = "path/to/file/test/dummy_file/dummy_file.csv",
