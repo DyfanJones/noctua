@@ -206,7 +206,9 @@ cache_query = function(poll_result){
                             "StatementType"= poll_result$QueryExecution$StatementType,
                             "WorkGroup" = poll_result$QueryExecution$WorkGroup)
   new_query = fsetdiff(cache_append, athena_option_env$cache_dt, all = TRUE)
-  if(nrow(new_query) > 0) athena_option_env$cache_dt = head(rbind(cache_append, athena_option_env$cache_dt), athena_option_env$cache_size)
+  
+  # As Athena doesn't scanned data with Failed queries. Failed queries wont be cached: https://aws.amazon.com/athena/pricing/
+  if(nrow(new_query[get("State") != "FAILED"]) > 0) athena_option_env$cache_dt = head(rbind(cache_append, athena_option_env$cache_dt), athena_option_env$cache_size)
 }
 
 # check cached query ids
