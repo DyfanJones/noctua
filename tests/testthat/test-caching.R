@@ -23,4 +23,6 @@ test_that("Testing if caching returns the same query id", {
   exp2 = res3@info$QueryExecutionId == res4@info$QueryExecutionId
   expect_false(exp1)
   expect_true(exp2)
+  expect_error(noctua_options(cache_size = 101))
+  expect_error(noctua_options(cache_size = -1))
 })
