@@ -30,16 +30,16 @@ test_that("Create and Delete Athena Work Groups",{
   
   dbDisconnect(con)
   
+  expect_error(create_work_group(con, "demo_work_group", description = "This is a demo work group",
+                    tags = tag_options(key= "demo_work_group", value = "demo_01")))
+  expect_error(delete_work_group(con, "demo_work_group"))
+  expect_error(list_work_groups(con))
+  expect_error(get_work_group(con))
+  expect_error(update_work_group(con, "demo_work_group", 
+                                 description = "This is a demo work group update"))
   expect_equal(any(grepl("demo_work_group", output1)), FALSE)
   expect_equal(any(grepl("demo_work_group", output2)), TRUE)
   expect_equal(any(grepl("demo_work_group", output3)), FALSE)
   expect_equal(meta_data1, "This is a demo work group")
   expect_equal(meta_data2, "This is a demo work group update")
-  
-  # clean up system environmental variables
-  Sys.unsetenv("AWS_ACCESS_KEY_ID")
-  Sys.unsetenv("AWS_SECRET_ACCESS_KEY")
-  Sys.unsetenv("AWS_SESSION_TOKEN")
-  Sys.unsetenv("AWS_PROFILE")
-  Sys.unsetenv("AWS_REGION")
 })

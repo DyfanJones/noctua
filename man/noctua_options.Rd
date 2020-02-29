@@ -2,18 +2,21 @@
 % Please edit documentation in R/Options.R
 \name{noctua_options}
 \alias{noctua_options}
-\title{A method to change noctua backend file parser.}
+\title{A method to configue noctua backend options.}
 \usage{
-noctua_options(file_parser = c("data.table", "vroom"))
+noctua_options(file_parser = c("data.table", "vroom"), cache_size = 0)
 }
 \arguments{
 \item{file_parser}{Method to read and write tables to Athena, currently defaults to data.table}
+
+\item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries.}
 }
 \value{
 \code{noctua_options()} returns \code{NULL}, invisibly.
 }
 \description{
-A method to change noctua backend file parser.
+\code{noctua_options()} provides a method to change the backend. This includes changing the file parser
+and whether \code{noctua} should cache query ids locally.
 }
 \examples{
 library(noctua)

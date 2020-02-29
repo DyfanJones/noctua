@@ -7,10 +7,13 @@ AthenaResult <- function(conn,
   
   stopifnot(is.character(statement))
 
+  response <- list(QueryExecutionId = NULL)
+  if (athena_option_env$cache_size > 0) response <- list(QueryExecutionId = check_cache(statement, conn@info$work_group))
+  if (is.null(response$QueryExecutionId)) {
   tryCatch(response <- conn@ptr$Athena$start_query_execution(QueryString = statement,
                                                              QueryExecutionContext = list(Database = conn@info$dbms.name),
                                                              ResultConfiguration = ResultConfiguration(conn),
-                                                             WorkGroup = conn@info$work_group))
+                                                             WorkGroup = conn@info$work_group))}
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
   new("AthenaResult", connection = conn, info = response)
 }
@@ -77,13 +80,15 @@ setMethod(
       # remove class pointers
       eval.parent(substitute(res@connection@ptr <- list()))
       
-      # Out put Python error as warning if s3 resource can't be dropped
-      tryCatch(res@connection@ptr$S3$delete_object(Bucket = result_info$bucket,
-                                                   Key = paste0(result_info$key, ".metadata")),
-               error = function(e) warning(e, call. = F))
-      tryCatch(res@connection@ptr$S3$delete_object(Bucket = result_info$bucket,
-                                                   Key = result_info$key),
-               error = function(e) cat(""))
+      # for caching s3 data is still required
+      if (athena_option_env$cache_size == 0){
+        # Out put error as warning if s3 resource can't be dropped
+        tryCatch(res@connection@ptr$S3$delete_object(Bucket = result_info$bucket,
+                                                     Key = paste0(result_info$key, ".metadata")),
+                 error = function(e) warning(e, call. = F))
+        tryCatch(res@connection@ptr$S3$delete_object(Bucket = result_info$bucket,
+                                                     Key = result_info$key),
+                 error = function(e) cat(""))}
     }
     invisible(TRUE)
   })
@@ -128,6 +133,9 @@ setMethod(
     if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
     # check status of query
     result <- poll(res)
+    
+    # cache query metadata if caching is enabled
+    if (athena_option_env$cache_size > 0) cache_query(result)
     
     result_info <- split_s3_uri(result$QueryExecution$ResultConfiguration$OutputLocation)
     

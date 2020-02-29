@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1.9000</span>
       </span>
     </div>
 
@@ -161,7 +161,7 @@
 
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbStatistics</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; $EngineExecutionTimeInMillis
-#&gt; [1] 261
+#&gt; [1] 194
 #&gt; 
 #&gt; $DataScannedInBytes
 #&gt; [1] 0
@@ -170,7 +170,7 @@
 #&gt; character(0)
 #&gt; 
 #&gt; $TotalExecutionTimeInMillis
-#&gt; [1] 338
+#&gt; [1] 270
 #&gt; 
 #&gt; $QueryQueueTimeInMillis
 #&gt; [1] 48
@@ -179,7 +179,7 @@
 #&gt; numeric(0)
 #&gt; 
 #&gt; $ServiceProcessingTimeInMillis
-#&gt; [1] 29
+#&gt; [1] 28
 #&gt; </div><div class='input'>
 <span class='co'># Clean up</span>
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
