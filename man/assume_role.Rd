@@ -8,7 +8,7 @@ assume_role(
   profile_name = NULL,
   region_name = NULL,
   role_arn = NULL,
-  role_session_name = sprintf("paws-athena-session-\%s", as.integer(Sys.time())),
+  role_session_name = sprintf("noctua-session-\%s", as.integer(Sys.time())),
   duration_seconds = 3600L,
   set_env = FALSE
 )
