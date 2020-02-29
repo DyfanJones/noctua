@@ -10,12 +10,14 @@ test_that("Testing if caching returns the same query id", {
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena())
   
-  res1 = dbExecute(con, "SELECT table_name FROM information_schema.tables limit 1")
+  res1 = dbSendStatement(con, "SELECT table_name FROM information_schema.tables limit 1")
+  dbFetch(res1)
   res2 = dbExecute(con, "SELECT table_name FROM information_schema.tables limit 1")
   
   noctua_options(cache_size = 10)
   
-  res3 = dbExecute(con, "SELECT table_name FROM information_schema.tables limit 1")
+  res3 = dbSendStatement(con, "SELECT table_name FROM information_schema.tables limit 1")
+  dbFetch(res3)
   res4 = dbExecute(con, "SELECT table_name FROM information_schema.tables limit 1")
   
   # expect query ids not to be the same
