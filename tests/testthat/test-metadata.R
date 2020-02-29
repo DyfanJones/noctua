@@ -7,16 +7,44 @@ context("Athena Metadata")
 
 df_col_info <- data.frame(field_name = c("w","x","y", "z", "timestamp"),
                           type = c("timestamp", "integer", "varchar", "boolean", "varchar"), stringsAsFactors = F)
+con_info = c("profile_name", "s3_staging","dbms.name","work_group", "poll_interval","encryption_option","kms_key","expiration", "region_name", "paws", "noctua")
+col_info_exp = c("w","x","y", "z", "timestamp")
 
-test_that("Returning meta data from query",{
+test_that("Returning meta data",{
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(athena())
+  con = dbConnect(athena())
   
-  res <- dbExecute(con, "select * from test_df")
-  column_info <- dbColumnInfo(res)
+  res = dbExecute(con, "select * from test_df")
+  res_out = dbHasCompleted(res)
+  res_info = dbGetInfo(res)
+  res_stat = dbStatistics(res)
+  column_info1 = dbColumnInfo(res)
+  column_info2 = dbListFields(con, "test_df")
+  con_info_exp = names(dbGetInfo(con))
+  list_tbl1 = any(grepl("test_df", dbListTables(con, "default")))
+  list_tbl2 = nrow(dbGetTables(con, "default")[TableName == "test_df"]) == 1
+  partition = grepl("timestamp", dbGetPartition(con, "test_df")[["var1"]])
+  db_show_ddl = gsub(", \n  'transient_lastDdlTime'.*",")", dbShow(con, "test_df"))
+  db_info = dbGetInfo(con)
+  
   dbClearResult(res)
   dbDisconnect(con)
   
-  expect_equal(column_info, df_col_info)
+  
+  expect_equal(column_info1, df_col_info)
+  expect_equal(column_info2, col_info_exp)
+  expect_equal(con_info, con_info_exp)
+  expect_true(list_tbl1)
+  expect_true(list_tbl2)
+  expect_true(partition)
+  expect_equal(db_show_ddl, show_ddl)
+  expect_warning(noctua:::time_check(Sys.time() + 10))
+  expect_error(noctua:::pkg_method("made_up", "made_up_pkg"))
+  expect_false(noctua:::is.s3_uri(NULL))
+  expect_true(is.list(db_info))
+  expect_error(dbGetInfo(con))
+  expect_true(res_out)
+  expect_equal(names(res_info), "QueryExecutionId")
+  expect_true(is.list(res_stat))
 })

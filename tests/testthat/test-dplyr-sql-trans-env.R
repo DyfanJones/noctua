@@ -6,6 +6,35 @@ context("dplyr sql_translate_env")
 # Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
 library(dbplyr)
+
+dt = data.table::data.table(Logicial = TRUE,
+                            Integer = as.integer(1),
+                            Integer64 = bit64::as.integer64(1),
+                            Numeric = as.numeric(1),
+                            Double = as.double(1),
+                            Factor = factor(1),
+                            Character = as.character(1),
+                            List = list(1),
+                            Date = Sys.Date(),
+                            Posixct = as.POSIXct(Sys.Date()))
+data_type1 = c("BOOLEAN", "INT", "BIGINT", "DOUBLE", "DOUBLE", 
+              "STRING", "STRING", "STRING", "DATE", "TIMESTAMP")
+names(data_type1) = c("Logicial", "Integer", "Integer64", "Numeric", "Double", "Factor", "Character", "List", "Date", "Posixct")
+method <- "file_method"
+type_names <- sapply(1:12, function(x) paste0("var_", x))
+data_types <- list(list(Name = type_names,
+                        Type = c("boolean", "int",
+                                 "integer", "tinyint",
+                                 "smallint", "bigint",
+                                 "float", "decimal",
+                                 "string", "varchar",
+                                 "date", "timestamp")))
+data_type2 = c("logical", "integer", "integer", "integer", "integer", "integer64", "double", "double", 
+               "character", "character","Date","POSIXct")
+data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "c", "c", "D", "T")
+names(data_type2) = type_names
+names(data_type3) = type_names
+
 test_that("Check RAthena s3 dplyr sql_translate_env method",{
   skip_if_no_env()
   # Test connection is using AWS CLI to set profile_name 
@@ -37,6 +66,13 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t22 <- translate_sql(as.character("2020-01-01"), con = con)
   t23 <- translate_sql(c("2020-01-01", "2020-01-02"), con = con)
   t24 <- translate_sql(c("2020-01-01", "2020-13-02"), con = con)
+  t25 <- translate_sql(as(1,"character"), con = con)
+  t26 <- translate_sql(iris[["sepal_length"]], con = con)
+  t27 <- translate_sql(iris[[1]], con = con)
+  t28 <- grepl("^Athena.*\\[.*/.*\\]", dplyr::db_desc(con))
+  t29 <- dbDataType(con, dt)
+  t30 <- noctua:::AthenaToRDataType.athena_data.table(method, data_types)
+  t31 <- noctua:::AthenaToRDataType.athena_vroom(method, data_types)
   
   expect_equal(t1 ,sql("CAST(1.0 AS VARCHAR)"))
   expect_equal(t2 ,sql("CAST('1' AS DOUBLE)"))
@@ -62,4 +98,12 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t22, sql("CAST(DATE '2020-01-01' AS VARCHAR)"))
   expect_equal(t23, sql("(DATE '2020-01-01', DATE '2020-01-02')"))
   expect_equal(t24, sql("('2020-01-01', '2020-13-02')"))
+  expect_equal(t25, sql("CAST(1.0 AS STRING)"))
+  expect_equal(t26, sql("\"iris\"['sepal_length']"))
+  expect_equal(t27, sql('"iris"[1]'))
+  expect_true(t28)
+  expect_error(explain(tbl(con, "iris")))
+  expect_equal(t29, data_type1)
+  expect_equal(t30, data_type2)
+  expect_equal(t31, data_type3)
 })

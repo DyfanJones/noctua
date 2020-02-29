@@ -60,3 +60,6 @@ s3_loc <- list(exp_s3_1 = "path/to/file/test/dummy_file/dummy_file.csv",
                exp_s3_4 = c("path/to/test/dummy_file/YEAR=2000/dummy_file_1.tsv.gz","path/to/test/dummy_file/YEAR=2000/dummy_file_2.tsv.gz"),
                exp_s3_5 = "path/to/test/dummy_file/dummy_file.parquet",
                exp_s3_6 = "path/to/dummy_file/YEAR=2000/dummy_file.snappy.parquet")
+
+
+show_ddl <- SQL('CREATE EXTERNAL TABLE `default.test_df`(\n  `w` timestamp, \n  `x` int, \n  `y` string, \n  `z` boolean)\nPARTITIONED BY ( \n  `timestamp` string)\nROW FORMAT DELIMITED \n  FIELDS TERMINATED BY \'\\t\' \n  LINES TERMINATED BY \'\\n\' \nSTORED AS INPUTFORMAT \n  \'org.apache.hadoop.mapred.TextInputFormat\' \nOUTPUTFORMAT \n  \'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat\'\nLOCATION\n  \'s3://test-rathena/default/test_df\'\nTBLPROPERTIES (\n  \'skip.header.line.count\'=\'1\')')
