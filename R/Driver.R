@@ -156,7 +156,7 @@ setMethod(
                                 match.arg(encryption_option))
     
     # if aws session token then return duration
-    aws_session_token <- get_aws_env("AWS_SESSION_TOKEN")
+    aws_session_token <- aws_session_token %||% get_aws_env("AWS_SESSION_TOKEN")
     aws_expiration <- NULL
     if(!is.null(aws_session_token)) aws_expiration <- get_aws_env("AWS_EXPIRATION")
     if(!is.null(aws_expiration)) aws_expiration <- as.POSIXct(as.numeric(aws_expiration), origin='1970-01-01')
