@@ -27,6 +27,7 @@ athena_option_env$cache_dt <-  cache_dt
 #' @export
 noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE) {
   file_parser = match.arg(file_parser)
+  stopifnot(is.logical(clear_cache))
   
   if(cache_size < 0 | cache_size >= 100) stop("noctua currently only supports up to 100 queries being cached", call. = F)
   
