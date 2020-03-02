@@ -1,6 +1,7 @@
 # noctua 1.5.1.9000
 ## New Feature
 * Inspired by `pyathena`, `noctua_options` now has a new paramter `cache_size`. This implements local caching in R environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing S3's Athena output when caching isn't disabled
+* `noctua_options` now has `clear_cache` parameter to clear down all cached data.
 
 ## Bug Fix
 * `dbConnect` didn't correct pass `.internal` metadata for paws objects.

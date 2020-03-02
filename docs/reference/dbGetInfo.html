@@ -92,6 +92,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -170,7 +182,7 @@ or a DBIResult</p></td>
 <span class='co'># Return metadata from Athena query object</span>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbGetInfo</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; $QueryExecutionId
-#&gt; [1] "fdaa21b0-eefa-412e-8338-6fe3fe6a7967"
+#&gt; [1] "84b9caa3-be73-47c9-b8bb-923ed609d0dc"
 #&gt; </div><div class='input'>
 <span class='co'># Clear result</span>
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)

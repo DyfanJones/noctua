@@ -94,6 +94,18 @@ your account or for cross-account access." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -133,7 +145,7 @@ your account or for cross-account access.</p>
   <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"paws-athena-session-%s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())),
+  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"noctua-session-%s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())),
   <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
   <span class='kw'>set_env</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>

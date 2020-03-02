@@ -23,7 +23,11 @@ Suggests:
     readr,
     testthat,
     vroom (>= 1.2.0),
-    covr
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: 
+    knitr
 Depends: R (>= 3.2.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
