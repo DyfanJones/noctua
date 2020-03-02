@@ -91,6 +91,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -119,13 +131,36 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-1519000" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-1519000" class="anchor"></a>noctua 1.5.1.9000<small> Unreleased </small>
+</h1>
+<div id="new-feature" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-feature" class="anchor"></a>New Feature</h2>
+<ul>
+<li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3’s Athena output when caching isn’t disabled</li>
+<li>
+<code>noctua_options</code> now has <code>clear_cache</code> parameter to clear down all cached data.</li>
+</ul>
+</div>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
+<ul>
+<li>
+<code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
+<li>RStudio connection tab functions:<code>computeHostName</code> &amp; <code>computeDisplayName</code> now get region name from <code>info</code> object from <code>dbConnect</code> S4 class.</li>
+</ul>
+</div>
+</div>
     <div id="noctua-151" class="section level1">
 <h1 class="page-header">
 <a href="#noctua-151" class="anchor"></a>noctua 1.5.1<small> 2020-02-16 </small>
 </h1>
-<div id="bug-fix" class="section level2">
+<div id="bug-fix-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
@@ -209,9 +244,9 @@ tbl(con, "iris") %&gt;%
 </li>
 </ul>
 </div>
-<div id="new-feature" class="section level2">
+<div id="new-feature-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-1" class="anchor"></a>New Feature</h2>
 <ul>
 <li>
 <code>dbStatistics</code> is a wrapper around <code>paws</code> <code>get_query_execution</code> to return statistics for <code>noctua::dbSendQuery</code> results</li>
@@ -259,9 +294,9 @@ user  system elapsed
 <h1 class="page-header">
 <a href="#noctua-150" class="anchor"></a>noctua 1.5.0<small> 2020-01-08 </small>
 </h1>
-<div id="new-feature-1" class="section level2">
+<div id="new-feature-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-1" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-2" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Added integration into Rstudio connections tab</li>
 <li>Added information message of amount of data scanned by AWS Athena</li>
@@ -303,9 +338,9 @@ noctua_options("vroom")
 </ul>
 <pre><code><a href="https://rdrr.io/r/base/warning.html">warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)</a></code></pre>
 </div>
-<div id="bug-fix-1" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-1" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-2" class="anchor"></a>Bug fix</h2>
 <ul>
 <li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/50"># 50</a>), special characters have issue being processed when using flat file in the backend.</li>
 <li>Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
@@ -326,9 +361,9 @@ noctua_options("vroom")
 <li>Updated dplyr <code>sql_translate_env</code> until test to cater bug fix</li>
 </ul>
 </div>
-<div id="new-feature-2" class="section level2">
+<div id="new-feature-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-2" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-3" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Due to help from <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a>, <code>dbRemoveTable</code> can now remove S3 files for AWS Athena table being removed.</li>
 </ul>
@@ -390,9 +425,9 @@ dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will
 </li>
 </ul>
 </div>
-<div id="bug-fix-2" class="section level2">
+<div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Fixed bug in regards to Athena DDL being created incorrectly when passed from <code>dbWriteTable</code>
 </li>
@@ -458,9 +493,9 @@ con &lt;- dbConnect(noctua::athena())
 
 dbWriteTable(con, "iris", iris)</a></code></pre>
 </div>
-<div id="bug-fix-3" class="section level2">
+<div id="bug-fix-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-4" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
@@ -473,9 +508,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
 </ul>
 </div>
-<div id="new-feature-3" class="section level2">
+<div id="new-feature-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-3" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-4" class="anchor"></a>New Feature</h2>
 <ul>
 <li>GZIP compression is now supported for “csv” and “tsv” file format in <code>dbWriteTable</code>
 </li>
@@ -503,9 +538,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <code>BigInt</code> are now passed correctly into <code>integer64</code>
 </li>
 </ul>
-<div id="bug-fix-4" class="section level3">
+<div id="bug-fix-5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fix-4" class="anchor"></a>Bug fix</h3>
+<a href="#bug-fix-5" class="anchor"></a>Bug fix</h3>
 <ul>
 <li>
 <code>AthenaResult</code> returned: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>. The function <code>do.call</code> was causing the issue, to address this <code>do.call</code> has been removed and the helper function <code>request</code> has been broken down into <code>ResultConfiguration</code> to return a single component of <code>start_query_execution</code>
@@ -578,6 +613,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-1519000">1.5.1.9000</a></li>
         <li><a href="#noctua-151">1.5.1</a></li>
         <li><a href="#noctua-150">1.5.0</a></li>
         <li><a href="#noctua-140">1.4.0</a></li>
