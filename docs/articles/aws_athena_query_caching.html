@@ -132,6 +132,7 @@ system.time(df2 = dbGetQuery(con, "select * from iris"))
 # Info: (Data scanned: 3.63 KB)
 #   user  system elapsed 
 #  0.072   0.000   0.348 </code></pre>
+<p>Here we can see a x10 in performance with repeat queries.</p>
 </div>
 <div id="caching-weakness" class="section level2">
 <h2 class="hasAnchor">
@@ -152,6 +153,7 @@ nrow(dt5)
 
 nrow(dt6)
 # 300</code></pre>
+<p>Sadly the cached query didn’t pick up the new data from <code>iris</code>.</p>
 </div>
 <div id="cache-memory" class="section level2">
 <h2 class="hasAnchor">

@@ -4,8 +4,8 @@ author: "Dyfan Jones"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{AWS Athena Query Caching}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::knitr}
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 # Intro
