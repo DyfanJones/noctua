@@ -4,12 +4,18 @@
 \alias{noctua_options}
 \title{A method to configue noctua backend options.}
 \usage{
-noctua_options(file_parser = c("data.table", "vroom"), cache_size = 0)
+noctua_options(
+  file_parser = c("data.table", "vroom"),
+  cache_size = 0,
+  clear_cache = FALSE
+)
 }
 \arguments{
 \item{file_parser}{Method to read and write tables to Athena, currently defaults to data.table}
 
 \item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries.}
+
+\item{clear_cache}{Clears all previous cached query metadata}
 }
 \value{
 \code{noctua_options()} returns \code{NULL}, invisibly.
