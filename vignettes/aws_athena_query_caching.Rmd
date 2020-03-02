@@ -1,0 +1,106 @@
+---
+title: "AWS Athena Query Caching"
+author: "Dyfan Jones"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AWS Athena Query Caching}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Intro
+
+`nocuta` now supports caching. This was inspired by `pyathena`to reduce the cost of using `AWS Athena`. `nocuta` however has a slightly different caching method and utilities local caching in `R` environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing `AWS S3`'s `AWS Athena` output when caching is disabled.
+
+## Caching benefits
+
+By caching queries the performance of repeat queries significantly increase. This is because the query is no longer sent to `AWS Athena` instead the QueryID of the repeat query is used to retrieve the `AWS Athena` result from `AWS S3`.
+
+```
+library(DBI)
+library(noctua)
+
+con = dbConnect(athena())
+
+# Start caching queries
+noctua_options(cache_size = 10)
+
+# Upload Data to AWS Athena
+dbWriteTable(con, "iris", iris, partition = c("Partition" = "01")
+
+# initial query to AWS Athena
+system.time(df1 = dbGetQuery(con, "select * from iris"))
+
+# Info: (Data scanned: 3.63 KB)
+#   user  system elapsed 
+#  0.105   0.004   3.397 
+
+# repeat query to AWS Athena
+system.time(df2 = dbGetQuery(con, "select * from iris"))
+
+# Info: (Data scanned: 3.63 KB)
+#   user  system elapsed 
+#  0.072   0.000   0.348 
+```
+
+Here we can see a x10 in performance with repeat queries.
+
+## Caching weakness 
+
+The weakness in caching is when the underlying data is updated. The cache will still only retrieve the previous QueryID. This means that the new updated data won't be return when the caching is being used:
+
+```
+# Updating iris table
+dbWriteTable(con, "iris", iris, append = T, partition = c("Partition" = "02"))
+
+dt5 = dbGetQuery(con, "select * from iris")
+
+# Stop using cache data
+RAthena_options()
+
+dt6 = dbGetQuery(con, "select * from iris")
+
+nrow(dt5)
+# 150
+
+nrow(dt6)
+# 300
+```
+
+Sadly the cached query didn't pick up the new data from `iris`.
+
+## Cache memory
+
+The caching method in `noctua` will rememeber previous query ids within each R session, even if you stop and start caching in `noctua_options`.
+
+```
+# Start caching
+RAthena_options(cache_size = 10)
+res1 = dbExecute(con, "select * from iris")
+
+# Stop caching
+RAthena_options()
+res2 = dbExecute(con, "select * from iris")
+
+# Start caching
+RAthena_options(cache_size = 10)
+res3 = dbExecute(con, "select * from iris")
+
+# Compare Query ID's
+res1@info$QueryExecutionId
+# 9a9272f5-0632-4774-9aa9-d07f151dabc5
+
+res2@info$QueryExecutionId
+# be12fe0-3ec0-4595-b3e6-b3bf67efa266
+
+res3@info$QueryExecutionId
+# 9a9272f5-0632-4774-9aa9-d07f151dabc5
+```
+
+## Clear down cache
+
+To clear down the cache just set the parameter `clear_cache` within `noctua_options` to `TRUE`
+
+```
+noctua_options(clear_cache = T)
+```
