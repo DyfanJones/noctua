@@ -1,0 +1,70 @@
+---
+title: "Changing Backend File Parser"
+author: "Dyfan Jones"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Changing Backend File Parser}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+# Intro
+`noctua` is dependent on `data.table` to read data into `R`. This is down to the amazing speed `data.table` offers when reading files into `R`. However a new package, with equally impressive read speeds, has come onto the scene called [`vroom`](https://github.com/r-lib/vroom). As `vroom` has been designed to only read data into `R` similarly to `readr`, `data.table` is still used for all of the heavy lifting. However if a user wishes to use `vroom` as the file parser an `noctua_options` function has been created to enable this:
+
+```
+library(DBI)
+library(noctua)
+
+con = dbConnect(athena())
+
+nocuta_options(file_parser = c("data.table", "vroom"))
+```
+
+By setting the `file_parser` to `"vroom"` then the backend will change to allow `vroom`'s file parser to be used instead of `data.table`. 
+
+# Change back to `data.table`
+
+To go back to using `data.table` as the file parser it is a simple as calling the `noctua_options` function.
+
+```
+# return to using data.table as file parser
+noctua_options()
+```
+
+# Swapping on the fly
+
+This makes it very felixible to swap between each file parser even between each query execution!
+
+```
+library(DBI)
+library(noctua)
+
+con = dbConnect(athena())
+
+# upload data
+dbWriteTable(con, "iris", iris)
+
+# use default data.table file parser
+df1 = dbGetQuery(con, "select * from iris")
+
+# use vroom as file parser
+nocuta_options("vroom")
+df2 = dbGetQuery(con, "select * from iris")
+
+# return back to data.table file parser
+nocuta_options()
+df3 = dbGetQuery(con, "select * from iris")
+```
+
+# Why should you consider `vroom`?
+
+If you aren't sure whether to use `vroom` over `data.table`, I draw your attention to `vroom` boasting a whopping 1.40GB/sec throughput.
+
+> *Statistics taken from vroom's github readme* 
+
+package |	version |	time (sec) |	speed-up |	throughput
+---|---|---|---|---
+vroom |	1.1.0 |	1.14 |	58.44 |	1.40 GB/sec
+data.table |	1.12.8 |	11.88 |	5.62 |	134.13 MB/sec
+readr |	1.3.1 |	29.02 |	2.30 |	54.92 MB/sec
+read.delim |	3.6.2 |	66.74 |	1.00 |	23.88 MB/sec
