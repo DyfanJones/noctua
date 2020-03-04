@@ -10,7 +10,7 @@ vignette: >
 
 # Intro
 
-`nocuta` now supports caching. This was inspired by `pyathena`to reduce the cost of using `AWS Athena`. `nocuta` however has a slightly different caching method and utilities local caching in `R` environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing `AWS S3`'s `AWS Athena` output when caching is disabled.
+`noctua` now supports caching. This was inspired by `pyathena`to reduce the cost of using `AWS Athena`. `noctua` however has a slightly different caching method and utilities local caching in `R` environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing `AWS S3`'s `AWS Athena` output when caching is disabled.
 
 ## Caching benefits
 
@@ -96,6 +96,8 @@ res2@info$QueryExecutionId
 res3@info$QueryExecutionId
 # 9a9272f5-0632-4774-9aa9-d07f151dabc5
 ```
+
+We can see that `res1` and `res3` utilise the same QueryID, even tho caching was stopped and started.
 
 ## Clear down cache
 
