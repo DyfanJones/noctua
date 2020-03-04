@@ -17,7 +17,7 @@ library(noctua)
 
 con = dbConnect(athena())
 
-nocuta_options(file_parser = c("data.table", "vroom"))
+noctua_options(file_parser = c("data.table", "vroom"))
 ```
 
 By setting the `file_parser` to `"vroom"` then the backend will change to allow `vroom`'s file parser to be used instead of `data.table`. 
@@ -48,11 +48,11 @@ dbWriteTable(con, "iris", iris)
 df1 = dbGetQuery(con, "select * from iris")
 
 # use vroom as file parser
-nocuta_options("vroom")
+noctua_options("vroom")
 df2 = dbGetQuery(con, "select * from iris")
 
 # return back to data.table file parser
-nocuta_options()
+noctua_options()
 df3 = dbGetQuery(con, "select * from iris")
 ```
 
