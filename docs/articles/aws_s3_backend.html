@@ -109,13 +109,13 @@
 
     
     
-<p><code>AWS Athena</code> allows SQL querying to be performed on <a href="https://aws.amazon.com/s3/">AWS S3 buckets</a>. To gain access to this, the correct permission level will need to be enabled.</p>
+<p><code>AWS Athena</code> allows SQL querying to be performed on <a href="https://aws.amazon.com/s3/">AWS S3 buckets</a>. To gain access to this, the correct permission level needs to be enabled.</p>
 <div id="aws-s3-structures" class="section level1">
 <h1 class="hasAnchor">
 <a href="#aws-s3-structures" class="anchor"></a>AWS S3 Structures</h1>
-<p>When uploading data into <code>AWS Athena</code>. Firstly <code>noctua</code> uploads the data into <code>AWS S3</code>, then registers the table in <code>AWS Athena</code>. When appending data to an existing <code>AWS Athena</code> table, <code>noctua</code> adds the data in the specified <code>AWS S3</code> partition and then repairs the <code>AWS Athena</code> table.</p>
+<p><code>noctua</code> uploads the data into <code>AWS S3</code>, then registers the table in <code>AWS Athena</code>. When appending data to an existing <code>AWS Athena</code> table, <code>noctua</code> adds the data in the specified <code>AWS S3</code> partition and then repairs the <code>AWS Athena</code> table.</p>
 <p><code>noctua</code> uses the parameter: <code>s3.location</code> from the function <code>dbWriteTable</code> for the <code>AWS S3</code> location. If <code>s3.location</code> isn’t specified then the location is taken from the initial connection (<code>dbConnect</code>).</p>
-<p><code>noctua</code> aligns the <code>s3.location</code> to the following <code>AWS S3</code> structure: <code>{s3.location}/{schema}/{table_name}/{partition}/{file}</code> (remember that <code>s3.location</code> has to be in <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html">s3 uri format</a>: “s3://bucket-name/key-name”). This is to allow tables with same name being uploaded to different schemas.</p>
+<p><code>noctua</code> aligns the <code>s3.location</code> to the following <code>AWS S3</code> structure: <code>{s3.location}/{schema}/{table_name}/{partition}/{file}</code> (remember that <code>s3.location</code> has to be in <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html">s3 uri format</a>: “s3://bucket-name/key-name”). This is to allow tables with same name to be uploaded to different schemas.</p>
 <p><img src="athena_s3_example.png"><!-- --></p>
 <p><strong>NOTE:</strong> <code>noctua</code> won’t duplicate the table name or schema if they have been provided in <code>s3.location</code>. For example:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">dbWriteTable</span>(con, <span class="st">"myschema.table"</span>, table, </a>

@@ -8,15 +8,15 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
-`AWS Athena` allows SQL querying to be performed on [AWS S3 buckets](https://aws.amazon.com/s3/). To gain access to this, the correct permission level will need to be enabled.
+`AWS Athena` allows SQL querying to be performed on [AWS S3 buckets](https://aws.amazon.com/s3/). To gain access to this, the correct permission level needs to be enabled.
 
 # AWS S3 Structures
 
-When uploading data into `AWS Athena`. Firstly `noctua` uploads the data into `AWS S3`, then registers the table in `AWS Athena`. When appending data to an existing `AWS Athena` table, `noctua` adds the data in the specified `AWS S3` partition and then repairs the `AWS Athena` table. 
+`noctua` uploads the data into `AWS S3`, then registers the table in `AWS Athena`. When appending data to an existing `AWS Athena` table, `noctua` adds the data in the specified `AWS S3` partition and then repairs the `AWS Athena` table. 
 
 `noctua` uses the parameter: `s3.location` from the function `dbWriteTable` for the `AWS S3` location. If `s3.location` isn't specified then the location is taken from the initial connection (`dbConnect`). 
 
-`noctua` aligns the `s3.location` to the following `AWS S3` structure: `{s3.location}/{schema}/{table_name}/{partition}/{file}` (remember that `s3.location` has to be in [s3 uri format](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html): "s3://bucket-name/key-name"). This is to allow tables with same name being uploaded to different schemas. 
+`noctua` aligns the `s3.location` to the following `AWS S3` structure: `{s3.location}/{schema}/{table_name}/{partition}/{file}` (remember that `s3.location` has to be in [s3 uri format](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html): "s3://bucket-name/key-name"). This is to allow tables with same name to be uploaded to different schemas. 
 
 ```{r, echo = F}
 knitr::include_graphics("athena_s3_example.png")
