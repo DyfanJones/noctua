@@ -102,6 +102,15 @@
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -173,7 +182,7 @@
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='co'># Get Column information from query</span>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"select * from information_schema.tables"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"select * from information_schema.tables"</span>)
 <span class='fu'>dbColumnInfo</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;      field_name    type
 #&gt; 1 table_catalog varchar
 #&gt; 2  table_schema varchar

@@ -102,6 +102,15 @@
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -179,7 +188,7 @@ or a DBIResult</p></td>
 <span class='co'># Check is connection is valid</span>
 <span class='fu'>dbIsValid</span>(<span class='no'>con</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># Check is query is valid</span>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbIsValid</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># Check if query is valid after clearing result</span>
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)

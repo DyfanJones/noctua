@@ -101,6 +101,15 @@
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -142,7 +151,28 @@
 <li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3’s Athena output when caching isn’t disabled</li>
 <li>
 <code>noctua_options</code> now has <code>clear_cache</code> parameter to clear down all cached data.</li>
+<li>
+<code>dbRemoveTable</code> now utilise <code>AWS Glue</code> to remove tables from <code>AWS Glue</code> catalog. This has a performance enhancement:</li>
 </ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+
+con = dbConnect(noctua::athena())
+
+# upload iris dataframe for removal test
+dbWriteTable(con, "iris2", iris)
+
+# Athena method
+system.time(dbRemoveTable(con, "iris2", confirm = T))
+# user  system elapsed 
+# 0.247   0.091   2.243 
+
+# upload iris dataframe for removal test
+dbWriteTable(con, "iris2", iris)
+
+# Glue method
+system.time(dbRemoveTable(con, "iris2", confirm = T))
+# user  system elapsed 
+# 0.110   0.045   1.094 </a></code></pre>
 </div>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
@@ -151,6 +181,14 @@
 <li>
 <code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
 <li>RStudio connection tab functions:<code>computeHostName</code> &amp; <code>computeDisplayName</code> now get region name from <code>info</code> object from <code>dbConnect</code> S4 class.</li>
+</ul>
+</div>
+<div id="documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<ul>
+<li>Added supported environmental variable <code>AWS_REGION</code> into <code>dbConnect</code>
+</li>
 </ul>
 </div>
 </div>
@@ -163,7 +201,7 @@
 <a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
+<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://rdrr.io/pkg/readr/man/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
 </ul>
 <pre><code>library(readr)
 library(microbenchmark)
@@ -318,9 +356,9 @@ noctua_options("vroom")
 </li>
 </ul>
 </div>
-<div id="documentation" class="section level2">
+<div id="documentation-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#documentation" class="anchor"></a>Documentation</h2>
+<a href="#documentation-1" class="anchor"></a>Documentation</h2>
 <ul>
 <li>Updated R documentation to <code>roxygen2</code> 7.0.2</li>
 </ul>

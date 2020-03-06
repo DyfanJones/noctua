@@ -102,6 +102,15 @@
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -146,7 +155,7 @@
     <tr>
       <th>conn</th>
       <td><p>A DBIConnection object, as returned by
-<code><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect()</a></code>.</p></td>
+<code><a href='https://rdrr.io/pkg/DBI/man/dbConnect.html'>dbConnect()</a></code>.</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -177,7 +186,7 @@
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
+<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
              <span class='kw'>partition</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"TIMESTAMP"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
              <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/data/"</span>)
 
