@@ -102,6 +102,15 @@
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -248,7 +257,7 @@ Currently parquet compression isn't supported.</p></td>
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20200302 STRING)
+#&gt; PARTITIONED BY (20200306 STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY '	'
 #&gt; 	LINES TERMINATED BY '\n'
@@ -269,7 +278,7 @@ Currently parquet compression isn't supported.</p></td>
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20200302 STRING)
+#&gt; PARTITIONED BY (20200306 STRING)
 #&gt; STORED AS PARQUET
 #&gt; LOCATION 's3://path/to/athena/table/default/iris/'
 #&gt; ;</div><div class='input'>

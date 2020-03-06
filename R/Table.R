@@ -152,7 +152,7 @@ Athena_write_table <-
                                ": Is currently not supported by noctua", call. = F))
       
       # Return if existing files are compressed or not
-      compress = switch(file.type,
+      compress = switch(File.Type,
                         "parquet" = {if(is.null(tbl_info$Parameters$parquet.compress)) FALSE else {
                           if(tolower(tbl_info$Parameters$parquet.compress) == "snappy") TRUE else 
                             stop("noctua currently only supports SNAPPY compression for parquet", call. = F)}

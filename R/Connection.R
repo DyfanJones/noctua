@@ -56,7 +56,7 @@ AthenaConnection <-
     ptr <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
                                  "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
                 S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects")],
-                glue = glue[c(".internal", "get_databases","get_tables","get_table")])
+                glue = glue[c(".internal", "get_databases","get_tables","get_table","delete_table")])
     
     s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
     
@@ -600,8 +600,8 @@ setMethod(
       }
     }
     
-    res <- dbExecute(conn, paste("DROP TABLE ", paste(dbms.name, Table, sep = "."), ";"))
-    dbClearResult(res)
+    # use glue to remove table from glue catalog
+    conn@ptr$glue$delete_table(DatabaseName = dbms.name, Name = Table)
     
     if(!delete_data) message("Info: Only Athena table has been removed.")
     on_connection_updated(conn, Table)

@@ -101,6 +101,15 @@
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -142,7 +151,28 @@
 <li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3’s Athena output when caching isn’t disabled</li>
 <li>
 <code>noctua_options</code> now has <code>clear_cache</code> parameter to clear down all cached data.</li>
+<li>
+<code>dbRemoveTable</code> now utilise <code>AWS Glue</code> to remove tables from <code>AWS Glue</code> catalog. This has a performance enhancement:</li>
 </ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+
+con = dbConnect(noctua::athena())
+
+# upload iris dataframe for removal test
+dbWriteTable(con, "iris2", iris)
+
+# Athena method
+system.time(dbRemoveTable(con, "iris2", confirm = T))
+# user  system elapsed 
+# 0.247   0.091   2.243 
+
+# upload iris dataframe for removal test
+dbWriteTable(con, "iris2", iris)
+
+# Glue method
+system.time(dbRemoveTable(con, "iris2", confirm = T))
+# user  system elapsed 
+# 0.110   0.045   1.094 </a></code></pre>
 </div>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
@@ -151,6 +181,31 @@
 <li>
 <code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
 <li>RStudio connection tab functions:<code>computeHostName</code> &amp; <code>computeDisplayName</code> now get region name from <code>info</code> object from <code>dbConnect</code> S4 class.</li>
+<li>
+<code>dbWriteTable</code> appending to existing table compress file type was incorrectly return.</li>
+</ul>
+</div>
+<div id="documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<ul>
+<li>Added supported environmental variable <code>AWS_REGION</code> into <code>dbConnect</code>
+</li>
+<li>Vignettes added:
+<ul>
+<li>AWS Athena Query Cache</li>
+<li>AWS S3 backend</li>
+<li>Changing Backend File Parser</li>
+<li>Getting Started</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="unit-tests" class="section level2">
+<h2 class="hasAnchor">
+<a href="#unit-tests" class="anchor"></a>Unit tests:</h2>
+<ul>
+<li>Increase coverage to + 80%</li>
 </ul>
 </div>
 </div>
@@ -310,17 +365,17 @@ noctua_options("vroom")
 <li>new function <code>dbGetTables</code> that returns Athena hierarchy as a data.frame</li>
 </ul>
 </div>
-<div id="unit-tests" class="section level2">
+<div id="unit-tests-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests" class="anchor"></a>Unit tests</h2>
+<a href="#unit-tests-1" class="anchor"></a>Unit tests</h2>
 <ul>
 <li>Added data transfer unit test for backend file parser <code>vroom</code>
 </li>
 </ul>
 </div>
-<div id="documentation" class="section level2">
+<div id="documentation-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#documentation" class="anchor"></a>Documentation</h2>
+<a href="#documentation-1" class="anchor"></a>Documentation</h2>
 <ul>
 <li>Updated R documentation to <code>roxygen2</code> 7.0.2</li>
 </ul>
@@ -349,9 +404,9 @@ noctua_options("vroom")
 <li>Fixed issue where <code>as.character</code> was getting wrongly translated (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/45"># 45</a>)</li>
 </ul>
 </div>
-<div id="unit-tests-1" class="section level2">
+<div id="unit-tests-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-1" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-2" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>Special characters have been added to unit test <code>data-transfer</code>
 </li>
@@ -438,9 +493,9 @@ dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will
 <li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for identifying issue around <code>sql_translate_env</code>. Previously <code>noctua</code> would take the default <code><a href="https://dplyr.tidyverse.org/reference/backend_dbplyr.html">dplyr::sql_translate_env</a></code>, now <code>noctua</code> has a custom method that uses Data types from: <a href="https://docs.aws.amazon.com/athena/latest/ug/data-types.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/data-types.html</a> and window functions from: <a href="https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html</a>
 </li>
 </ul>
-<div id="unit-tests-2" class="section level3">
+<div id="unit-tests-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#unit-tests-2" class="anchor"></a>Unit tests</h3>
+<a href="#unit-tests-3" class="anchor"></a>Unit tests</h3>
 <ul>
 <li>
 <code>POSIXct</code> class has now been added to data transfer unit test</li>
@@ -500,9 +555,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
 </div>
-<div id="unit-tests-3" class="section level2">
+<div id="unit-tests-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-3" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-4" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>
 <code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
@@ -550,9 +605,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </ul>
 </div>
 </div>
-<div id="unit-tests-4" class="section level2">
+<div id="unit-tests-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-4" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-5" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>

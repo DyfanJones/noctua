@@ -2,10 +2,45 @@
 ## New Feature
 * Inspired by `pyathena`, `noctua_options` now has a new paramter `cache_size`. This implements local caching in R environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing S3's Athena output when caching isn't disabled
 * `noctua_options` now has `clear_cache` parameter to clear down all cached data.
+* `dbRemoveTable` now utilise `AWS Glue` to remove tables from `AWS Glue` catalog. This has a performance enhancement:
+
+```
+library(DBI)
+
+con = dbConnect(noctua::athena())
+
+# upload iris dataframe for removal test
+dbWriteTable(con, "iris2", iris)
+
+# Athena method
+system.time(dbRemoveTable(con, "iris2", confirm = T))
+# user  system elapsed 
+# 0.247   0.091   2.243 
+
+# upload iris dataframe for removal test
+dbWriteTable(con, "iris2", iris)
+
+# Glue method
+system.time(dbRemoveTable(con, "iris2", confirm = T))
+# user  system elapsed 
+# 0.110   0.045   1.094 
+```
 
 ## Bug Fix
 * `dbConnect` didn't correct pass `.internal` metadata for paws objects.
 * RStudio connection tab functions:`computeHostName` & `computeDisplayName` now get region name from `info` object from `dbConnect` S4 class.
+* `dbWriteTable` appending to existing table compress file type was incorrectly return.
+
+## Documentation
+* Added supported environmental variable `AWS_REGION` into `dbConnect`
+* Vignettes added:
+  * AWS Athena Query Cache
+  * AWS S3 backend
+  * Changing Backend File Parser
+  * Getting Started
+
+## Unit tests:
+* Increase coverage to + 80%
 
 # noctua 1.5.1
 ## Bug Fix

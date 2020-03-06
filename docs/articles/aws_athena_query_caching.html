@@ -63,6 +63,15 @@
 <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
     </li>
+    <li>
+      <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
+    </li>
+    <li>
+      <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
+    </li>
+    <li>
+      <a href="../articles/getting_started.html">Getting Started</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -103,89 +112,90 @@
 <div id="intro" class="section level1">
 <h1 class="hasAnchor">
 <a href="#intro" class="anchor"></a>Intro</h1>
-<p><code>nocuta</code> now supports caching. This was inspired by <code>pyathena</code>to reduce the cost of using <code>AWS Athena</code>. <code>nocuta</code> however has a slightly different caching method and utilities local caching in <code>R</code> environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing <code>AWS S3</code>’s <code>AWS Athena</code> output when caching is disabled.</p>
+<p><code>noctua</code> now supports caching. This was originally inspired by <code>pyathena</code>to reduce the cost of using <code>AWS Athena</code>. <code>noctua</code> however has a different caching method and utilities local caching in <code>R</code> environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing <code>AWS S3</code>’s <code>AWS Athena</code> output when caching is disabled.</p>
 <div id="caching-benefits" class="section level2">
 <h2 class="hasAnchor">
 <a href="#caching-benefits" class="anchor"></a>Caching benefits</h2>
-<p>By caching queries the performance of repeat queries significantly increase. This is because the query is no longer sent to <code>AWS Athena</code> instead the QueryID of the repeat query is used to retrieve the <code>AWS Athena</code> result from <code>AWS S3</code>.</p>
-<pre><code>library(DBI)
-library(noctua)
-
-con = dbConnect(athena())
-
-# Start caching queries
-noctua_options(cache_size = 10)
-
-# Upload Data to AWS Athena
-dbWriteTable(con, "iris", iris, partition = c("Partition" = "01")
-
-# initial query to AWS Athena
-system.time(df1 = dbGetQuery(con, "select * from iris"))
-
-# Info: (Data scanned: 3.63 KB)
-#   user  system elapsed 
-#  0.105   0.004   3.397 
-
-# repeat query to AWS Athena
-system.time(df2 = dbGetQuery(con, "select * from iris"))
-
-# Info: (Data scanned: 3.63 KB)
-#   user  system elapsed 
-#  0.072   0.000   0.348 </code></pre>
-<p>Here we can see a x10 in performance with repeat queries.</p>
+<p>By caching queries the performance of repeat queries is significantly improved. This is because the query is no longer sent to <code>AWS Athena</code>. Instead the query ID, of the repeating query, is taken from the R environment and the result is returned from <code>AWS S3</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(DBI)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(noctua)</a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4">con =<span class="st"> </span><span class="kw"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw"><a href="../reference/athena.html">athena</a></span>())</a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co"># Start caching queries</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="kw"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="dt">cache_size =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb1-8" title="8"></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co"># Upload Data to AWS Athena</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="kw">dbWriteTable</span>(con, <span class="st">"iris"</span>, iris, <span class="dt">partition =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Partition"</span> =<span class="st"> "01"</span>)</a>
+<a class="sourceLine" id="cb1-11" title="11"></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co"># initial query to AWS Athena</span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="dt">df1 =</span> <span class="kw"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(con, <span class="st">"select * from iris"</span>))</a>
+<a class="sourceLine" id="cb1-14" title="14"></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="co"># Info: (Data scanned: 3.63 KB)</span></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co">#   user  system elapsed </span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="co">#  0.105   0.004   3.397 </span></a>
+<a class="sourceLine" id="cb1-18" title="18"></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co"># repeat query to AWS Athena</span></a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="dt">df2 =</span> <span class="kw"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(con, <span class="st">"select * from iris"</span>))</a>
+<a class="sourceLine" id="cb1-21" title="21"></a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co"># Info: (Data scanned: 3.63 KB)</span></a>
+<a class="sourceLine" id="cb1-23" title="23"><span class="co">#   user  system elapsed </span></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="co">#  0.072   0.000   0.348 </span></a></code></pre></div>
+<p>Here we can see a performance increase of x10 with repeat query execution.</p>
 </div>
 <div id="caching-weakness" class="section level2">
 <h2 class="hasAnchor">
 <a href="#caching-weakness" class="anchor"></a>Caching weakness</h2>
-<p>The weakness in caching is when the underlying data is updated. The cache will still only retrieve the previous QueryID. This means that the new updated data won’t be return when the caching is being used:</p>
-<pre><code># Updating iris table
-dbWriteTable(con, "iris", iris, append = T, partition = c("Partition" = "02"))
-
-dt5 = dbGetQuery(con, "select * from iris")
-
-# Stop using cache data
-RAthena_options()
-
-dt6 = dbGetQuery(con, "select * from iris")
-
-nrow(dt5)
-# 150
-
-nrow(dt6)
-# 300</code></pre>
+<p>The weakness in caching occurs when the underlying data is updated. The cache will still only retrieve the previous query ID. This means that the new updated data won’t be return when the caching is enabled:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Updating iris table</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">dbWriteTable</span>(con, <span class="st">"iris"</span>, iris, <span class="dt">append =</span> T, <span class="dt">partition =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Partition"</span> =<span class="st"> "02"</span>))</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4">dt5 =<span class="st"> </span><span class="kw"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(con, <span class="st">"select * from iris"</span>)</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co"># Stop using cache data</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="kw">RAthena_options</span>()</a>
+<a class="sourceLine" id="cb2-8" title="8"></a>
+<a class="sourceLine" id="cb2-9" title="9">dt6 =<span class="st"> </span><span class="kw"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(con, <span class="st">"select * from iris"</span>)</a>
+<a class="sourceLine" id="cb2-10" title="10"></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(dt5)</a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="co"># 150</span></a>
+<a class="sourceLine" id="cb2-13" title="13"></a>
+<a class="sourceLine" id="cb2-14" title="14"><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(dt6)</a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="co"># 300</span></a></code></pre></div>
 <p>Sadly the cached query didn’t pick up the new data from <code>iris</code>.</p>
 </div>
 <div id="cache-memory" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cache-memory" class="anchor"></a>Cache memory</h2>
 <p>The caching method in <code>noctua</code> will rememeber previous query ids within each R session, even if you stop and start caching in <code>noctua_options</code>.</p>
-<pre><code># Start caching
-RAthena_options(cache_size = 10)
-res1 = dbExecute(con, "select * from iris")
-
-# Stop caching
-RAthena_options()
-res2 = dbExecute(con, "select * from iris")
-
-# Start caching
-RAthena_options(cache_size = 10)
-res3 = dbExecute(con, "select * from iris")
-
-# Compare Query ID's
-res1@info$QueryExecutionId
-# 9a9272f5-0632-4774-9aa9-d07f151dabc5
-
-res2@info$QueryExecutionId
-# be12fe0-3ec0-4595-b3e6-b3bf67efa266
-
-res3@info$QueryExecutionId
-# 9a9272f5-0632-4774-9aa9-d07f151dabc5</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># Start caching</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">RAthena_options</span>(<span class="dt">cache_size =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3">res1 =<span class="st"> </span><span class="kw">dbExecute</span>(con, <span class="st">"select * from iris"</span>)</a>
+<a class="sourceLine" id="cb3-4" title="4"></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co"># Stop caching</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="kw">RAthena_options</span>()</a>
+<a class="sourceLine" id="cb3-7" title="7">res2 =<span class="st"> </span><span class="kw">dbExecute</span>(con, <span class="st">"select * from iris"</span>)</a>
+<a class="sourceLine" id="cb3-8" title="8"></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co"># Start caching</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="kw">RAthena_options</span>(<span class="dt">cache_size =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb3-11" title="11">res3 =<span class="st"> </span><span class="kw">dbExecute</span>(con, <span class="st">"select * from iris"</span>)</a>
+<a class="sourceLine" id="cb3-12" title="12"></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="co"># Compare Query ID's</span></a>
+<a class="sourceLine" id="cb3-14" title="14">res1<span class="op">@</span>info<span class="op">$</span>QueryExecutionId</a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="co"># 9a9272f5-0632-4774-9aa9-d07f151dabc5</span></a>
+<a class="sourceLine" id="cb3-16" title="16"></a>
+<a class="sourceLine" id="cb3-17" title="17">res2<span class="op">@</span>info<span class="op">$</span>QueryExecutionId</a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="co"># be12fe0-3ec0-4595-b3e6-b3bf67efa266</span></a>
+<a class="sourceLine" id="cb3-19" title="19"></a>
+<a class="sourceLine" id="cb3-20" title="20">res3<span class="op">@</span>info<span class="op">$</span>QueryExecutionId</a>
+<a class="sourceLine" id="cb3-21" title="21"><span class="co"># 9a9272f5-0632-4774-9aa9-d07f151dabc5</span></a></code></pre></div>
+<p>We can see that <code>res1</code> and <code>res3</code> utilise the same QueryID, even tho caching was stopped and started.</p>
 </div>
 <div id="clear-down-cache" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clear-down-cache" class="anchor"></a>Clear down cache</h2>
-<p>To clear down the cache just set the parameter <code>clear_cache</code> within <code>noctua_options</code> to <code>TRUE</code></p>
-<pre><code><a href="../reference/noctua_options.html">noctua_options(clear_cache = T)</a></code></pre>
+<p>To clear down the cache, just set the parameter: <code>clear_cache</code> within <code>noctua_options</code> to <code>TRUE</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="dt">clear_cache =</span> T)</a></code></pre></div>
 </div>
 </div>
   </div>
