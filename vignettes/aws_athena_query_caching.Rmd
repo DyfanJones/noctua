@@ -56,7 +56,7 @@ dbWriteTable(con, "iris", iris, append = T, partition = c("Partition" = "02"))
 dt5 = dbGetQuery(con, "select * from iris")
 
 # Stop using cache data
-RAthena_options()
+noctua_options()
 
 dt6 = dbGetQuery(con, "select * from iris")
 
@@ -75,15 +75,15 @@ The caching method in `noctua` will rememeber previous query ids within each R s
 
 ```r
 # Start caching
-RAthena_options(cache_size = 10)
+noctua_options(cache_size = 10)
 res1 = dbExecute(con, "select * from iris")
 
 # Stop caching
-RAthena_options()
+noctua_options()
 res2 = dbExecute(con, "select * from iris")
 
 # Start caching
-RAthena_options(cache_size = 10)
+noctua_options(cache_size = 10)
 res3 = dbExecute(con, "select * from iris")
 
 # Compare Query ID's
