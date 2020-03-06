@@ -10,9 +10,9 @@ vignette: >
 
 `AWS Athena` allows SQL querying to be performed on [AWS S3 buckets](https://aws.amazon.com/s3/). To gain access to this, the correct permission level will need to be enabled.
 
-# S3 Structures
+# AWS S3 Structures
 
-When uploading data into `AWS Athena`. Firstly `noctua` uploads the data into `AWS S3` and then registers the table in `AWS Athena`. When appending data to an existing `AWS Athena` table, `noctua` adds the data in the specified `AWS S3` partition and then repairs the `AWS Athena` table. 
+When uploading data into `AWS Athena`. Firstly `noctua` uploads the data into `AWS S3`, then registers the table in `AWS Athena`. When appending data to an existing `AWS Athena` table, `noctua` adds the data in the specified `AWS S3` partition and then repairs the `AWS Athena` table. 
 
 `noctua` uses the parameter: `s3.location` from the function `dbWriteTable` for the `AWS S3` location. If `s3.location` isn't specified then the location is taken from the initial connection (`dbConnect`). 
 
@@ -35,7 +35,9 @@ dbWriteTable(con, "myschema.table", table,
 
 # File Types
 
-Currently `noctua` supports the following file types `[".tsv", ".csv", ".parquet"]`. `noctua` also supports compression when uploading data to `AWS S3`. For delimited files (`.tsv` and `.csv`), [gunzip compression](https://en.wikipedia.org/wiki/Gzip) is used. In addition for using `gunzip` compression for delimited file types will be split into a maximum of 20 equal files. This is to speed up how `AWS Athena` queries gunzip compressed files [Default Compression Method for Flat Files](https://github.com/DyfanJones/RAthena/issues/36). For `parquet` files, the package [arrow](https://arrow.apache.org/docs/r/) is used. This package will have to be installed, before data can be sent to `AWS S3` in `parquet` format. `Parquet` files are compressed using `snappy` compression.
+Currently `noctua` supports the following file types `[".tsv", ".csv", ".parquet"]`. For `parquet` files, the package [arrow](https://arrow.apache.org/docs/r/) is used. This package will have to be installed, before data can be sent to `AWS S3` in `parquet` format.
+
+`noctua` also supports compression when uploading data to `AWS S3`. For delimited files (`".tsv"` and `".csv"`), [gunzip compression](https://en.wikipedia.org/wiki/Gzip) is used. When using gunzip compression, `noctua` will split the zipped file into a maximum of 20 equal parts. This is to speed up how `AWS Athena` queries gunzip compressed files ([Default Compression Method for Flat Files](https://github.com/DyfanJones/RAthena/issues/36)). [Snappy](https://en.wikipedia.org/wiki/Snappy_(compression)) compression is used for compressing `parquet` files.
 
 # Useful links
 
