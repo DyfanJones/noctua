@@ -39,7 +39,7 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
   * Getting Started
 
 ## Unit tests:
-* Increase coverage to 80%
+* Increase coverage to + 80%
 
 # noctua 1.5.1
 ## Bug Fix
