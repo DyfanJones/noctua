@@ -29,6 +29,7 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 ## Bug Fix
 * `dbConnect` didn't correct pass `.internal` metadata for paws objects.
 * RStudio connection tab functions:`computeHostName` & `computeDisplayName` now get region name from `info` object from `dbConnect` S4 class.
+* `dbWriteTable` appending to existing table compress file type was incorrectly return.
 
 ## Documentation
 * Added supported environmental variable `AWS_REGION` into `dbConnect`
