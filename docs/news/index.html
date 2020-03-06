@@ -189,6 +189,21 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 <ul>
 <li>Added supported environmental variable <code>AWS_REGION</code> into <code>dbConnect</code>
 </li>
+<li>Vignettes added:
+<ul>
+<li>AWS Athena Query Cache</li>
+<li>AWS S3 backend</li>
+<li>Changing Backend File Parser</li>
+<li>Getting Started</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="unit-tests" class="section level2">
+<h2 class="hasAnchor">
+<a href="#unit-tests" class="anchor"></a>Unit tests:</h2>
+<ul>
+<li>Increase coverage to 80%</li>
 </ul>
 </div>
 </div>
@@ -201,7 +216,7 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 <a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://rdrr.io/pkg/readr/man/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
+<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
 </ul>
 <pre><code>library(readr)
 library(microbenchmark)
@@ -348,9 +363,9 @@ noctua_options("vroom")
 <li>new function <code>dbGetTables</code> that returns Athena hierarchy as a data.frame</li>
 </ul>
 </div>
-<div id="unit-tests" class="section level2">
+<div id="unit-tests-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests" class="anchor"></a>Unit tests</h2>
+<a href="#unit-tests-1" class="anchor"></a>Unit tests</h2>
 <ul>
 <li>Added data transfer unit test for backend file parser <code>vroom</code>
 </li>
@@ -387,9 +402,9 @@ noctua_options("vroom")
 <li>Fixed issue where <code>as.character</code> was getting wrongly translated (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/45"># 45</a>)</li>
 </ul>
 </div>
-<div id="unit-tests-1" class="section level2">
+<div id="unit-tests-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-1" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-2" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>Special characters have been added to unit test <code>data-transfer</code>
 </li>
@@ -476,9 +491,9 @@ dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will
 <li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for identifying issue around <code>sql_translate_env</code>. Previously <code>noctua</code> would take the default <code><a href="https://dplyr.tidyverse.org/reference/backend_dbplyr.html">dplyr::sql_translate_env</a></code>, now <code>noctua</code> has a custom method that uses Data types from: <a href="https://docs.aws.amazon.com/athena/latest/ug/data-types.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/data-types.html</a> and window functions from: <a href="https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html</a>
 </li>
 </ul>
-<div id="unit-tests-2" class="section level3">
+<div id="unit-tests-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#unit-tests-2" class="anchor"></a>Unit tests</h3>
+<a href="#unit-tests-3" class="anchor"></a>Unit tests</h3>
 <ul>
 <li>
 <code>POSIXct</code> class has now been added to data transfer unit test</li>
@@ -538,9 +553,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
 </div>
-<div id="unit-tests-3" class="section level2">
+<div id="unit-tests-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-3" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-4" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>
 <code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
@@ -588,9 +603,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </ul>
 </div>
 </div>
-<div id="unit-tests-4" class="section level2">
+<div id="unit-tests-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#unit-tests-4" class="anchor"></a>Unit Tests</h2>
+<a href="#unit-tests-5" class="anchor"></a>Unit Tests</h2>
 <ul>
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>

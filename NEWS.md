@@ -32,6 +32,14 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 
 ## Documentation
 * Added supported environmental variable `AWS_REGION` into `dbConnect`
+* Vignettes added:
+  * AWS Athena Query Cache
+  * AWS S3 backend
+  * Changing Backend File Parser
+  * Getting Started
+
+## Unit tests:
+* Increase coverage to 80%
 
 # noctua 1.5.1
 ## Bug Fix
