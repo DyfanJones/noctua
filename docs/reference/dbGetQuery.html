@@ -155,7 +155,7 @@
     <tr>
       <th>conn</th>
       <td><p>A DBIConnection object, as returned by
-<code><a href='https://rdrr.io/pkg/DBI/man/dbConnect.html'>dbConnect()</a></code>.</p></td>
+<code><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect()</a></code>.</p></td>
     </tr>
     <tr>
       <th>statement</th>
@@ -190,10 +190,7 @@
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
 <span class='co'># Sending Queries to Athena</span>
-<span class='fu'>dbGetQuery</span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt;       var1
-#&gt; 1  default
-#&gt; 2 sampledb
-#&gt; 3     temp</div><div class='input'>
+<span class='fu'>dbGetQuery</span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt; <span class='error'>Error: NoSuchKey: The specified key does not exist.</span></div><div class='input'>
 <span class='co'># Disconnect conenction</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
 <span class='co'># }</span></div></pre>

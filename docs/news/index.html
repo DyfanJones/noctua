@@ -181,6 +181,8 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 <li>
 <code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
 <li>RStudio connection tab functions:<code>computeHostName</code> &amp; <code>computeDisplayName</code> now get region name from <code>info</code> object from <code>dbConnect</code> S4 class.</li>
+<li>
+<code>dbWriteTable</code> appending to existing table compress file type was incorrectly return.</li>
 </ul>
 </div>
 <div id="documentation" class="section level2">

@@ -180,9 +180,9 @@
 <span class='co'># Demo connection to Athena using profile name </span>
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/noctua/man/athena.html'>athena</a></span>())
 
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbStatistics</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; $EngineExecutionTimeInMillis
-#&gt; [1] 215
+#&gt; [1] 228
 #&gt; 
 #&gt; $DataScannedInBytes
 #&gt; [1] 0
@@ -191,16 +191,16 @@
 #&gt; character(0)
 #&gt; 
 #&gt; $TotalExecutionTimeInMillis
-#&gt; [1] 291
+#&gt; [1] 319
 #&gt; 
 #&gt; $QueryQueueTimeInMillis
-#&gt; [1] 51
+#&gt; [1] 62
 #&gt; 
 #&gt; $QueryPlanningTimeInMillis
 #&gt; numeric(0)
 #&gt; 
 #&gt; $ServiceProcessingTimeInMillis
-#&gt; [1] 25
+#&gt; [1] 29
 #&gt; </div><div class='input'>
 <span class='co'># Clean up</span>
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
