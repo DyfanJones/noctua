@@ -26,6 +26,15 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 # 0.110   0.045   1.094 
 ```
 
+* `dbWriteTable` now supports uploading json lines (http://jsonlines.org/) format up to `AWS Athena` (#88).
+
+```
+library(DBI)
+con = dbConnect(RAthena::athena())
+dbWriteTable(con, "iris2", iris, file.type = "json")
+dbGetQuery(con, "select * from iris2")
+```
+
 ## Bug Fix
 * `dbConnect` didn't correct pass `.internal` metadata for paws objects.
 * RStudio connection tab functions:`computeHostName` & `computeDisplayName` now get region name from `info` object from `dbConnect` S4 class.
