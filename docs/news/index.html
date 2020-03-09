@@ -173,6 +173,14 @@ dbWriteTable(con, "iris2", iris)
 system.time(dbRemoveTable(con, "iris2", confirm = T))
 # user  system elapsed 
 # 0.110   0.045   1.094 </a></code></pre>
+<ul>
+<li>
+<code>dbWriteTable</code> now supports uploading json lines (<a href="http://jsonlines.org/" class="uri">http://jsonlines.org/</a>) format up to <code>AWS Athena</code> (<a href='https://github.com/DyfanJones/noctua/issues/88'>#88</a>).</li>
+</ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+con = dbConnect(RAthena::athena())
+dbWriteTable(con, "iris2", iris, file.type = "json")
+dbGetQuery(con, "select * from iris2")</a></code></pre>
 </div>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
