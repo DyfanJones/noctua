@@ -65,6 +65,8 @@ setMethod(
 #' \item{\strong{AWS_ATHENA_WORK_GROUP:} is equivalent to \code{dbConnect} parameter - \code{work_group}}
 #' \item{\strong{AWS_REGION:} is equivalent to \code{dbConnect} parameter - \code{region_name}}
 #' }
+#' 
+#' \strong{NOTE:} If you have set any environmental variables in \code{.Renviron} please restart your R in order for the changes to take affect.
 #'
 #' @inheritParams DBI::dbConnect
 #' @param aws_access_key_id AWS access key ID
