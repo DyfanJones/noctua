@@ -16,12 +16,13 @@
 #'        When creating a table for the first time \code{s3.location} will be formatted from \code{"s3://mybucket/data/"} to the following 
 #'        syntax \code{"s3://{mybucket/data}/{schema}/{table}/{parition}/"} this is to support tables with the same name but existing in different 
 #'        schemas. If schema isn't specified in \code{name} parameter then the schema from \code{dbConnect} is used instead.
-#' @param file.type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
 #'                  of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
 #'                  Athena due to the separating value ",". This would cause issues with AWS Athena. 
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used., for file type "parquet" 
-#'                 "snappy" compression is used.
+#'                  "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+#'                 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.
 #' @param max.batch Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
 #'                  is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the 
 #'                  performance of AWS Athena when working with files compressed in "gzip" format. \code{max.batch} will not split the data.frame 
@@ -80,7 +81,7 @@ NULL
 Athena_write_table <-
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...) {
     # variable checks
     stopifnot(is.character(name),
@@ -148,6 +149,7 @@ Athena_write_table <-
                                                                                         "\t" = "tsv",
                                                                                         stop("noctua currently only supports csv and tsv delimited format")),
                           "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe" = "parquet",
+                          "org.apache.hive.hcatalog.data.JsonSerDe" = "json",
                           stop("Unable to append onto table: ", name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
                                ": Is currently not supported by noctua", call. = F))
       
@@ -162,7 +164,11 @@ Athena_write_table <-
                             stop("noctua currently only supports gzip compression for tsv", call. = F)}},
                         "csv" = {if(is.null(tbl_info$Parameters$compressionType)) FALSE else {
                           if(tolower(tbl_info$Parameters$compressionType) == "gzip") TRUE else
-                            stop("noctua currently only supports gzip compression for csv", call. = F)}})
+                            stop("noctua currently only supports gzip compression for csv", call. = F)}},
+                        "json" = {if(is.null(tbl_info$Parameters$compressionType)) FALSE else {
+                          if(!is.null(tbl_info$Parameters$compressionType)) 
+                            stop("RAthena currently doesn't support compression for json", call. = F)}}
+                        )
       if(file.type != File.Type) warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
       
       # get previous s3 location #73
@@ -183,6 +189,13 @@ Athena_write_table <-
         stop("The package arrow is required for R to utilise Apache Arrow to create parquet files.", call. = FALSE)
       else {cp <- if(compress) "snappy" else NULL
             arrow::write_parquet(value, FileLocation, compression = cp)}
+    }
+    
+    # check if jsonlite is installed before attempting to create json lines
+    if(file.type == "json"){
+      FileLocation <- tempfile()
+      stream_out <- pkg_method("stream_out", "jsonlite")
+      stream_out(value, con = file(FileLocation), verbose = FALSE)
     }
     
     # writes out csv/tsv, uses data.table for extra speed
@@ -244,7 +257,7 @@ setMethod(
   "dbWriteTable", c("AthenaConnection", "character", "data.frame"),
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     Athena_write_table(conn, name, value, overwrite, append,
@@ -258,7 +271,7 @@ setMethod(
   "dbWriteTable", c("AthenaConnection", "Id", "data.frame"),
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     Athena_write_table(conn, name, value, overwrite, append,
@@ -272,7 +285,7 @@ setMethod(
   "dbWriteTable", c("AthenaConnection", "SQL", "data.frame"),
   function(conn, name, value, overwrite=FALSE, append=FALSE,
            row.names = NA, field.types = NULL, 
-           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet"),
+           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     Athena_write_table(conn, name, value, overwrite, append,
@@ -286,7 +299,7 @@ setMethod(
 #' This method converts data.frame columns into the correct format so that it can be uploaded Athena.
 #' @name sqlData
 #' @inheritParams DBI::sqlData
-#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet", "json"].
 #'                  \strong{Note:} This parameter is used for format any special characters that clash with file type separator.
 #' @return \code{sqlData} returns a dataframe formatted for Athena. Currently converts \code{list} variable types into \code{character}
 #'         split by \code{'|'}, similar to how \code{data.table} writes out to files.
@@ -296,7 +309,7 @@ NULL
 #' @rdname sqlData
 #' @export
 setMethod("sqlData", "AthenaConnection", 
-          function(con, value, row.names = NA, file.type = c("tsv", "csv", "parquet"),...) {
+          function(con, value, row.names = NA, file.type = c("tsv", "csv", "parquet", "json"),...) {
   stopifnot(is.data.frame(value))
   file.type = match.arg(file.type)
   Value <- copy(value)
@@ -339,9 +352,13 @@ setMethod("sqlData", "AthenaConnection",
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/"). 
 #'        By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.
-#' @param file.type What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
-#'        Currently parquet compression isn't supported.
+#' @param file.type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
+#'                  of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
+#'                  Athena due to the separating value ",". This would cause issues with AWS Athena. 
+#'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
+#'                  "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+#'                 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.
 #' @return \code{sqlCreateTable} returns data.frame's \code{DDL} in the \code{\link[DBI]{SQL}} format.
 #' @seealso \code{\link[DBI]{sqlCreateTable}}
 #' @examples 
@@ -377,7 +394,7 @@ NULL
 #' @rdname sqlCreateTable
 #' @export
 setMethod("sqlCreateTable", "AthenaConnection",
-  function(con, table, fields, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("tsv", "csv", "parquet"),
+  function(con, table, fields, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, ...){
     if (!dbIsValid(con)) {stop("Connection already closed.", call. = FALSE)}
     stopifnot(is.character(table),
@@ -446,7 +463,8 @@ FileType <- function(obj){
   switch(obj,
          csv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY ','\n\tLINES TERMINATED BY '\\_n'"),
          tsv = gsub("_","","ROW FORMAT DELIMITED\n\tFIELDS TERMINATED BY '\t'\n\tLINES TERMINATED BY '\\_n'"),
-         parquet = SQL("STORED AS PARQUET"))
+         parquet = SQL("STORED AS PARQUET"),
+         json = SQL("ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'"))
 }
 
 header <- function(obj, compress){
@@ -466,7 +484,9 @@ Compress <- function(file.type, compress){
     switch(file.type,
            "csv" = paste(file.type, "gz", sep = "."),
            "tsv" = paste(file.type, "gz", sep = "."),
-           "parquet" = paste("snappy", file.type, sep = "."))
+           "parquet" = paste("snappy", file.type, sep = "."),
+           "json" = {message("Info: json format currently doesn't support compression")
+             file.type})
   } else {file.type}
 }
 

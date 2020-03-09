@@ -17,7 +17,7 @@
   field.types = NULL,
   partition = NULL,
   s3.location = NULL,
-  file.type = c("tsv", "csv", "parquet"),
+  file.type = c("tsv", "csv", "parquet", "json"),
   compress = FALSE,
   max.batch = Inf,
   ...
@@ -33,7 +33,7 @@
   field.types = NULL,
   partition = NULL,
   s3.location = NULL,
-  file.type = c("tsv", "csv", "parquet"),
+  file.type = c("tsv", "csv", "parquet", "json"),
   compress = FALSE,
   max.batch = Inf,
   ...
@@ -49,7 +49,7 @@
   field.types = NULL,
   partition = NULL,
   s3.location = NULL,
-  file.type = c("tsv", "csv", "parquet"),
+  file.type = c("tsv", "csv", "parquet", "json"),
   compress = FALSE,
   max.batch = Inf,
   ...
@@ -91,13 +91,14 @@ When creating a table for the first time \code{s3.location} will be formatted fr
 syntax \code{"s3://{mybucket/data}/{schema}/{table}/{parition}/"} this is to support tables with the same name but existing in different 
 schemas. If schema isn't specified in \code{name} parameter then the schema from \code{dbConnect} is used instead.}
 
-\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
 of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
 Athena due to the separating value ",". This would cause issues with AWS Athena. 
-\strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
+\strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
+"json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used., for file type "parquet" 
-"snappy" compression is used.}
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+"snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.}
 
 \item{max.batch}{Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
 is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the 

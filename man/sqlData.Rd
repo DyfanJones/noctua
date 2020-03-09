@@ -9,7 +9,7 @@
   con,
   value,
   row.names = NA,
-  file.type = c("tsv", "csv", "parquet"),
+  file.type = c("tsv", "csv", "parquet", "json"),
   ...
 )
 }
@@ -29,7 +29,7 @@ default name.
 
 For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
 
-\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"].
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet", "json"].
 \strong{Note:} This parameter is used for format any special characters that clash with file type separator.}
 
 \item{...}{Other arguments used by individual methods.}

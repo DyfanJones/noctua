@@ -12,7 +12,7 @@
   field.types = NULL,
   partition = NULL,
   s3.location = NULL,
-  file.type = c("tsv", "csv", "parquet"),
+  file.type = c("tsv", "csv", "parquet", "json"),
   compress = FALSE,
   ...
 )
@@ -39,10 +39,14 @@ A data frame: field types are generated using
 \item{s3.location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/"). 
 By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.}
 
-\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet"]}
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
+of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
+Athena due to the separating value ",". This would cause issues with AWS Athena. 
+\strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
+"json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used.
-Currently parquet compression isn't supported.}
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+"snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.}
 
 \item{...}{Other arguments used by individual methods.}
 }
