@@ -203,7 +203,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
     </tr>
     <tr>
       <th>compress</th>
-      <td><p><code>FALSE | TRUE</code> To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+      <td><p><code>FALSE | TRUE</code> To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
 "snappy" compression is used. Currently <code>noctua</code> doesn't support compression for "json" file type.</p></td>
     </tr>
     <tr>
@@ -261,7 +261,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20200309 STRING)
+#&gt; PARTITIONED BY (20200311 STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY '	'
 #&gt; 	LINES TERMINATED BY '\n'
@@ -282,7 +282,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (20200309 STRING)
+#&gt; PARTITIONED BY (20200311 STRING)
 #&gt; STORED AS PARQUET
 #&gt; LOCATION 's3://path/to/athena/table/default/iris/'
 #&gt; ;</div><div class='input'>

@@ -97,7 +97,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.}
 
 \item{max.batch}{Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression

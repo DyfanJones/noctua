@@ -21,7 +21,7 @@
 #'                  Athena due to the separating value ",". This would cause issues with AWS Athena. 
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 #'                  "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
 #'                 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.
 #' @param max.batch Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
 #'                  is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the 
@@ -357,7 +357,7 @@ setMethod("sqlData", "AthenaConnection",
 #'                  Athena due to the separating value ",". This would cause issues with AWS Athena. 
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 #'                  "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv", "json"] then "gzip" compression is used, for file type "parquet" 
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
 #'                 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.
 #' @return \code{sqlCreateTable} returns data.frame's \code{DDL} in the \code{\link[DBI]{SQL}} format.
 #' @seealso \code{\link[DBI]{sqlCreateTable}}
