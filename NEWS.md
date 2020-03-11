@@ -39,6 +39,7 @@ dbGetQuery(con, "select * from iris2")
 * `dbConnect` didn't correct pass `.internal` metadata for paws objects.
 * RStudio connection tab functions:`computeHostName` & `computeDisplayName` now get region name from `info` object from `dbConnect` S4 class.
 * `dbWriteTable` appending to existing table compress file type was incorrectly return.
+* `Rstudio connection tab` comes into an issue when Glue Table isn't stored correctly ([RAthena: # 92](https://github.com/DyfanJones/RAthena/issues/92))
 
 ## Documentation
 * Added supported environmental variable `AWS_REGION` into `dbConnect`
