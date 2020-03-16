@@ -33,7 +33,7 @@ noctua_options()
 
 # Swapping on the fly
 
-This makes it very felixible to swap between each file parser even between each query execution:
+This makes it very flexible to swap between each file parser even between each query execution:
 
 ```r
 library(DBI)

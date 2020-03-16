@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
       </span>
     </div>
 
@@ -140,9 +140,9 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-1519000" class="section level1">
+    <div id="noctua-160" class="section level1">
 <h1 class="page-header">
-<a href="#noctua-1519000" class="anchor"></a>noctua 1.5.1.9000<small> Unreleased </small>
+<a href="#noctua-160" class="anchor"></a>noctua 1.6.0<small> Unreleased </small>
 </h1>
 <div id="new-feature" class="section level2">
 <h2 class="hasAnchor">
@@ -228,7 +228,7 @@ dbGetQuery(con, "select * from iris2")</a></code></pre>
 <a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is avialable on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
+<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://rdrr.io/pkg/readr/man/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
 </ul>
 <pre><code>library(readr)
 library(microbenchmark)
@@ -678,7 +678,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#noctua-1519000">1.5.1.9000</a></li>
+        <li><a href="#noctua-160">1.6.0</a></li>
         <li><a href="#noctua-151">1.5.1</a></li>
         <li><a href="#noctua-150">1.5.0</a></li>
         <li><a href="#noctua-140">1.4.0</a></li>

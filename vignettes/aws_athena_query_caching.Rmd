@@ -71,7 +71,7 @@ Sadly the cached query didn't pick up the new data from `iris`.
 
 ## Cache memory
 
-The caching method in `noctua` will rememeber previous query ids within each R session, even if you stop and start caching in `noctua_options`.
+The caching method in `noctua` will remember previous query ids within each R session, even if you stop and start caching in `noctua_options`.
 
 ```r
 # Start caching
