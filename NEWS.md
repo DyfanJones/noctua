@@ -1,4 +1,4 @@
-# noctua 1.5.1.9000
+# noctua 1.6.0
 ## New Feature
 * Inspired by `pyathena`, `noctua_options` now has a new paramter `cache_size`. This implements local caching in R environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing S3's Athena output when caching isn't disabled
 * `noctua_options` now has `clear_cache` parameter to clear down all cached data.
@@ -54,7 +54,7 @@ dbGetQuery(con, "select * from iris2")
 
 # noctua 1.5.1
 ## Bug Fix
-* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. If `readr` is avialable on system then `readr::write_file` is used for extra speed.
+* `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. If `readr` is available on system then `readr::write_file` is used for extra speed.
 
 ```
 library(readr)
