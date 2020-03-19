@@ -243,6 +243,11 @@ setMethod(
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
     poll_result <- poll(res)
     
+    # if query failed stop
+    if(poll_result$QueryExecution$Status$State == "FAILED") {
+      stop(poll_result$QueryExecution$Status$StateChangeReason, call. = FALSE)
+    }
+    
     # cache query metadata if caching is enabled
     if (athena_option_env$cache_size > 0) cache_query(poll_result)
     
