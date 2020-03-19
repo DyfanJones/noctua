@@ -138,7 +138,7 @@ Athena_write_table <-
       dbms.name <- gsub("\\..*", "" , name)
       Table <- gsub(".*\\.", "" , name)
       
-      retry_api_call(
+      tryCatch(
       tbl_info <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
                                  Name = Table)$Table)
       

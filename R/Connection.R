@@ -467,7 +467,7 @@ setMethod("dbListFields", c("AthenaConnection", "character") ,
               dbms.name <- conn@info$dbms.name
               Table <- name}
             
-            retry_api_call(
+            tryCatch(
               output <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
                                                Name = Table)$Table)
             col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
