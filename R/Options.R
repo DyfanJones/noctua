@@ -7,6 +7,8 @@ class(athena_option_env$file_parser) <- "athena_data.table"
 cache_dt = data.table("QueryId" = character(), "Query" = character(), "State"= character(),
                       "StatementType"= character(),"WorkGroup" = character())
 athena_option_env$cache_dt <-  cache_dt
+athena_option_env$retry <- 10
+athena_option_env$retry_quiet <- TRUE
 
 # ==========================================================================
 # Setting file parser method
@@ -18,6 +20,8 @@ athena_option_env$cache_dt <-  cache_dt
 #' @param file_parser Method to read and write tables to Athena, currently defaults to data.table
 #' @param cache_size Number of queries to be cached. Currently only support caching up to 100 distinct queries.
 #' @param clear_cache Clears all previous cached query metadata
+#' @param retry Maximum number of requests to attempt.
+#' @param retry_quiet If \code{FALSE}, will print a message from retry displaying how long until the next request.
 #' @return \code{noctua_options()} returns \code{NULL}, invisibly.
 #' @examples
 #' library(noctua)
@@ -25,7 +29,7 @@ athena_option_env$cache_dt <-  cache_dt
 #' # change file parser from default data.table to vroom
 #' noctua_options("vroom")
 #' @export
-noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE) {
+noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE, retry = 10, retry_quiet = TRUE) {
   file_parser = match.arg(file_parser)
   stopifnot(is.logical(clear_cache))
   
@@ -41,6 +45,8 @@ noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 
   class(athena_option_env$file_parser) <- paste("athena", file_parser, sep = "_")
   
   athena_option_env$cache_size <- cache_size
+  athena_option_env$retry <- retry
+  athena_option_env$retry_quiet <- retry_quiet
   
   if(clear_cache) athena_option_env$cache_dt <- athena_option_env$cache_dt[0]
   
