@@ -245,7 +245,7 @@ upload_data <- function(con, x, name, partition = NULL, s3.location= NULL,  file
   
   for (i in 1:length(x)){
     obj <- readBin(x[i], "raw", n = file.size(x[i]))
-    tryCatch(con@ptr$S3$put_object(Body = obj, Bucket = s3_key[[1]], Key = s3_key[[2]][i]))}
+    retry_api_call(con@ptr$S3$put_object(Body = obj, Bucket = s3_key[[1]], Key = s3_key[[2]][i]))}
 
   invisible(NULL)
 }
