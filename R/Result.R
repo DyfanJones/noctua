@@ -147,7 +147,7 @@ setMethod(
     if(n >= 0 && n !=Inf){
       n = as.integer(n + 1)
       if (n > 1000){n = 1000L; message("Info: n has been restricted to 1000 due to AWS Athena limitation")}
-      tryCatch(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, MaxResults = n))
+      retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, MaxResults = n))
       
       output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
       dt <- rbindlist(output, fill = TRUE)
@@ -165,12 +165,12 @@ setMethod(
     
     # connect to s3 and create a bucket object
     # download athena output
-    tryCatch(obj <- res@connection@ptr$S3$get_object(Bucket = result_info$bucket, Key = result_info$key))
+    retry_api_call(obj <- res@connection@ptr$S3$get_object(Bucket = result_info$bucket, Key = result_info$key))
     
     write_bin(obj$Body, File)
     
     # return metadata of athena data types
-    tryCatch(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
+    retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
                                                                          MaxResults = as.integer(1))$ResultSet$ResultSetMetadata$ColumnInfo)
 
     if(grepl("\\.csv$",result_info$key)){
