@@ -246,7 +246,7 @@ db_query_fields.AthenaConnection <- function(con, sql, ...) {
       dbms.name <- con@info$dbms.name
       Table <- sql}
     
-    tryCatch(
+    retry_api_call(
       output <- con@ptr$glue$get_table(DatabaseName = dbms.name,
                                        Name = Table)$Table)
     

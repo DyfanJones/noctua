@@ -291,7 +291,7 @@ setMethod(
       stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
     }
     
-    tryCatch(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
+    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
                                                                    MaxResults = as.integer(1)))
     
     Name <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Name)

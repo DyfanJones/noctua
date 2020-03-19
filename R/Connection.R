@@ -370,7 +370,7 @@ setMethod(
   function(conn, schema = NULL, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     if(is.null(schema)){
-      tryCatch(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
+      retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
     tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
     unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
   }
@@ -415,7 +415,7 @@ setMethod("dbGetTables", "AthenaConnection",
           function(conn, schema = NULL, ...){
   if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
   if(is.null(schema)){
-    tryCatch(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
+    retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
   tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
   rbindlist(lapply(output, function(x) rbindlist(lapply(x, function(y) data.frame(Schema = y$DatabaseName,
                                                                                   TableName=y$Name,
@@ -467,7 +467,7 @@ setMethod("dbListFields", c("AthenaConnection", "character") ,
               dbms.name <- conn@info$dbms.name
               Table <- name}
             
-            tryCatch(
+            retry_api_call(
               output <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
                                                Name = Table)$Table)
             col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
