@@ -7,7 +7,7 @@ class(athena_option_env$file_parser) <- "athena_data.table"
 cache_dt = data.table("QueryId" = character(), "Query" = character(), "State"= character(),
                       "StatementType"= character(),"WorkGroup" = character())
 athena_option_env$cache_dt <-  cache_dt
-athena_option_env$retry <- 10
+athena_option_env$retry <- 5
 athena_option_env$retry_quiet <- TRUE
 
 # ==========================================================================
@@ -29,7 +29,7 @@ athena_option_env$retry_quiet <- TRUE
 #' # change file parser from default data.table to vroom
 #' noctua_options("vroom")
 #' @export
-noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE, retry = 10, retry_quiet = TRUE) {
+noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE, retry = 5, retry_quiet = FALSE) {
   file_parser = match.arg(file_parser)
   stopifnot(is.logical(clear_cache))
   

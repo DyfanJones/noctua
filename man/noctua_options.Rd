@@ -8,8 +8,8 @@ noctua_options(
   file_parser = c("data.table", "vroom"),
   cache_size = 0,
   clear_cache = FALSE,
-  retry = 10,
-  retry_quiet = TRUE
+  retry = 5,
+  retry_quiet = FALSE
 )
 }
 \arguments{
