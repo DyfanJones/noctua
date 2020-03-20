@@ -8,7 +8,7 @@ cache_dt = data.table("QueryId" = character(), "Query" = character(), "State"= c
                       "StatementType"= character(),"WorkGroup" = character())
 athena_option_env$cache_dt <-  cache_dt
 athena_option_env$retry <- 5
-athena_option_env$retry_quiet <- TRUE
+athena_option_env$retry_quiet <- FALSE
 
 # ==========================================================================
 # Setting file parser method
