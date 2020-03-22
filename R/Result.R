@@ -15,7 +15,7 @@ AthenaResult <- function(conn,
                                                              ResultConfiguration = ResultConfiguration(conn),
                                                              WorkGroup = conn@info$work_group))}
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
-  new("AthenaResult", connection = conn, info = response)
+  new("AthenaResult", connection = conn, info = c(response, list(NextToken = NULL)))
 }
 
 #' @rdname AthenaConnection
@@ -67,11 +67,11 @@ setMethod(
     } else {
       
       # checks status of query
-      tryCatch(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
+      retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
       
       # stops resource if query is still running
       if (!(query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED"))){
-        tryCatch(res@connection@ptr$Athena$stop_query_execution(QueryExecutionId = res@info$QueryExecutionId))}
+        retry_api_call(res@connection@ptr$Athena$stop_query_execution(QueryExecutionId = res@info$QueryExecutionId))}
       
       # clear s3 athena output
       # split s3_uri
@@ -144,16 +144,45 @@ setMethod(
       stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
     }
     
+    # return metadata of athena data types
+    retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
+                                                                               MaxResults = as.integer(1))$ResultSet$ResultSetMetadata$ColumnInfo)
     if(n >= 0 && n !=Inf){
       n = as.integer(n + 1)
-      if (n > 1000){n = 1000L; message("Info: n has been restricted to 1000 due to AWS Athena limitation")}
-      retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, MaxResults = n))
+      chunk = n
+      if (n > 1000L) chunk = 1000L
       
-      output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
-      dt <- rbindlist(output, fill = TRUE)
-      colnames(dt) <- as.character(unname(dt[1,]))
-      rownames(dt) <- NULL
-      return(dt[-1,])
+      dt_list <- list()
+      iterate <- 1:ceiling(n/chunk)
+      
+      for (i in iterate){
+        if(i == iterate[length(iterate)]) chunk <- as.integer(chunk - (i * chunk) + n)
+        retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, NextToken = res@info$NextToken, MaxResults = chunk))
+        output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
+        suppressWarnings(staging_dt <- rbindlist(output, fill = TRUE))
+        
+        # remove colnames from first row
+        if (i == 1 && is.null(res@info$NextToken)){
+          staging_dt <- staging_dt[-1,]
+        }
+        
+        # Update Token in s4 class
+        eval.parent(substitute(res@info$NextToken <- result$NextToken))
+        
+        # ensure rownames are not set
+        rownames(staging_dt) <- NULL
+        
+        # added staging data.table to list
+        dt_list[[i]] <- staging_dt
+      }
+      
+      # combined all lists together
+      dt <- rbindlist(dt_list, use.names = FALSE)
+      
+      # replace names with actual names
+      Names <- names(AthenaToRDataType(athena_option_env$file_parser, result_class))
+      colnames(dt) <- Names
+      return(dt)
     }
     
     # Added data scan information when returning data from athena
@@ -169,10 +198,6 @@ setMethod(
     
     write_bin(obj$Body, File)
     
-    # return metadata of athena data types
-    retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
-                                                                         MaxResults = as.integer(1))$ResultSet$ResultSetMetadata$ColumnInfo)
-
     if(grepl("\\.csv$",result_info$key)){
       output <- athena_read(athena_option_env$file_parser, File, result_class)
     } else{
