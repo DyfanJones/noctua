@@ -157,7 +157,11 @@ setMethod(
       
       for (i in iterate){
         if(i == iterate[length(iterate)]) chunk <- as.integer(chunk - (i * chunk) + n)
+        
+        # get chunk with retry api call if call fails
         retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, NextToken = res@info$NextToken, MaxResults = chunk))
+        
+        # process returned listß
         output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
         suppressWarnings(staging_dt <- rbindlist(output, fill = TRUE))
         
