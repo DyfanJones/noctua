@@ -152,27 +152,30 @@ setMethod(
       chunk = n
       if (n > 1000L) chunk = 1000L
       
-      dt_list <- list()
       iterate <- 1:ceiling(n/chunk)
       
+      # create empty list shell
+      dt_list <- list()
+      length(dt_list) <- max(iterate)
+      
+      # assign token from AthenaResult class
+      token <- res@info$NextToken
       for (i in iterate){
-        if(i == iterate[length(iterate)]) chunk <- as.integer(n - (i-1) * chunk)
+        if(i == max(iterate)) chunk <- as.integer(n - (i-1) * chunk)
         
         # get chunk with retry api call if call fails
-        retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, NextToken = res@info$NextToken, MaxResults = chunk))
+        retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, NextToken = token, MaxResults = chunk))
         
-        # process returned listß
+        # process returned list
         output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0 ) NA else x)))
-        suppressWarnings(staging_dt <- rbindlist(output, fill = TRUE))
+        suppressWarnings(staging_dt <- rbindlist(output, use.names = FALSE))
         
         # remove colnames from first row
         if (i == 1 && is.null(res@info$NextToken)){
           staging_dt <- staging_dt[-1,]
         }
         
-        # Update Token in s4 class
-        eval.parent(substitute(res@info$NextToken <- result$NextToken))
-        
+        token <- result$NextToken
         # ensure rownames are not set
         rownames(staging_dt) <- NULL
         
@@ -182,6 +185,9 @@ setMethod(
       
       # combined all lists together
       dt <- rbindlist(dt_list, use.names = FALSE)
+      
+      # Update last token in s4 class
+      eval.parent(substitute(res@info$NextToken <- result$NextToken))
       
       # replace names with actual names
       Names <- sapply(result_class, function(x) x$Name)
