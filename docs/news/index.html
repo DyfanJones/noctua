@@ -151,7 +151,15 @@
 <li>functions that collect or push to AWS S3 now have a retry capability. Meaning if API call fails then the call is retried (<a href='https://github.com/DyfanJones/noctua/issues/79'>#79</a>)</li>
 <li>
 <code>noctua_options</code> contains 2 new parameters to control how <code>noctua</code> handles retries.</li>
+<li>
+<code>dbFetch</code> is able to return data from AWS Athena in chunk. This has been achieved by passing <code>NextToken</code> to <code>AthenaResult</code> s4 class. This method won’t be as fast <code>n = -1</code> as each chunk will have to be process into data frame format.</li>
 </ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+
+con &lt;- dbConnect(noctua::athena())
+
+res &lt;- dbExecute(con, "select * from some_big_table limit 10000")
+dbFetch(res, 5000)</a></code></pre>
 </div>
 <div id="bug" class="section level2">
 <h2 class="hasAnchor">
