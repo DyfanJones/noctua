@@ -521,10 +521,24 @@ setMethod(
     } else {dbms.name <- conn@info$dbms.name
     Table <- tolower(name)}
     
-    tryerror <- try(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), silent = TRUE)
-    if(inherits(tryerror, "try-error") && !grepl(".*table.*not.*found.*", tryerror[1], ignore.case = T)){
-      stop(gsub("^Error : ", "", tryerror[1]), call. = F)}
-    !grepl(".*table.*not.*found.*", tryerror[1], ignore.case = T)
+    for (i in seq_len(athena_option_env$retry)) {
+      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), 
+                       error = function(e) e)
+      
+      # exponential step back if error and not expected error
+      if(inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)){
+        backoff_len <- runif(n=1, min=0, max=(2^i - 1))
+        
+        if(!athena_option_env$retry_quiet) message(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
+        
+        Sys.sleep(backoff_len)
+      } else {break}
+    }
+    
+    
+    if (inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)) stop(resp)
+    
+    !grepl(".*table.*not.*found.*", resp[1], ignore.case = T)
   })
 
 #' Remove table from Athena
