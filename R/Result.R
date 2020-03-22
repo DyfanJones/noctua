@@ -184,7 +184,7 @@ setMethod(
       dt <- rbindlist(dt_list, use.names = FALSE)
       
       # replace names with actual names
-      Names <- names(AthenaToRDataType(athena_option_env$file_parser, result_class))
+      Names <- sapply(result_class, function(x) x$Name)
       colnames(dt) <- Names
       return(dt)
     }
