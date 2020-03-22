@@ -10,7 +10,7 @@ AthenaResult <- function(conn,
   response <- list(QueryExecutionId = NULL)
   if (athena_option_env$cache_size > 0) response <- list(QueryExecutionId = check_cache(statement, conn@info$work_group))
   if (is.null(response$QueryExecutionId)) {
-  tryCatch(response <- conn@ptr$Athena$start_query_execution(QueryString = statement,
+  retry_api_call(response <- conn@ptr$Athena$start_query_execution(QueryString = statement,
                                                              QueryExecutionContext = list(Database = conn@info$dbms.name),
                                                              ResultConfiguration = ResultConfiguration(conn),
                                                              WorkGroup = conn@info$work_group))}
