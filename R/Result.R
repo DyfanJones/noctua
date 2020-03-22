@@ -171,7 +171,7 @@ setMethod(
         suppressWarnings(staging_dt <- rbindlist(output, use.names = FALSE))
         
         # remove colnames from first row
-        if (i == 1 && is.null(res@info$NextToken)){
+        if (i == 1 && is.null(token)){
           staging_dt <- staging_dt[-1,]
         }
         
