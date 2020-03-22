@@ -156,7 +156,7 @@ setMethod(
       iterate <- 1:ceiling(n/chunk)
       
       for (i in iterate){
-        if(i == iterate[length(iterate)]) chunk <- as.integer(chunk - (i * chunk) + n)
+        if(i == iterate[length(iterate)]) chunk <- as.integer(n - (i-1) * chunk)
         
         # get chunk with retry api call if call fails
         retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId, NextToken = res@info$NextToken, MaxResults = chunk))
