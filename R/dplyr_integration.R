@@ -111,7 +111,7 @@ db_save_query.AthenaConnection <- function(con, sql, name ,
                        sql, ";"))
   res <- dbExecute(con, tt_sql)
   # check if execution failed
-  query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId)
+  retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
   if(query_execution$QueryExecution$Status$State == "FAILED") {
     stop(query_execution$QueryExecution$Status$StateChangeReason, call. = FALSE)
   }

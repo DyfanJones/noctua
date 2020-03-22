@@ -253,7 +253,7 @@ setMethod(
   "dbHasCompleted", "AthenaResult",
   function(res, ...) {
     if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
-    tryCatch(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
+    retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
     
     if(query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED")) TRUE
     else if (query_execution$QueryExecution$Status$State == "RUNNING") FALSE
@@ -320,7 +320,7 @@ setMethod(
       stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
     }
     
-    tryCatch(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
+    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
                                                                    MaxResults = as.integer(1)))
     
     Name <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Name)
