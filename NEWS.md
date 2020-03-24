@@ -1,3 +1,21 @@
+# noctua 1.6.0.9000
+## New Feature
+* functions that collect or push to AWS S3 now have a retry capability. Meaning if API call fails then the call is retried (#79)
+* `noctua_options` contains 2 new parameters to control how `noctua` handles retries.
+* `dbFetch` is able to return data from AWS Athena in chunk. This has been achieved by passing `NextToken` to `AthenaResult` s4 class. This method won't be as fast `n = -1` as each chunk will have to be process into data frame format.
+
+```
+library(DBI)
+
+con <- dbConnect(noctua::athena())
+
+res <- dbExecute(con, "select * from some_big_table limit 10000")
+dbFetch(res, 5000)
+```
+
+## Bug
+* `dbWriteTable` would throw `throttling error` every now and again, `retry_api_call` as been built to handle the parsing of data between R and AWS S3.
+
 # noctua 1.6.0
 ## New Feature
 * Inspired by `pyathena`, `noctua_options` now has a new paramter `cache_size`. This implements local caching in R environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing S3's Athena output when caching isn't disabled

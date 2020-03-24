@@ -243,6 +243,11 @@ setMethod(
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
     poll_result <- poll(res)
     
+    # if query failed stop
+    if(poll_result$QueryExecution$Status$State == "FAILED") {
+      stop(poll_result$QueryExecution$Status$StateChangeReason, call. = FALSE)
+    }
+    
     # cache query metadata if caching is enabled
     if (athena_option_env$cache_size > 0) cache_query(poll_result)
     
@@ -365,7 +370,7 @@ setMethod(
   function(conn, schema = NULL, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     if(is.null(schema)){
-      tryCatch(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
+      retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
     tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
     unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
   }
@@ -410,7 +415,7 @@ setMethod("dbGetTables", "AthenaConnection",
           function(conn, schema = NULL, ...){
   if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
   if(is.null(schema)){
-    tryCatch(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
+    retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
   tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
   rbindlist(lapply(output, function(x) rbindlist(lapply(x, function(y) data.frame(Schema = y$DatabaseName,
                                                                                   TableName=y$Name,
@@ -516,10 +521,24 @@ setMethod(
     } else {dbms.name <- conn@info$dbms.name
     Table <- tolower(name)}
     
-    tryerror <- try(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), silent = TRUE)
-    if(inherits(tryerror, "try-error") && !grepl(".*table.*not.*found.*", tryerror[1], ignore.case = T)){
-      stop(gsub("^Error : ", "", tryerror[1]), call. = F)}
-    !grepl(".*table.*not.*found.*", tryerror[1], ignore.case = T)
+    for (i in seq_len(athena_option_env$retry)) {
+      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), 
+                       error = function(e) e)
+      
+      # exponential step back if error and not expected error
+      if(inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)){
+        backoff_len <- runif(n=1, min=0, max=(2^i - 1))
+        
+        if(!athena_option_env$retry_quiet) message(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
+        
+        Sys.sleep(backoff_len)
+      } else {break}
+    }
+    
+    
+    if (inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)) stop(resp)
+    
+    !grepl(".*table.*not.*found.*", resp[1], ignore.case = T)
   })
 
 #' Remove table from Athena

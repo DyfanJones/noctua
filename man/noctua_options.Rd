@@ -7,7 +7,9 @@
 noctua_options(
   file_parser = c("data.table", "vroom"),
   cache_size = 0,
-  clear_cache = FALSE
+  clear_cache = FALSE,
+  retry = 5,
+  retry_quiet = FALSE
 )
 }
 \arguments{
@@ -16,13 +18,17 @@ noctua_options(
 \item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries.}
 
 \item{clear_cache}{Clears all previous cached query metadata}
+
+\item{retry}{Maximum number of requests to attempt.}
+
+\item{retry_quiet}{If \code{FALSE}, will print a message from retry displaying how long until the next request.}
 }
 \value{
 \code{noctua_options()} returns \code{NULL}, invisibly.
 }
 \description{
-\code{noctua_options()} provides a method to change the backend. This includes changing the file parser
-and whether \code{noctua} should cache query ids locally.
+\code{noctua_options()} provides a method to change the backend. This includes changing the file parser,
+ whether \code{noctua} should cache query ids locally and number of retries on a failed api call.
 }
 \examples{
 library(noctua)

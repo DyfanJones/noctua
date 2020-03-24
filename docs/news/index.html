@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
       </span>
     </div>
 
@@ -140,13 +140,43 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-160" class="section level1">
+    <div id="noctua-1609000" class="section level1">
 <h1 class="page-header">
-<a href="#noctua-160" class="anchor"></a>noctua 1.6.0<small> Unreleased </small>
+<a href="#noctua-1609000" class="anchor"></a>noctua 1.6.0.9000<small> Unreleased </small>
 </h1>
 <div id="new-feature" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-feature" class="anchor"></a>New Feature</h2>
+<ul>
+<li>functions that collect or push to AWS S3 now have a retry capability. Meaning if API call fails then the call is retried (<a href='https://github.com/DyfanJones/noctua/issues/79'>#79</a>)</li>
+<li>
+<code>noctua_options</code> contains 2 new parameters to control how <code>noctua</code> handles retries.</li>
+<li>
+<code>dbFetch</code> is able to return data from AWS Athena in chunk. This has been achieved by passing <code>NextToken</code> to <code>AthenaResult</code> s4 class. This method won’t be as fast <code>n = -1</code> as each chunk will have to be process into data frame format.</li>
+</ul>
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+
+con &lt;- dbConnect(noctua::athena())
+
+res &lt;- dbExecute(con, "select * from some_big_table limit 10000")
+dbFetch(res, 5000)</a></code></pre>
+</div>
+<div id="bug" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug" class="anchor"></a>Bug</h2>
+<ul>
+<li>
+<code>dbWriteTable</code> would throw <code>throttling error</code> every now and again, <code>retry_api_call</code> as been built to handle the parsing of data between R and AWS S3.</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-160" class="section level1">
+<h1 class="page-header">
+<a href="#noctua-160" class="anchor"></a>noctua 1.6.0<small> 2020-03-17 </small>
+</h1>
+<div id="new-feature-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-feature-1" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3’s Athena output when caching isn’t disabled</li>
 <li>
@@ -228,7 +258,7 @@ dbGetQuery(con, "select * from iris2")</a></code></pre>
 <a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://rdrr.io/pkg/readr/man/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
+<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
 </ul>
 <pre><code>library(readr)
 library(microbenchmark)
@@ -309,9 +339,9 @@ tbl(con, "iris") %&gt;%
 </li>
 </ul>
 </div>
-<div id="new-feature-1" class="section level2">
+<div id="new-feature-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-1" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-2" class="anchor"></a>New Feature</h2>
 <ul>
 <li>
 <code>dbStatistics</code> is a wrapper around <code>paws</code> <code>get_query_execution</code> to return statistics for <code>noctua::dbSendQuery</code> results</li>
@@ -359,9 +389,9 @@ user  system elapsed
 <h1 class="page-header">
 <a href="#noctua-150" class="anchor"></a>noctua 1.5.0<small> 2020-01-08 </small>
 </h1>
-<div id="new-feature-2" class="section level2">
+<div id="new-feature-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-2" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-3" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Added integration into Rstudio connections tab</li>
 <li>Added information message of amount of data scanned by AWS Athena</li>
@@ -426,9 +456,9 @@ noctua_options("vroom")
 <li>Updated dplyr <code>sql_translate_env</code> until test to cater bug fix</li>
 </ul>
 </div>
-<div id="new-feature-3" class="section level2">
+<div id="new-feature-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-3" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-4" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Due to help from <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a>, <code>dbRemoveTable</code> can now remove S3 files for AWS Athena table being removed.</li>
 </ul>
@@ -573,9 +603,9 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
 </ul>
 </div>
-<div id="new-feature-4" class="section level2">
+<div id="new-feature-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-4" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-5" class="anchor"></a>New Feature</h2>
 <ul>
 <li>GZIP compression is now supported for “csv” and “tsv” file format in <code>dbWriteTable</code>
 </li>
@@ -678,6 +708,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#noctua-1609000">1.6.0.9000</a></li>
         <li><a href="#noctua-160">1.6.0</a></li>
         <li><a href="#noctua-151">1.5.1</a></li>
         <li><a href="#noctua-150">1.5.0</a></li>

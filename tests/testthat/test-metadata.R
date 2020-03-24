@@ -45,6 +45,6 @@ test_that("Returning meta data",{
   expect_true(is.list(db_info))
   expect_error(dbGetInfo(con))
   expect_true(res_out)
-  expect_equal(names(res_info), "QueryExecutionId")
+  expect_equal(names(res_info), c("QueryExecutionId", "NextToken"))
   expect_true(is.list(res_stat))
 })

@@ -43,8 +43,8 @@
 
 
 <meta property="og:title" content="A method to configue noctua backend options. — noctua_options" />
-<meta property="og:description" content="noctua_options() provides a method to change the backend. This includes changing the file parser
-and whether noctua should cache query ids locally." />
+<meta property="og:description" content="noctua_options() provides a method to change the backend. This includes changing the file parser,
+ whether noctua should cache query ids locally and number of retries on a failed api call." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -78,7 +78,7 @@ and whether noctua should cache query ids locally." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
       </span>
     </div>
 
@@ -144,14 +144,16 @@ and whether noctua should cache query ids locally." />
     </div>
 
     <div class="ref-description">
-    <p><code>noctua_options()</code> provides a method to change the backend. This includes changing the file parser
-and whether <code>noctua</code> should cache query ids locally.</p>
+    <p><code>noctua_options()</code> provides a method to change the backend. This includes changing the file parser,
+ whether <code>noctua</code> should cache query ids locally and number of retries on a failed api call.</p>
     </div>
 
     <pre class="usage"><span class='fu'>noctua_options</span>(
   <span class='kw'>file_parser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"data.table"</span>, <span class='st'>"vroom"</span>),
   <span class='kw'>cache_size</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>clear_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>clear_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>retry</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>retry_quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -168,6 +170,14 @@ and whether <code>noctua</code> should cache query ids locally.</p>
     <tr>
       <th>clear_cache</th>
       <td><p>Clears all previous cached query metadata</p></td>
+    </tr>
+    <tr>
+      <th>retry</th>
+      <td><p>Maximum number of requests to attempt.</p></td>
+    </tr>
+    <tr>
+      <th>retry_quiet</th>
+      <td><p>If <code>FALSE</code>, will print a message from retry displaying how long until the next request.</p></td>
     </tr>
     </table>
 
