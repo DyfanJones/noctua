@@ -13,6 +13,8 @@ res <- dbExecute(con, "select * from some_big_table limit 10000")
 dbFetch(res, 5000)
 ```
 
+* When creating/appending partitions to a table, `dbWriteTable` opts to use `alter table` instead of standard `msck repair table`. This is to improve performance when appending to tables with high number of existing partitions.
+
 ## Bug
 * `dbWriteTable` would throw `throttling error` every now and again, `retry_api_call` as been built to handle the parsing of data between R and AWS S3.
 
