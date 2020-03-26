@@ -148,8 +148,11 @@ setMethod(
     retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
                                                                                MaxResults = as.integer(1))$ResultSet$ResultSetMetadata$ColumnInfo)
     if(n >= 0 && n !=Inf){
-      n = as.integer(n + 1)
-      chunk = n
+      # assign token from AthenaResult class
+      token <- res@info$NextToken
+      
+      if(length(token) == 0) n <- as.integer(n + 1)
+      chunk <- as.integer(n)
       if (n > 1000L) chunk = 1000L
       
       iterate <- 1:ceiling(n/chunk)
@@ -158,8 +161,6 @@ setMethod(
       dt_list <- list()
       length(dt_list) <- max(iterate)
       
-      # assign token from AthenaResult class
-      token <- res@info$NextToken
       for (i in iterate){
         if(i == max(iterate)) chunk <- as.integer(n - (i-1) * chunk)
         
@@ -171,16 +172,18 @@ setMethod(
         suppressWarnings(staging_dt <- rbindlist(output, use.names = FALSE))
         
         # remove colnames from first row
-        if (i == 1 && is.null(token)){
+        if (i == 1 && length(token) == 0) {
           staging_dt <- staging_dt[-1,]
         }
         
-        token <- result$NextToken
         # ensure rownames are not set
         rownames(staging_dt) <- NULL
         
         # added staging data.table to list
         dt_list[[i]] <- staging_dt
+        
+        # if token hasn't changed or if no more tokens are available then break loop
+        if ((length(token) != 0 && token == result$NextToken) || length(result$NextToken) == 0) {break} else {token <- result$NextToken}
       }
       
       # combined all lists together
