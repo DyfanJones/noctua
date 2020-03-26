@@ -220,8 +220,7 @@ Athena_write_table <-
       dbClearResult(rs)}
     
     # Repair table
-    res <- dbExecute(conn, paste0("MSCK REPAIR TABLE ", name))
-    dbClearResult(res)
+    repair_table(conn, name, partition, s3.location, append)
     
     on.exit({lapply(FileLocation, unlink)
       if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
@@ -549,3 +548,62 @@ s3_upload_location <- function(x,
   list(s3_info$bucket,
        sprintf("%s%s%s%s%s", s3_info$key, schema, name, partition, FileName))
 }
+
+# repair table using MSCK REPAIR TABLE for non partitioned and ALTER TABLE for partitioned tables
+repair_table <- function(con, name, partition = NULL, s3.location = NULL, append = FALSE){
+  if (grepl("\\.", name)) {
+    schema <- gsub("\\..*", "" , name)
+    table1 <- gsub(".*\\.", "" , name)
+  } else {
+    schema <- con@info$dbms.name
+    table1 <- name}
+  
+  # format table name for special characters
+  table <- paste0(quote_identifier(con,  c(schema,table1)), collapse = ".")
+  
+  if (is.null(partition)){
+    query <- SQL(paste0("MSCK REPAIR TABLE ", table))
+  } else {
+    # formatting s3 partitions
+    s3_partition <- unlist(partition)
+    s3_partition <- paste(names(s3_partition), unname(s3_partition), sep = "=", collapse = "/")
+    
+    # s3 bucket and key split
+    s3_info <- split_s3_uri(s3.location)
+    s3_info$key <- gsub("/$", "", s3_info$key)
+    
+    # Append data to existing s3 location
+    if(append) {s3.location <- sprintf("s3://%s/%s/%s/", s3_info$bucket, s3_info$key, s3_partition)
+    } else {
+      if (s3_partition != "") s3_partition <- paste0(s3_partition, "/")
+      split_key <- unlist(strsplit(s3_info$key,"/"))
+      
+      # remove name from s3 key
+      if(split_key[length(split_key)] == table1 || length(split_key) == 0)  split_key <- split_key[-length(split_key)]
+      
+      # remove schema from s3 key
+      if(any(schema == split_key))  split_key <- split_key[-which(schema == split_key)]
+      
+      s3_info$key <- paste(split_key, collapse = "/")
+      if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
+      
+      # s3 folder
+      schema <- paste0(schema, "/")
+      table1 <- paste0(table1, "/")
+      
+      # S3 new syntax #73
+      s3.location <- sprintf("s3://%s/%s%s%s%s", s3_info$bucket, s3_info$key, schema, table1, s3_partition)
+    }
+    
+    partition_names <- quote_identifier(con, names(partition))
+    partition <- dbQuoteString(con, partition)
+    partition <- paste0(partition_names, " = ", partition, collapse = ", ")
+    s3.location <- dbQuoteString(con, s3.location)
+    
+    query <- SQL(paste0("ALTER TABLE ", table, " ADD IF NOT EXISTS\nPARTITION (", partition, ")\nLOCATION ", s3.location))
+  }
+  
+  res <- dbExecute(con, query)
+  dbClearResult(res)
+}
+
