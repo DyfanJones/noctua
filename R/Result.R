@@ -175,12 +175,14 @@ setMethod(
           staging_dt <- staging_dt[-1,]
         }
         
-        token <- result$NextToken
         # ensure rownames are not set
         rownames(staging_dt) <- NULL
         
         # added staging data.table to list
         dt_list[[i]] <- staging_dt
+        
+        # if token hasn't changed or if no more tokens are available then break loop
+        if (token == result$NextToken || length(result$NextToken) == 0) {break} else {token <- result$NextToken}
       }
       
       # combined all lists together
