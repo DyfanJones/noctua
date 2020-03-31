@@ -151,7 +151,7 @@ Athena_write_table <-
                           "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe" = "parquet",
                           # json library support: https://docs.aws.amazon.com/athena/latest/ug/json.html#hivejson
                           "org.apache.hive.hcatalog.data.JsonSerDe" = "json",
-                          "org.openx.data.jsonserde.JsonSerDe", "json",
+                          "org.openx.data.jsonserde.JsonSerDe" = "json",
                           stop("Unable to append onto table: ", name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
                                ": Is currently not supported by noctua", call. = F))
       
@@ -426,7 +426,7 @@ setMethod("sqlCreateTable", "AthenaConnection",
     SQL(paste0(
       "CREATE EXTERNAL TABLE ", table, " (\n",
       "  ", paste(field, collapse = ",\n  "), "\n)\n",
-      partitioned(partition),
+      partitioned(con, partition),
       FileType(file.type), "\n",
       "LOCATION ",s3.location, "\n",
       header(file.type, compress)
@@ -454,9 +454,9 @@ createFields <- function(con, fields, field.types) {
 }
 
 # Helper function partition
-partitioned <- function(obj = NULL){
+partitioned <- function(con, obj = NULL){
   if(!is.null(obj)) {
-    obj <- paste(obj, "STRING", collapse = ", ")
+    obj <- paste(quote_identifier(con, obj), "STRING", collapse = ", ")
     paste0("PARTITIONED BY (", obj, ")\n") }
 }
 
