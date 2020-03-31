@@ -19,6 +19,9 @@ dbFetch(res, 5000)
 ## Bug
 * `dbWriteTable` would throw `throttling error` every now and again, `retry_api_call` as been built to handle the parsing of data between R and AWS S3.
 
+## Documentation
+* `dbWriteTable` added support ddl structures for user who have created ddl's outside of `noctua`
+
 # noctua 1.6.0
 ## New Feature
 * Inspired by `pyathena`, `noctua_options` now has a new paramter `cache_size`. This implements local caching in R environments instead of using AWS `list_query_executions`. This is down to `dbClearResult` clearing S3's Athena output when caching isn't disabled

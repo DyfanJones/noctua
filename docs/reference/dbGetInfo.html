@@ -191,7 +191,10 @@ or a DBIResult</p></td>
 <span class='co'># Return metadata from Athena query object</span>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbGetInfo</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; $QueryExecutionId
-#&gt; [1] "fb882ab2-bb96-4001-bed9-3cb089058973"
+#&gt; [1] "fdbc7d97-3eba-4da6-9357-e6092fe9b49a"
+#&gt; 
+#&gt; $NextToken
+#&gt; NULL
 #&gt; </div><div class='input'>
 <span class='co'># Clear result</span>
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)

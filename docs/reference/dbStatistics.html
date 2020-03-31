@@ -182,7 +182,7 @@
 
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbStatistics</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; $EngineExecutionTimeInMillis
-#&gt; [1] 202
+#&gt; [1] 235
 #&gt; 
 #&gt; $DataScannedInBytes
 #&gt; [1] 0
@@ -191,16 +191,16 @@
 #&gt; character(0)
 #&gt; 
 #&gt; $TotalExecutionTimeInMillis
-#&gt; [1] 267
+#&gt; [1] 308
 #&gt; 
 #&gt; $QueryQueueTimeInMillis
-#&gt; [1] 40
+#&gt; [1] 46
 #&gt; 
 #&gt; $QueryPlanningTimeInMillis
 #&gt; numeric(0)
 #&gt; 
 #&gt; $ServiceProcessingTimeInMillis
-#&gt; [1] 25
+#&gt; [1] 27
 #&gt; </div><div class='input'>
 <span class='co'># Clean up</span>
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
