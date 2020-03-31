@@ -149,7 +149,9 @@ Athena_write_table <-
                                                                                         "\t" = "tsv",
                                                                                         stop("noctua currently only supports csv and tsv delimited format")),
                           "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe" = "parquet",
+                          # json library support: https://docs.aws.amazon.com/athena/latest/ug/json.html#hivejson
                           "org.apache.hive.hcatalog.data.JsonSerDe" = "json",
+                          "org.openx.data.jsonserde.JsonSerDe", "json",
                           stop("Unable to append onto table: ", name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
                                ": Is currently not supported by noctua", call. = F))
       
