@@ -221,8 +221,13 @@ just any valid bare table name.</p></td>
     <tr>
       <th>append</th>
       <td><p>Allow appending to the destination table. Cannot be <code>TRUE</code> if <code>overwrite</code> is also <code>TRUE</code>. Existing Athena DDL file type will be retained
-and used when uploading data to AWS Athena. If parameter <code>file.type</code> doesn't match AWS Athena DDL file type a warning message will be created 
-notifying user and <code>noctua</code> will use the file type for the Athena DDL.</p></td>
+              and used when uploading data to AWS Athena. If parameter <code>file.type</code> doesn't match AWS Athena DDL file type a warning message will be created 
+              notifying user and <code>noctua</code> will use the file type for the Athena DDL. When appending to an Athena DDL that has been created outside of <code>noctua</code>.
+              <code>noctua</code> can support the following SerDes and Data Formats.</p><ul>
+<li><p><strong>csv/tsv:</strong> <a href='https://docs.aws.amazon.com/athena/latest/ug/lazy-simple-serde.html'>LazySimpleSerDe</a></p></li>
+<li><p><strong>parquet:</strong> <a href='https://docs.aws.amazon.com/athena/latest/ug/parquet.html'>Parquet SerDe</a></p></li>
+<li><p><strong>json:</strong> <a href='https://docs.aws.amazon.com/athena/latest/ug/json.html'>JSON SerDe Libraries</a></p></li>
+</ul></td>
     </tr>
     <tr>
       <th>row.names</th>

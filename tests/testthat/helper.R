@@ -63,7 +63,7 @@ tbl6 =
   `x` INT,
   `y` STRING
 )
-PARTITIONED BY (timestamp STRING)
+PARTITIONED BY (`timestamp` STRING)
 STORED AS PARQUET
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'
 tblproperties (\"parquet.compress\"=\"SNAPPY\");")),
@@ -79,7 +79,7 @@ tbl8 =
   `x` INT,
   `y` STRING
 )
-PARTITIONED BY (timestamp STRING)
+PARTITIONED BY (`timestamp` STRING)
 ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'\n")))
 

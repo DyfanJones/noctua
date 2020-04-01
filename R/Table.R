@@ -8,7 +8,13 @@
 #' @param overwrite Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.
 #' @param append Allow appending to the destination table. Cannot be \code{TRUE} if \code{overwrite} is also \code{TRUE}. Existing Athena DDL file type will be retained
 #'               and used when uploading data to AWS Athena. If parameter \code{file.type} doesn't match AWS Athena DDL file type a warning message will be created 
-#'               notifying user and \code{noctua} will use the file type for the Athena DDL. 
+#'               notifying user and \code{noctua} will use the file type for the Athena DDL. When appending to an Athena DDL that has been created outside of \code{noctua}.
+#'               \code{noctua} can support the following SerDes and Data Formats.
+#' \itemize{
+#' \item{\strong{csv/tsv:} \href{https://docs.aws.amazon.com/athena/latest/ug/lazy-simple-serde.html}{LazySimpleSerDe}}
+#' \item{\strong{parquet:} \href{https://docs.aws.amazon.com/athena/latest/ug/parquet.html}{Parquet SerDe}}
+#' \item{\strong{json:} \href{https://docs.aws.amazon.com/athena/latest/ug/json.html}{JSON SerDe Libraries}}
+#' }
 #' @param field.types Additional field types used to override derived types.
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3.location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
@@ -149,7 +155,9 @@ Athena_write_table <-
                                                                                         "\t" = "tsv",
                                                                                         stop("noctua currently only supports csv and tsv delimited format")),
                           "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe" = "parquet",
+                          # json library support: https://docs.aws.amazon.com/athena/latest/ug/json.html#hivejson
                           "org.apache.hive.hcatalog.data.JsonSerDe" = "json",
+                          "org.openx.data.jsonserde.JsonSerDe" = "json",
                           stop("Unable to append onto table: ", name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
                                ": Is currently not supported by noctua", call. = F))
       
@@ -424,7 +432,7 @@ setMethod("sqlCreateTable", "AthenaConnection",
     SQL(paste0(
       "CREATE EXTERNAL TABLE ", table, " (\n",
       "  ", paste(field, collapse = ",\n  "), "\n)\n",
-      partitioned(partition),
+      partitioned(con, partition),
       FileType(file.type), "\n",
       "LOCATION ",s3.location, "\n",
       header(file.type, compress)
@@ -452,9 +460,9 @@ createFields <- function(con, fields, field.types) {
 }
 
 # Helper function partition
-partitioned <- function(obj = NULL){
+partitioned <- function(con, obj = NULL){
   if(!is.null(obj)) {
-    obj <- paste(obj, "STRING", collapse = ", ")
+    obj <- paste(quote_identifier(con, obj), "STRING", collapse = ", ")
     paste0("PARTITIONED BY (", obj, ")\n") }
 }
 

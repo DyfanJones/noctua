@@ -67,8 +67,14 @@ just any valid bare table name.}
 \item{overwrite}{Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.}
 
 \item{append}{Allow appending to the destination table. Cannot be \code{TRUE} if \code{overwrite} is also \code{TRUE}. Existing Athena DDL file type will be retained
-and used when uploading data to AWS Athena. If parameter \code{file.type} doesn't match AWS Athena DDL file type a warning message will be created 
-notifying user and \code{noctua} will use the file type for the Athena DDL.}
+              and used when uploading data to AWS Athena. If parameter \code{file.type} doesn't match AWS Athena DDL file type a warning message will be created 
+              notifying user and \code{noctua} will use the file type for the Athena DDL. When appending to an Athena DDL that has been created outside of \code{noctua}.
+              \code{noctua} can support the following SerDes and Data Formats.
+\itemize{
+\item{\strong{csv/tsv:} \href{https://docs.aws.amazon.com/athena/latest/ug/lazy-simple-serde.html}{LazySimpleSerDe}}
+\item{\strong{parquet:} \href{https://docs.aws.amazon.com/athena/latest/ug/parquet.html}{Parquet SerDe}}
+\item{\strong{json:} \href{https://docs.aws.amazon.com/athena/latest/ug/json.html}{JSON SerDe Libraries}}
+}}
 
 \item{row.names}{Either \code{TRUE}, \code{FALSE}, \code{NA} or a string.
 

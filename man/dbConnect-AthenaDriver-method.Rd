@@ -91,7 +91,7 @@ of supported environment variables:
 \dontrun{
 # Connect to Athena using your aws access keys
  library(DBI)
- con <- dbConnect(RAthena:athena(),
+ con <- dbConnect(noctua::athena(),
                   aws_access_key_id='YOUR_ACCESS_KEY_ID', # 
                   aws_secret_access_key='YOUR_SECRET_ACCESS_KEY',
                   s3_staging_dir='s3://path/to/query/bucket/',
@@ -100,13 +100,13 @@ of supported environment variables:
  
 # Connect to Athena using your profile name
 # Profile name can be created by using AWS CLI
- con <- dbConnect(RAthena::athena(),
+ con <- dbConnect(noctua::athena(),
                   profile_name = "YOUR_PROFILE_NAME",
                   s3_staging_dir = 's3://path/to/query/bucket/')
  dbDisconnect(con)
  
 # Connect to Athena using ARN role
- con <- dbConnect(athena(),
+ con <- dbConnect(noctua::athena(),
                   profile_name = "YOUR_PROFILE_NAME",
                   role_arn = "arn:aws:sts::123456789012:assumed-role/role_name/role_session_name",
                   s3_staging_dir = 's3://path/to/query/bucket/')
