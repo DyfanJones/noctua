@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -44,7 +48,6 @@
 
 <meta property="og:title" content="Changelog" />
 <meta property="og:image" content="/logo.png" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -62,7 +65,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -118,7 +121,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/DyfanJones/noctua">
+  <a href="https://github.com/DyfanJones/noctua/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -136,12 +139,12 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div id="noctua-1609000" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.6.0.9000">
 <a href="#noctua-1609000" class="anchor"></a>noctua 1.6.0.9000<small> Unreleased </small>
 </h1>
 <div id="new-feature" class="section level2">
@@ -152,9 +155,9 @@
 <li>
 <code>noctua_options</code> contains 2 new parameters to control how <code>noctua</code> handles retries.</li>
 <li>
-<code>dbFetch</code> is able to return data from AWS Athena in chunk. This has been achieved by passing <code>NextToken</code> to <code>AthenaResult</code> s4 class. This method won’t be as fast <code>n = -1</code> as each chunk will have to be process into data frame format.</li>
+<code>dbFetch</code> is able to return data from AWS Athena in chunk. This has been achieved by passing <code>NextToken</code> to <code>AthenaResult</code> s4 class. This method wonât be as fast <code>n = -1</code> as each chunk will have to be process into data frame format.</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 
 con &lt;- dbConnect(noctua::athena())
 
@@ -172,6 +175,9 @@ dbFetch(res, 5000)</a></code></pre>
 <ul>
 <li>
 <code>dbWriteTable</code> would throw <code>throttling error</code> every now and again, <code>retry_api_call</code> as been built to handle the parsing of data between R and AWS S3.</li>
+<li>
+<code>dbWriteTable</code> did not clear down all metadata when uploading to <code>AWS Athena</code>
+</li>
 </ul>
 </div>
 <div id="documentation" class="section level2">
@@ -179,26 +185,26 @@ dbFetch(res, 5000)</a></code></pre>
 <a href="#documentation" class="anchor"></a>Documentation</h2>
 <ul>
 <li>
-<code>dbWriteTable</code> added support ddl structures for user who have created ddl’s outside of <code>noctua</code>
+<code>dbWriteTable</code> added support ddl structures for user who have created ddlâs outside of <code>noctua</code>
 </li>
 </ul>
 </div>
 </div>
     <div id="noctua-160" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.6.0">
 <a href="#noctua-160" class="anchor"></a>noctua 1.6.0<small> 2020-03-17 </small>
 </h1>
 <div id="new-feature-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-feature-1" class="anchor"></a>New Feature</h2>
 <ul>
-<li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3’s Athena output when caching isn’t disabled</li>
+<li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3âs Athena output when caching isnât disabled</li>
 <li>
 <code>noctua_options</code> now has <code>clear_cache</code> parameter to clear down all cached data.</li>
 <li>
 <code>dbRemoveTable</code> now utilise <code>AWS Glue</code> to remove tables from <code>AWS Glue</code> catalog. This has a performance enhancement:</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 
 con = dbConnect(noctua::athena())
 
@@ -221,7 +227,7 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 <li>
 <code>dbWriteTable</code> now supports uploading json lines (<a href="http://jsonlines.org/" class="uri">http://jsonlines.org/</a>) format up to <code>AWS Athena</code> (<a href='https://github.com/DyfanJones/noctua/issues/88'>#88</a>).</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 con = dbConnect(RAthena::athena())
 dbWriteTable(con, "iris2", iris, file.type = "json")
 dbGetQuery(con, "select * from iris2")</a></code></pre>
@@ -231,12 +237,12 @@ dbGetQuery(con, "select * from iris2")</a></code></pre>
 <a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
+<code>dbConnect</code> didnât correct pass <code>.internal</code> metadata for paws objects.</li>
 <li>RStudio connection tab functions:<code>computeHostName</code> &amp; <code>computeDisplayName</code> now get region name from <code>info</code> object from <code>dbConnect</code> S4 class.</li>
 <li>
 <code>dbWriteTable</code> appending to existing table compress file type was incorrectly return.</li>
 <li>
-<code>Rstudio connection tab</code> comes into an issue when Glue Table isn’t stored correctly (<a href="https://github.com/DyfanJones/RAthena/issues/92">RAthena: # 92</a>)</li>
+<code>Rstudio connection tab</code> comes into an issue when Glue Table isnât stored correctly (<a href="https://github.com/DyfanJones/RAthena/issues/92">RAthena: # 92</a>)</li>
 </ul>
 </div>
 <div id="documentation-1" class="section level2">
@@ -264,7 +270,7 @@ dbGetQuery(con, "select * from iris2")</a></code></pre>
 </div>
 </div>
     <div id="noctua-151" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.5.1">
 <a href="#noctua-151" class="anchor"></a>noctua 1.5.1<small> 2020-02-16 </small>
 </h1>
 <div id="bug-fix-1" class="section level2">
@@ -328,7 +334,7 @@ translate_sql("2019-01-01", con = con) -&gt; DATE '2019-01-01'</code></pre>
 <ul>
 <li>Dependency data.table now restricted to (&gt;=1.12.4) due to file compression being added to <code>fwrite</code> (&gt;=1.12.4) <a href="https://github.com/Rdatatable/data.table/blob/master/NEWS.md" class="uri">https://github.com/Rdatatable/data.table/blob/master/NEWS.md</a>
 </li>
-<li>R functions <code>paste</code>/<code>paste0</code> would use default <code>dplyr:sql-translate-env</code> (<code>concat_ws</code>). <code>paste0</code> now uses Presto’s <code>concat</code> function and <code>paste</code> now uses pipes to get extra flexible for custom separating values.</li>
+<li>R functions <code>paste</code>/<code>paste0</code> would use default <code>dplyr:sql-translate-env</code> (<code>concat_ws</code>). <code>paste0</code> now uses Prestoâs <code>concat</code> function and <code>paste</code> now uses pipes to get extra flexible for custom separating values.</li>
 </ul>
 <pre><code><a href="https://rdrr.io/r/base/paste.html"># R code:
 paste("hi", "bye", sep = "-")
@@ -339,7 +345,7 @@ paste("hi", "bye", sep = "-")
 <li>
 <code>db_compute</code> returned table name, however when a user wished to write table to another location (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/74"># 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code>.</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 library(dplyr)
 
 con &lt;- dbConnect(RAthena::athena())
@@ -348,8 +354,8 @@ tbl(con, "iris") %&gt;%
   compute(name = "temp.iris")</a></code></pre>
 <ul>
 <li>
-<code>dbListFields</code> didn’t display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.</li>
-<li>RStudio connections tab didn’t display any partitioned columns, this has been fixed in the same manner as <code>dbListFields</code>
+<code>dbListFields</code> didnât display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.</li>
+<li>RStudio connections tab didnât display any partitioned columns, this has been fixed in the same manner as <code>dbListFields</code>
 </li>
 </ul>
 </div>
@@ -400,7 +406,7 @@ user  system elapsed
 </div>
 </div>
     <div id="noctua-150" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.5.0">
 <a href="#noctua-150" class="anchor"></a>noctua 1.5.0<small> 2020-01-08 </small>
 </h1>
 <div id="new-feature-3" class="section level2">
@@ -411,7 +417,7 @@ user  system elapsed
 <li>Added information message of amount of data scanned by AWS Athena</li>
 <li>Added method to change backend file parser so user can change file parser from <code>data.table</code> to <code>vroom</code>. From now on it is possible to change file parser using <code>noctua_options</code> for example:</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(noctua)
+<pre><code><a href="https://rdrr.io/pkg/noctua/man">library(noctua)
 
 noctua_options("vroom")
 </a></code></pre>
@@ -436,14 +442,14 @@ noctua_options("vroom")
 </div>
 </div>
     <div id="noctua-140" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.4.0">
 <a href="#noctua-140" class="anchor"></a>noctua 1.4.0<small> 2019-12-19 </small>
 </h1>
 <div id="major-change" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-change" class="anchor"></a>Major Change</h2>
 <ul>
-<li>Default delimited file uploaded to AWS Athena changed from “csv” to “tsv” this is due to separating value “,” in character variables. By using “tsv” file type JSON/Array objects can be passed to Athena through character types. To prevent this becoming a breaking change <code>dbWriteTable</code> <code>append</code> parameter checks and uses existing AWS Athena DDL file type. If <code>file.type</code> doesn’t match Athena DDL file type then user will receive a warning message:</li>
+<li>Default delimited file uploaded to AWS Athena changed from âcsvâ to âtsvâ this is due to separating value â,â in character variables. By using âtsvâ file type JSON/Array objects can be passed to Athena through character types. To prevent this becoming a breaking change <code>dbWriteTable</code> <code>append</code> parameter checks and uses existing AWS Athena DDL file type. If <code>file.type</code> doesnât match Athena DDL file type then user will receive a warning message:</li>
 </ul>
 <pre><code><a href="https://rdrr.io/r/base/warning.html">warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)</a></code></pre>
 </div>
@@ -487,7 +493,7 @@ noctua_options("vroom")
 </div>
 </div>
     <div id="noctua-130" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.3.0">
 <a href="#noctua-130" class="anchor"></a>noctua 1.3.0<small> 2019-12-06 </small>
 </h1>
 <div id="major-change-1" class="section level2">
@@ -498,7 +504,7 @@ noctua_options("vroom")
 <code>dbWriteTable</code> now will split <code>gzip</code> compressed files to improve AWS Athena performance. By default <code>gzip</code> compressed files will be split into 20.</li>
 </ul>
 <p>Performance results</p>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 X &lt;- 1e8
 df &lt;- data.frame(w =runif(X),
                  x = 1:X,
@@ -515,7 +521,7 @@ dbWriteTable(con, "test_split3", df, compress = T, max.batch = 0.1 * nrow(df), o
 <li>test_split2: (Run time: 3.73 seconds, Data scanned: 1.16 GB)</li>
 <li>test_split3: (Run time: 5.47 seconds, Data scanned: 1.16 GB)</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 X &lt;- 1e8
 df &lt;- data.frame(w =runif(X),
                  x = 1:X,
@@ -560,7 +566,7 @@ dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will
 </div>
 </div>
     <div id="noctua-121" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2.1">
 <a href="#noctua-121" class="anchor"></a>noctua 1.2.1<small> 2019-11-28 </small>
 </h1>
 <div id="new-features" class="section level2">
@@ -579,7 +585,7 @@ dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will
 </div>
 </div>
     <div id="noctua-120" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2.0">
 <a href="#noctua-120" class="anchor"></a>noctua 1.2.0<small> 2019-11-14 </small>
 </h1>
 <div id="minor-change-2" class="section level2">
@@ -594,9 +600,9 @@ dbWriteTable(con, "test_split1", df, compress = T, overwrite = T) # default will
 <h2 class="hasAnchor">
 <a href="#backend-change" class="anchor"></a>Backend Change</h2>
 <ul>
-<li>helper function <code>upload_data</code> has been rebuilt and removed the old “horrible” if statement with <code>paste</code> now the function relies on <code>sprintf</code> to construct the s3 location path. This method now is a lot clearer in how the s3 location is created plus it enables a <code>dbWriteTable</code> to be simplified. <code>dbWriteTable</code> can now upload data to the default s3_staging directory created in <code>dbConnect</code> this simplifies <code>dbWriteTable</code> to :</li>
+<li>helper function <code>upload_data</code> has been rebuilt and removed the old âhorribleâ if statement with <code>paste</code> now the function relies on <code>sprintf</code> to construct the s3 location path. This method now is a lot clearer in how the s3 location is created plus it enables a <code>dbWriteTable</code> to be simplified. <code>dbWriteTable</code> can now upload data to the default s3_staging directory created in <code>dbConnect</code> this simplifies <code>dbWriteTable</code> to :</li>
 </ul>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library(DBI)
+<pre><code><a href="https://dbi.r-dbi.org/reference">library(DBI)
 
 con &lt;- dbConnect(noctua::athena())
 
@@ -606,7 +612,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <h2 class="hasAnchor">
 <a href="#bug-fix-4" class="anchor"></a>Bug Fix</h2>
 <ul>
-<li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
+<li>Info message wasnât being return when colnames needed changing for Athena DDL</li>
 </ul>
 </div>
 <div id="unit-tests-4" class="section level2">
@@ -621,7 +627,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <h2 class="hasAnchor">
 <a href="#new-feature-5" class="anchor"></a>New Feature</h2>
 <ul>
-<li>GZIP compression is now supported for “csv” and “tsv” file format in <code>dbWriteTable</code>
+<li>GZIP compression is now supported for âcsvâ and âtsvâ file format in <code>dbWriteTable</code>
 </li>
 </ul>
 </div>
@@ -635,7 +641,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </div>
 </div>
     <div id="noctua-110" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.1.0">
 <a href="#noctua-110" class="anchor"></a>noctua 1.1.0<small> 2019-10-23 </small>
 </h1>
 <div id="new-features-1" class="section level2">
@@ -678,12 +684,12 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 <a href="#major-change-2" class="anchor"></a>Major Change</h2>
 <ul>
 <li>
-<code>data.table</code> is now used as the default file parser <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">data.table::fread</a></code> / <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html">data.table::fwrite</a></code>. This isn’t a breaking change as <code>data.table</code> was used before however this change makes <code>data.table</code> to default file parser.</li>
+<code>data.table</code> is now used as the default file parser <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">data.table::fread</a></code> / <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html">data.table::fwrite</a></code>. This isnât a breaking change as <code>data.table</code> was used before however this change makes <code>data.table</code> to default file parser.</li>
 </ul>
 </div>
 </div>
     <div id="noctua-100" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.0.0">
 <a href="#noctua-100" class="anchor"></a>noctua 1.0.0<small> 2019-10-20 </small>
 </h1>
 <div id="new-features-2" class="section level2">
@@ -718,22 +724,10 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#noctua-1609000">1.6.0.9000</a></li>
-        <li><a href="#noctua-160">1.6.0</a></li>
-        <li><a href="#noctua-151">1.5.1</a></li>
-        <li><a href="#noctua-150">1.5.0</a></li>
-        <li><a href="#noctua-140">1.4.0</a></li>
-        <li><a href="#noctua-130">1.3.0</a></li>
-        <li><a href="#noctua-121">1.2.1</a></li>
-        <li><a href="#noctua-120">1.2.0</a></li>
-        <li><a href="#noctua-110">1.1.0</a></li>
-        <li><a href="#noctua-100">1.0.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -745,7 +739,7 @@ dbWriteTable(con, "iris", iris)</a></code></pre>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

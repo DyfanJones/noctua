@@ -18,6 +18,7 @@ dbFetch(res, 5000)
 
 ## Bug
 * `dbWriteTable` would throw `throttling error` every now and again, `retry_api_call` as been built to handle the parsing of data between R and AWS S3.
+* `dbWriteTable` did not clear down all metadata when uploading to `AWS Athena`
 
 ## Documentation
 * `dbWriteTable` added support ddl structures for user who have created ddl's outside of `noctua`
