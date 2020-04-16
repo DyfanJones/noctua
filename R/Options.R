@@ -31,9 +31,13 @@ athena_option_env$retry_quiet <- FALSE
 #' @export
 noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE, retry = 5, retry_quiet = FALSE) {
   file_parser = match.arg(file_parser)
-  stopifnot(is.logical(clear_cache))
+  stopifnot(is.logical(clear_cache),
+            is.numeric(retry),
+            is.numeric(cache_size),
+            is.logical(retry_quiet))
   
   if(cache_size < 0 | cache_size >= 100) stop("noctua currently only supports up to 100 queries being cached", call. = F)
+  if(retry < 0) stop("Number of retries is required to be greater than 0.")
   
   if (!requireNamespace(file_parser, quietly = TRUE)) 
     stop('Please install ', file_parser, ' package and try again', call. = F)
@@ -44,8 +48,8 @@ noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 
   
   class(athena_option_env$file_parser) <- paste("athena", file_parser, sep = "_")
   
-  athena_option_env$cache_size <- cache_size
-  athena_option_env$retry <- retry
+  athena_option_env$cache_size <- as.integer(cache_size)
+  athena_option_env$retry <- as.integer(retry)
   athena_option_env$retry_quiet <- retry_quiet
   
   if(clear_cache) athena_option_env$cache_dt <- athena_option_env$cache_dt[0]
