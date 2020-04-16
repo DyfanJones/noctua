@@ -22,6 +22,7 @@ dbFetch(res, 5000)
 
 ## Documentation
 * `dbWriteTable` added support ddl structures for user who have created ddl's outside of `noctua`
+* added vignette around how to use `noctua`'s retry functionality
 
 # noctua 1.6.0
 ## New Feature

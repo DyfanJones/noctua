@@ -1,0 +1,61 @@
+---
+title: "How to Retry?"
+author: "Dyfan Jones"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to Retry?}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+With most applications that connect to an API, unnecessary exceptions can be returned back to the caller in the case of transient network or service issues. To avoid this `noctua` has implemented a retry method with exponential backoff. This technique increases the reliability of the application with connecting to `AWS Athena`. 
+
+# How to handle `noctua`'s retry?
+
+By default `noctua` performs a retry noisily, this means it will report the exception it has encounted and let the user know how long `noctua` will wait until it retries again. This is reported in the following format:
+
+```r
+{expection message} + "Request failed. Retrying in " + {wait time}  + " seconds..."
+```
+
+This is to keep the user informed in what `noctua` is doing behind the scenes.
+
+## Configure
+
+By default `noctua` retries 5 times and does it noisily. To configure this, `noctua_options` has been give 2 extra parameters `retry` and `retry_quiet`. `retry` is the number of retries `notcua` will perform. `retry_quiet` tells `noctua` to retry quietly or not.
+
+We can change the default retry settings so that `noctua` will retry 10 times and do it quietly:
+
+```r
+noctua_options(retry = 10, retry_quiet = TRUE)
+```
+
+If you wish to create your own custom retry function just set the `retry` to 0:
+
+```r
+library(DBI)
+library(noctua)
+
+# connection to AWS Athena
+con = dbConnect(athena())
+
+# Stop noctua retrying
+noctua_options(retry = 0)
+
+# build your own custom retry function
+custom_retry = function(x){
+  # your custom retry method
+}
+
+# apply your own retry function
+custom_retry(dbGetQuery(con, "select ..."))
+```
+
+# Requests
+
+If you wish to increase the retry functionality of `noctua` for example the use of different backoff algorithms, please raise a ticket at [issues](https://github.com/DyfanJones/noctua/issues) or raise a pull request.
+
+# Reading material
+
+- [Exponential Backoff and Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+- [How to handle a "Throttling – Maximum sending rate exceeded" error](https://aws.amazon.com/blogs/messaging-and-targeting/how-to-handle-a-throttling-maximum-sending-rate-exceeded-error/)
