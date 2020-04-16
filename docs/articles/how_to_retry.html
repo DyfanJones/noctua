@@ -112,7 +112,7 @@
 
     
     
-<p>With most applications that connect to an API unnecessary exceptions can be returned back to the caller in the case of transient network or service issues. To avoid this <code>noctua</code> has implemented a retry method with exponential backoff. This technique increases the reliability of the application with connecting to <code>AWS Athena</code>.</p>
+<p>With most applications that connect to an API, unnecessary exceptions can be returned back to the caller in the case of transient network or service issues. To avoid this <code>noctua</code> has implemented a retry method with exponential backoff. This technique increases the reliability of the application with connecting to <code>AWS Athena</code>.</p>
 <div id="how-to-handle-noctuas-retry" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to-handle-noctuas-retry" class="anchor"></a>How to handle <code>noctua</code>’s retry?</h1>
@@ -122,7 +122,7 @@
 <div id="configure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#configure" class="anchor"></a>Configure</h2>
-<p>By default <code>noctua</code> retries 5 times and does it noisily. To configure this, <code>noctua_options</code> has been give 2 extra parameters <code>retry</code> and <code>retry_quiet</code>. <code>retry</code> is the number of retries <code>notcua</code> will perform. <code>retry_quiet</code> tells <code>noctua</code> to retry quietly or not.</p>
+<p>By default <code>noctua</code> retries 5 times and does it noisily. To configure this, <code>noctua_options</code> has been give 2 extra parameters <code>retry</code> and <code>retry_quiet</code>. <code>retry</code> is the number of retries <code>noctua</code> will perform. <code>retry_quiet</code> tells <code>noctua</code> to retry quietly or not.</p>
 <p>We can change the default retry settings so that <code>noctua</code> will retry 10 times and do it quietly:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">retry</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">retry_quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p>If you wish to create your own custom retry function just set the <code>retry</code> to 0:</p>

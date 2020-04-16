@@ -22,7 +22,7 @@ This is to keep the user informed in what `noctua` is doing behind the scenes.
 
 ## Configure
 
-By default `noctua` retries 5 times and does it noisily. To configure this, `noctua_options` has been give 2 extra parameters `retry` and `retry_quiet`. `retry` is the number of retries `notcua` will perform. `retry_quiet` tells `noctua` to retry quietly or not.
+By default `noctua` retries 5 times and does it noisily. To configure this, `noctua_options` has been give 2 extra parameters `retry` and `retry_quiet`. `retry` is the number of retries `noctua` will perform. `retry_quiet` tells `noctua` to retry quietly or not.
 
 We can change the default retry settings so that `noctua` will retry 10 times and do it quietly:
 
