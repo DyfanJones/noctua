@@ -18,7 +18,7 @@ vignette: >
 
 `noctua` aligns the `s3.location` to the following `AWS S3` structure: `{s3.location}/{schema}/{table_name}/{partition}/{file}` (remember that `s3.location` has to be in [s3 uri format](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html): "s3://bucket-name/key-name"). This is to allow tables with same name to be uploaded to different schemas. 
 
-```{r, echo = F}
+```{r, echo = F,out.width = "100%"}
 knitr::include_graphics("athena_s3_example.png")
 ```
 
