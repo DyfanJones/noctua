@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Changing Backend File Parser • noctua</title>
+<title>How to Retry? • noctua</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Changing Backend File Parser">
+<script src="../pkgdown.js"></script><meta property="og:title" content="How to Retry?">
 <meta property="og:description" content="noctua">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -101,106 +101,61 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Changing Backend File Parser</h1>
+      <h1 data-toc-skip>How to Retry?</h1>
                         <h4 class="author">Dyfan Jones</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/master/vignettes/changing_backend_file_parser.Rmd"><code>vignettes/changing_backend_file_parser.Rmd</code></a></small>
-      <div class="hidden name"><code>changing_backend_file_parser.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/master/vignettes/how_to_retry.Rmd"><code>vignettes/how_to_retry.Rmd</code></a></small>
+      <div class="hidden name"><code>how_to_retry.Rmd</code></div>
 
     </div>
 
     
     
-<div id="intro" class="section level1">
+<p>With most applications that connect to an API, unnecessary exceptions can be returned back to the caller in the case of transient network or service issues. To avoid this <code>noctua</code> has implemented a retry method with exponential backoff. This technique increases the reliability of the application with connecting to <code>AWS Athena</code>.</p>
+<div id="how-to-handle-noctuas-retry" class="section level1">
 <h1 class="hasAnchor">
-<a href="#intro" class="anchor"></a>Intro</h1>
-<p><code>noctua</code> is dependent on <code>data.table</code> to read data into <code>R</code>. This is down to the amazing speed <code>data.table</code> offers when reading files into <code>R</code>. However a new package, with equally impressive read speeds, has come onto the scene called <a href="https://github.com/r-lib/vroom"><code>vroom</code></a>. As <code>vroom</code> has been designed to only read data into <code>R</code>, similarly to <code>readr</code>, <code>data.table</code> is still used for all of the heavy lifting. However if a user wishes to use <code>vroom</code> as the file parser, <code>noctua_options</code> function has been created to enable this:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
-
-<span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
-
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">file_parser</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"data.table"</span>, <span class="st">"vroom"</span>))</pre></body></html></div>
-<p>By setting the <code>file_parser</code> to <code>"vroom"</code> then the backend will change to allow <code>vroom</code>’s file parser to be used instead of <code>data.table</code>.</p>
-</div>
-<div id="change-back-to-data-table" class="section level1">
-<h1 class="hasAnchor">
-<a href="#change-back-to-data-table" class="anchor"></a>Change back to <code>data.table</code>
-</h1>
-<p>To go back to using <code>data.table</code> as the file parser it is a simple as calling the <code>noctua_options</code> function:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># return to using data.table as file parser</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>()</pre></body></html></div>
-</div>
-<div id="swapping-on-the-fly" class="section level1">
-<h1 class="hasAnchor">
-<a href="#swapping-on-the-fly" class="anchor"></a>Swapping on the fly</h1>
-<p>This makes it very flexible to swap between each file parser even between each query execution:</p>
+<a href="#how-to-handle-noctuas-retry" class="anchor"></a>How to handle <code>noctua</code>’s retry?</h1>
+<p>By default <code>noctua</code> performs a retry noisily, this means it will report the exception it has encounted and let the user know how long <code>noctua</code> will wait until it retries again. This is reported in the following format:</p>
+<div class="sourceCode" id="cb1"><html><body><pre class="r">{expection message} + "Request failed. Retrying in " + {wait time}  + " seconds..."</pre></body></html></div>
+<p>This is to keep the user informed in what <code>noctua</code> is doing behind the scenes.</p>
+<div id="configure" class="section level2">
+<h2 class="hasAnchor">
+<a href="#configure" class="anchor"></a>Configure</h2>
+<p>By default <code>noctua</code> retries 5 times and does it noisily. To configure this, <code>noctua_options</code> has been give 2 extra parameters <code>retry</code> and <code>retry_quiet</code>. <code>retry</code> is the number of retries <code>noctua</code> will perform. <code>retry_quiet</code> tells <code>noctua</code> to retry quietly or not.</p>
+<p>We can change the default retry settings so that <code>noctua</code> will retry 10 times and do it quietly:</p>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">retry</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">retry_quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
+<p>If you wish to create your own custom retry function just set the <code>retry</code> to 0:</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
 
+<span class="co"># connection to AWS Athena</span>
 <span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
 
-<span class="co"># upload data</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)
+<span class="co"># Stop noctua retrying</span>
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">retry</span> <span class="kw">=</span> <span class="fl">0</span>)
 
-<span class="co"># use default data.table file parser</span>
-<span class="no">df1</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
+<span class="co"># build your own custom retry function</span>
+<span class="no">custom_retry</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>){
+  <span class="co"># your custom retry method</span>
+}
 
-<span class="co"># use vroom as file parser</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="st">"vroom"</span>)
-<span class="no">df2</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
-
-<span class="co"># return back to data.table file parser</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>()
-<span class="no">df3</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)</pre></body></html></div>
+<span class="co"># apply your own retry function</span>
+<span class="fu">custom_retry</span>(<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select ..."</span>))</pre></body></html></div>
 </div>
-<div id="why-should-you-consider-vroom" class="section level1">
+</div>
+<div id="requests" class="section level1">
 <h1 class="hasAnchor">
-<a href="#why-should-you-consider-vroom" class="anchor"></a>Why should you consider <code>vroom</code>?</h1>
-<p>If you aren’t sure whether to use <code>vroom</code> over <code>data.table</code>, I draw your attention to <code>vroom</code> boasting a whopping 1.40GB/sec throughput.</p>
-<blockquote>
-<p><em>Statistics taken from vroom’s github readme</em></p>
-</blockquote>
-<table class="table">
-<thead><tr class="header">
-<th>package</th>
-<th>version</th>
-<th>time (sec)</th>
-<th>speed-up</th>
-<th>throughput</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>vroom</td>
-<td>1.1.0</td>
-<td>1.14</td>
-<td>58.44</td>
-<td>1.40 GB/sec</td>
-</tr>
-<tr class="even">
-<td>data.table</td>
-<td>1.12.8</td>
-<td>11.88</td>
-<td>5.62</td>
-<td>134.13 MB/sec</td>
-</tr>
-<tr class="odd">
-<td>readr</td>
-<td>1.3.1</td>
-<td>29.02</td>
-<td>2.30</td>
-<td>54.92 MB/sec</td>
-</tr>
-<tr class="even">
-<td>read.delim</td>
-<td>3.6.2</td>
-<td>66.74</td>
-<td>1.00</td>
-<td>23.88 MB/sec</td>
-</tr>
-</tbody>
-</table>
+<a href="#requests" class="anchor"></a>Requests</h1>
+<p>If you wish to increase the retry functionality of <code>noctua</code> for example the use of different backoff algorithms, please raise a ticket at <a href="https://github.com/DyfanJones/noctua/issues">issues</a> or raise a pull request.</p>
+</div>
+<div id="reading-material" class="section level1">
+<h1 class="hasAnchor">
+<a href="#reading-material" class="anchor"></a>Reading material</h1>
+<ul>
+<li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">Exponential Backoff and Jitter</a></li>
+<li><a href="https://aws.amazon.com/blogs/messaging-and-targeting/how-to-handle-a-throttling-maximum-sending-rate-exceeded-error/">How to handle a “Throttling – Maximum sending rate exceeded” error</a></li>
+</ul>
 </div>
   </div>
 

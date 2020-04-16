@@ -4,11 +4,9 @@
 * `noctua_options` contains 2 new parameters to control how `noctua` handles retries.
 * `dbFetch` is able to return data from AWS Athena in chunk. This has been achieved by passing `NextToken` to `AthenaResult` s4 class. This method won't be as fast `n = -1` as each chunk will have to be process into data frame format.
 
-```
+```r
 library(DBI)
-
 con <- dbConnect(noctua::athena())
-
 res <- dbExecute(con, "select * from some_big_table limit 10000")
 dbFetch(res, 5000)
 ```
@@ -22,6 +20,7 @@ dbFetch(res, 5000)
 
 ## Documentation
 * `dbWriteTable` added support ddl structures for user who have created ddl's outside of `noctua`
+* added vignette around how to use `noctua` retry functionality
 
 # noctua 1.6.0
 ## New Feature
@@ -29,7 +28,7 @@ dbFetch(res, 5000)
 * `noctua_options` now has `clear_cache` parameter to clear down all cached data.
 * `dbRemoveTable` now utilise `AWS Glue` to remove tables from `AWS Glue` catalog. This has a performance enhancement:
 
-```
+```r
 library(DBI)
 
 con = dbConnect(noctua::athena())
@@ -53,7 +52,7 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 
 * `dbWriteTable` now supports uploading json lines (http://jsonlines.org/) format up to `AWS Athena` (#88).
 
-```
+```r
 library(DBI)
 con = dbConnect(RAthena::athena())
 dbWriteTable(con, "iris2", iris, file.type = "json")
@@ -81,14 +80,14 @@ dbGetQuery(con, "select * from iris2")
 ## Bug Fix
 * `writeBin`: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this `writeBin` can be called in chunks. If `readr` is available on system then `readr::write_file` is used for extra speed.
 
-```
+```r
 library(readr)
 library(microbenchmark)
 
 # creating some dummy data for testing
 X <- 1e8
 df <- 
-  data.frame(
+data.frame(
     w = runif(X),
     x = 1:X,
     y = sample(letters, X, replace = T), 
@@ -122,34 +121,39 @@ microbenchmark(writeBin_loop = write_bin(obj, tempfile()),
                readr = write_file(obj, tempfile()),
                times = 5)
 
-Unit: seconds
-expr       min       lq      mean    median        uq       max neval
-R_loop 41.463273 41.62077 42.265778 41.908908 42.022042 44.313893     5
-readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5
+# Unit: seconds
+# expr       min       lq      mean    median        uq       max neval
+# R_loop 41.463273 41.62077 42.265778 41.908908 42.022042 44.313893     5
+# readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5
 ```
 
 * Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: [# 44](https://github.com/DyfanJones/RAthena/issues/44))
 
-```
+```r
 # Before
-translate_sql("2019-01-01", con = con) -> '2019-01-01'
+translate_sql("2019-01-01", con = con)
+# '2019-01-01'
+
 # Now
-translate_sql("2019-01-01", con = con) -> DATE '2019-01-01'
+translate_sql("2019-01-01", con = con)
+# DATE '2019-01-01'
 ```
 
 * Dependency data.table now restricted to (>=1.12.4) due to file compression being added to `fwrite` (>=1.12.4) https://github.com/Rdatatable/data.table/blob/master/NEWS.md
 * R functions `paste`/`paste0` would use default `dplyr:sql-translate-env` (`concat_ws`). `paste0` now uses Presto's `concat` function and `paste` now uses pipes to get extra flexible for custom separating values.
 
-```
+```r
 # R code:
 paste("hi", "bye", sep = "-")
+
 # SQL translation:
 ('hi'||'-'||'bye')
 ```
 
 * If table exists and parameter `append` set to `TRUE` then existing s3.location will be utilised (RAthena: [# 73](https://github.com/DyfanJones/RAthena/issues/73))
 * `db_compute` returned table name, however when a user wished to write table to another location (RAthena: [# 74](https://github.com/DyfanJones/RAthena/issues/74)). An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist` This has now been fixed with db_compute returning `dbplyr::in_schema`.
-```
+
+```r
 library(DBI)
 library(dplyr)
 
@@ -158,6 +162,7 @@ con <- dbConnect(RAthena::athena())
 tbl(con, "iris") %>%
   compute(name = "temp.iris")
 ```
+
 * `dbListFields` didn't display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.
 * RStudio connections tab didn't display any partitioned columns, this has been fixed in the same manner as `dbListFields`
 
@@ -168,7 +173,8 @@ tbl(con, "iris") %>%
   * Now checks if desired file parser is installed before changed file_parser method
   * File parser `vroom` has been restricted to >= 1.2.0 due to integer64 support and changes to `vroom` api
 * Thanks to @OssiLehtinen for improving the speed of `dplyr::tbl` when calling Athena when using the ident method (#64): 
-```
+
+```r
 library(DBI)
 library(dplyr)
 
@@ -181,12 +187,12 @@ t1 <- system.time(tbl(con, "iris"))
 t2 <- system.time(tbl(con, sql("select * from iris")))
 
 # ident method
-user  system elapsed 
-0.082   0.012   0.288 
+# user  system elapsed 
+# 0.082   0.012   0.288 
 
 # sub query method
-user  system elapsed 
-0.993   0.138   3.660 
+# user  system elapsed 
+# 0.993   0.138   3.660 
 ```
   
 ## Unit test
@@ -199,11 +205,10 @@ user  system elapsed
 * Added information message of amount of data scanned by AWS Athena
 * Added method to change backend file parser so user can change file parser from `data.table` to `vroom`. From now on it is possible to change file parser using `noctua_options` for example:
 
-```
+```r
 library(noctua)
 
 noctua_options("vroom")
-
 ```
 
 * new function `dbGetTables` that returns Athena hierarchy as a data.frame
@@ -218,7 +223,7 @@ noctua_options("vroom")
 ## Major Change
 * Default delimited file uploaded to AWS Athena changed from "csv" to "tsv" this is due to separating value "," in character variables. By using "tsv" file type JSON/Array objects can be passed to Athena through character types. To prevent this becoming a breaking change `dbWriteTable` `append` parameter checks and uses existing AWS Athena DDL file type. If `file.type` doesn't match Athena DDL file type then user will receive a warning message:
 
-```
+```r
 warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
 ```
 
@@ -246,7 +251,8 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 * `dbWriteTable` now will split `gzip` compressed files to improve AWS Athena performance. By default `gzip` compressed files will be split into 20.
 
 Performance results
-```
+
+```r
 library(DBI)
 X <- 1e8
 df <- data.frame(w =runif(X),
@@ -265,7 +271,7 @@ AWS Athena performance results from AWS console (query executed: `select count(*
 * test_split2: (Run time: 3.73 seconds, Data scanned: 1.16 GB)
 * test_split3: (Run time: 5.47 seconds, Data scanned: 1.16 GB)
 
-```
+```r
 library(DBI)
 X <- 1e8
 df <- data.frame(w =runif(X),
@@ -305,13 +311,15 @@ Added information message to inform user about what files have been added to S3 
 
 ## Backend Change
 * helper function `upload_data` has been rebuilt and removed the old "horrible" if statement with `paste` now the function relies on `sprintf` to construct the s3 location path. This method now is a lot clearer in how the s3 location is created plus it enables a `dbWriteTable` to be simplified. `dbWriteTable` can now upload data to the default s3_staging directory created in `dbConnect` this simplifies `dbWriteTable` to :
-```
+
+```r
 library(DBI)
 
 con <- dbConnect(noctua::athena())
 
 dbWriteTable(con, "iris", iris)
 ```
+
 ## Bug Fix
 * Info message wasn't being return when colnames needed changing for Athena DDL
 
