@@ -88,11 +88,15 @@ setMethod(
                  error = function(e) warning(e, call. = F))
         tryCatch(res@connection@ptr$S3$delete_object(Bucket = result_info$bucket,
                                                      Key = result_info$key),
-                 error = function(e) cat(""))}
+                 error = function(e) cat(""))
+        # remove manifest csv created with CTAS statements 
+        if (query_execution$QueryExecution$StatementType == "DDL")
+          tryCatch(res@connection@ptr$S3$delete_object(Bucket = result_info$bucket,
+                                                       Key = paste0(result_info$key, "-manifest.csv")),
+                   error = function(e) cat(""))}
     }
     invisible(TRUE)
   })
-
 
 #' Fetch records from previously executed query
 #' 
