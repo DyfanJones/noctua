@@ -1,0 +1,135 @@
+---
+title: "Convert and Save Cost"
+author: "Dyfan Jones"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Convert and Save Cost}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+# Pricing Details
+
+>You are charged for the number of bytes scanned by Amazon Athena, rounded up to the nearest megabyte, with a 10MB minimum per query. There are no charges for Data Definition Language (DDL) statements like CREATE/ALTER/DROP TABLE, statements for managing partitions, or failed queries. Cancelled queries are charged based on the amount of data scanned.
+>
+>Compressing your data allows Athena to scan less data. Converting your data to columnar formats allows Athena to selectively read only required columns to process the data. Athena supports Apache ORC and Apache Parquet. Partitioning your data also allows Athena to restrict the amount of data scanned. This leads to cost savings and improved performance. You can see the amount of data scanned per query on the Athena console. [link](https://aws.amazon.com/athena/pricing/)
+So it becomes more important to compress your data and convert it to the recommended file formats [Apache Parquet](https://parquet.apache.org/) or [Apache ORC](https://orc.apache.org/).
+
+**DON'T WORRY!!! `noctua` is here to help!**
+
+# `noctua`'s help
+
+For a lot of users, [Apache Parquet](https://parquet.apache.org/) or [Apache ORC](https://orc.apache.org/) are file formats that aren't well known and as a result alto systems don't have the software to create these formats. `noctua` offers some assists by firstly enabling `apache parquet` format to be uploaded through [`dbWriteTable`](https://dyfanjones.github.io/noctua/reference/AthenaWriteTables.html), using the R package [`arrow`](https://arrow.apache.org/docs/r/) to create the parquet format.
+
+If uploading Apache Parquet is not possible or if the file format Apache ORC is preferred then `noctua` offers another solution. `noctua` can utilise the power of AWS Athena to convert file formats for you. What this allows you to do is:
+
+* Upload Data in an easier file format for example delimited format
+* Convert Data into Parquet or ORC using AWS Athena to save cost
+* Finally insert into final table with ETL processes
+
+## Upload Data in delimited format
+
+Uploading Data in delimited format is the easiest method. 
+
+```r
+library(DBI)
+library(noctua)
+
+con <- dbConnect(athena())
+
+# create a temporary database to upload data into
+res <- dbExecute(con, "CREATE IF NOT EXISTS DATABASE temp")
+dbClearResult(res)
+
+iris2 <- iris
+iris2$time_stamp <- format(Sys.Date(), "%Y%m%d")
+
+dbWriteTable(con, "temp.iris_delim", iris2)
+```
+
+However delimited file format isn't the most cost effective when it comes to using AWS Athena. To overcome this we can convert this by using AWS Athena. 
+
+## Convert Data into Parquet or ORC
+
+Converting table to a non-partitioned Parquet or ORC format.
+
+```r
+# convert to parquet
+dbConvertTable(con,
+               obj = "temp.iris_delim",
+               name = "iris_parquet",
+               file.type = "parquet")
+               
+# convert to orc
+dbConvertTable(con,
+               obj = "temp.iris_delim",
+               name = "iris_orc",
+               file.type = "orc")
+```
+
+**NOTE:** By default `dbConvertTable` compresses Parquet/ ORC format using `snappy` compression.
+
+`noctua` goes a step further by allowing tables to be converted with partitions.
+
+```r
+# convert to parquet with partition time_stamp
+dbConvertTable(con,
+               obj = "temp.iris_delim",
+               name = "iris_parquet_partition",
+               partition = "time_stamp",
+               file.type = "parquet")
+```
+
+`noctua` even allows SQL queries to be converted into desired file format:
+
+```r
+dbConvertTable(con,
+              obj = SQL("select 
+                          Sepal_Length,
+                          Sepal_Width,
+                          date_format(current_date, '%Y%m%d') as time_stamp 
+                        from temp.iris_delim"),
+              name = "iris_orc_partition",
+              partition = "time_stamp",
+              file.type = "orc")
+```
+
+## Insert into table for ETL processes
+
+As we have created partitioned data, we can easily insert into:
+
+```r
+res <- 
+  dbExecute(con, "insert into iris_orc_partition
+                  select 
+                    Sepal_Length,
+                    Sepal_Width, 
+                    date_format(date_add('date', 1, current_date) , '%Y%m%d') time_stamp 
+                  from temp.iris_delim")
+dbClearResult(res)
+```
+What this all means is that you can create ETL processes by uploading data in basic file format (delimited), and then converting / inserting into the prefer file format. 
+
+## `dplyr` method
+
+The good news doesn't stop there, `noctua` integrates with `dplyr` to allow converting to be done through `dplyr`.
+
+```r
+library(dplyr)
+
+iris_tbl <- tbl(con, dbplyr::in_schema("temp", "iris_delim"))
+
+r_date <- format(Sys.Date(), "%Y%m%d")
+
+iris_tbl %>% 
+  select(petal_length,
+         petal_width) %>% 
+  mutate(time_stamp = r_date) %>%
+  compute("iris_dplyr_parquet", partition = "time_stamp", file_type = "parquet")
+```
+
+# Reading Material
+
+* [CTAS insert into ETL](https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into-etl.html)
+* [Considerations and Limitations for CTAS Queries](https://docs.aws.amazon.com/athena/latest/ug/considerations-ctas.html)
+* [Examples of CTAS Queries](https://docs.aws.amazon.com/athena/latest/ug/ctas-examples.html)

@@ -112,6 +112,9 @@
       <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
     </li>
     <li>
+      <a href="../articles/convert_and_save_cost.html">Convert and Save Cost</a>
+    </li>
+    <li>
       <a href="../articles/getting_started.html">Getting Started</a>
     </li>
     <li>
@@ -220,7 +223,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>sqlCreateTable</code> returns data.frame's <code>DDL</code> in the <code><a href='https://dbi.r-dbi.org/reference/SQL.html'>SQL</a></code> format.</p>
+    <p><code>sqlCreateTable</code> returns data.frame's <code>DDL</code> in the <code><a href='https://rdrr.io/pkg/DBI/man/SQL.html'>SQL</a></code> format.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/sqlCreateTable.html'>sqlCreateTable</a></code></p></div>
@@ -267,7 +270,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (`20200416` STRING)
+#&gt; PARTITIONED BY (`20200421` STRING)
 #&gt; ROW FORMAT DELIMITED
 #&gt; 	FIELDS TERMINATED BY '	'
 #&gt; 	LINES TERMINATED BY '\n'
@@ -288,7 +291,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 #&gt;   `Petal_Width` DOUBLE,
 #&gt;   `Species` STRING
 #&gt; )
-#&gt; PARTITIONED BY (`20200416` STRING)
+#&gt; PARTITIONED BY (`20200421` STRING)
 #&gt; STORED AS PARQUET
 #&gt; LOCATION 's3://path/to/athena/table/default/iris/'
 #&gt; ;</div><div class='input'>

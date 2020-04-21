@@ -114,6 +114,9 @@ utilise AWS Glue to speed up sql query execution." />
       <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
     </li>
     <li>
+      <a href="../articles/convert_and_save_cost.html">Convert and Save Cost</a>
+    </li>
+    <li>
       <a href="../articles/getting_started.html">Getting Started</a>
     </li>
     <li>
@@ -187,7 +190,7 @@ utilise AWS Glue to speed up sql query execution.</p>
     </tr>
     <tr>
       <th>file_type</th>
-      <td><p>What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
+      <td><p>What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 <code>"NULL"</code> will let Athena set the file_type for you.</p></td>
     </tr>
     <tr>
@@ -201,6 +204,10 @@ utilise AWS Glue to speed up sql query execution.</p>
     <tr>
       <th>...</th>
       <td><p>other parameters, currently not implemented</p></td>
+    </tr>
+    <tr>
+      <th>compress</th>
+      <td><p>Compress Athena table, currently can only compress ["parquet", "orc"] <a href='https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html'>AWS Athena CTAS</a></p></td>
     </tr>
     </table>
 

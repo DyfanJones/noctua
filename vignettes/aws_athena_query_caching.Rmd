@@ -26,7 +26,7 @@ con = dbConnect(athena())
 noctua_options(cache_size = 10)
 
 # Upload Data to AWS Athena
-dbWriteTable(con, "iris", iris, partition = c("Partition" = "01")
+dbWriteTable(con, "iris", iris, partition = c("Partition" = "01"))
 
 # initial query to AWS Athena
 system.time(df1 = dbGetQuery(con, "select * from iris"))
