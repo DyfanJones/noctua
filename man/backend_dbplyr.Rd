@@ -11,9 +11,10 @@ db_save_query.AthenaConnection(
   con,
   sql,
   name,
-  file_type = c("NULL", "csv", "parquet", "json"),
+  file_type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
   s3_location = NULL,
   partition = NULL,
+  compress = TRUE,
   ...
 )
 
@@ -35,9 +36,9 @@ db_query_fields.AthenaConnection(con, sql, ...)
 
 \item{partition}{Partition Athena table, requires to be a partitioned variable from previous table.}
 
-\item{...}{other parameters, currently not implemented}
-
 \item{compress}{Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}}
+
+\item{...}{other parameters, currently not implemented}
 }
 \value{
 \describe{

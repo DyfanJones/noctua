@@ -87,10 +87,11 @@ db_compute.AthenaConnection <- function(con,
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
 #' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
-#' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
+#' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 #'                  \code{"NULL"} will let Athena set the file_type for you.
 #' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
 #' @param partition Partition Athena table, requires to be a partitioned variable from previous table.
+#' @param compress Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}
 #' @param ... other parameters, currently not implemented
 #' @name backend_dbplyr
 #' @return
@@ -100,43 +101,19 @@ db_compute.AthenaConnection <- function(con,
 #' \item{db_query_fields}{Returns sql query column names}
 #' }
 db_save_query.AthenaConnection <- function(con, sql, name , 
-                                           file_type = c("NULL","csv", "parquet", "json"),
+                                           file_type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
                                            s3_location = NULL,
                                            partition = NULL,
+                                           compress = TRUE,
                                            ...){
   stopifnot(is.null(s3_location) || is.s3_uri(s3_location))
   file_type = match.arg(file_type)
   tt_sql <- SQL(paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
-                       " ", db_save_query_with(file_type, s3_location, partition), "AS ",
+                       " ", ctas_sql_with(partition, s3_location, file_type, compress), "AS ",
                        sql, ";"))
   res <- dbExecute(con, tt_sql)
-  # check if execution failed
-  retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
-  if(query_execution$QueryExecution$Status$State == "FAILED") {
-    stop(query_execution$QueryExecution$Status$StateChangeReason, call. = FALSE)
-  }
+  dbClearResult(res)
   name
-}
-
-# helper function
-db_save_query_with <- function(file_type, s3_location,partition){
-  if(file_type!="NULL" || !is.null(s3_location) || !is.null(partition)){
-    FILE <- switch(file_type,
-                   "csv" = "format = 'TEXTFILE'",
-                   "parquet" = "format = 'PARQUET'",
-                   "json" = "format = 'JSON'",
-                   "")
-    LOCATION <- if(!is.null(s3_location)){
-      if(file_type == "NULL") paste0("external_location ='", s3_location, "'")
-      else paste0(",\nexternal_location ='", s3_location, "'")
-    } else ""
-    PARTITION <- if(!is.null(partition)){
-      partition <- paste(partition, collapse = "','")
-      if(is.null(s3_location) && file_type == "NULL") paste0("partitioned_by = ARRAY['",partition,"']")
-      else paste0(",\npartitioned_by = ARRAY['",partition,"']")
-    } else ""
-    paste0("WITH (", FILE, LOCATION, PARTITION,")\n")
-  } else ""
 }
 
 #' S3 implementation of \code{db_copy_to} for Athena
