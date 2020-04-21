@@ -70,6 +70,9 @@
       <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
     </li>
     <li>
+      <a href="../articles/convert_and_save_cost.html">Convert and Save Cost</a>
+    </li>
+    <li>
       <a href="../articles/getting_started.html">Getting Started</a>
     </li>
     <li>
@@ -120,30 +123,30 @@
 <h2 class="hasAnchor">
 <a href="#caching-benefits" class="anchor"></a>Caching benefits</h2>
 <p>By caching queries the performance of repeat queries is significantly improved. This is because the query is no longer sent to <code>AWS Athena</code>. Instead the query ID, of the repeating query, is taken from the R environment and the result is returned from <code>AWS S3</code>.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">library(DBI)
-library(noctua)
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
 
-con = dbConnect(athena())
+<span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
 
-# Start caching queries
-noctua_options(cache_size = 10)
+<span class="co"># Start caching queries</span>
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">cache_size</span> <span class="kw">=</span> <span class="fl">10</span>)
 
-# Upload Data to AWS Athena
-dbWriteTable(con, "iris", iris, partition = c("Partition" = "01")
+<span class="co"># Upload Data to AWS Athena</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>, <span class="kw">partition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Partition"</span> <span class="kw">=</span> <span class="st">"01"</span>))
 
-# initial query to AWS Athena
-system.time(df1 = dbGetQuery(con, "select * from iris"))
+<span class="co"># initial query to AWS Athena</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw">df1</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>))
 
-# Info: (Data scanned: 3.63 KB)
-#   user  system elapsed 
-#  0.105   0.004   3.397 
+<span class="co"># Info: (Data scanned: 3.63 KB)</span>
+<span class="co">#   user  system elapsed </span>
+<span class="co">#  0.105   0.004   3.397 </span>
 
-# repeat query to AWS Athena
-system.time(df2 = dbGetQuery(con, "select * from iris"))
+<span class="co"># repeat query to AWS Athena</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw">df2</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>))
 
-# Info: (Data scanned: 3.63 KB)
-#   user  system elapsed 
-#  0.072   0.000   0.348 </pre></body></html></div>
+<span class="co"># Info: (Data scanned: 3.63 KB)</span>
+<span class="co">#   user  system elapsed </span>
+<span class="co">#  0.072   0.000   0.348 </span></pre></body></html></div>
 <p>Here we can see a performance increase of x10 with repeat query execution.</p>
 </div>
 <div id="caching-weakness" class="section level2">
@@ -151,7 +154,7 @@ system.time(df2 = dbGetQuery(con, "select * from iris"))
 <a href="#caching-weakness" class="anchor"></a>Caching weakness</h2>
 <p>The weakness in caching occurs when the underlying data is updated. The cache will still only retrieve the previous query ID. This means that the new updated data won’t be return when the caching is enabled:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Updating iris table</span>
-<span class="fu">dbWriteTable</span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>, <span class="kw">append</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">partition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Partition"</span> <span class="kw">=</span> <span class="st">"02"</span>))
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>, <span class="kw">append</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">partition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Partition"</span> <span class="kw">=</span> <span class="st">"02"</span>))
 
 <span class="no">dt5</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
 
@@ -173,15 +176,15 @@ system.time(df2 = dbGetQuery(con, "select * from iris"))
 <p>The caching method in <code>noctua</code> will remember previous query ids within each R session, even if you stop and start caching in <code>noctua_options</code>.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Start caching</span>
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">cache_size</span> <span class="kw">=</span> <span class="fl">10</span>)
-<span class="no">res1</span> <span class="kw">=</span> <span class="fu">dbExecute</span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
+<span class="no">res1</span> <span class="kw">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
 
 <span class="co"># Stop caching</span>
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>()
-<span class="no">res2</span> <span class="kw">=</span> <span class="fu">dbExecute</span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
+<span class="no">res2</span> <span class="kw">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
 
 <span class="co"># Start caching</span>
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">cache_size</span> <span class="kw">=</span> <span class="fl">10</span>)
-<span class="no">res3</span> <span class="kw">=</span> <span class="fu">dbExecute</span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
+<span class="no">res3</span> <span class="kw">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"select * from iris"</span>)
 
 <span class="co"># Compare Query ID's</span>
 <span class="no">res1</span>@<span class="kw">info</span>$<span class="no">QueryExecutionId</span>

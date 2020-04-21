@@ -70,6 +70,9 @@
       <a href="../articles/changing_backend_file_parser.html">Changing Backend File Parser</a>
     </li>
     <li>
+      <a href="../articles/convert_and_save_cost.html">Convert and Save Cost</a>
+    </li>
+    <li>
       <a href="../articles/getting_started.html">Getting Started</a>
     </li>
     <li>
@@ -213,12 +216,12 @@
 <a href="#dplyr" class="anchor"></a>dplyr:</h2>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 
-<span class="no">athena_iris</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
+<span class="no">athena_iris</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
 
 <span class="no">athena_iris</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span>(<span class="no">species</span>, <span class="no">sepal_length</span>, <span class="no">sepal_width</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">species</span>, <span class="no">sepal_length</span>, <span class="no">sepal_width</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/compute.html">collect</a></span>()
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a></span>()
 
 <span class="co"># Info: (Data scanned: 860 Bytes)</span>
 <span class="co"># # A tibble: 10 x 3</span>

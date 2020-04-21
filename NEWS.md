@@ -13,6 +13,8 @@ dbFetch(res, 5000)
 
 * When creating/appending partitions to a table, `dbWriteTable` opts to use `alter table` instead of standard `msck repair table`. This is to improve performance when appending to tables with high number of existing partitions.
 * `dbWriteTable` now allows json to be appended to json ddls created with the Openx-JsonSerDe library.
+* `dbConvertTable` brings `dplyr::compute` functionality to base package, allowing `noctua` to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (RAthena: [# 37](https://github.com/DyfanJones/RAthena/issues/37)).
+* Extended `dplyr::compute` to give same functionality of `dbConvertTable`
 
 ## Bug
 * `dbWriteTable` would throw `throttling error` every now and again, `retry_api_call` as been built to handle the parsing of data between R and AWS S3.

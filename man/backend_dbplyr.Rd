@@ -11,9 +11,10 @@ db_save_query.AthenaConnection(
   con,
   sql,
   name,
-  file_type = c("NULL", "csv", "parquet", "json"),
+  file_type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
   s3_location = NULL,
   partition = NULL,
+  compress = TRUE,
   ...
 )
 
@@ -28,12 +29,14 @@ db_query_fields.AthenaConnection(con, sql, ...)
 
 \item{name}{Table name if left default noctua will use default from 'dplyr''s \code{compute} function.}
 
-\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
+\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 \code{"NULL"} will let Athena set the file_type for you.}
 
 \item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 
 \item{partition}{Partition Athena table, requires to be a partitioned variable from previous table.}
+
+\item{compress}{Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}}
 
 \item{...}{other parameters, currently not implemented}
 }

@@ -101,7 +101,7 @@ sql_escape_string.AthenaConnection <- function(con, x) {
   # Added string restiction to prevent timestamps wrongly added to date format
   all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x) & all(nchar(x) == 10)
   if(all_dates & !is.na(all_dates)) {
-    paste0('DATE ', DBI::dbQuoteString(con, x))
+    paste0('date ', DBI::dbQuoteString(con, x))
   } else {
     DBI::dbQuoteString(con, x)
   }

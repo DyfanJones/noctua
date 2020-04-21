@@ -822,3 +822,97 @@ setMethod(
     Table <- name}
     SQL(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", dbms.name,".",Table))[[1]])
   })
+
+
+#' Simple wrapper to convert Athena backend file types
+#' 
+#' @description Utilises AWS Athena to convert AWS S3 backend file types. It also also to create more efficient file types i.e. "parquet" and "orc" from SQL queries.
+#' @param conn An \code{\linkS4class{AthenaConnection}} object, produced by [DBI::dbConnect()]
+#' @param obj Athena table or \code{SQL} DML query to be converted. For \code{SQL}, the query need to be wrapped with \code{DBI::SQL()} and 
+#'            follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/select.html}{link}
+#' @param name Name of destination table
+#' @param partition Partition Athena table
+#' @param s3.location location to store output file, must be in s3 uri fromat for example ("s3://mybucket/data/").
+#' @param file.type File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
+#'                  \code{"NULL"} will let Athena set the file type for you.
+#' @param compress Compress \code{name}, currently can only compress ["parquet", "orc"] (\href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS})
+#' @param data If \code{name} should be created with data or not.
+#' @param ... Extra parameters, currently not used
+#' @name dbConvertTable
+#' @return \code{dbConvertTable()} returns \code{TRUE} but invisible.
+#' @examples 
+#' \dontrun{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
+#' 
+#' library(DBI)
+#' library(noctua)
+#' 
+#' # Demo connection to Athena using profile name 
+#' con <- dbConnect(athena())
+#'                  
+#' # write iris table to Athena in defualt delimited format                 
+#' dbWriteTable(con, "iris", iris)
+#' 
+#' # convert delimited table to parquet
+#' dbConvertTable(con, 
+#'               obj = "iris",
+#'               name = "iris_parquet",
+#'               file.type = "parquet")
+#' 
+#' # Create partitioned table from non-partitioned 
+#' # iris table using SQL DML query
+#' dbConvertTable(con,
+#'                obj = SQL("select 
+#'                             iris.*, 
+#'                             date_format(current_date, '%Y%m%d') as time_stamp 
+#'                           from iris"),
+#'                name = "iris_orc_partitioned",
+#'                file.type = "orc",
+#'                partition = "time_stamp")
+#' 
+#' # disconnect from Athena
+#' dbDisconnect(con)
+#' }
+#' @docType methods
+NULL
+
+#' @rdname dbConvertTable
+#' @export
+setGeneric("dbConvertTable",
+           def = function(conn, obj, name, ...) standardGeneric("dbConvertTable"))
+
+#' @rdname dbConvertTable
+#' @export
+setMethod(
+  "dbConvertTable", "AthenaConnection",
+  function(conn, 
+           obj,
+           name,
+           partition = NULL,
+           s3.location = NULL,
+           file.type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
+           compress = TRUE,
+           data = TRUE,
+           ...){
+    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    stopifnot(is.character(obj),
+              is.character(name),
+              is.null(partition) || is.character(partition),
+              is.null(s3.location) || is.s3_uri(s3.location),
+              is.logical(compress),
+              is.logical(data))
+    file.type = match.arg(file.type)
+    
+    with_data <- if (data) " " else " NO "
+    
+    ins <- if(inherits(obj, "SQL")) {obj} else {paste0("SELECT * FROM ",paste0('"',unlist(strsplit(obj,"\\.")),'"', collapse = '.'))}
+    
+    tt_sql <- paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
+                     " ", ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
+                     ins,"\nWITH", with_data, "DATA", ";")
+    res <- dbExecute(conn, tt_sql)
+    dbClearResult(res)
+    return(invisible(TRUE))
+  })
