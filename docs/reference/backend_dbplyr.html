@@ -163,9 +163,10 @@ utilise AWS Glue to speed up sql query execution.</p>
   <span class='no'>con</span>,
   <span class='no'>sql</span>,
   <span class='no'>name</span>,
-  <span class='kw'>file_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>, <span class='st'>"csv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>),
+  <span class='kw'>file_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>, <span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>, <span class='st'>"orc"</span>),
   <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>
 )
 
@@ -202,12 +203,12 @@ utilise AWS Glue to speed up sql query execution.</p>
       <td><p>Partition Athena table, requires to be a partitioned variable from previous table.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>other parameters, currently not implemented</p></td>
-    </tr>
-    <tr>
       <th>compress</th>
       <td><p>Compress Athena table, currently can only compress ["parquet", "orc"] <a href='https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html'>AWS Athena CTAS</a></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other parameters, currently not implemented</p></td>
     </tr>
     </table>
 
