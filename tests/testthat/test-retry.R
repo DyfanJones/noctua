@@ -1,7 +1,7 @@
 context("Testing retry function")
 
 test_that("Check if retry_api is working as intended",{
-  
+  skip_if_no_env()
   # create a function that is designed to fail so many times
   fail_env <- new.env()
   fail_env$i <- 1
