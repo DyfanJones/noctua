@@ -199,11 +199,7 @@
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
 
 <span class='co'># Sending Queries to Athena</span>
-<span class='fu'>dbGetQuery</span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: (Data scanned: 0 Bytes)</span></div><div class='output co'>#&gt;       var1
-#&gt; 1    adhoc
-#&gt; 2  default
-#&gt; 3 sampledb
-#&gt; 4     temp</div><div class='input'>
+<span class='fu'>dbGetQuery</span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)</div><div class='output co'>#&gt; <span class='error'>Error: InvalidRequestException (HTTP 400). Could not find results</span></div><div class='input'>
 <span class='co'># Disconnect conenction</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
 <span class='co'># }</span></div></pre>
