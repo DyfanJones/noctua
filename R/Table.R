@@ -106,7 +106,7 @@ Athena_write_table <-
     if(max.batch < 0) stop("`max.batch` has to be greater than 0", call. = F)
     
     if(!is.infinite(max.batch) && file.type == "parquet") message("Info: parquet format is splittable and AWS Athena can read parquet format ",
-                                                                  "in parrellel. `max.batch` is used for compressed `gzip` format which is not splittable.")
+                                                                  "in parallel. `max.batch` is used for compressed `gzip` format which is not splittable.")
     
     # use default s3_staging directory is s3.location isn't provided
     if (is.null(s3.location)) s3.location <- conn@info$s3_staging
