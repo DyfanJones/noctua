@@ -2,7 +2,7 @@
 % Please edit documentation in R/Options.R
 \name{noctua_options}
 \alias{noctua_options}
-\title{A method to configue noctua backend options.}
+\title{A method to configure noctua backend options.}
 \usage{
 noctua_options(
   file_parser = c("data.table", "vroom"),
@@ -35,4 +35,7 @@ library(noctua)
 
 # change file parser from default data.table to vroom
 noctua_options("vroom")
+
+# cache queries locally
+noctua_options(cache_size = 5)
 }
