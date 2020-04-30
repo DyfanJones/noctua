@@ -242,6 +242,13 @@ get_session_token <- function(profile_name = NULL,
             is.numeric(duration_seconds),
             is.logical(set_env))
   
+  # get lower level paws methods
+  get_region <- pkg_method("get_region", "paws.common")
+  get_profile_name <- pkg_method("get_profile_name", "paws.common")
+  
+  region_name <- region_name %||% get_region(profile_name)
+  profile_name <-  profile_name %||% get_profile_name(profile_name)
+  
   config <- cred_set(NULL, NULL, NULL, profile_name, region_name)
   
   STS <- paws::sts(config)
@@ -299,6 +306,13 @@ assume_role <- function(profile_name = NULL,
             is.character(role_arn),
             is.numeric(duration_seconds),
             is.logical(set_env))
+  
+  # get lower level paws methods
+  get_region <- pkg_method("get_region", "paws.common")
+  get_profile_name <- pkg_method("get_profile_name", "paws.common")
+  
+  region_name <- region_name %||% get_region(profile_name)
+  profile_name <-  profile_name %||% get_profile_name(profile_name)
   
   config <- cred_set(NULL, NULL, NULL, profile_name, region_name)
   
