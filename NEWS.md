@@ -1,4 +1,4 @@
-# noctua 1.6.0.9000
+# noctua 1.7.0
 ## New Feature
 * functions that collect or push to AWS S3 now have a retry capability. Meaning if API call fails then the call is retried (#79)
 * `noctua_options` contains 2 new parameters to control how `noctua` handles retries.
@@ -15,6 +15,7 @@ dbFetch(res, 5000)
 * `dbWriteTable` now allows json to be appended to json ddls created with the Openx-JsonSerDe library.
 * `dbConvertTable` brings `dplyr::compute` functionality to base package, allowing `noctua` to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (RAthena: [# 37](https://github.com/DyfanJones/RAthena/issues/37)).
 * Extended `dplyr::compute` to give same functionality of `dbConvertTable`
+* Added `region_name` check before making a connection to AWS Athena ([RAthena: # 110](https://github.com/DyfanJones/RAthena/issues/110))
 
 ## Bug
 * `dbWriteTable` would throw `throttling error` every now and again, `retry_api_call` as been built to handle the parsing of data between R and AWS S3.
@@ -23,6 +24,7 @@ dbFetch(res, 5000)
 ## Documentation
 * `dbWriteTable` added support ddl structures for user who have created ddl's outside of `noctua`
 * added vignette around how to use `noctua` retry functionality
+* Moved all examples requiring credentials to `\dontrun` (#91)
 
 # noctua 1.6.0
 ## New Feature
@@ -142,7 +144,7 @@ translate_sql("2019-01-01", con = con)
 ```
 
 * Dependency data.table now restricted to (>=1.12.4) due to file compression being added to `fwrite` (>=1.12.4) https://github.com/Rdatatable/data.table/blob/master/NEWS.md
-* R functions `paste`/`paste0` would use default `dplyr:sql-translate-env` (`concat_ws`). `paste0` now uses Presto's `concat` function and `paste` now uses pipes to get extra flexible for custom separating values.
+* R functions `paste`/`paste0` would use default `dplyr:sql-translate-env` (`concat_ws`). `paste0` now uses Presto's `concat` function and `paste` now uses pipes to get extra flexibility for custom separating values.
 
 ```r
 # R code:
