@@ -31,7 +31,7 @@ The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to 
              The \code{dbExecute()} method submits a query to Athena and waits for the query to be executed.
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation

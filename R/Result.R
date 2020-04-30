@@ -38,7 +38,7 @@ setClass(
 #' @return \code{dbClearResult()} returns \code{TRUE}, invisibly.
 #' @seealso \code{\link[DBI]{dbIsValid}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -109,7 +109,7 @@ setMethod(
 #' @return \code{dbFetch()} returns a data frame.
 #' @seealso \code{\link[DBI]{dbFetch}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -238,7 +238,7 @@ setMethod(
 #' @return \code{dbHasCompleted()} returns a logical scalar. \code{TRUE} if the query has completed, \code{FALSE} otherwise.
 #' @seealso \code{\link[DBI]{dbHasCompleted}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -301,7 +301,7 @@ setMethod(
 #'         The data.frame has two columns (field_name, type).
 #' @seealso \code{\link[DBI]{dbHasCompleted}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
@@ -350,7 +350,7 @@ setMethod(
 #' @name dbStatistics
 #' @return \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation

@@ -25,7 +25,7 @@ or a \linkS4class{DBIResult}}
 This method tests whether the \code{dbObj} is still valid.
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation

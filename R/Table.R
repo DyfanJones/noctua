@@ -369,7 +369,7 @@ setMethod("sqlData", "AthenaConnection",
 #' @return \code{sqlCreateTable} returns data.frame's \code{DDL} in the \code{\link[DBI]{SQL}} format.
 #' @seealso \code{\link[DBI]{sqlCreateTable}}
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -384,12 +384,12 @@ setMethod("sqlData", "AthenaConnection",
 #' 
 #' # Create DDL for iris data.frame with partition
 #' sqlCreateTable(con, "iris", iris, 
-#'                partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
+#'                partition = "timestamp",
 #'                s3.location = "s3://path/to/athena/table")
 #'                
 #' # Create DDL for iris data.frame with partition and file.type parquet
 #' sqlCreateTable(con, "iris", iris, 
-#'                partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
+#'                partition = "timestamp",
 #'                s3.location = "s3://path/to/athena/table",
 #'                file.type = "parquet")
 #' 

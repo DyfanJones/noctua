@@ -57,7 +57,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 Creates an interface to compose \code{CREATE EXTERNAL TABLE}.
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
