@@ -40,7 +40,7 @@ Number of updates in past 6 months: 7
 0 errors ✓ | 0 warnings ✓ | 1 note x
 
 **Author's Notes**
-* Apologies for the fast re-submission of this package. 
+* Apologies for the fast re-submission of this package. This release contains package resilience when working AWS APIs
 
 ## unit tests (using testthat) results
 * OK:       127
