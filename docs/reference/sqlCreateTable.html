@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -229,7 +229,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/sqlCreateTable.html'>sqlCreateTable</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Note: </span>
 <span class='co'># - Require AWS Account to run below example.</span>
 <span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
@@ -240,64 +240,22 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
 
 <span class='co'># Create DDL for iris data.frame</span>
-<span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame colnames have been converted to align with Athena DDL naming convertions: </span>
-#&gt; <span class='message'>Sepal_Length,</span>
-#&gt; <span class='message'>Sepal_Width,</span>
-#&gt; <span class='message'>Petal_Length,</span>
-#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `default`.`iris` (
-#&gt;   `Sepal_Length` DOUBLE,
-#&gt;   `Sepal_Width` DOUBLE,
-#&gt;   `Petal_Length` DOUBLE,
-#&gt;   `Petal_Width` DOUBLE,
-#&gt;   `Species` STRING
-#&gt; )
-#&gt; ROW FORMAT DELIMITED
-#&gt; 	FIELDS TERMINATED BY '	'
-#&gt; 	LINES TERMINATED BY '\n'
-#&gt; LOCATION 's3://path/to/athena/table/default/iris/'
-#&gt; TBLPROPERTIES ("skip.header.line.count"="1");</div><div class='input'>
+<span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>, <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)
+
 <span class='co'># Create DDL for iris data.frame with partition</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
                <span class='kw'>partition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"timestamp"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
-               <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame colnames have been converted to align with Athena DDL naming convertions: </span>
-#&gt; <span class='message'>Sepal_Length,</span>
-#&gt; <span class='message'>Sepal_Width,</span>
-#&gt; <span class='message'>Petal_Length,</span>
-#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `default`.`iris` (
-#&gt;   `Sepal_Length` DOUBLE,
-#&gt;   `Sepal_Width` DOUBLE,
-#&gt;   `Petal_Length` DOUBLE,
-#&gt;   `Petal_Width` DOUBLE,
-#&gt;   `Species` STRING
-#&gt; )
-#&gt; PARTITIONED BY (`20200422` STRING)
-#&gt; ROW FORMAT DELIMITED
-#&gt; 	FIELDS TERMINATED BY '	'
-#&gt; 	LINES TERMINATED BY '\n'
-#&gt; LOCATION 's3://path/to/athena/table/default/iris/'
-#&gt; TBLPROPERTIES ("skip.header.line.count"="1");</div><div class='input'>
+               <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)
+
 <span class='co'># Create DDL for iris data.frame with partition and file.type parquet</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
                <span class='kw'>partition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"timestamp"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
                <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>,
-               <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"parquet"</span>)</div><div class='output co'>#&gt; <span class='message'>Info: data.frame colnames have been converted to align with Athena DDL naming convertions: </span>
-#&gt; <span class='message'>Sepal_Length,</span>
-#&gt; <span class='message'>Sepal_Width,</span>
-#&gt; <span class='message'>Petal_Length,</span>
-#&gt; <span class='message'>Petal_Width</span></div><div class='output co'>#&gt; &lt;SQL&gt; CREATE EXTERNAL TABLE `default`.`iris` (
-#&gt;   `Sepal_Length` DOUBLE,
-#&gt;   `Sepal_Width` DOUBLE,
-#&gt;   `Petal_Length` DOUBLE,
-#&gt;   `Petal_Width` DOUBLE,
-#&gt;   `Species` STRING
-#&gt; )
-#&gt; PARTITIONED BY (`20200422` STRING)
-#&gt; STORED AS PARQUET
-#&gt; LOCATION 's3://path/to/athena/table/default/iris/'
-#&gt; ;</div><div class='input'>
+               <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"parquet"</span>)
+
 <span class='co'># Disconnect from Athena</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-<span class='co'># }</span></div></pre>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -313,7 +271,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

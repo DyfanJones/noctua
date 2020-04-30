@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A method to configue noctua backend options. — noctua_options • noctua</title>
+<title>A method to configure noctua backend options. — noctua_options • noctua</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="A method to configue noctua backend options. — noctua_options" />
+<meta property="og:title" content="A method to configure noctua backend options. — noctua_options" />
 <meta property="og:description" content="noctua_options() provides a method to change the backend. This includes changing the file parser,
  whether noctua should cache query ids locally and number of retries on a failed api call." />
 <meta property="og:image" content="/logo.png" />
@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A method to configue noctua backend options.</h1>
+    <h1>A method to configure noctua backend options.</h1>
     <small class="dont-index">Source: <a href='https://github.com/DyfanJones/noctua/blob/master/R/Options.R'><code>R/Options.R</code></a></small>
     <div class="hidden name"><code>noctua_options.Rd</code></div>
     </div>
@@ -198,7 +198,10 @@
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>noctua</span>)
 
 <span class='co'># change file parser from default data.table to vroom</span>
-<span class='fu'>noctua_options</span>(<span class='st'>"vroom"</span>)</div></pre>
+<span class='fu'>noctua_options</span>(<span class='st'>"vroom"</span>)
+
+<span class='co'># cache queries locally</span>
+<span class='fu'>noctua_options</span>(<span class='kw'>cache_size</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -214,7 +217,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

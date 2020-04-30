@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -180,7 +180,7 @@
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbHasCompleted.html'>dbHasCompleted</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Note: </span>
 <span class='co'># - Require AWS Account to run below example.</span>
 <span class='co'># - Different connection methods can be used please see `RAthena::dbConnect` documnentation</span>
@@ -192,15 +192,12 @@
 
 <span class='co'># Get Column information from query</span>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"select * from information_schema.tables"</span>)
-<span class='fu'>dbColumnInfo</span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;      field_name    type
-#&gt; 1 table_catalog varchar
-#&gt; 2  table_schema varchar
-#&gt; 3    table_name varchar
-#&gt; 4    table_type varchar</div><div class='input'><span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
+<span class='fu'>dbColumnInfo</span>(<span class='no'>res</span>)
+<span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
 
 <span class='co'># Disconnect from Athena</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-<span class='co'># }</span></div></pre>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -216,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
