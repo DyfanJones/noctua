@@ -244,12 +244,12 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 
 <span class='co'># Create DDL for iris data.frame with partition</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
-               <span class='kw'>partition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"timestamp"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
+               <span class='kw'>partition</span> <span class='kw'>=</span> <span class='st'>"timestamp"</span>,
                <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>)
 
 <span class='co'># Create DDL for iris data.frame with partition and file.type parquet</span>
 <span class='fu'>sqlCreateTable</span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>,
-               <span class='kw'>partition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"timestamp"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
+               <span class='kw'>partition</span> <span class='kw'>=</span> <span class='st'>"timestamp"</span>,
                <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://path/to/athena/table"</span>,
                <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"parquet"</span>)
 
