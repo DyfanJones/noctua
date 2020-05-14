@@ -94,7 +94,7 @@ update_work_groupUpdates the workgroup with the specified name (link).
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -291,7 +291,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Note: </span>
 <span class='co'># - Require AWS Account to run below example.</span>
 <span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
@@ -302,20 +302,8 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
 
 <span class='co'># List current work group available</span>
-<span class='fu'>list_work_groups</span>(<span class='no'>con</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; [[1]]$Name
-#&gt; [1] "primary"
-#&gt; 
-#&gt; [[1]]$State
-#&gt; [1] "ENABLED"
-#&gt; 
-#&gt; [[1]]$Description
-#&gt; [1] ""
-#&gt; 
-#&gt; [[1]]$CreationTime
-#&gt; [1] "2019-08-22 15:14:47 GMT"
-#&gt; 
-#&gt; </div><div class='input'>
+<span class='fu'>list_work_groups</span>(<span class='no'>con</span>)
+
 <span class='co'># Create a new work group</span>
 <span class='no'>wg</span> <span class='kw'>&lt;-</span> <span class='fu'>create_work_group</span>(<span class='no'>con</span>,
                   <span class='st'>"demo_work_group"</span>,
@@ -323,34 +311,8 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
                    <span class='kw'>tags</span> <span class='kw'>=</span> <span class='fu'>tag_options</span>(<span class='kw'>key</span><span class='kw'>=</span> <span class='st'>"demo_work_group"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"demo_01"</span>))
 
 <span class='co'># List work groups to see new work group</span>
-<span class='fu'>list_work_groups</span>(<span class='no'>con</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; [[1]]$Name
-#&gt; [1] "demo_work_group"
-#&gt; 
-#&gt; [[1]]$State
-#&gt; [1] "ENABLED"
-#&gt; 
-#&gt; [[1]]$Description
-#&gt; [1] "This is a demo work group"
-#&gt; 
-#&gt; [[1]]$CreationTime
-#&gt; [1] "2020-04-22 07:43:51 GMT"
-#&gt; 
-#&gt; 
-#&gt; [[2]]
-#&gt; [[2]]$Name
-#&gt; [1] "primary"
-#&gt; 
-#&gt; [[2]]$State
-#&gt; [1] "ENABLED"
-#&gt; 
-#&gt; [[2]]$Description
-#&gt; [1] ""
-#&gt; 
-#&gt; [[2]]$CreationTime
-#&gt; [1] "2019-08-22 15:14:47 GMT"
-#&gt; 
-#&gt; </div><div class='input'>
+<span class='fu'>list_work_groups</span>(<span class='no'>con</span>)
+
 <span class='co'># get meta data from work group</span>
 <span class='no'>wg</span> <span class='kw'>&lt;-</span> <span class='fu'>get_work_group</span>(<span class='no'>con</span>, <span class='st'>"demo_work_group"</span>)
 
@@ -367,7 +329,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 
 <span class='co'># Disconect from Athena</span>
 <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-<span class='co'># }</span></div></pre>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -383,7 +345,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

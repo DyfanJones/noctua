@@ -21,7 +21,7 @@ Frees all resources (local and Athena) associated with result set. It does this 
 stopping query execution if still running and removed the connection resource locally.
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation

@@ -32,7 +32,7 @@ follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/
 
 \item{partition}{Partition Athena table}
 
-\item{s3.location}{location to store output file, must be in s3 uri fromat for example ("s3://mybucket/data/").}
+\item{s3.location}{location to store output file, must be in s3 uri format for example ("s3://mybucket/data/").}
 
 \item{file.type}{File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 \code{"NULL"} will let Athena set the file type for you.}

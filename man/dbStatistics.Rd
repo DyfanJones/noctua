@@ -22,7 +22,7 @@ dbStatistics(res, ...)
 Returns AWS Athena Statistics from execute queries \code{\link{dbSendQuery}}
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `RAthena::dbConnect` documnentation

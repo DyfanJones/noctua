@@ -44,7 +44,7 @@ dbDataType(athena(), list(raw(10), raw(20)))
 vapply(iris, function(x) dbDataType(noctua::athena(), x),
        FUN.VALUE = character(1), USE.NAMES = TRUE)
 
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation

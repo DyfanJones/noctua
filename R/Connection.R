@@ -100,7 +100,7 @@ setMethod(
 #' @return \code{dbDisconnect()} returns \code{TRUE}, invisibly.
 #' @seealso \code{\link[DBI]{dbDisconnect}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -137,7 +137,7 @@ setMethod(
 #' @return \code{dbIsValid()} returns logical scalar, \code{TRUE} if the object (\code{dbObj}) is valid, \code{FALSE} otherwise.
 #' @seealso \code{\link[DBI]{dbIsValid}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -185,7 +185,7 @@ setMethod(
 #' @return Returns \code{AthenaResult} s4 class.
 #' @seealso \code{\link[DBI]{dbSendQuery}}, \code{\link[DBI]{dbSendStatement}}, \code{\link[DBI]{dbExecute}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -275,7 +275,7 @@ setMethod(
 #' vapply(iris, function(x) dbDataType(noctua::athena(), x),
 #'        FUN.VALUE = character(1), USE.NAMES = TRUE)
 #' 
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -635,7 +635,7 @@ setMethod(
 #' @return \code{dbGetQuery()} returns a dataframe.
 #' @seealso \code{\link[DBI]{dbGetQuery}}
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -677,7 +677,7 @@ setMethod(
 #' @return a named list
 #' @seealso \code{\link[DBI]{dbGetInfo}}
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #' # Note: 
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -832,7 +832,7 @@ setMethod(
 #'            follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/select.html}{link}
 #' @param name Name of destination table
 #' @param partition Partition Athena table
-#' @param s3.location location to store output file, must be in s3 uri fromat for example ("s3://mybucket/data/").
+#' @param s3.location location to store output file, must be in s3 uri format for example ("s3://mybucket/data/").
 #' @param file.type File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 #'                  \code{"NULL"} will let Athena set the file type for you.
 #' @param compress Compress \code{name}, currently can only compress ["parquet", "orc"] (\href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS})

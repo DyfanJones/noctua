@@ -25,7 +25,7 @@ if entire dataframe is required use \code{n = -1} or \code{n = Inf}.}
 Currently returns the top n elements (rows) from result set or returns entire table from Athena.
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation

@@ -1,5 +1,5 @@
 pandoc: 2.7.2
-pkgdown: 1.5.0
+pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   aws_athena_query_caching: aws_athena_query_caching.html
@@ -8,5 +8,5 @@ articles:
   convert_and_save_cost: convert_and_save_cost.html
   getting_started: getting_started.html
   how_to_retry: how_to_retry.html
-last_built: 2020-04-22T07:43Z
+last_built: 2020-05-14T13:59Z
 

@@ -12,7 +12,7 @@ With most applications that connect to an API, unnecessary exceptions can be ret
 
 # How to handle `noctua`'s retry?
 
-By default `noctua` performs a retry noisily, this means it will report the exception it has encounted and let the user know how long `noctua` will wait until it retries again. This is reported in the following format:
+By default `noctua` performs a retry noisily, this means it will report the exception it has encountered and let the user know how long `noctua` will wait until it retries again. This is reported in the following format:
 
 ```r
 {expection message} + "Request failed. Retrying in " + {wait time}  + " seconds..."

@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -149,9 +149,9 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-1609000" class="section level1">
-<h1 class="page-header" data-toc-text="1.6.0.9000">
-<a href="#noctua-1609000" class="anchor"></a>noctua 1.6.0.9000<small> Unreleased </small>
+    <div id="noctua-170" class="section level1">
+<h1 class="page-header" data-toc-text="1.7.0">
+<a href="#noctua-170" class="anchor"></a>noctua 1.7.0<small> Unreleased </small>
 </h1>
 <div id="new-feature" class="section level2">
 <h2 class="hasAnchor">
@@ -175,6 +175,7 @@
 <code>dbConvertTable</code> brings <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> functionality to base package, allowing <code>noctua</code> to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/37"># 37</a>).</li>
 <li>Extended <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> to give same functionality of <code>dbConvertTable</code>
 </li>
+<li>Added <code>region_name</code> check before making a connection to AWS Athena (<a href="https://github.com/DyfanJones/RAthena/issues/110">RAthena: # 110</a>)</li>
 </ul>
 </div>
 <div id="bug" class="section level2">
@@ -196,6 +197,7 @@
 <code>dbWriteTable</code> added support ddl structures for user who have created ddl’s outside of <code>noctua</code>
 </li>
 <li>added vignette around how to use <code>noctua</code> retry functionality</li>
+<li>Moved all examples requiring credentials to <code>\dontrun</code> (<a href='https://github.com/DyfanJones/noctua/issues/91'>#91</a>)</li>
 </ul>
 </div>
 </div>
@@ -346,7 +348,7 @@
 <ul>
 <li>Dependency data.table now restricted to (&gt;=1.12.4) due to file compression being added to <code>fwrite</code> (&gt;=1.12.4) <a href="https://github.com/Rdatatable/data.table/blob/master/NEWS.md" class="uri">https://github.com/Rdatatable/data.table/blob/master/NEWS.md</a>
 </li>
-<li>R functions <code>paste</code>/<code>paste0</code> would use default <code>dplyr:sql-translate-env</code> (<code>concat_ws</code>). <code>paste0</code> now uses Presto’s <code>concat</code> function and <code>paste</code> now uses pipes to get extra flexible for custom separating values.</li>
+<li>R functions <code>paste</code>/<code>paste0</code> would use default <code>dplyr:sql-translate-env</code> (<code>concat_ws</code>). <code>paste0</code> now uses Presto’s <code>concat</code> function and <code>paste</code> now uses pipes to get extra flexibility for custom separating values.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="r"><span class="co"># R code:</span>
 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"hi"</span>, <span class="st">"bye"</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"-"</span>)
@@ -751,7 +753,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

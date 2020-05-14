@@ -57,7 +57,7 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 Creates an interface to compose \code{CREATE EXTERNAL TABLE}.
 }
 \examples{
-\donttest{
+\dontrun{
 # Note: 
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
@@ -72,12 +72,12 @@ sqlCreateTable(con, "iris", iris, s3.location = "s3://path/to/athena/table")
 
 # Create DDL for iris data.frame with partition
 sqlCreateTable(con, "iris", iris, 
-               partition = c("timestamp" = format(Sys.Date(), "\%Y\%m\%d")),
+               partition = "timestamp",
                s3.location = "s3://path/to/athena/table")
                
 # Create DDL for iris data.frame with partition and file.type parquet
 sqlCreateTable(con, "iris", iris, 
-               partition = c("timestamp" = format(Sys.Date(), "\%Y\%m\%d")),
+               partition = "timestamp",
                s3.location = "s3://path/to/athena/table",
                file.type = "parquet")
 
