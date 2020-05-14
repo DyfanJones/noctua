@@ -832,7 +832,7 @@ setMethod(
 #'            follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/select.html}{link}
 #' @param name Name of destination table
 #' @param partition Partition Athena table
-#' @param s3.location location to store output file, must be in s3 uri fromat for example ("s3://mybucket/data/").
+#' @param s3.location location to store output file, must be in s3 uri format for example ("s3://mybucket/data/").
 #' @param file.type File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 #'                  \code{"NULL"} will let Athena set the file type for you.
 #' @param compress Compress \code{name}, currently can only compress ["parquet", "orc"] (\href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS})
