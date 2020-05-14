@@ -31,16 +31,7 @@ dbFetch(res, 5000)
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## R devtools::check_rhub() results
-0 errors ✓ | 0 warnings ✓ | 1 note x
-
-Maintainer: 'Dyfan Jones <dyfan.r.jones@gmail.com>'
-
-Number of updates in past 6 months: 7
-
-0 errors ✓ | 0 warnings ✓ | 1 note x
-
-**Author's Notes**
-* Apologies for the fast re-submission of this package. This release contains package resilience when working AWS APIs
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## unit tests (using testthat) results
 * OK:       127
