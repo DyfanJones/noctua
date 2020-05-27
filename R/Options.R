@@ -17,7 +17,8 @@ athena_option_env$retry_quiet <- FALSE
 #'
 #' \code{noctua_options()} provides a method to change the backend. This includes changing the file parser,
 #'  whether \code{noctua} should cache query ids locally and number of retries on a failed api call.
-#' @param file_parser Method to read and write tables to Athena, currently defaults to data.table
+#' @param file_parser Method to read and write tables to Athena, currently defaults to \code{data.table}. The file_parser also
+#'                    determines the data format returned for example \code{data.table} will return \code{data.table} and \code{vroom} will return \code{tibble}.
 #' @param cache_size Number of queries to be cached. Currently only support caching up to 100 distinct queries.
 #' @param clear_cache Clears all previous cached query metadata
 #' @param retry Maximum number of requests to attempt.
