@@ -24,7 +24,7 @@ test_that("Returning meta data",{
   con_info_exp = names(dbGetInfo(con))
   list_tbl1 = any(grepl("test_df", dbListTables(con, "default")))
   list_tbl2 = nrow(dbGetTables(con, "default")[TableName == "test_df"]) == 1
-  partition = grepl("timestamp", dbGetPartition(con, "test_df")[["var1"]])
+  partition = grepl("timestamp", dbGetPartition(con, "test_df")[[1]])
   db_show_ddl = gsub(", \n  'transient_lastDdlTime'.*",")", dbShow(con, "test_df"))
   db_info = dbGetInfo(con)
   
