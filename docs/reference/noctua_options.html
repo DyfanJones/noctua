@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0.9000</span>
       </span>
     </div>
 
@@ -170,7 +170,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>file_parser</th>
-      <td><p>Method to read and write tables to Athena, currently defaults to data.table</p></td>
+      <td><p>Method to read and write tables to Athena, currently defaults to <code>data.table</code>. The file_parser also
+determines the data format returned for example <code>data.table</code> will return <code>data.table</code> and <code>vroom</code> will return <code>tibble</code>.</p></td>
     </tr>
     <tr>
       <th>cache_size</th>

@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0.9000</span>
       </span>
     </div>
 
@@ -197,7 +197,7 @@
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
                  <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)
 
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"SELECT * FROM one_row"</span>)
+<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"SELECT * FROM one_row"</span>)
 <span class="fu"><a href="reference/dbFetch.html">dbFetch</a></span>(<span class="no">res</span>)
 <span class="fu"><a href="reference/dbClearResult.html">dbClearResult</a></span>(<span class="no">res</span>)</pre></div>
 <p>To retrieve query in 1 step.</p>
@@ -229,7 +229,7 @@
       with serdeproperties ( 'paths'='requestBeginTime, adId, impressionId, referrer, userAgent, userCookie, ip' )
   LOCATION 's3://elasticmapreduce/samples/hive-ads/tables/impressions/' ;"</span>
 
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="no">query</span>)</pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="no">query</span>)</pre></div>
 <p>noctua has 2 extra function to return extra information around Athena tables: <code>dbGetParitiions</code> and <code>dbShow</code></p>
 <p><code>dbGetPartitions</code> will return all the partitions (returns data.frame):</p>
 <div class="sourceCode" id="cb11"><pre class="r"><span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/dbGetPartition.html">dbGetPartition</a></span>(<span class="no">con</span>, <span class="st">"impressions"</span>)</pre></div>
@@ -249,11 +249,11 @@
 <div class="sourceCode" id="cb14"><pre class="r"><span class="co"># Check existing tables</span>
 <span class="fu"><a href="reference/dbListTables.html">dbListTables</a></span>(<span class="no">con</span>)
 <span class="co"># Upload iris to Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>,
+<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>,
              <span class="kw">partition</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"TIMESTAMP"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span>(), <span class="st">"%Y%m%d"</span>)))
 
 <span class="co"># Read in iris from Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html">dbReadTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbReadTable.html">dbReadTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
 
 <span class="co"># Check new existing tables in Athena</span>
 <span class="fu"><a href="reference/dbListTables.html">dbListTables</a></span>(<span class="no">con</span>)
