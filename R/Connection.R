@@ -820,7 +820,7 @@ setMethod(
       Table <- gsub(".*\\.", "" , name)
     } else {dbms.name <- conn@info$dbms.name
     Table <- name}
-    SQL(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", dbms.name,".",Table))[[1]])
+    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", dbms.name,".",Table))[[1]], collapse = "\n"))
   })
 
 

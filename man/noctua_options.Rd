@@ -13,7 +13,8 @@ noctua_options(
 )
 }
 \arguments{
-\item{file_parser}{Method to read and write tables to Athena, currently defaults to data.table}
+\item{file_parser}{Method to read and write tables to Athena, currently defaults to \code{data.table}. The file_parser also
+determines the data format returned for example \code{data.table} will return \code{data.table} and \code{vroom} will return \code{tibble}.}
 
 \item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries.}
 

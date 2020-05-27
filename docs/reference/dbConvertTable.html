@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0.9000</span>
       </span>
     </div>
 
@@ -179,7 +179,7 @@
     </tr>
     <tr>
       <th>obj</th>
-      <td><p>Athena table or <code>SQL</code> DML query to be converted. For <code>SQL</code>, the query need to be wrapped with <code><a href='https://dbi.r-dbi.org/reference/SQL.html'>DBI::SQL()</a></code> and 
+      <td><p>Athena table or <code>SQL</code> DML query to be converted. For <code>SQL</code>, the query need to be wrapped with <code><a href='https://rdrr.io/pkg/DBI/man/SQL.html'>DBI::SQL()</a></code> and 
 follow AWS Athena DML format <a href='https://docs.aws.amazon.com/athena/latest/ug/select.html'>link</a></p></td>
     </tr>
     <tr>
@@ -230,7 +230,7 @@ follow AWS Athena DML format <a href='https://docs.aws.amazon.com/athena/latest/
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='fu'><a href='athena.html'>athena</a></span>())
 
 <span class='co'># write iris table to Athena in defualt delimited format                 </span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>)
 
 <span class='co'># convert delimited table to parquet</span>
 <span class='fu'>dbConvertTable</span>(<span class='no'>con</span>,
@@ -241,7 +241,7 @@ follow AWS Athena DML format <a href='https://docs.aws.amazon.com/athena/latest/
 <span class='co'># Create partitioned table from non-partitioned </span>
 <span class='co'># iris table using SQL DML query</span>
 <span class='fu'>dbConvertTable</span>(<span class='no'>con</span>,
-               <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/SQL.html'>SQL</a></span>(<span class='st'>"select 
+               <span class='kw'>obj</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/SQL.html'>SQL</a></span>(<span class='st'>"select 
                             iris.*, 
                             date_format(current_date, '%Y%m%d') as time_stamp 
                           from iris"</span>),

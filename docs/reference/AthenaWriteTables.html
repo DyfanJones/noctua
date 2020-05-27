@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0.9000</span>
       </span>
     </div>
 
@@ -292,7 +292,7 @@ when loading file in parquet format. For more information please go to <a href='
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable()</a></code> returns <code>TRUE</code>, invisibly. If the table exists, and both append and overwrite
+    <p><code><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable()</a></code> returns <code>TRUE</code>, invisibly. If the table exists, and both append and overwrite
         arguments are unset, or append = TRUE and the data frame with the new data has different column names,
         an error is raised; the remote table remains unchanged.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -314,12 +314,12 @@ when loading file in parquet format. For more information please go to <a href='
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
 
 <span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
+<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>, <span class='no'>mtcars</span>,
              <span class='kw'>partition</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"TIMESTAMP"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
              <span class='kw'>s3.location</span> <span class='kw'>=</span> <span class='st'>"s3://mybucket/data/"</span>)
 
 <span class='co'># Read entire table from Athena</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
 
 <span class='co'># List all tables in Athena after uploading new table to Athena</span>
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
@@ -328,10 +328,10 @@ when loading file in parquet format. For more information please go to <a href='
 <span class='fu'><a href='dbExistsTable.html'>dbExistsTable</a></span>(<span class='no'>con</span>, <span class='st'>"mtcars"</span>)
 
 <span class='co'># using default s3.location</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbWriteTable.html'>dbWriteTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>, <span class='no'>iris</span>)
 
 <span class='co'># Read entire table from Athena</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbReadTable.html'>dbReadTable</a></span>(<span class='no'>con</span>, <span class='st'>"iris"</span>)
 
 <span class='co'># List all tables in Athena after uploading new table to Athena</span>
 <span class='fu'><a href='dbListTables.html'>dbListTables</a></span>(<span class='no'>con</span>)
