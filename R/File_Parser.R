@@ -1,6 +1,6 @@
 # ==========================================================================
 # read in method
-athena_read <- function(method, File, ...) {
+athena_read <- function(method, File, athena_types, ...) {
   UseMethod("athena_read")
 }
 
@@ -17,7 +17,7 @@ athena_read.athena_data.table <-
     # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
     for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
     
-    output
+    return(output)
   }
 
 athena_read.athena_vroom <- 
@@ -27,7 +27,40 @@ athena_read.athena_vroom <-
 
     output <- vroom(File, delim = ",", col_types = Type, progress = FALSE, trim_ws = FALSE, altrep = TRUE)
 
-    output
+    return(output)
+  }
+
+# Read in .txt files line by line and return them as a data.frame
+athena_read_lines <- function(method, File, athena_types, ...) {
+  UseMethod("athena_read_lines")
+}
+
+# Keep data.table formatting
+athena_read_lines.athena_data.table <-
+  function(method, File, athena_types, ...){
+    Type2 <- Type <- AthenaToRDataType(method, athena_types)
+    # Type2 is to handle issue with data.table fread 
+    Type2[Type2 %in% "POSIXct"] <- "character"
+    
+    # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
+    output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), sep = "\n", showProgress = F, na.strings="", header = F, strip.white= F)
+    # formatting POSIXct: from string to POSIXct
+    for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]]))
+    # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
+    for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
+    
+    return(output)
+  }
+
+athena_read_lines.athena_vroom <- 
+  function(method, File, athena_types, ...){
+    vroom <- pkg_method("vroom", "vroom")
+    
+    Type <- AthenaToRDataType(method, athena_types)
+    
+    output <- vroom(File, col_names = names(Type), col_types = unname(Type), progress = FALSE, altrep = TRUE, trim_ws = FALSE, delim = "\n")
+    
+    return(output)
   }
 
 # ==========================================================================
