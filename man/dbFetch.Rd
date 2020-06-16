@@ -13,8 +13,7 @@
 \code{\link[DBI:dbSendQuery]{dbSendQuery()}}.}
 
 \item{n}{maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
-Some implementations may recognize other special values. Currently chunk sizes range from 0 to 999, 
-if entire dataframe is required use \code{n = -1} or \code{n = Inf}.}
+Some implementations may recognize other special values. If entire dataframe is required use \code{n = -1} or \code{n = Inf}.}
 
 \item{...}{Other arguments passed on to methods.}
 }
