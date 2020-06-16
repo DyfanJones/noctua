@@ -164,13 +164,12 @@
     <tr>
       <th>res</th>
       <td><p>An object inheriting from DBIResult, created by
-<code><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery()</a></code>.</p></td>
+<code><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery()</a></code>.</p></td>
     </tr>
     <tr>
       <th>n</th>
       <td><p>maximum number of records to retrieve per fetch. Use <code>n = -1</code> or <code>n = Inf</code> to retrieve all pending records.
-Some implementations may recognize other special values. Currently chunk sizes range from 0 to 999, 
-if entire dataframe is required use <code>n = -1</code> or <code>n = Inf</code>.</p></td>
+Some implementations may recognize other special values. If entire dataframe is required use <code>n = -1</code> or <code>n = Inf</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -196,7 +195,7 @@ if entire dataframe is required use <code>n = -1</code> or <code>n = Inf</code>.
 <span class='co'># Demo connection to Athena using profile name </span>
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
 
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbFetch</span>(<span class='no'>res</span>)
 <span class='fu'><a href='dbClearResult.html'>dbClearResult</a></span>(<span class='no'>res</span>)
 

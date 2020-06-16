@@ -198,7 +198,7 @@ or a DBIResult</p></td>
 <span class='fu'>dbIsValid</span>(<span class='no'>con</span>)
 
 <span class='co'># Check is query is valid</span>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbIsValid</span>(<span class='no'>res</span>)
 
 <span class='co'># Check if query is valid after clearing result</span>

@@ -198,7 +198,7 @@ or a DBIResult</p></td>
 <span class='no'>metadata</span> <span class='kw'>&lt;-</span> <span class='fu'>dbGetInfo</span>(<span class='no'>con</span>)
 
 <span class='co'># Return metadata from Athena query object</span>
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbGetInfo</span>(<span class='no'>res</span>)
 
 <span class='co'># Clear result</span>

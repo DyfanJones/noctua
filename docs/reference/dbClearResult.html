@@ -176,6 +176,10 @@ stopping query execution if still running and removed the connection resource lo
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>dbClearResult()</code> returns <code>TRUE</code>, invisibly.</p>
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
+      It is better use query caching <code><a href='noctua_options.html'>noctua_options</a></code> so that the warning doesn't repeatly show.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbIsValid.html'>dbIsValid</a></code></p></div>
@@ -191,7 +195,7 @@ stopping query execution if still running and removed the connection resource lo
 <span class='co'># Demo connection to Athena using profile name </span>
 <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
 
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
 <span class='fu'>dbClearResult</span>(<span class='no'>res</span>)
 
 <span class='co'># Check if connection if valid after closing connection</span>
