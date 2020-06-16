@@ -33,6 +33,9 @@ setClass(
 #' 
 #' Frees all resources (local and Athena) associated with result set. It does this by removing query output in AWS S3 Bucket,
 #' stopping query execution if still running and removed the connection resource locally.
+#' 
+#' @note If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
+#'       It is better use query caching \code{\link{noctua_options}} so that the warning doesn't repeatly show.
 #' @name dbClearResult
 #' @inheritParams DBI::dbClearResult
 #' @return \code{dbClearResult()} returns \code{TRUE}, invisibly.
@@ -103,8 +106,7 @@ setMethod(
 #' Currently returns the top n elements (rows) from result set or returns entire table from Athena.
 #' @name dbFetch
 #' @param n maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
-#'          Some implementations may recognize other special values. Currently chunk sizes range from 0 to 999, 
-#'          if entire dataframe is required use \code{n = -1} or \code{n = Inf}.
+#'          Some implementations may recognize other special values. If entire dataframe is required use \code{n = -1} or \code{n = Inf}.
 #' @inheritParams DBI::dbFetch
 #' @return \code{dbFetch()} returns a data frame.
 #' @seealso \code{\link[DBI]{dbFetch}}

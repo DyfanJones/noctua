@@ -195,7 +195,7 @@
 <span class="co"># [1] "1.5.1"</span>
 
 <span class="co"># create table to AWS Athena</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)
 
 <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris limit 10"</span>)
 <span class="co"># Info: (Data scanned: 860 Bytes)</span>
