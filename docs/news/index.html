@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1</span>
       </span>
     </div>
 
@@ -149,13 +149,13 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-1709000" class="section level1">
-<h1 class="page-header" data-toc-text="1.7.0.9000">
-<a href="#noctua-1709000" class="anchor"></a>noctua 1.7.0.9000<small> Unreleased </small>
+    <div id="noctua-171" class="section level1">
+<h1 class="page-header" data-toc-text="1.7.1">
+<a href="#noctua-171" class="anchor"></a>noctua 1.7.1<small> Unreleased </small>
 </h1>
-<div id="breaking-change" class="section level2">
+<div id="minor-change" class="section level2">
 <h2 class="hasAnchor">
-<a href="#breaking-change" class="anchor"></a>Breaking Change</h2>
+<a href="#minor-change" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>Fixed issue where <code>noctua</code> would return a <code>data.frame</code> for utility <code>SQL</code> queries regardless of backend file parser. This is due to <code>AWS Athena</code> outputting <code>SQL UTILITY</code> queries as a text file that required to be read in line by line. Now <code>noctua</code> will return the correct data format based on file parser set in <code>noctua_options</code> for example: <code><a href="../reference/noctua_options.html">noctua_options("vroom")</a></code> will return <code>tibbles</code>.</li>
 </ul>
@@ -516,9 +516,9 @@
 <li>Due to help from <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a>, <code>dbRemoveTable</code> can now remove S3 files for AWS Athena table being removed.</li>
 </ul>
 </div>
-<div id="minor-change" class="section level2">
+<div id="minor-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-1" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>Added AWS_ATHENA_WORK_GROUP environmental variable support</li>
 <li>Removed <code>tolower</code> conversion due to request (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
@@ -541,8 +541,8 @@
 <span class="no">X</span> <span class="kw">&lt;-</span> <span class="fl">1e8</span>
 <span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">w</span> <span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">X</span>),
                  <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">X</span>,
-                 <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
-                 <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
+                 <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
+                 <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
 <span class="co"># upload dataframe with different splits</span>
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># no splits</span>
@@ -558,15 +558,15 @@
 <span class="no">X</span> <span class="kw">&lt;-</span> <span class="fl">1e8</span>
 <span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">w</span> <span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">X</span>),
                  <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">X</span>,
-                 <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
-                 <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
+                 <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
+                 <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># default will now split compressed file into 20 equal size files.</span></pre></div>
 <p>Added information message to inform user about what files have been added to S3 location if user is overwriting an Athena table.</p>
 </div>
-<div id="minor-change-1" class="section level2">
+<div id="minor-change-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-1" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>
 <code>copy_to</code> method now supports compress and max_batch, to align with <code>dbWriteTable</code>
@@ -621,9 +621,9 @@
 <h1 class="page-header" data-toc-text="1.2.0">
 <a href="#noctua-120" class="anchor"></a>noctua 1.2.0<small> 2019-11-14 </small>
 </h1>
-<div id="minor-change-2" class="section level2">
+<div id="minor-change-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-3" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>
 <code>s3.location</code> parameter is <code>dbWriteTable</code> can now be made nullable</li>
@@ -664,9 +664,9 @@
 </li>
 </ul>
 </div>
-<div id="minor-change-3" class="section level2">
+<div id="minor-change-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-3" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-4" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>
 <code>sqlCreateTable</code> info message will now only inform user if colnames have changed and display the column name that have changed</li>
@@ -705,9 +705,9 @@
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>
 </div>
-<div id="minor-change-4" class="section level2">
+<div id="minor-change-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-4" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-5" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>dependency <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
 </ul>
