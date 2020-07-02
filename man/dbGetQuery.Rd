@@ -26,7 +26,7 @@ Send query, retrieve results and then clear result set
 }
 \note{
 If the user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
-      It is better use query caching \code{\link{noctua_options}} so that the warning doesn't repeatly show.
+      It is better use query caching \code{\link{noctua_options}} so that the warning doesn't repeatedly show.
 }
 \examples{
 \dontrun{

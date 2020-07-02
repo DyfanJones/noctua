@@ -1,9 +1,9 @@
-# noctua 1.7.0.9000
-## Breaking Change
+# noctua 1.7.1
+## Minor Change
 * Fixed issue where `noctua` would return a `data.frame` for utility `SQL` queries regardless of backend file parser. This is due to `AWS Athena` outputting `SQL UTILITY` queries as a text file that required to be read in line by line. Now `noctua` will return the correct data format based on file parser set in `noctua_options` for example: `noctua_options("vroom")` will return `tibbles`.
 
 ## Documentation:
-* Added documentation to highlight behavour `dbClearResult` when user doesn't have permission to delete AWS S3 objects (#96)
+* Added documentation to highlight behaviour `dbClearResult` when user doesn't have permission to delete AWS S3 objects (#96)
 
 # noctua 1.7.0
 ## New Feature
