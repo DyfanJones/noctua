@@ -308,7 +308,7 @@
 <a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
-<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
+<code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://rdrr.io/pkg/readr/man/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">readr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">microbenchmark</span>)
@@ -321,7 +321,7 @@
     <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">X</span>,
     <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
     <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
-<span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span>(<span class="no">df</span>, <span class="st">"test.csv"</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/readr/man/write_delim.html">write_csv</a></span>(<span class="no">df</span>, <span class="st">"test.csv"</span>)
 
 <span class="co"># read in text file into raw format</span>
 <span class="no">obj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readBin.html">readBin</a></span>(<span class="st">"test.csv"</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">"raw"</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.info.html">file.size</a></span>(<span class="st">"test.csv"</span>))
@@ -347,7 +347,7 @@
 
 
 <span class="fu">microbenchmark</span>(<span class="kw">writeBin_loop</span> <span class="kw">=</span> <span class="fu">write_bin</span>(<span class="no">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()),
-               <span class="kw">readr</span> <span class="kw">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html">write_file</a></span>(<span class="no">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()),
+               <span class="kw">readr</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/readr/man/read_file.html">write_file</a></span>(<span class="no">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()),
                <span class="kw">times</span> <span class="kw">=</span> <span class="fl">5</span>)
 
 <span class="co"># Unit: seconds</span>
