@@ -94,7 +94,7 @@ NOTE: If you have set any environmental variables in .Renviron please restart yo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.1.9000</span>
       </span>
     </div>
 
@@ -200,6 +200,7 @@ of supported environment variables:</p><ul>
   <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
   <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>keyboard_interrupt</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -274,6 +275,10 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
       <th>region_name</th>
       <td><p>Default region when creating new connections. Please refer to <a href='https://docs.aws.amazon.com/general/latest/gr/rande.html'>link</a> for 
 AWS region codes (region code example: Region = EU (Ireland)     <code> region_name = "eu-west-1"</code>)</p></td>
+    </tr>
+    <tr>
+      <th>keyboard_interrupt</th>
+      <td><p>Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>...</th>
