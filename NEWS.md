@@ -1,3 +1,19 @@
+# noctua 1.7.1.9000
+## New Feature
+* noctua now supports Keyboard Interrupt and will stop AWS Athena running the query when the query has been interrupted. To keep the functionality of AWS Athena running when `R` has been interrupt a new parameter has been added to `dbConnect`, `keyboard_interrupt`. Example:
+
+```r
+# Stop AWS Athena when R has been interrupted:
+
+con <- dbConnect(noctua::athena())
+
+# Let AWS Athena keep running when R has been interrupted:
+
+con <- dbConnect(noctua::athena(),
+                 keyboard_interrupt = F)
+```
+
+
 # noctua 1.7.1
 ## Minor Change
 * Fixed issue where `noctua` would return a `data.frame` for utility `SQL` queries regardless of backend file parser. This is due to `AWS Athena` outputting `SQL UTILITY` queries as a text file that required to be read in line by line. Now `noctua` will return the correct data format based on file parser set in `noctua_options` for example: `noctua_options("vroom")` will return `tibbles`.
