@@ -90,6 +90,7 @@ setMethod(
 #' @param s3_staging_dir The location in Amazon S3 where your query results are stored, such as \code{s3://path/to/query/bucket/}
 #' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
 #'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
+#' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}
 #' @param ... other parameters for \code{paws} session
 #' @aliases dbConnect
 #' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
@@ -137,7 +138,9 @@ setMethod(
            role_session_name= sprintf("noctua-session-%s", as.integer(Sys.time())),
            duration_seconds = 3600L,
            s3_staging_dir = NULL,
-           region_name = NULL, ...) {
+           region_name = NULL,
+           keyboard_interrupt = TRUE,
+           ...) {
     
     # assert checks on parameters
     stopifnot(is.null(aws_access_key_id) || is.character(aws_access_key_id),
@@ -152,7 +155,8 @@ setMethod(
               is.null(profile_name) || is.character(profile_name),
               is.null(role_arn) || is.character(role_arn),
               is.character(role_session_name),
-              is.numeric(duration_seconds))
+              is.numeric(duration_seconds),
+              is.logical(keyboard_interrupt))
     
     encryption_option <- switch(encryption_option[1],
                                 "NULL" = NULL,
@@ -193,7 +197,9 @@ setMethod(
                             s3_staging_dir = s3_staging_dir,
                             region_name = region_name,
                             profile_name = profile_name, 
-                            aws_expiration = aws_expiration,...)
+                            aws_expiration = aws_expiration,
+                            keyboard_interrupt = keyboard_interrupt,
+                            ...)
     # integrate with RStudio
     on_connection_opened(con)
     con
