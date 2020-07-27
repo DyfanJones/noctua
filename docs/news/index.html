@@ -204,7 +204,7 @@
 </ul>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"select * from some_big_table limit 10000"</span>)
+<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"select * from some_big_table limit 10000"</span>)
 <span class="fu"><a href="../reference/dbFetch.html">dbFetch</a></span>(<span class="no">res</span>, <span class="fl">5000</span>)</pre></div>
 <ul>
 <li>When creating/appending partitions to a table, <code>dbWriteTable</code> opts to use <code>alter table</code> instead of standard <code>msck repair table</code>. This is to improve performance when appending to tables with high number of existing partitions.</li>
@@ -259,7 +259,7 @@
 <span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
 
 <span class="co"># upload iris dataframe for removal test</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>)
 
 <span class="co"># Athena method</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="kw">confirm</span> <span class="kw">=</span> <span class="no">T</span>))
@@ -267,7 +267,7 @@
 <span class="co"># 0.247   0.091   2.243 </span>
 
 <span class="co"># upload iris dataframe for removal test</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>)
 
 <span class="co"># Glue method</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="kw">confirm</span> <span class="kw">=</span> <span class="no">T</span>))
@@ -279,7 +279,7 @@
 </ul>
 <div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
 <span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">RAthena</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span>())
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>, <span class="kw">file.type</span> <span class="kw">=</span> <span class="st">"json"</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>, <span class="kw">file.type</span> <span class="kw">=</span> <span class="st">"json"</span>)
 <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris2"</span>)</pre></div>
 </div>
 <div id="bug-fix-1" class="section level2">
@@ -418,7 +418,7 @@
 <a href="#new-feature-3" class="anchor"></a>New Feature</h2>
 <ul>
 <li>
-<code>dbStatistics</code> is a wrapper around <code>paws</code> <code>get_query_execution</code> to return statistics for <code><a href="https://rdrr.io/pkg/DBI/man/dbSendQuery.html">noctua::dbSendQuery</a></code> results</li>
+<code>dbStatistics</code> is a wrapper around <code>paws</code> <code>get_query_execution</code> to return statistics for <code><a href="https://dbi.r-dbi.org/reference/dbSendQuery.html">noctua::dbSendQuery</a></code> results</li>
 <li>
 <code>dbGetQuery</code> has new parameter <code>statistics</code> to print out <code>dbStatistics</code> before returning Athena results.</li>
 <li>
@@ -565,9 +565,9 @@
                  <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
 <span class="co"># upload dataframe with different splits</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># no splits</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split2"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fl">0.05</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># 20 splits</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split3"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fl">0.1</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># 10 splits</span></pre></div>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># no splits</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split2"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fl">0.05</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># 20 splits</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split3"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fl">0.1</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># 10 splits</span></pre></div>
 <p>AWS Athena performance results from AWS console (query executed: <code>select count(*) from ....</code> ):</p>
 <ul>
 <li>test_split1: (Run time: 38.4 seconds, Data scanned: 1.16 GB)</li>
@@ -581,7 +581,7 @@
                  <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
                  <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># default will now split compressed file into 20 equal size files.</span></pre></div>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># default will now split compressed file into 20 equal size files.</span></pre></div>
 <p>Added information message to inform user about what files have been added to S3 location if user is overwriting an Athena table.</p>
 </div>
 <div id="minor-change-2" class="section level2">
@@ -659,7 +659,7 @@
 
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
 
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)</pre></div>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)</pre></div>
 </div>
 <div id="bug-fix-5" class="section level2">
 <h2 class="hasAnchor">

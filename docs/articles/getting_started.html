@@ -132,6 +132,22 @@
 
 <span class="co"># Dev version</span>
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"dyfanjones/noctua"</span>)</pre></body></html></div>
+<div id="docker-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#docker-example" class="anchor"></a>Docker Example:</h2>
+<p>To help with users wishing to run <code>noctua</code> in a <a href="https://hub.docker.com/">docker</a>, a simple docker file has been created <a href="https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile">here</a>. To set up the docker please refer to <a href="https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-temporary-credentials-docker/">link</a>. For demo purposes we will use the <a href="https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile">example docker</a> and run it locally:</p>
+<pre class="console"><code># build docker image
+docker build . -t noctua
+
+# start container with aws credentials passed from local
+docker run \
+      -e AWS_ACCESS_KEY_ID="$(aws configure get aws_access_key_id)" \
+      -e AWS_SECRET_ACCESS_KEY="$(aws configure get aws_secret_access_key)" \
+      -e AWS_SESSION_TOKEN="$(aws configure get aws_session_token)" \
+      -e AWS_REGION="$(aws configure get region)" \
+      -it noctua bash</code></pre>
+<p><strong>NOTE:</strong> <code>readr</code> isn’t required for <code>noctua</code>, however it has been included in the docker file to improve performance when querying AWS Athena.</p>
+</div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
@@ -139,7 +155,7 @@
 <div id="low---level-api" class="section level2">
 <h2 class="hasAnchor">
 <a href="#low---level-api" class="anchor"></a>Low - Level API:</h2>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
 
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
@@ -154,7 +170,7 @@
 <div id="dbi" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dbi" class="anchor"></a>DBI:</h2>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
 
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
 
@@ -195,7 +211,7 @@
 <span class="co"># [1] "1.5.1"</span>
 
 <span class="co"># create table to AWS Athena</span>
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)
 
 <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris limit 10"</span>)
 <span class="co"># Info: (Data scanned: 860 Bytes)</span>
@@ -214,7 +230,7 @@
 <div id="dplyr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dplyr" class="anchor"></a>dplyr:</h2>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 
 <span class="no">athena_iris</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
 
