@@ -40,7 +40,7 @@ docker run \
       -e AWS_SECRET_ACCESS_KEY="$(aws configure get aws_secret_access_key)" \
       -e AWS_SESSION_TOKEN="$(aws configure get aws_session_token)" \
       -e AWS_DEFAULT_REGION="$(aws configure get region)" \
-      -it noctua bash
+      -it noctua
 ```
 
 **NOTE:** `readr` isn't required for `noctua`, however it has been included in the docker file to improve performance when querying AWS Athena.
