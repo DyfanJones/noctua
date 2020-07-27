@@ -26,6 +26,25 @@ install.packages("noctua")
 remotes::install_github("dyfanjones/noctua")
 ```
 
+## Docker Example:
+
+To help with users wishing to run `noctua` in a [docker](https://hub.docker.com/), a simple docker file has been created [here](https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile). To set up the docker please refer to [link](https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-temporary-credentials-docker/). For demo purposes we will use the [example docker](https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile) and run it locally:
+
+```console
+# build docker image
+docker build . -t noctua
+
+# start container with aws credentials passed from local
+docker run \
+      -e AWS_ACCESS_KEY_ID="$(aws configure get aws_access_key_id)" \
+      -e AWS_SECRET_ACCESS_KEY="$(aws configure get aws_secret_access_key)" \
+      -e AWS_SESSION_TOKEN="$(aws configure get aws_session_token)" \
+      -e AWS_DEFAULT_REGION="$(aws configure get region)" \
+      -it noctua
+```
+
+**NOTE:** `readr` isn't required for `noctua`, however it has been included in the docker file to improve performance when querying AWS Athena.
+
 # Usage:
 
 ## Low - Level API:

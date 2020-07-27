@@ -144,13 +144,13 @@
 <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
 
 <span class="co"># create a temporary database to upload data into</span>
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"CREATE IF NOT EXISTS DATABASE temp"</span>)
+<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"CREATE IF NOT EXISTS DATABASE temp"</span>)
 <span class="fu"><a href="../reference/dbClearResult.html">dbClearResult</a></span>(<span class="no">res</span>)
 
 <span class="no">iris2</span> <span class="kw">&lt;-</span> <span class="no">iris</span>
 <span class="no">iris2</span>$<span class="no">time_stamp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span>(), <span class="st">"%Y%m%d"</span>)
 
-<span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"temp.iris_delim"</span>, <span class="no">iris2</span>)</pre></body></html></div>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"temp.iris_delim"</span>, <span class="no">iris2</span>)</pre></body></html></div>
 <p>However delimited file format isn’t the most cost effective when it comes to using AWS Athena. To overcome this we can convert this by using AWS Athena.</p>
 </div>
 <div id="convert-data-into-parquet-or-orc" class="section level2">
@@ -178,7 +178,7 @@
                <span class="kw">file.type</span> <span class="kw">=</span> <span class="st">"parquet"</span>)</pre></body></html></div>
 <p><code>noctua</code> even allows SQL queries to be converted into desired file format:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span>(<span class="no">con</span>,
-              <span class="kw">obj</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/DBI/man/SQL.html">SQL</a></span>(<span class="st">"select 
+              <span class="kw">obj</span> <span class="kw">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/SQL.html">SQL</a></span>(<span class="st">"select 
                           Sepal_Length,
                           Sepal_Width,
                           date_format(current_date, '%Y%m%d') as time_stamp 
@@ -192,7 +192,7 @@
 <a href="#insert-into-table-for-etl-processes" class="anchor"></a>Insert into table for ETL processes</h2>
 <p>As we have created partitioned data, we can easily insert into:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/DBI/man/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"insert into iris_orc_partition
+  <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"insert into iris_orc_partition
                   select 
                     Sepal_Length,
                     Sepal_Width, 
