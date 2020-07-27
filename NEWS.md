@@ -13,6 +13,7 @@ con <- dbConnect(noctua::athena(),
                  keyboard_interrupt = F)
 ```
 
+* Added "AWS_DEFAULT_REGION" to supported environmental variables: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#using-environment-variables
 
 # noctua 1.7.1
 ## Minor Change
