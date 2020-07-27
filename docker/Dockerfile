@@ -6,7 +6,7 @@ RUN sudo yum install -y https://repo.ius.io/ius-release-el7.rpm \
    && sudo yum update -y \
    && sudo yum install -y libcurl-devel libxml2-devel openssl-devel
    
-# Set up docker with aws credentials
+# get aws cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && sudo ./aws/install
