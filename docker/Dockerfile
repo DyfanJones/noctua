@@ -11,7 +11,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && unzip awscliv2.zip \
     && sudo ./aws/install
 
-# Install RAthena
+# Install noctua
 RUN R -e "install.packages(c('paws', 'readr', 'noctua'), repos='https://cran.rstudio.com/')"
 
 CMD ["R"]
