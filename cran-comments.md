@@ -1,14 +1,17 @@
 ## Release Summary
-This release brings new a feature to the package.
+This release brings in bug fixes.
 
-**New Features**
-* noctua now supports keyboard interrupt. `AWS Athena` queries will now be stop when a keyboard interrupt happens within R.
+**Bug Fix**
+* Provided uuid string to `ClientRequestToken`. This fixes the following errors:
+  * `Error: InvalidRequestException (HTTP 400). Idempotent parameters do not match`
+  * `Error: InvalidRequestException (HTTP 400). Could not find results`
+* `noctua_options` parameter `cache_size` now correctly uses the range (0,100)
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
 
 ## Test environments
-* local OS X install, R 4.0.0
+* local OS X install, R 4.0.2
 * rhub: windows-x86_64-devel, ubuntu-gcc-release, fedora-clang-devel
 
 ## R CMD check results (local)

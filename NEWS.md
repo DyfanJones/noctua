@@ -1,4 +1,4 @@
-# noctua 1.8.0.9000
+# noctua 1.8.1
 ## Bug Fix
 * Pass a uuid string to `start_query_execution` parameter `ClientRequestToken`. This so that the `ClientRequestToken` is "A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once)." (#104)
 * Allowed cache_size to equal 100
