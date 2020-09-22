@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
       </span>
     </div>
 
@@ -149,6 +149,19 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="noctua-181" class="section level1">
+<h1 class="page-header" data-toc-text="1.8.1">
+<a href="#noctua-181" class="anchor"></a>noctua 1.8.1<small> Unreleased </small>
+</h1>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
+<ul>
+<li>Pass a uuid string to <code>start_query_execution</code> parameter <code>ClientRequestToken</code>. This so that the <code>ClientRequestToken</code> is “A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once).” (<a href='https://github.com/DyfanJones/noctua/issues/104'>#104</a>)</li>
+<li>Allowed cache_size to equal 100</li>
+</ul>
+</div>
+</div>
     <div id="noctua-180" class="section level1">
 <h1 class="page-header" data-toc-text="1.8.0">
 <a href="#noctua-180" class="anchor"></a>noctua 1.8.0<small> 2020-08-10 </small>
@@ -221,9 +234,9 @@
 <li>Added <code>region_name</code> check before making a connection to AWS Athena (<a href="https://github.com/DyfanJones/RAthena/issues/110">RAthena: # 110</a>)</li>
 </ul>
 </div>
-<div id="bug-fix" class="section level2">
+<div id="bug-fix-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbWriteTable</code> would throw <code>throttling error</code> every now and again, <code>retry_api_call</code> as been built to handle the parsing of data between R and AWS S3.</li>
@@ -286,9 +299,9 @@
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>, <span class="kw">file.type</span> <span class="kw">=</span> <span class="st">"json"</span>)
 <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris2"</span>)</pre></div>
 </div>
-<div id="bug-fix-1" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
@@ -327,9 +340,9 @@
 <h1 class="page-header" data-toc-text="1.5.1">
 <a href="#noctua-151" class="anchor"></a>noctua 1.5.1<small> 2020-02-16 </small>
 </h1>
-<div id="bug-fix-2" class="section level2">
+<div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
@@ -510,9 +523,9 @@
 </ul>
 <div class="sourceCode" id="cb11"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/warning.html">warning</a></span>(<span class="st">'Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "'</span>, <span class="no">File.Type</span>,<span class="st">'".'</span>, <span class="kw">call.</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></div>
 </div>
-<div id="bug-fix-3" class="section level2">
+<div id="bug-fix-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-3" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-4" class="anchor"></a>Bug fix</h2>
 <ul>
 <li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/50"># 50</a>), special characters have issue being processed when using flat file in the backend.</li>
 <li>Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
@@ -597,9 +610,9 @@
 </li>
 </ul>
 </div>
-<div id="bug-fix-4" class="section level2">
+<div id="bug-fix-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-4" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-5" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Fixed bug in regards to Athena DDL being created incorrectly when passed from <code>dbWriteTable</code>
 </li>
@@ -665,9 +678,9 @@
 
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)</pre></div>
 </div>
-<div id="bug-fix-5" class="section level2">
+<div id="bug-fix-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-5" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-6" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
@@ -710,9 +723,9 @@
 <code>BigInt</code> are now passed correctly into <code>integer64</code>
 </li>
 </ul>
-<div id="bug-fix-6" class="section level3">
+<div id="bug-fix-7" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fix-6" class="anchor"></a>Bug fix</h3>
+<a href="#bug-fix-7" class="anchor"></a>Bug fix</h3>
 <ul>
 <li>
 <code>AthenaResult</code> returned: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>. The function <code>do.call</code> was causing the issue, to address this <code>do.call</code> has been removed and the helper function <code>request</code> has been broken down into <code>ResultConfiguration</code> to return a single component of <code>start_query_execution</code>

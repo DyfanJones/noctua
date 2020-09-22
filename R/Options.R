@@ -40,7 +40,7 @@ noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 
             is.numeric(cache_size),
             is.logical(retry_quiet))
   
-  if(cache_size < 0 | cache_size >= 100) stop("noctua currently only supports up to 100 queries being cached", call. = F)
+  if(cache_size < 0 | cache_size > 100) stop("noctua currently only supports up to 100 queries being cached", call. = F)
   if(retry < 0) stop("Number of retries is required to be greater than 0.")
   
   if (!requireNamespace(file_parser, quietly = TRUE)) 
