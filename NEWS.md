@@ -1,3 +1,7 @@
+# noctua 1.8.0.9000
+## Bug Fix
+Pass a uuid string to `start_query_execution` parameter `ClientRequestToken`. This so that the `ClientRequestToken` is "A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once)." (#104)
+
 # noctua 1.8.0
 ## New Feature
 * noctua now supports Keyboard Interrupt and will stop AWS Athena running the query when the query has been interrupted. To keep the functionality of AWS Athena running when `R` has been interrupt a new parameter has been added to `dbConnect`, `keyboard_interrupt`. Example:
