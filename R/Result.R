@@ -11,7 +11,7 @@ AthenaResult <- function(conn,
   if (athena_option_env$cache_size > 0) response <- list(QueryExecutionId = check_cache(statement, conn@info$work_group))
   if (is.null(response$QueryExecutionId)) {
   retry_api_call(response <- conn@ptr$Athena$start_query_execution(
-    ClientRequestToken = digest::digest(paste(statement, conn@info$dbms.name, sep="/"), algo = "md5"),
+    ClientRequestToken = uuid::UUIDgenerate(),
     QueryString = statement,
     QueryExecutionContext = list(Database = conn@info$dbms.name),
     ResultConfiguration = ResultConfiguration(conn),
