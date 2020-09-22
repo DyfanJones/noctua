@@ -11,6 +11,12 @@ test_that("Check noctua s3 dplyr compute method",{
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena())
   
+  # remove test tables if exist
+  if(dbExistsTable(con, "compute_tbl1"))
+    dbRemoveTable(con, "compute_tbl1", confirm = TRUE)
+  if(dbExistsTable(con, "compute_tbl2"))
+    dbRemoveTable(con, "compute_tbl2", confirm = TRUE)
+  
   athena_tbl <- tbl(con, sql("SELECT * FROM INFORMATION_SCHEMA.TABLES"))
   athena_tbl %>% compute("compute_tbl1", s3_location = paste0(Sys.getenv("noctua_s3_tbl"),"compute_tbl/"))
   athena_tbl %>% compute("compute_tbl2")
