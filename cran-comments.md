@@ -5,7 +5,8 @@ This release brings in bug fixes.
 * Provided uuid string to `ClientRequestToken`. This fixes the following errors:
   * `Error: InvalidRequestException (HTTP 400). Idempotent parameters do not match`
   * `Error: InvalidRequestException (HTTP 400). Could not find results`
-* `noctua_options` parameter `cache_size` now correctly uses the range (0,100)
+* `noctua_options` parameter `cache_size` now correctly uses the range [0,100]
+*  Do not abort if a `AWS Glue` `get_tables` api call fails
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
