@@ -2,6 +2,7 @@
 ## Bug Fix
 * Pass a uuid string to `start_query_execution` parameter `ClientRequestToken`. This so that the `ClientRequestToken` is "A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once)." (#104)
 * Allowed cache_size to equal 100
+* Do not abort if a glue::get_tables api call fails (e.g., due to missing permissions to a specific database or an orphaned Lake Formation resource link) when retrieving a list of database tables with dbListTables, dbGetTables or in Rstudio's Connections pane. 
 
 # noctua 1.8.0
 ## New Feature
