@@ -167,7 +167,7 @@ AthenaTableTypes <- function(connection, database = NULL, name = NULL, ...) {
   
   if(is.null(database)) database <- sapply(glue$get_databases()$DatabaseList,function(x) x$Name)
   if(is.null(name)){
-    output <- lapply(database, function (x) glue$get_tables(DatabaseName = x)$TableList)
+    output <- lapply(database, function (x) tryCatch(glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL))
     tbl_meta <- unlist(lapply(output, function(x) sapply(x, TblMeta)))}
   else{
     output <- glue$get_table(DatabaseName = database, Name = name)$Table
@@ -390,4 +390,4 @@ TblMeta <- function(x) {
 ColMeta <- function(x){
   col_type <- x$Type %||% ""
   names(col_type) <- x$Name
-  col_type} 
+  col_type}

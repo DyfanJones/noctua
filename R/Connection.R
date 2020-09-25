@@ -374,7 +374,7 @@ setMethod(
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
     if(is.null(schema)){
       retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
-    tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
+    tryCatch(output <- lapply(schema, function (x) tryCatch(conn@ptr$glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL)))
     unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
   }
 )
@@ -419,7 +419,7 @@ setMethod("dbGetTables", "AthenaConnection",
   if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
   if(is.null(schema)){
     retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
-  tryCatch(output <- lapply(schema, function (x) conn@ptr$glue$get_tables(DatabaseName = x)$TableList))
+  tryCatch(output <- lapply(schema, function (x) tryCatch(conn@ptr$glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL)))
   rbindlist(lapply(output, function(x) rbindlist(lapply(x, function(y) data.frame(Schema = y$DatabaseName,
                                                                                   TableName=y$Name,
                                                                                   TableType = y$TableType)))))
