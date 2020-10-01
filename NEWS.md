@@ -1,3 +1,8 @@
+# noctua 1.8.1.9000
+## New Feature
+* Move `sql_escape_date` into `dplyr_integration.R` backend (RAthena: [# 121](https://github.com/DyfanJones/RAthena/issues/121)).
+
+
 # noctua 1.8.1
 ## Bug Fix
 * Pass a uuid string to `start_query_execution` parameter `ClientRequestToken`. This so that the `ClientRequestToken` is "A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once)." (#104)
