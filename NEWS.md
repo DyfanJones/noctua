@@ -1,6 +1,6 @@
 # noctua 1.8.1.9000
 ## New Feature
-* Move `sql_escape_date` into `dplyr_integration.R` backend (#121). Thanks to @OssiLehtinen for developing Athena date translation.
+* Move `sql_escape_date` into `dplyr_integration.R` backend (RAthena: [# 121](https://github.com/DyfanJones/RAthena/issues/121)).
 
 
 # noctua 1.8.1
