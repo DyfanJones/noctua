@@ -65,19 +65,23 @@ athena_read_lines.athena_vroom <-
 
 # ==========================================================================
 # write method
-split_data <- function(method, x, ...){
-  UseMethod("split_data")
+write_batch <- function(dt, split_vec, fun, max.batch, max_row, path, file.type, compress, ...){
+  
+  # create temp file
+  File <- paste(uuid::UUIDgenerate(), Compress(file.type, compress), sep = ".")
+  path <- file.path(path, File)
+  file_con <- if(file.type != "json") path else file(path)
+  
+  # split data.frame into chunks
+  chunk <- dt[split_vec:min(max_row,(split_vec+max.batch-1)),]
+  
+  # write 
+  fun(chunk, file_con, ...)
+  
+  path
 }
 
-split_data.athena_data.table <- function(method, x, max.batch = Inf, path = tempdir(), 
-                                         sep = ",", compress = T, file.type = "csv"){
-  # Bypass splitter if not compressed
-  if(!compress){
-    file <- paste(paste(sample(letters, 10, replace = TRUE), collapse = ""), Compress(file.type, compress), sep = ".")
-    path <- file.path(path, file)
-    fwrite(x, path, sep = sep, quote = FALSE, showProgress = FALSE)
-    return(path)}
-  
+split_vec <- function(x, max.batch){
   # set up split vec
   max_row <- nrow(x)
   split_10 <- .05 * max_row # default currently set to 20 split: https://github.com/DyfanJones/RAthena/issues/36
@@ -91,55 +95,47 @@ split_data.athena_data.table <- function(method, x, max.batch = Inf, path = temp
   
   # if max.batch is set by user
   if(!is.infinite(max.batch)) split_vec <- seq(1, max_row, as.integer(max.batch))
-  
-  sapply(split_vec, write_batch_DT, dt = x, max.batch = max.batch,
-         max_row= max_row, path = path, sep = sep, file.type= file.type)
+  return(split_vec)
 }
 
-# write data.frame by batch data.table
-write_batch_DT <- function(split_vec, dt, max.batch, max_row, path, sep, file.type){
-  sample <- dt[split_vec:min(max_row,(split_vec+max.batch-1)),]
-  file <- paste(paste(sample(letters, 10, replace = TRUE), collapse = ""), Compress(file.type, TRUE), sep = ".")
-  path <- file.path(path, file)
-  fwrite(sample, path, sep = sep, quote = FALSE, showProgress = FALSE)
-  path
-}
-
-split_data.athena_vroom <- function(method, x, max.batch = Inf, path = tempdir(), 
-                                    sep = ",", compress = T, file.type = "csv"){
-  vroom_write <- pkg_method("vroom_write", "vroom")
-  # Bypass splitter if not compressed
-  if(!compress){
-    file <- paste(paste(sample(letters, 10, replace = TRUE), collapse = ""), Compress(file.type, compress), sep = ".")
-    path <- file.path(path, file)
-    vroom_write(x, path, delim = sep, quote = "none", progress = FALSE, escape = "none")
-    return(path)}
-  
-  # set up split vec
-  max_row <- nrow(x)
-  split_10 <- .05 * max_row # default currently set to 20 split: https://github.com/DyfanJones/RAthena/issues/36
-  min.batch = 1000000 # min.batch sized at 1M
-  
-  # if batch is set to default
-  if(is.infinite(max.batch)){
-    max.batch <- max(split_10, min.batch)
-    split_vec <- seq(1, max_row, max.batch)
+update_args <- function(file.type = "tsv", init_args){
+  if(file.type ==  "parquet"){
+    write_parquet <- pkg_method("write_parquet", "arrow")
+    cp <- if(compress) "snappy" else NULL
+    init_args <- c(init_args,
+                   fun = write_parquet,
+                   list(compression = cp))
+  } else if(file.type == "json") {
+    stream_out <- pkg_method("stream_out", "jsonlite")
+    init_args <- c(init_args,
+                   fun = stream_out,
+                   verbose = FALSE)
+  } else if(class(athena_option_env$file_parser) == "athena_data.table") {
+    init_args <- c(init_args,
+                   fun = data.table::fwrite,
+                   quote = FALSE,
+                   showProgress = FALSE)
+    if(file.type == "csv")
+      init_args <- c(init_args,
+                     sep = ",")
+    if(file.type == "tsv")
+      init_args <- c(init_args,
+                     sep = "\t")
+  } else if(class(athena_option_env$file_parser) == "athena_vroom"){
+    vroom_write <- pkg_method("vroom_write", "vroom")
+    init_args <- c(init_args,
+                   fun = vroom_write,
+                   quote = "none",
+                   progress = FALSE,
+                   escape = "none")
+    if(file.type == "csv")
+      init_args <- c(init_args,
+                     delim = ",")
+    if(file.type == "tsv")
+      init_args <- c(init_args,
+                     delim = "\t")
   }
-  
-  # if max.batch is set by user
-  if(!is.infinite(max.batch)) split_vec <- seq(1, max_row, as.integer(max.batch))
-  
-  sapply(split_vec, write_batch_vroom, dt = x, fun = vroom_write, max.batch = max.batch,
-         max_row= max_row, path = path, sep = sep, file.type= file.type)
-}
-
-# write data.frame by batch vroom
-write_batch_vroom <- function(split_vec, dt, fun, max.batch, max_row, path, sep, file.type){
-  sample <- dt[split_vec:min(max_row,(split_vec+max.batch-1)),]
-  file <- paste(paste(sample(letters, 10, replace = TRUE), collapse = ""), Compress(file.type, TRUE), sep = ".")
-  path <- file.path(path, file)
-  fun(sample,  path, delim = sep, quote = "none", progress = FALSE, escape = "none")
-  path
+  return(init_args)
 }
 
 # To enable vroom to compress files in parrallel then pigz is required: https://zlib.net/pigz/. 

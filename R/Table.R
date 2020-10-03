@@ -121,8 +121,6 @@ Athena_write_table <-
     
     if (overwrite && append) stop("overwrite and append cannot both be TRUE", call. = FALSE)
     
-    if(append && is.null(partition)) stop("Athena requires the table to be partitioned to append", call. = FALSE)
-    
     # Check if table already exists in the database
     found <- dbExistsTable(conn, name)
     
@@ -188,32 +186,31 @@ Athena_write_table <-
     if(is.null(field.types)) field.types <- dbDataType(conn, value)
     value <- sqlData(conn, value, row.names = row.names, file.type = file.type)
     
-    # check if arrow is installed before attempting to create parquet
-    if(file.type == "parquet"){
-      # compress file
-      t <- tempfile()
-      FileLocation <- paste(t, Compress(file.type, compress), sep =".")
-      if(!requireNamespace("arrow", quietly=TRUE))
-        stop("The package arrow is required for R to utilise Apache Arrow to create parquet files.", call. = FALSE)
-      else {cp <- if(compress) "snappy" else NULL
-            arrow::write_parquet(value, FileLocation, compression = cp)}
+    ############# write data frame to file type ###########################
+    
+    # create temp location
+    temp_dir <- tempdir()
+
+    # split data
+    SplitVec <- split_vec(value, max.batch = max.batch)
+    max_row <- nrow(value)
+    
+    FileLocation <- character(length(SplitVec))
+    args <- list(dt = value,
+                 max.batch = max.batch,
+                 max_row = max_row,
+                 path = temp_dir,
+                 file.type = file.type,
+                 compress = compress)
+    args <- update_args(file.type, args)
+    
+    # write data.frame to backend in batch
+    for(i in seq_along(SplitVec)){
+      args$split_vec <- SplitVec[i]
+      FileLocation[[i]] <- do.call(write_batch, args)
     }
     
-    # check if jsonlite is installed before attempting to create json lines
-    if(file.type == "json"){
-      FileLocation <- tempfile()
-      stream_out <- pkg_method("stream_out", "jsonlite")
-      stream_out(value, con = file(FileLocation), verbose = FALSE)
-    }
-    
-    # writes out csv/tsv, uses data.table for extra speed
-    if (file.type == "csv"){
-      FileLocation <- split_data(athena_option_env$file_parser, value, max.batch = max.batch, compress = compress, file.type = file.type)
-    }
-    
-    if (file.type == "tsv"){
-      FileLocation <- split_data(athena_option_env$file_parser, value, max.batch = max.batch, compress = compress, file.type = file.type, sep = "\t")
-    }
+    ############# update data to aws s3 ###########################
     
     # send data over to s3 bucket
     upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress, append)
@@ -526,7 +523,9 @@ s3_upload_location <- function(x,
   
   # s3_file name
   FileType <- if(compress) Compress(file.type, compress) else file.type
-  FileName <- paste(if (length(x) > 1) paste0(name,"_", 1:length(x)) else name, FileType, sep = ".")
+  
+  # Upload file with uuid to allow appending to same s3 location 
+  FileName <- paste(uuid::UUIDgenerate(n = length(x)),  FileType, sep = ".")
   
   # s3 bucket and key split
   s3_info <- split_s3_uri(s3.location)
