@@ -35,6 +35,13 @@ test_that("Testing data transfer between R and athena datatable", {
                              "month" = format(DATE, "%m"),
                              "DAY" = format(DATE, "%d")),
                s3.location = s3.location2)
+  
+  if(dbExistsTable(con, "test_df3")){
+    dbRemoveTable(con, "test_df3", confirm = T)
+  }
+  
+  dbWriteTable(con, "test_df3", df, overwrite = T, file.type = "json")
+  
   dbWriteTable(con, "df_bigint", df2, overwrite = T, s3.location = s3.location2)
   dbWriteTable(con, "mtcars2", mtcars, overwrite = T, compress = T) # mtcars used to test data.frame with row.names
   
@@ -43,9 +50,11 @@ test_that("Testing data transfer between R and athena datatable", {
   test_df2 <- as.data.frame(dbGetQuery(con, paste0("select w, x, y, z from test_df2 where year = '", format(DATE, "%Y"), "' and month = '",format(DATE, "%m"), "' and day = '", format(DATE, "%d"),"'")))
   test_df3 <- as.data.frame(dbGetQuery(con, "select * from df_bigint"))
   test_df4 <- as.data.frame(dbGetQuery(con, "select * from mtcars2"))
+  test_df5 <- as.data.frame(dbGetQuery(con, "select * from test_df3"))
   
   expect_equal(test_df,sqlData(con, df))
   expect_equal(test_df2,sqlData(con, df))
   expect_equal(test_df3,df2)
   expect_equal(test_df4, sqlData(con, mtcars))
+  expect_equal(test_df5, df)
 })
