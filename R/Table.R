@@ -105,9 +105,6 @@ Athena_write_table <-
     
     if(max.batch < 0) stop("`max.batch` has to be greater than 0", call. = F)
     
-    if(!is.infinite(max.batch) && file.type == "parquet") message("Info: parquet format is splittable and AWS Athena can read parquet format ",
-                                                                  "in parallel. `max.batch` is used for compressed `gzip` format which is not splittable.")
-    
     # use default s3_staging directory is s3.location isn't provided
     if (is.null(s3.location)) s3.location <- conn@info$s3_staging
     
@@ -173,7 +170,7 @@ Athena_write_table <-
                             stop("noctua currently only supports gzip compression for csv", call. = F)}},
                         "json" = {if(is.null(tbl_info$Parameters$compressionType)) FALSE else {
                           if(!is.null(tbl_info$Parameters$compressionType)) 
-                            stop("RAthena currently doesn't support compression for json", call. = F)}}
+                            stop("noctua currently doesn't support compression for json", call. = F)}}
                         )
       if(file.type != File.Type) warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
       
