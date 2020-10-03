@@ -84,12 +84,12 @@ write_batch <- function(dt, split_vec, fun, max.batch, max_row, path, file.type,
 split_vec <- function(x, max.batch){
   # set up split vec
   max_row <- nrow(x)
-  split_10 <- .05 * max_row # default currently set to 20 split: https://github.com/DyfanJones/RAthena/issues/36
+  split_20 <- .05 * max_row # default currently set to 20 split: https://github.com/DyfanJones/RAthena/issues/36
   min.batch = 1000000 # min.batch sized at 1M
   
   # if batch is set to default
   if(is.infinite(max.batch)){
-    max.batch <- max(split_10, min.batch)
+    max.batch <- max(split_20, min.batch)
     split_vec <- seq(1, max_row, max.batch)
   }
   
