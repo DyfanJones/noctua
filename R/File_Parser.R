@@ -98,7 +98,7 @@ split_vec <- function(x, max.batch){
   return(split_vec)
 }
 
-update_args <- function(file.type = "tsv", init_args){
+update_args <- function(file.type = "tsv", init_args = list(), compress = FALSE){
   if(file.type ==  "parquet"){
     write_parquet <- pkg_method("write_parquet", "arrow")
     cp <- if(compress) "snappy" else NULL

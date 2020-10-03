@@ -199,7 +199,7 @@ Athena_write_table <-
                  path = temp_dir,
                  file.type = file.type,
                  compress = compress)
-    args <- update_args(file.type, args)
+    args <- update_args(file.type, args, compress)
     
     # write data.frame to backend in batch
     for(i in seq_along(SplitVec)){
