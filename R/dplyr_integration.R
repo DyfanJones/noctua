@@ -86,6 +86,7 @@ db_compute.AthenaConnection <- function(con,
 #' utilise AWS Glue to speed up sql query execution.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
+#' @param x R object to be transformed into athena equivalent
 #' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
 #' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
 #'                  \code{"NULL"} will let Athena set the file_type for you.
@@ -245,4 +246,16 @@ db_query_fields.AthenaConnection <- function(con, sql, ...) {
     res <- dbFetch(qry, 0)
     names(res)
   }
+}
+
+#' @rdname backend_dbplyr
+sql_escape_date.AthenaConnection <- function(con, x) {
+  paste0('date ', dbQuoteString(con, as.character(x)))
+}
+
+
+#' @rdname backend_dbplyr
+sql_escape_datetime.AthenaConnection <- function(con, x) {
+  x <- strftime(x, "%Y-%m-%d %H:%M:%OS %Z")
+  paste0('timestamp ', dbQuoteString(con, x))
 }

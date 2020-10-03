@@ -73,6 +73,8 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t29 <- dbDataType(con, dt)
   t30 <- noctua:::AthenaToRDataType.athena_data.table(method, data_types)
   t31 <- noctua:::AthenaToRDataType.athena_vroom(method, data_types)
+  t32 <- noctua:::sql_escape_date.AthenaConnection(con, "2020-01-01")
+  t33 <- noctua:::sql_escape_datetime.AthenaConnection(con, "2020-01-01")
   
   expect_equal(t1 ,sql("CAST(1.0 AS VARCHAR)"))
   expect_equal(t2 ,sql("CAST('1' AS DOUBLE)"))
@@ -106,4 +108,6 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t29, data_type1)
   expect_equal(t30, data_type2)
   expect_equal(t31, data_type3)
+  expect_equal(t32, "date '2020-01-01'")
+  expect_equal(t33, sprintf("timestamp '%s'", strftime("2020-01-01", "%Y-%m-%d %H:%M:%OS %Z")))
 })
