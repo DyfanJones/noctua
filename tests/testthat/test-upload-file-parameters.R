@@ -17,8 +17,8 @@ test_that("test file parser parameter setup",{
   arg_6 <- noctua:::update_args(file.type = "csv", init_args)
   arg_7 <- noctua:::update_args(file.type = "tsv", init_args)
   
-  expect_equal(arg_1, list(fun = arrow::write_parquet, compression = NULL))
-  expect_equal(arg_2, list(fun = arrow::write_parquet, compression = "snappy"))
+  expect_equal(arg_1, list(fun = arrow::write_parquet, use_deprecated_int96_timestamps = TRUE, compression = NULL))
+  expect_equal(arg_2, list(fun = arrow::write_parquet, use_deprecated_int96_timestamps = TRUE, compression = "snappy"))
   expect_equal(arg_3, list(fun = jsonlite::stream_out, verbose = FALSE))
   expect_equal(arg_4, list(fun = data.table::fwrite, quote= FALSE, showProgress = FALSE, sep = ","))
   expect_equal(arg_5, list(fun = data.table::fwrite, quote= FALSE, showProgress = FALSE, sep = "\t"))
