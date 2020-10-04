@@ -104,6 +104,7 @@ update_args <- function(file.type = "tsv", init_args = list(), compress = FALSE)
     cp <- if(compress) "snappy" else NULL
     init_args <- c(init_args,
                    fun = write_parquet,
+                   use_deprecated_int96_timestamps = TRUE, # align POSIXct to athena timestamp: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
                    list(compression = cp))
   } else if(file.type == "json") {
     stream_out <- pkg_method("stream_out", "jsonlite")
