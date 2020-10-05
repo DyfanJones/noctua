@@ -1,5 +1,7 @@
 context("upload file setup")
 
+library(data.table)
+
 test_that("test file parser parameter setup",{
   init_args = list()
   
@@ -26,13 +28,38 @@ test_that("test file parser parameter setup",{
   expect_equal(arg_7, list(fun = vroom::vroom_write, quote= "none", progress = FALSE, escape = "none", delim = "\t"))
 })
 
-test_that("test data frame splitter vec",{
+default_split <- c(1, 1000001)
+custom_split <- seq(1, 2e6, 100000)
+custom_chunk <- 100000
+
+test_that("test data frame is split correctly",{
   # Test connection is using AWS CLI to set profile_name 
-  vec_1 <- split_vec(iris, 10)
+  value = data.table(x = 1:2e6)
+  max_row = nrow(value)
+
+  vec_1 <- noctua:::dt_split(value, Inf, "csv", T)
+  vec_2 <- noctua:::dt_split(value, Inf, "tsv", F)
+  vec_3 <- noctua:::dt_split(value, custom_chunk, "tsv", T)
+  vec_4 <- noctua:::dt_split(value, custom_chunk, "csv", F)
+  vec_5 <- noctua:::dt_split(value, Inf, "parquet", T)
+  vec_6 <- noctua:::dt_split(value, Inf, "parquet", F)
+  vec_7 <- noctua:::dt_split(value, custom_chunk, "parquet", T)
+  vec_8 <- noctua:::dt_split(value, custom_chunk, "parquet", F)
+  vec_9 <- noctua:::dt_split(value, Inf, "json", T)
+  vec_10 <- noctua:::dt_split(value, Inf, "json", F)
+  vec_11 <- noctua:::dt_split(value, custom_chunk, "json", T)
+  vec_12 <- noctua:::dt_split(value, custom_chunk, "json", F)
   
-  dt = data.table(x = 1:2e6)
-  vec_2 <- split_vec(dt, Inf)
-  
-  expect_equal(vec_1, c(1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 101, 111, 121, 131, 141))
-  expect_equal(vec_2, c(1, 1000001))
+  expect_equal(vec_1, list(SplitVec = default_split, MaxBatch = 1e+06, MaxRow = max_row))
+  expect_equal(vec_2, list(SplitVec = 1, MaxBatch = max_row, MaxRow = max_row))
+  expect_equal(vec_3, list(SplitVec = custom_split, MaxBatch = custom_chunk, MaxRow = max_row))
+  expect_equal(vec_4, list(SplitVec = custom_split, MaxBatch = custom_chunk, MaxRow = max_row))
+  expect_equal(vec_5, list(SplitVec = 1, MaxBatch = max_row, MaxRow = max_row))
+  expect_equal(vec_6, list(SplitVec = 1, MaxBatch = max_row, MaxRow = max_row))
+  expect_equal(vec_7, list(SplitVec = custom_split, MaxBatch = custom_chunk, MaxRow = max_row))
+  expect_equal(vec_8, list(SplitVec = custom_split, MaxBatch = custom_chunk, MaxRow = max_row))
+  expect_equal(vec_9, list(SplitVec = 1, MaxBatch = max_row, MaxRow = max_row))
+  expect_equal(vec_10, list(SplitVec = 1, MaxBatch = max_row, MaxRow = max_row))
+  expect_equal(vec_11, list(SplitVec = custom_split, MaxBatch = custom_chunk, MaxRow = max_row))
+  expect_equal(vec_12, list(SplitVec = custom_split, MaxBatch = custom_chunk, MaxRow = max_row))
 })
