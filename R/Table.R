@@ -105,9 +105,6 @@ Athena_write_table <-
     
     if(max.batch < 0) stop("`max.batch` has to be greater than 0", call. = F)
     
-    if(!is.infinite(max.batch) && file.type == "parquet") message("Info: parquet format is splittable and AWS Athena can read parquet format ",
-                                                                  "in parallel. `max.batch` is used for compressed `gzip` format which is not splittable.")
-    
     # use default s3_staging directory is s3.location isn't provided
     if (is.null(s3.location)) s3.location <- conn@info$s3_staging
     
@@ -120,8 +117,6 @@ Athena_write_table <-
     if(!grepl("\\.", name)) name <- paste(conn@info$dbms.name, name, sep = ".") 
     
     if (overwrite && append) stop("overwrite and append cannot both be TRUE", call. = FALSE)
-    
-    if(append && is.null(partition)) stop("Athena requires the table to be partitioned to append", call. = FALSE)
     
     # Check if table already exists in the database
     found <- dbExistsTable(conn, name)
@@ -175,7 +170,7 @@ Athena_write_table <-
                             stop("noctua currently only supports gzip compression for csv", call. = F)}},
                         "json" = {if(is.null(tbl_info$Parameters$compressionType)) FALSE else {
                           if(!is.null(tbl_info$Parameters$compressionType)) 
-                            stop("RAthena currently doesn't support compression for json", call. = F)}}
+                            stop("noctua currently doesn't support compression for json", call. = F)}}
                         )
       if(file.type != File.Type) warning('Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "', File.Type,'".', call. = FALSE)
       
@@ -188,32 +183,30 @@ Athena_write_table <-
     if(is.null(field.types)) field.types <- dbDataType(conn, value)
     value <- sqlData(conn, value, row.names = row.names, file.type = file.type)
     
-    # check if arrow is installed before attempting to create parquet
-    if(file.type == "parquet"){
-      # compress file
-      t <- tempfile()
-      FileLocation <- paste(t, Compress(file.type, compress), sep =".")
-      if(!requireNamespace("arrow", quietly=TRUE))
-        stop("The package arrow is required for R to utilise Apache Arrow to create parquet files.", call. = FALSE)
-      else {cp <- if(compress) "snappy" else NULL
-            arrow::write_parquet(value, FileLocation, compression = cp)}
+    ############# write data frame to file type ###########################
+    
+    # create temp location
+    temp_dir <- tempdir()
+    
+    # Split data into chunks
+    DtSplit <- dt_split(value, max.batch, file.type, compress)
+    
+    FileLocation <- character(length(DtSplit$SplitVec))
+    args <- list(value = value,
+                 max.batch = DtSplit$MaxBatch,
+                 max_row = DtSplit$MaxRow,
+                 path = temp_dir,
+                 file.type = file.type,
+                 compress = compress)
+    args <- update_args(file.type, args, compress)
+    
+    # write data.frame to backend in batch
+    for(i in seq_along(DtSplit$SplitVec)){
+      args$split_vec <- DtSplit$SplitVec[i]
+      FileLocation[[i]] <- do.call(write_batch, args)
     }
     
-    # check if jsonlite is installed before attempting to create json lines
-    if(file.type == "json"){
-      FileLocation <- tempfile()
-      stream_out <- pkg_method("stream_out", "jsonlite")
-      stream_out(value, con = file(FileLocation), verbose = FALSE)
-    }
-    
-    # writes out csv/tsv, uses data.table for extra speed
-    if (file.type == "csv"){
-      FileLocation <- split_data(athena_option_env$file_parser, value, max.batch = max.batch, compress = compress, file.type = file.type)
-    }
-    
-    if (file.type == "tsv"){
-      FileLocation <- split_data(athena_option_env$file_parser, value, max.batch = max.batch, compress = compress, file.type = file.type, sep = "\t")
-    }
+    ############# update data to aws s3 ###########################
     
     # send data over to s3 bucket
     upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress, append)
@@ -328,10 +321,13 @@ setMethod("sqlData", "AthenaConnection",
   # get R col types
   col_types <- sapply(Value, class)
   
-  # preprosing proxict format
-  posixct_cols <- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
-  # create timestamp in athena format: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
-  for (col in posixct_cols) set(Value, j=col, value=strftime(Value[[col]], format="%Y-%m-%d %H:%M:%OS3"))
+  # leave POSIXct format for parquet file types
+  if(file.type != "parquet"){
+    # preprosing proxict format
+    posixct_cols <- names(Value)[sapply(col_types, function(x) "POSIXct" %in% x)]
+    # create timestamp in athena format: https://docs.aws.amazon.com/athena/latest/ug/data-types.html
+    for (col in posixct_cols) set(Value, j=col, value=strftime(Value[[col]], format="%Y-%m-%d %H:%M:%OS3"))
+  }
   
   # preprocessing list format
   list_cols <- names(Value)[sapply(col_types, function(x) "list" %in% x)]
@@ -526,7 +522,9 @@ s3_upload_location <- function(x,
   
   # s3_file name
   FileType <- if(compress) Compress(file.type, compress) else file.type
-  FileName <- paste(if (length(x) > 1) paste0(name,"_", 1:length(x)) else name, FileType, sep = ".")
+  
+  # Upload file with uuid to allow appending to same s3 location 
+  FileName <- paste(uuid::UUIDgenerate(n = length(x)),  FileType, sep = ".")
   
   # s3 bucket and key split
   s3_info <- split_s3_uri(s3.location)
