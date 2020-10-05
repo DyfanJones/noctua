@@ -65,7 +65,7 @@ athena_read_lines.athena_vroom <-
 
 # ==========================================================================
 # write method
-write_batch <- function(dt, split_vec, fun, max.batch, max_row, path, file.type, compress, ...){
+write_batch <- function(value, split_vec, fun, max.batch, max_row, path, file.type, compress, ...){
   
   # create temp file
   File <- paste(uuid::UUIDgenerate(), Compress(file.type, compress), sep = ".")
@@ -73,7 +73,7 @@ write_batch <- function(dt, split_vec, fun, max.batch, max_row, path, file.type,
   file_con <- if(file.type != "json") path else file(path)
   
   # split data.frame into chunks
-  chunk <- dt[split_vec:min(max_row,(split_vec+max.batch-1)),]
+  chunk <- value[split_vec:min(max_row,(split_vec+max.batch-1)),]
   
   # write 
   fun(chunk, file_con, ...)
@@ -81,9 +81,14 @@ write_batch <- function(dt, split_vec, fun, max.batch, max_row, path, file.type,
   path
 }
 
-split_vec <- function(x, max.batch){
+dt_split <- function(value, max.batch, file.type, compress){
+  
+  if((file.type %in% c("parquet", "json") & is.infinite(max.batch)) || 
+     (file.type %in% c("csv", "tsv") & !compress & is.infinite(max.batch))) 
+    max.batch <- nrow(value)
+  
   # set up split vec
-  max_row <- nrow(x)
+  max_row <- nrow(value)
   split_20 <- .05 * max_row # default currently set to 20 split: https://github.com/DyfanJones/RAthena/issues/36
   min.batch = 1000000 # min.batch sized at 1M
   
@@ -95,7 +100,7 @@ split_vec <- function(x, max.batch){
   
   # if max.batch is set by user
   if(!is.infinite(max.batch)) split_vec <- seq(1, max_row, as.integer(max.batch))
-  return(split_vec)
+  return(list(SplitVec = split_vec, MaxBatch = max.batch, MaxRow = max_row))
 }
 
 update_args <- function(file.type = "tsv", init_args = list(), compress = FALSE){
