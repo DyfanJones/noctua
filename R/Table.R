@@ -187,23 +187,22 @@ Athena_write_table <-
     
     # create temp location
     temp_dir <- tempdir()
-
-    # split data
-    SplitVec <- split_vec(value, max.batch = max.batch)
-    max_row <- nrow(value)
     
-    FileLocation <- character(length(SplitVec))
-    args <- list(dt = value,
-                 max.batch = max.batch,
-                 max_row = max_row,
+    # Split data into chunks
+    DtSplit <- dt_split(value, max.batch, file.type, compress)
+    
+    FileLocation <- character(length(DtSplit$SplitVec))
+    args <- list(value = value,
+                 max.batch = DtSplit$MaxBatch,
+                 max_row = DtSplit$MaxRow,
                  path = temp_dir,
                  file.type = file.type,
                  compress = compress)
     args <- update_args(file.type, args, compress)
     
     # write data.frame to backend in batch
-    for(i in seq_along(SplitVec)){
-      args$split_vec <- SplitVec[i]
+    for(i in seq_along(DtSplit$SplitVec)){
+      args$split_vec <- DtSplit$SplitVec[i]
       FileLocation[[i]] <- do.call(write_batch, args)
     }
     
