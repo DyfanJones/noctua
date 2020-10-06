@@ -57,7 +57,7 @@ AthenaConnection <-
     # return a subset of api function to reduce object size
     ptr <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
                                  "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
-                S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects")],
+                S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects_v2")],
                 glue = glue[c(".internal", "get_databases","get_tables","get_table","delete_table")])
     
     s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
@@ -598,28 +598,26 @@ setMethod(
     TableType <- conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$TableType
     
     if(delete_data && TableType == "EXTERNAL_TABLE"){
-      nobjects <- 1000 # Only 1000 objects at a time
-      while(nobjects >= 1000) {
-        tryCatch(
-          s3_path <- split_s3_uri(conn@ptr$glue$get_table(DatabaseName = dbms.name,
-                                                          Name = Table)$Table$StorageDescriptor$Location))
-        tryCatch(
-          objects <- conn@ptr$S3$list_objects(Bucket=s3_path$bucket, Prefix=paste0(s3_path$key, "/"))$Contents)
-        
-        nobjects <- length(objects)
-        all_keys <- sapply(objects, function(x) x$Key)
-        
-        message(paste0("Info: The S3 objects in prefix will be deleted:\n",
-                       paste0("s3://", s3_path$bucket, "/", s3_path$key)))
-        if(!confirm) {
-          confirm <- readline(prompt = "Delete files (y/n)?: ")
-          if(confirm != "y") {
-            message("Info: Table deletion aborted.")
-            return(NULL)}
-        }
-        
-        sapply(all_keys, function(x) conn@ptr$S3$delete_object(Bucket = s3_path$bucket, Key = x))
+      tryCatch(
+        s3_path <- split_s3_uri(
+          conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
+      all_keys <- character()
+      token <- NULL
+      # Get all s3 objects linked to table
+      while(is.null(token) || length(token) != 0) {
+        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=paste0(s3_path$key, "/"), ContinuationToken = token)
+        token <- objects$NextContinuationToken
+        all_keys <- c(all_keys, sapply(objects$Contents, function(x) x$Key))
       }
+      message(paste0("Info: The S3 objects in prefix will be deleted:\n",
+                     paste0("s3://", s3_path$bucket, "/", s3_path$key)))
+      if(!confirm) {
+        confirm <- readline(prompt = "Delete files (y/n)?: ")
+        if(trimws(tolower(confirm)) != "y") {
+          message("Info: Table deletion aborted.")
+          return(invisible(NULL))}
+      }
+      sapply(all_keys, function(x) conn@ptr$S3$delete_object(Bucket = s3_path$bucket, Key = x))
     }
     
     # use glue to remove table from glue catalog
