@@ -1,4 +1,31 @@
 # noctua 1.8.1.9000
+## Minor Change:
+* `dbRemoveTable` now removes AWS S3 objects using `delete_objects` instead of `delete_object`. This allows `noctua` to delete AWS S3 files in batches. This will reduce the number of api calls to AWS and comes with a performance improvement.
+```r
+library(DBI)
+library(data.table)
+
+X <- 1010
+value <- data.table(x = 1:X,
+                    y = sample(letters, X, replace = T), 
+                    z = sample(c(TRUE, FALSE), X, replace = T))
+
+con <- dbConnect(noctua::athena())
+
+# create a removable table with 1010 parquet files in AWS S3.
+dbWriteTable(con, "rm_tbl", value, file.type = "parquet", overwrite = T, max.batch = 1)
+
+# old method: delete_object
+system.time({dbRemoveTable(con, "rm_tbl", confirm = T)})
+# user  system elapsed 
+# 31.004   8.152 115.906 
+
+# new method: delete_objects
+system.time({dbRemoveTable(con, "rm_tbl", confirm = T)})
+# user  system elapsed 
+# 17.319   0.370  22.709 
+```
+
 ## New Feature
 * Move `sql_escape_date` into `dplyr_integration.R` backend (RAthena: [# 121](https://github.com/DyfanJones/RAthena/issues/121)).
 * Allow noctua to append to a static AWS s3 location using uuid
