@@ -299,3 +299,12 @@ ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NUL
     paste0("WITH (", FILE, COMPRESSION, LOCATION, PARTITION,")\n")
   } else ""
 }
+
+# split list into chunksize 1000
+splitList <- function(l){
+  chunks <- seq(1, length(l), 1000)
+  ll <- Map(function(i) list(), 1:length(chunks))
+  for (i in seq_along(chunks))
+    ll[[i]] <- l[chunks[i]:min(chunks[i]+999, length(l))]
+  return(ll)
+}
