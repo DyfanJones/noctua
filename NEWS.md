@@ -5,6 +5,14 @@
 
 ## Bug Fix:
 * parquet file.types now use parameter `use_deprecated_int96_timestamps` set to `TRUE`. This puts POSIXct data type in to `java.sql.Timestamp` compatible format, such as `yyyy-MM-dd HH:mm:ss[.f...]`. Thanks to Christian N Wolz for highlight this issue.
+* When more than 1000 files exist in the back of an Athena table. `dbRemoveTable` will ask the user twice to confirm if they wish to remove the backend files:
+```
+Info: The S3 objects in prefix will be deleted:
+  s3://bucket/path/schema/table
+Info: The S3 objects in prefix will be deleted:
+  s3://bucket/path/schema/table
+```
+To overcome this `dbRemoveTable` will opt for `paws::s3()$list_objects_v2` instead of `paws::s3()$list_objects` when listing s3 objects to be deleted. This allows `noctua` to iterate over AWS s3 prefix using tokens, instead of deleting objects in chunks.
 
 # noctua 1.8.1
 ## Bug Fix
