@@ -221,7 +221,7 @@ Athena_write_table <-
       dbClearResult(rs)}
     
     # Repair table
-    repair_table(conn, name, partition, s3.location)
+    repair_table(conn, name, partition, s3.location, append)
     
     on.exit({lapply(FileLocation, unlink)
       if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
