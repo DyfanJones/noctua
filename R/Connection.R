@@ -601,13 +601,13 @@ setMethod(
       tryCatch(
         s3_path <- split_s3_uri(
           conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
-      all_keys <- character()
+      all_keys <- list()
       token <- NULL
       # Get all s3 objects linked to table
       while(is.null(token) || length(token) != 0) {
         objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=paste0(s3_path$key, "/"), ContinuationToken = token)
         token <- objects$NextContinuationToken
-        all_keys <- c(all_keys, sapply(objects$Contents, function(x) x$Key))
+        all_keys <- c(all_keys, lapply(objects$Contents, function(x) list(Key=x$Key)))
       }
       message(paste0("Info: The S3 objects in prefix will be deleted:\n",
                      paste0("s3://", s3_path$bucket, "/", s3_path$key)))
@@ -617,7 +617,10 @@ setMethod(
           message("Info: Table deletion aborted.")
           return(invisible(NULL))}
       }
-      sapply(all_keys, function(x) conn@ptr$S3$delete_object(Bucket = s3_path$bucket, Key = x))
+      # Delete S3 files in batch size 1000
+      key_parts <- splitList(all_keys)
+      for(i in seq_along(key_parts))
+        conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
     }
     
     # use glue to remove table from glue catalog
