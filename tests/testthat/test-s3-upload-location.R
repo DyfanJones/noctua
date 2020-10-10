@@ -2,62 +2,46 @@ context("S3 upload location")
 
 test_that("Check if the S3 upload location is correctly built",{
   # Test connection is using AWS CLI to set profile_name 
-  
-  x <- c("dummy_file")
-  schema <- "test"
-  name <- "dummy_file"
-  s3.location <- "s3://bucket/path/to/file"
-  partition <- c("YEAR"= 2000)
+  conn <- dbConnect(noctua::athena(),
+                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
   
   # schema and name not s3 location 
-  s3_1 <- noctua:::s3_upload_location(x, schema, name, file.type = "csv", compress = F, s3.location = s3.location, append = F)
-  s3_2 <- noctua:::s3_upload_location(x, schema, name, file.type = "csv", compress = T, partition = partition, s3.location = s3.location, append = T)
-  
-  x <- c("dummy_file","dummy_file")
-  schema <- "test"
-  name <- "dummy_file"
-  s3.location <- "s3://bucket/path/to/test/dummy_file"
+  name <- "dummy_table"
+  s3.location <- "s3://bucket/path/to/file"
   partition <- c("YEAR"= 2000)
+  s3_1 <- noctua:::s3_upload_location(conn, s3.location, name, partition)
+  s3_2 <- noctua:::s3_upload_location(conn, s3.location, name, NULL)
+
+  # schema in s3 location 
+  s3.location <- "s3://bucket/path/to/file/schema"
+  name <- "schema.dummy_table"
+  s3_3 <- noctua:::s3_upload_location(conn, s3.location, name, partition)
+  s3_4 <- noctua:::s3_upload_location(conn, s3.location, name, NULL)
   
-  # schema and name in s3 location 
-  s3_3 <- noctua:::s3_upload_location(x, schema, name, file.type = "tsv", compress = F, partition = partition, s3.location = s3.location, append = F)
-  s3_4 <- noctua:::s3_upload_location(x, schema, name, file.type = "tsv", compress = T, partition = partition, s3.location = s3.location, append = T)
+  # name in s3 location 
+  s3.location <- "s3://bucket/path/to/file/dummy_table"
+  name <- "schema.dummy_table"
+  s3_3 <- noctua:::s3_upload_location(conn, s3.location, name, partition)
+  s3_4 <- noctua:::s3_upload_location(conn, s3.location, name, NULL)
+
+  # schema different s3 location
+  s3.location <- "s3://bucket/path/schema/to/file"
+  name <- "schema.dummy_table"
+  s3_5 <- noctua:::s3_upload_location(conn, s3.location, name, partition)
+  s3_6 <- noctua:::s3_upload_location(conn, s3.location, name, NULL)
   
-  x <- c("dummy_file")
-  schema <- "test"
-  name <- "dummy_file"
-  s3.location <- "s3://bucket/path/to/dummy_file/"
-  partition <- c("YEAR"= 2000)
+  # schema and table in s3 location
+  s3.location <- "s3://bucket/path/to/file/schema/dummy_table"
+  name <- "schema.dummy_table"
+  s3_7 <- noctua:::s3_upload_location(conn, s3.location, name, partition)
+  s3_8 <- noctua:::s3_upload_location(conn, s3.location, name, NULL)
   
-  # / at end of s3 location
-  s3_5 <- noctua:::s3_upload_location(x, schema, name, file.type = "parquet", compress = F, s3.location = s3.location, append = F)
-  s3_6 <- noctua:::s3_upload_location(x, schema, name, file.type = "parquet", compress = T, partition = partition, s3.location = s3.location, append = T)
-  
-  x <- c("dummy_file")
-  schema <- "test"
-  name <- "dummy_file"
-  s3.location <- "s3://bucket/path/to/dummy_file/"
-  partition <- c("YEAR"= 2000)
-  
-  # / at end of s3 location
-  s3_7 <- noctua:::s3_upload_location(x, schema, name, file.type = "json", compress = F, s3.location = s3.location, append = F)
-  s3_8 <- noctua:::s3_upload_location(x, schema, name, file.type = "json", compress = T, partition = partition, s3.location = s3.location, append = T)
-  
-  expect_equal(dirname(s3_1[[2]]), s3_loc$exp_s3_1)
-  expect_equal(dirname(s3_2[[2]]), s3_loc$exp_s3_2)
-  expect_equal(dirname(s3_3[[2]]), s3_loc$exp_s3_3)
-  expect_equal(dirname(s3_4[[2]]), s3_loc$exp_s3_4)
-  expect_equal(dirname(s3_5[[2]]), s3_loc$exp_s3_5)
-  expect_equal(dirname(s3_6[[2]]), s3_loc$exp_s3_6)
-  expect_equal(dirname(s3_7[[2]]), s3_loc$exp_s3_7)
-  expect_equal(dirname(s3_8[[2]]), s3_loc$exp_s3_8)
-  
-  expect_true(endsWith(s3_1[[2]], "csv"))
-  expect_true(endsWith(s3_2[[2]], "csv.gz"))
-  expect_true(endsWith(s3_3[[2]][1], "tsv"))
-  expect_true(endsWith(s3_4[[2]][1], "tsv.gz"))
-  expect_true(endsWith(s3_5[[2]][1], "parquet"))
-  expect_true(endsWith(s3_6[[2]][1], "snappy.parquet"))
-  expect_true(endsWith(s3_7[[2]][1], "json"))
-  expect_true(endsWith(s3_8[[2]][1], "json"))
+  expect_equal(s3_1, list(Bucket = "bucket", Key = "path/to/file", Schema = "default", Name = "dummy_table", Partition = "YEAR=2000"))
+  expect_equal(s3_2, list(Bucket = "bucket", Key = "path/to/file", Schema = "default", Name = "dummy_table", Partition = NULL))
+  expect_equal(s3_3, list(Bucket = "bucket", Key = "path/to/file/dummy_table", Schema = "schema", Name = NULL, Partition = "YEAR=2000"))
+  expect_equal(s3_4, list(Bucket = "bucket", Key = "path/to/file/dummy_table", Schema = "schema", Name = NULL, Partition = NULL))
+  expect_equal(s3_5, list(Bucket = "bucket", Key = "path/schema/to/file", Schema = NULL, Name = "dummy_table", Partition = "YEAR=2000"))
+  expect_equal(s3_6, list(Bucket = "bucket", Key = "path/schema/to/file", Schema = NULL, Name = "dummy_table", Partition = NULL))
+  expect_equal(s3_7, list(Bucket = "bucket", Key = "path/to/file/schema/dummy_table", Schema = NULL, Name = NULL, Partition = "YEAR=2000"))
+  expect_equal(s3_8, list(Bucket = "bucket", Key = "path/to/file/schema/dummy_table", Schema = NULL, Name = NULL, Partition = NULL))
 })
