@@ -209,7 +209,7 @@ Athena_write_table <-
     ############# update data to aws s3 ###########################
     
     # send data over to s3 bucket
-    upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress, append)
+    upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress)
     
     if (!append) {
       sql <- sqlCreateTable(conn, table = name, fields = value, field.types = field.types, 
@@ -221,7 +221,7 @@ Athena_write_table <-
       dbClearResult(rs)}
     
     # Repair table
-    repair_table(conn, name, partition, s3.location, append)
+    repair_table(conn, name, partition, s3.location)
     
     on.exit({lapply(FileLocation, unlink)
       if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
@@ -230,22 +230,25 @@ Athena_write_table <-
   }
 
 # send data to s3 is Athena registered location
-upload_data <- function(con, x, name, partition = NULL, s3.location= NULL,  file.type = NULL, compress = NULL, append = FALSE) {
-  
-  # Get schema and name
-  if (grepl("\\.", name)) {
-    schema <- gsub("\\..*", "" , name)
-    name <- gsub(".*\\.", "" , name)
-  } else {
-    schema <- con@info$dbms.name
-    name <- name}
+upload_data <- function(conn, x, name, partition = NULL, s3.location= NULL,  file.type = NULL, compress = NULL) {
   
   # create s3 location components
-  s3_key <- s3_upload_location(x, schema, name, partition, s3.location, file.type, compress, append)
+  s3_location <- s3_upload_location(conn, s3.location, name, partition)
+  
+  # 
+  Bucket <- s3_location$Bucket
+  s3_location$Bucket <- NULL
+  s3_location <- Filter(Negate(is.null), s3_location)
+  s3_key <- paste(s3_location,collapse = "/")
+  
+  # Upload file with uuid to allow appending to same s3 location 
+  FileType <- if(compress) Compress(file.type, compress) else file.type
+  FileName <- paste(uuid::UUIDgenerate(n = length(x)),  FileType, sep = ".")
+  s3_key <- paste(s3_key, FileName, sep = "/")
   
   for (i in 1:length(x)){
     obj <- readBin(x[i], "raw", n = file.size(x[i]))
-    retry_api_call(con@ptr$S3$put_object(Body = obj, Bucket = s3_key[[1]], Key = s3_key[[2]][i]))}
+    retry_api_call(conn@ptr$S3$put_object(Body = obj, Bucket = Bucket, Key = s3_key[i]))}
 
   invisible(NULL)
 }
@@ -420,17 +423,19 @@ setMethod("sqlCreateTable", "AthenaConnection",
       schema <- con@info$dbms.name
       table1 <- table}
     
+    # create s3 location
+    s3_location <- s3_upload_location(con, s3.location, table, NULL)
+    s3_location <- Filter(Negate(is.null), s3_location)
+    s3_location <- sprintf("'s3://%s/'", paste(s3_location,collapse = "/"))
+    
     table <- paste0(quote_identifier(con,  c(schema,table1)), collapse = ".")
     
-    s3.location <- gsub("/$", "", s3.location)
-    if(grepl(table1, s3.location)){s3.location <- gsub(paste0("/", table1,"$"), "", s3.location)}
-    s3.location <- paste0("'",s3.location,"/",schema,"/", table1,"/'")
     SQL(paste0(
       "CREATE EXTERNAL TABLE ", table, " (\n",
       "  ", paste(field, collapse = ",\n  "), "\n)\n",
       partitioned(con, partition),
       FileType(file.type), "\n",
-      "LOCATION ",s3.location, "\n",
+      "LOCATION ",s3_location, "\n",
       header(file.type, compress)
     ))
   }
@@ -448,7 +453,9 @@ createFields <- function(con, fields, field.types) {
   
   field_names <- gsub("\\.", "_", make.names(names(fields), unique = TRUE))
   DIFF <- setdiff(field_names, names(fields))
-  if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
+  if (length(DIFF) > 0) 
+    message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",
+            paste0(DIFF, collapse= ",\n"))
   
   field_names <- quote_identifier(con, field_names)
   field.types <- unname(fields)
@@ -508,55 +515,40 @@ quote_identifier <- function(conn, x, ...) {
 }
 
 # moved s3 component builder to separate helper function to allow for unit tests
-s3_upload_location <- function(x, 
-         schema, 
-         name,
-         partition = NULL,
-         s3.location= NULL,
-         file.type = NULL,
-         compress = NULL,
-         append = FALSE){
-  # formatting s3 partitions
-  partition <- unlist(partition)
+s3_upload_location <- function(con, s3.location = NULL, name = NULL, partition = NULL){
+  # Get schema and name
+  if (grepl("\\.", name)) {
+    schema <- gsub("\\..*", "" , name)
+    name <- gsub(".*\\.", "" , name)
+  } else {
+    schema <- con@info$dbms.name
+    name <- name}
+  
+  # formatting partitions
   partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
-  
-  # s3_file name
-  FileType <- if(compress) Compress(file.type, compress) else file.type
-  
-  # Upload file with uuid to allow appending to same s3 location 
-  FileName <- paste(uuid::UUIDgenerate(n = length(x)),  FileType, sep = ".")
+  partition <- if(partition == "") NULL else partition
   
   # s3 bucket and key split
   s3_info <- split_s3_uri(s3.location)
   s3_info$key <- gsub("/$", "", s3_info$key)
   
-  # Append data to existing s3 location
-  if(append) {return(list(s3_info$bucket,
-                          paste(s3_info$key, partition, FileName, sep = "/")))}
-  
-  if (partition != "") partition <- paste0(partition, "/")
   split_key <- unlist(strsplit(s3_info$key,"/"))
   
-  # remove name from s3 key
-  if(split_key[length(split_key)] == name || length(split_key) == 0)  split_key <- split_key[-length(split_key)]
+  schema <- if(schema %in% tolower(split_key)) NULL else schema
+  name <- if(name %in% tolower(split_key)) NULL else name
   
-  # remove schema from s3 key
-  if(any(schema == split_key))  split_key <- split_key[-which(schema == split_key)]
-  
-  s3_info$key <- paste(split_key, collapse = "/")
-  if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
-  
-  # s3 folder
-  schema <- paste0(schema, "/")
-  name <- paste0(name, "/")
-  
-  # S3 new syntax #73
-  list(s3_info$bucket,
-       sprintf("%s%s%s%s%s", s3_info$key, schema, name, partition, FileName))
+  return(
+    list(Bucket = s3_info$bucket,
+         Key = s3_info$key,
+         Schema = schema,
+         Name = name,
+         Partition = partition
+    )
+  )
 }
 
 # repair table using MSCK REPAIR TABLE for non partitioned and ALTER TABLE for partitioned tables
-repair_table <- function(con, name, partition = NULL, s3.location = NULL, append = FALSE){
+repair_table <- function(con, name, partition = NULL, s3.location = NULL){
   if (grepl("\\.", name)) {
     schema <- gsub("\\..*", "" , name)
     table1 <- gsub(".*\\.", "" , name)
@@ -572,52 +564,28 @@ repair_table <- function(con, name, partition = NULL, s3.location = NULL, append
     res <- dbExecute(con, query)
     dbClearResult(res)
   } else {
-    # formatting s3 partitions
-    s3_partition <- unlist(partition)
-    s3_partition <- paste(names(s3_partition), unname(s3_partition), sep = "=", collapse = "/")
-    
-    # s3 bucket and key split
-    s3_info <- split_s3_uri(s3.location)
-    s3_info$key <- gsub("/$", "", s3_info$key)
-    
-    # Append data to existing s3 location
-    if(append) {s3.location <- sprintf("s3://%s/%s/%s/", s3_info$bucket, s3_info$key, s3_partition)
-    } else {
-      if (s3_partition != "") s3_partition <- paste0(s3_partition, "/")
-      split_key <- unlist(strsplit(s3_info$key,"/"))
-      
-      # remove name from s3 key
-      if(split_key[length(split_key)] == table1 || length(split_key) == 0)  split_key <- split_key[-length(split_key)]
-      
-      # remove schema from s3 key
-      if(any(schema == split_key))  split_key <- split_key[-which(schema == split_key)]
-      
-      s3_info$key <- paste(split_key, collapse = "/")
-      if (s3_info$key != "") s3_info$key <- paste0(s3_info$key, "/")
-      
-      # s3 folder
-      schema <- paste0(schema, "/")
-      table1 <- paste0(table1, "/")
-      
-      # S3 new syntax #73
-      s3.location <- sprintf("s3://%s/%s%s%s%s", s3_info$bucket, s3_info$key, schema, table1, s3_partition)
-    }
+    # create s3 location
+    s3_location <- s3_upload_location(con, s3.location, name, partition)
+    s3_location <- Filter(Negate(is.null), s3_location)
+    s3_location <- file.path("s3:/", paste(s3_location,collapse = "/"))
     
     partition_names <- quote_identifier(con, names(partition))
     partition <- dbQuoteString(con, partition)
     partition <- paste0(partition_names, " = ", partition, collapse = ", ")
-    s3.location <- dbQuoteString(con, s3.location)
+    s3_location <- dbQuoteString(con, s3_location)
     
-    query <- SQL(paste0("ALTER TABLE ", table, " ADD IF NOT EXISTS\nPARTITION (", partition, ")\nLOCATION ", s3.location))
+    query <- SQL(paste0("ALTER TABLE ", table, " ADD IF NOT EXISTS\nPARTITION (", partition, ")\nLOCATION ", s3_location))
     res <- dbSendQuery(con, query)
     poll_result <- poll(res)
     dbClearResult(res)
     # If query failed, due to glue permissions default back to msck repair table
-    if(poll_result$QueryExecution$Status$State == "FAILED" && grepl(".*glue.*BatchCreatePartition.*AccessDeniedException", poll_result$QueryExecution$Status$StateChangeReason)) {
+    if(poll_result$QueryExecution$Status$State == "FAILED" && 
+       grepl(".*glue.*BatchCreatePartition.*AccessDeniedException", 
+             poll_result$QueryExecution$Status$StateChangeReason)) {
       query <- SQL(paste0("MSCK REPAIR TABLE ", table))
       res <- dbExecute(con, query)
       dbClearResult(res)
-    } else if (poll_result$QueryExecution$Status$State == "FAILED") stop(poll_result$QueryExecution$Status$StateChangeReason, call. = FALSE)
-    
+    } else if (poll_result$QueryExecution$Status$State == "FAILED")
+        stop(poll_result$QueryExecution$Status$StateChangeReason, call. = FALSE)
   }
 }
