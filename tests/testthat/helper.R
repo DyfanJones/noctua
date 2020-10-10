@@ -17,7 +17,7 @@ tbl_ddl <-
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ','
 	LINES TERMINATED BY ", gsub("_","","'\\_n'"),
-                  "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'
+                  "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl2 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
@@ -27,7 +27,7 @@ tbl2 =
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ','
 	LINES TERMINATED BY ", gsub("_","","'\\_n'"),
-           "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'
+           "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\",
 \t\t'compressionType'='gzip');")),
 tbl3 = 
@@ -38,7 +38,7 @@ tbl3 =
 ROW FORMAT DELIMITED
 \tFIELDS TERMINATED BY '	'
 \tLINES TERMINATED BY ", gsub("_","","'\\_n'"),"
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl4 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
@@ -48,7 +48,7 @@ tbl4 =
 ROW FORMAT DELIMITED
 \tFIELDS TERMINATED BY '	'
 \tLINES TERMINATED BY ", gsub("_","","'\\_n'"),"
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\",
 \t\t'compressionType'='gzip');")), 
 tbl5 = 
@@ -57,7 +57,7 @@ tbl5 =
   `y` STRING
 )
 STORED AS PARQUET
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'\n;")),
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n;")),
 tbl6 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
   `x` INT,
@@ -65,7 +65,7 @@ tbl6 =
 )
 PARTITIONED BY (`timestamp` STRING)
 STORED AS PARQUET
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 tblproperties (\"parquet.compress\"=\"SNAPPY\");")),
 tbl7 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
@@ -73,7 +73,7 @@ tbl7 =
   `y` STRING
 )
 ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'\n")),
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n")),
 tbl8 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
   `x` INT,
@@ -81,7 +81,7 @@ tbl8 =
 )
 PARTITIONED BY (`timestamp` STRING)
 ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"default/test_df/'\n")))
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n")))
 
 
 # static Athena Query Request Tests
