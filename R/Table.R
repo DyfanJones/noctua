@@ -537,19 +537,18 @@ s3_upload_location <- function(con, s3.location = NULL, name = NULL, partition =
   
   split_key <- unlist(strsplit(s3_info$key,"/"))
   
+  # formatting partitions
+  partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
+  partition <- if(partition == "") NULL else partition
+  
   # Leave s3 location if appending to table:
   # Existing tables may not follow noctua s3 location schema
   if (!append){
     schema <- if(schema %in% tolower(split_key)) NULL else schema
     name <- if(name %in% tolower(split_key)) NULL else name
-  
-    # formatting partitions
-    partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
-    partition <- if(partition == "") NULL else partition
   } else {
     schema <- NULL
     name <- NULL
-    partition <- NULL
   }
   
   return(
