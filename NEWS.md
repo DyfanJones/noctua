@@ -40,6 +40,7 @@ Info: The S3 objects in prefix will be deleted:
   s3://bucket/path/schema/table
 ```
 To overcome this `dbRemoveTable` will opt for `paws::s3()$list_objects_v2` instead of `paws::s3()$list_objects` when listing s3 objects to be deleted. This allows `noctua` to iterate over AWS s3 prefix using tokens, instead of deleting objects in chunks.
+* `s3_upload_location` simplified how s3 location is built. Now s3.location parameter isn't affected and instead only additional components e.g. name, schema and partition.
 
 # noctua 1.8.1
 ## Bug Fix
