@@ -536,6 +536,7 @@ s3_upload_location <- function(con, s3.location = NULL, name = NULL, partition =
   s3_info$key <- gsub("/$", "", s3_info$key)
   
   split_key <- unlist(strsplit(s3_info$key,"/"))
+  s3_info$key <- if(s3_info$key == "") NULL else s3_info$key
   
   # formatting partitions
   partition <- paste(names(partition), unname(partition), sep = "=", collapse = "/")
