@@ -212,18 +212,26 @@ db_explain.AthenaConnection <- function(con, sql, ...){
 #' @rdname backend_dbplyr
 db_query_fields.AthenaConnection <- function(con, sql, ...) {
   
-  # check if sql is dbplyr ident
-  is_ident <- inherits(sql, "ident")
+  # check if sql is dbplyr schema
+  in_schema <- inherits(sql, c("dbplyr_schema", "ident"))
   
-  if(is_ident) { # If ident, get the fields from Glue
+  if(in_schema) {
     
-    if (grepl("\\.", sql)) {
-      dbms.name <- gsub("\\..*", "" , sql)
-      Table <- gsub(".*\\.", "" , sql)
-    } else {
-      dbms.name <- con@info$dbms.name
-      Table <- sql}
+    if(inherits(sql, "ident")) {
+      if (grepl("\\.", sql)) {
+        dbms.name <- gsub("\\..*", "" , sql)
+        Table <- gsub(".*\\.", "" , sql)
+      } else {
+        dbms.name <- con@info$dbms.name
+        Table <- sql}
+    }
     
+    if(inherits(sql, "dbplyr_schema")){
+      dbms.name <- sql$schema
+      Table <- sql$table
+    }
+    
+    # If dbplyr schema, get the fields from Glue
     tryCatch(
       output <- con@ptr$glue$get_table(DatabaseName = dbms.name,
                                        Name = Table)$Table)
