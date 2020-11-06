@@ -5,6 +5,8 @@
 \alias{db_save_query.AthenaConnection}
 \alias{db_explain.AthenaConnection}
 \alias{db_query_fields.AthenaConnection}
+\alias{sql_escape_date.AthenaConnection}
+\alias{sql_escape_datetime.AthenaConnection}
 \title{Athena S3 implementation of dbplyr backend functions}
 \usage{
 db_save_query.AthenaConnection(
@@ -21,6 +23,10 @@ db_save_query.AthenaConnection(
 db_explain.AthenaConnection(con, sql, ...)
 
 db_query_fields.AthenaConnection(con, sql, ...)
+
+sql_escape_date.AthenaConnection(con, x)
+
+sql_escape_datetime.AthenaConnection(con, x)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
@@ -39,6 +45,8 @@ db_query_fields.AthenaConnection(con, sql, ...)
 \item{compress}{Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}}
 
 \item{...}{other parameters, currently not implemented}
+
+\item{x}{R object to be transformed into athena equivalent}
 }
 \value{
 \describe{
