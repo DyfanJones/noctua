@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -101,7 +101,8 @@
 
       
 
-      </header><div class="row">
+      </header><link href="how_to_retry_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="how_to_retry_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>How to Retry?</h1>
@@ -120,31 +121,33 @@
 <h1 class="hasAnchor">
 <a href="#how-to-handle-noctuas-retry" class="anchor"></a>How to handle <code>noctua</code>’s retry?</h1>
 <p>By default <code>noctua</code> performs a retry noisily, this means it will report the exception it has encountered and let the user know how long <code>noctua</code> will wait until it retries again. This is reported in the following format:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">{expection message} + "Request failed. Retrying in " + {wait time}  + " seconds..."</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">{expection message} <span class="op">+</span><span class="st"> "Request failed. Retrying in "</span> <span class="op">+</span><span class="st"> </span>{wait time}  <span class="op">+</span><span class="st"> " seconds..."</span></a></code></pre></div>
 <p>This is to keep the user informed in what <code>noctua</code> is doing behind the scenes.</p>
 <div id="configure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#configure" class="anchor"></a>Configure</h2>
 <p>By default <code>noctua</code> retries 5 times and does it noisily. To configure this, <code>noctua_options</code> has been give 2 extra parameters <code>retry</code> and <code>retry_quiet</code>. <code>retry</code> is the number of retries <code>noctua</code> will perform. <code>retry_quiet</code> tells <code>noctua</code> to retry quietly or not.</p>
 <p>We can change the default retry settings so that <code>noctua</code> will retry 10 times and do it quietly:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">retry</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">retry_quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>retry <span class="op">=</span> <span class="fl">10</span>, retry_quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>If you wish to create your own custom retry function just set the <code>retry</code> to 0:</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua">noctua</a></span><span class="op">)</span>
 
 <span class="co"># connection to AWS Athena</span>
-<span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Stop noctua retrying</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="kw">retry</span> <span class="kw">=</span> <span class="fl">0</span>)
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>retry <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
 
 <span class="co"># build your own custom retry function</span>
-<span class="no">custom_retry</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>){
+<span class="va">custom_retry</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
   <span class="co"># your custom retry method</span>
-}
+<span class="op">}</span>
 
 <span class="co"># apply your own retry function</span>
-<span class="fu">custom_retry</span>(<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select ..."</span>))</pre></body></html></div>
+<span class="fu">custom_retry</span><span class="op">(</span><span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select ..."</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="requests" class="section level1">
@@ -177,7 +180,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

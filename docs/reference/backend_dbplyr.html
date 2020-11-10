@@ -82,7 +82,7 @@ utilise AWS Glue to speed up sql query execution." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -159,27 +159,31 @@ The AWS Athena implementation give extra parameters to allow access the to stand
 utilise AWS Glue to speed up sql query execution.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>db_save_query.AthenaConnection</span>(
-  <span class='no'>con</span>,
-  <span class='no'>sql</span>,
-  <span class='no'>name</span>,
-  <span class='kw'>file_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>, <span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>, <span class='st'>"orc"</span>),
-  <span class='kw'>s3_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>partition</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)
+    <pre class="usage"><span class='fu'>db_save_query.AthenaConnection</span><span class='op'>(</span>
+  <span class='va'>con</span>,
+  <span class='va'>sql</span>,
+  <span class='va'>name</span>,
+  file_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"NULL"</span>, <span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>, <span class='st'>"orc"</span><span class='op'>)</span>,
+  s3_location <span class='op'>=</span> <span class='cn'>NULL</span>,
+  partition <span class='op'>=</span> <span class='cn'>NULL</span>,
+  compress <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
-<span class='fu'>db_explain.AthenaConnection</span>(<span class='no'>con</span>, <span class='no'>sql</span>, <span class='no'>...</span>)
+<span class='fu'>db_explain.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>sql</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>db_query_fields.AthenaConnection</span>(<span class='no'>con</span>, <span class='no'>sql</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>db_query_fields.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>sql</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>sql_escape_date.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>x</span><span class='op'>)</span>
+
+<span class='fu'>sql_escape_datetime.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>con</th>
-      <td><p>A <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></code> object, as returned by <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect()</a></code></p></td>
+      <td><p>A <code><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></code> object, as returned by <code><a href='dbConnect,AthenaDriver-method.html'>dbConnect()</a></code></p></td>
     </tr>
     <tr>
       <th>sql</th>
@@ -210,12 +214,16 @@ utilise AWS Glue to speed up sql query execution.</p>
       <th>...</th>
       <td><p>other parameters, currently not implemented</p></td>
     </tr>
+    <tr>
+      <th>x</th>
+      <td><p>R object to be transformed into athena equivalent</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     
-<dl'>
+<dl>
 <dt>db_save_query</dt><dd><p>Returns table name</p></dd>
 <dt>db_explain</dt><dd><p>Raises an <code>error</code> as AWS Athena does not support <code>EXPLAIN</code> queries <a href='https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html'>Athena Limitations</a></p></dd>
 <dt>db_query_fields</dt><dd><p>Returns sql query column names</p></dd>
@@ -238,7 +246,7 @@ utilise AWS Glue to speed up sql query execution.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -154,26 +154,26 @@
     </div>
 
     <div class="ref-description">
-    <p>The <code>dbSendQuery()</code> and <code>dbSendStatement()</code> method submits a query to Athena but does not wait for query to execute. 
+    <p>The <code><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery()</a></code> and <code><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement()</a></code> method submits a query to Athena but does not wait for query to execute. 
              <code><a href='dbHasCompleted.html'>dbHasCompleted</a></code> method will need to ran to check if query has been completed or not.
-             The <code>dbExecute()</code> method submits a query to Athena and waits for the query to be executed.</p>
+             The <code><a href='https://dbi.r-dbi.org/reference/dbExecute.html'>dbExecute()</a></code> method submits a query to Athena and waits for the query to be executed.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaConnection,character</span>
-<span class='fu'>dbSendQuery</span>(<span class='no'>conn</span>, <span class='kw'>statement</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span><span class='op'>(</span><span class='va'>conn</span>, statement <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for AthenaConnection,character</span>
-<span class='fu'>dbSendStatement</span>(<span class='no'>conn</span>, <span class='kw'>statement</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement</a></span><span class='op'>(</span><span class='va'>conn</span>, statement <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for AthenaConnection,character</span>
-<span class='fu'>dbExecute</span>(<span class='no'>conn</span>, <span class='kw'>statement</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbExecute.html'>dbExecute</a></span><span class='op'>(</span><span class='va'>conn</span>, statement <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>conn</th>
-      <td><p>A DBIConnection object, as returned by
+      <td><p>A <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection</a> object, as returned by
 <code><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect()</a></code>.</p></td>
     </tr>
     <tr>
@@ -194,24 +194,25 @@
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></code>, <code><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement</a></code>, <code><a href='https://dbi.r-dbi.org/reference/dbExecute.html'>dbExecute</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Note: </span>
 <span class='co'># - Require AWS Account to run below example.</span>
 <span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>DBI</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://r-dbi.github.io/DBI'>DBI</a></span><span class='op'>)</span>
 
 <span class='co'># Demo connection to Athena using profile name </span>
-<span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
+<span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Sending Queries to Athena</span>
-<span class='no'>res1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
-<span class='no'>res2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
-<span class='no'>res3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbExecute.html'>dbExecute</a></span>(<span class='no'>con</span>, <span class='st'>"show databases"</span>)
+<span class='va'>res1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendQuery.html'>dbSendQuery</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"show databases"</span><span class='op'>)</span>
+<span class='va'>res2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbSendStatement.html'>dbSendStatement</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"show databases"</span><span class='op'>)</span>
+<span class='va'>res3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dbi.r-dbi.org/reference/dbExecute.html'>dbExecute</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"show databases"</span><span class='op'>)</span>
 
 <span class='co'># Disconnect conenction</span>
-<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-}</div></pre>
+<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -227,7 +228,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

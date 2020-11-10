@@ -1,4 +1,4 @@
-# noctua 1.8.1.9000
+# noctua 1.9.0
 ## Minor Change:
 * `dbRemoveTable` now removes AWS S3 objects using `delete_objects` instead of `delete_object`. This allows `noctua` to delete AWS S3 files in batches. This will reduce the number of api calls to AWS and comes with a performance improvement.
 ```r
@@ -41,7 +41,7 @@ Info: The S3 objects in prefix will be deleted:
 ```
 To overcome this `dbRemoveTable` will opt for `paws::s3()$list_objects_v2` instead of `paws::s3()$list_objects` when listing s3 objects to be deleted. This allows `noctua` to iterate over AWS s3 prefix using tokens, instead of deleting objects in chunks.
 * `s3_upload_location` simplified how s3 location is built. Now s3.location parameter isn't affected and instead only additional components e.g. name, schema and partition.
-* `dbplyr::in_schema` has changed class output from `ident` to `dbplyr_schema`, this breaks `db_query_fields.AthenaConnection`. Now `db_query_fields.AthenaConnection` checks for classes `ident` and `dbplyr_schema` (#117)
+* `dbplyr v-2.0.0` function `in_schema` now wraps strings in quotes, this breaks `db_query_fields.AthenaConnection`. Now `db_query_fields.AthenaConnection` removes any quotation from the string so that it can search `AWS GLUE` for table metadata. (#117)
 
 # noctua 1.8.1
 ## Bug Fix

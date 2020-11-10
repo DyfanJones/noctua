@@ -94,7 +94,7 @@ update_work_groupUpdates the workgroup with the specified name (link).
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -166,10 +166,10 @@ update_work_groupUpdates the workgroup with the specified name (link).
     </div>
 
     <div class="ref-description">
-    <p>Lower level API access, allows user to create and delete Athena Work Groups.</p><dl'>
+    <p>Lower level API access, allows user to create and delete Athena Work Groups.</p><dl>
 <dt>create_work_group</dt><dd><p>Creates a workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/create_work_group.html'>link</a>). 
                          The work group utilises parameters from the <code>dbConnect</code> object, to determine the encryption and output location of the work group.
-                         The s3_staging_dir, encryption_option and kms_key parameters are gotten from <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></code></p></dd>
+                         The s3_staging_dir, encryption_option and kms_key parameters are gotten from <code><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></code></p></dd>
 <dt>tag_options</dt><dd><p>Helper function to create tag options for function <code>create_work_group()</code></p></dd>
 <dt>delete_work_group</dt><dd><p>Deletes the workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/delete_work_group.html'>link</a>). 
                          The primary workgroup cannot be deleted.</p></dd>
@@ -177,47 +177,47 @@ update_work_groupUpdates the workgroup with the specified name (link).
 <dt>get_work_group</dt><dd><p>Returns information about the workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/get_work_group.html'>link</a>).</p></dd>
 <dt>update_work_group</dt><dd><p>Updates the workgroup with the specified name (<a href='https://paws-r.github.io/docs/athena/update_work_group.html'>link</a>). 
                          The workgroup's name cannot be changed. The work group utilises parameters from the <code>dbConnect</code> object, to determine the encryption and output location of the work group.
-                         The s3_staging_dir, encryption_option and kms_key parameters are gotten from <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></code></p></dd>
+                         The s3_staging_dir, encryption_option and kms_key parameters are gotten from <code><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></code></p></dd>
 
 </dl>
 
     </div>
 
-    <pre class="usage"><span class='fu'>create_work_group</span>(
-  <span class='no'>conn</span>,
-  <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>enforce_work_group_config</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>publish_cloud_watch_metrics</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bytes_scanned_cut_off</span> <span class='kw'>=</span> <span class='fl'>10000000L</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='fu'>tag_options</span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-)
+    <pre class="usage"><span class='fu'>create_work_group</span><span class='op'>(</span>
+  <span class='va'>conn</span>,
+  work_group <span class='op'>=</span> <span class='cn'>NULL</span>,
+  enforce_work_group_config <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  publish_cloud_watch_metrics <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  bytes_scanned_cut_off <span class='op'>=</span> <span class='fl'>10000000L</span>,
+  description <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tags <span class='op'>=</span> <span class='fu'>tag_options</span><span class='op'>(</span>key <span class='op'>=</span> <span class='cn'>NULL</span>, value <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>tag_options</span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>tag_options</span><span class='op'>(</span>key <span class='op'>=</span> <span class='cn'>NULL</span>, value <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>delete_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>recursive_delete_option</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>delete_work_group</span><span class='op'>(</span><span class='va'>conn</span>, work_group <span class='op'>=</span> <span class='cn'>NULL</span>, recursive_delete_option <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>list_work_groups</span>(<span class='no'>conn</span>)
+<span class='fu'>list_work_groups</span><span class='op'>(</span><span class='va'>conn</span><span class='op'>)</span>
 
-<span class='fu'>get_work_group</span>(<span class='no'>conn</span>, <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>get_work_group</span><span class='op'>(</span><span class='va'>conn</span>, work_group <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>update_work_group</span>(
-  <span class='no'>conn</span>,
-  <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>remove_output_location</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>enforce_work_group_config</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>publish_cloud_watch_metrics</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>bytes_scanned_cut_off</span> <span class='kw'>=</span> <span class='fl'>10000000L</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENABLED"</span>, <span class='st'>"DISABLED"</span>)
-)</pre>
+<span class='fu'>update_work_group</span><span class='op'>(</span>
+  <span class='va'>conn</span>,
+  work_group <span class='op'>=</span> <span class='cn'>NULL</span>,
+  remove_output_location <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  enforce_work_group_config <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  publish_cloud_watch_metrics <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  bytes_scanned_cut_off <span class='op'>=</span> <span class='fl'>10000000L</span>,
+  description <span class='op'>=</span> <span class='cn'>NULL</span>,
+  state <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ENABLED"</span>, <span class='st'>"DISABLED"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>conn</th>
-      <td><p>A <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></code> object, as returned by <code><a href='dbConnect-AthenaDriver-method.html'>dbConnect()</a></code></p></td>
+      <td><p>A <code><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></code> object, as returned by <code><a href='dbConnect,AthenaDriver-method.html'>dbConnect()</a></code></p></td>
     </tr>
     <tr>
       <th>work_group</th>
@@ -279,7 +279,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     
-<dl'>
+<dl>
 <dt>create_work_group</dt><dd><p>Returns <code>NULL</code> but invisible</p></dd>
 <dt>tag_options</dt><dd><p>Returns <code>list</code> but invisible</p></dd>
 <dt>delete_work_group</dt><dd><p>Returns <code>NULL</code> but invisible</p></dd>
@@ -291,45 +291,47 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Note: </span>
 <span class='co'># - Require AWS Account to run below example.</span>
 <span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>noctua</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/DyfanJones/noctua'>noctua</a></span><span class='op'>)</span>
 
 <span class='co'># Demo connection to Athena using profile name </span>
-<span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
+<span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># List current work group available</span>
-<span class='fu'>list_work_groups</span>(<span class='no'>con</span>)
+<span class='fu'>list_work_groups</span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
 
 <span class='co'># Create a new work group</span>
-<span class='no'>wg</span> <span class='kw'>&lt;-</span> <span class='fu'>create_work_group</span>(<span class='no'>con</span>,
+<span class='va'>wg</span> <span class='op'>&lt;-</span> <span class='fu'>create_work_group</span><span class='op'>(</span><span class='va'>con</span>,
                   <span class='st'>"demo_work_group"</span>,
-                   <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"This is a demo work group"</span>,
-                   <span class='kw'>tags</span> <span class='kw'>=</span> <span class='fu'>tag_options</span>(<span class='kw'>key</span><span class='kw'>=</span> <span class='st'>"demo_work_group"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"demo_01"</span>))
-
+                   description <span class='op'>=</span> <span class='st'>"This is a demo work group"</span>,
+                   tags <span class='op'>=</span> <span class='fu'>tag_options</span><span class='op'>(</span>key<span class='op'>=</span> <span class='st'>"demo_work_group"</span>, value <span class='op'>=</span> <span class='st'>"demo_01"</span><span class='op'>)</span><span class='op'>)</span>
+ 
 <span class='co'># List work groups to see new work group</span>
-<span class='fu'>list_work_groups</span>(<span class='no'>con</span>)
+<span class='fu'>list_work_groups</span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
 
 <span class='co'># get meta data from work group</span>
-<span class='no'>wg</span> <span class='kw'>&lt;-</span> <span class='fu'>get_work_group</span>(<span class='no'>con</span>, <span class='st'>"demo_work_group"</span>)
+<span class='va'>wg</span> <span class='op'>&lt;-</span> <span class='fu'>get_work_group</span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"demo_work_group"</span><span class='op'>)</span>
 
 <span class='co'># Update work group</span>
-<span class='no'>wg</span> <span class='kw'>&lt;-</span> <span class='fu'>update_work_group</span>(<span class='no'>con</span>, <span class='st'>"demo_work_group"</span>,
-                  <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"This is a demo work group update"</span>)
+<span class='va'>wg</span> <span class='op'>&lt;-</span> <span class='fu'>update_work_group</span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"demo_work_group"</span>,
+                  description <span class='op'>=</span> <span class='st'>"This is a demo work group update"</span><span class='op'>)</span>
 
 
 <span class='co'># get updated meta data from work group</span>
-<span class='no'>wg</span> <span class='kw'>&lt;-</span> <span class='fu'>get_work_group</span>(<span class='no'>con</span>, <span class='st'>"demo_work_group"</span>)
+<span class='va'>wg</span> <span class='op'>&lt;-</span> <span class='fu'>get_work_group</span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"demo_work_group"</span><span class='op'>)</span> 
 
 <span class='co'># Delete work group</span>
-<span class='fu'>delete_work_group</span>(<span class='no'>con</span>, <span class='st'>"demo_work_group"</span>)
+<span class='fu'>delete_work_group</span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"demo_work_group"</span><span class='op'>)</span>
 
 <span class='co'># Disconect from Athena</span>
-<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-}</div></pre>
+<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -345,7 +347,7 @@ For more information, see <a href='https://docs.aws.amazon.com/athena/latest/ug/
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

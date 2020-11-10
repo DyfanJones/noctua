@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -101,7 +101,8 @@
 
       
 
-      </header><div class="row">
+      </header><link href="aws_s3_backend_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="aws_s3_backend_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>AWS S3 Backend</h1>
@@ -124,12 +125,13 @@
 <p><code>noctua</code> aligns the <code>s3.location</code> to the following <code>AWS S3</code> structure: <code>{s3.location}/{schema}/{table_name}/{partition}/{file}</code> (remember that <code>s3.location</code> has to be in <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html">s3 uri format</a>: “s3://bucket-name/key-name”). This is to allow tables with same name to be uploaded to different schemas.</p>
 <p><img src="athena_s3_example.png" width="100%"></p>
 <p><strong>NOTE:</strong> <code>noctua</code> won’t duplicate the table name or schema if they have been provided in <code>s3.location</code>. For example:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu">dbWriteTable</span>(<span class="no">con</span>, <span class="st">"myschema.table"</span>, <span class="no">table</span>,
-             <span class="kw">s3.location</span> <span class="kw">=</span> <span class="st">"s3://mybucket/myschema/table"</span>,
-             <span class="kw">partition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"year"</span> <span class="kw">=</span> <span class="st">"2020"</span>))
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"myschema.table"</span>, <span class="va">table</span>, 
+             s3.location <span class="op">=</span> <span class="st">"s3://mybucket/myschema/table"</span>,
+             partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"year"</span> <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># AWS S3 location</span>
-<span class="st">"s3://mybucket/myschema/table/year=2020/table.tsv"</span></pre></body></html></div>
+<span class="st">"s3://mybucket/myschema/table/year=2020/table.tsv"</span></code></pre></div>
 </div>
 <div id="file-types" class="section level1">
 <h1 class="hasAnchor">
@@ -161,7 +163,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
