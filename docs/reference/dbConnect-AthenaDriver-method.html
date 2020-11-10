@@ -94,7 +94,7 @@ NOTE: If you have set any environmental variables in .Renviron please restart yo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -184,33 +184,33 @@ of supported environment variables:</p><ul>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaDriver</span>
-<span class='fu'>dbConnect</span>(
-  <span class='no'>drv</span>,
-  <span class='kw'>aws_access_key_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>aws_secret_access_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>aws_session_token</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>schema_name</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>work_group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>poll_interval</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>encryption_option</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NULL"</span>, <span class='st'>"SSE_S3"</span>, <span class='st'>"SSE_KMS"</span>, <span class='st'>"CSE_KMS"</span>),
-  <span class='kw'>kms_key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>role_session_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span>(<span class='st'>"noctua-session-%s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())),
-  <span class='kw'>duration_seconds</span> <span class='kw'>=</span> <span class='fl'>3600L</span>,
-  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>region_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>keyboard_interrupt</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>dbConnect</span><span class='op'>(</span>
+  <span class='va'>drv</span>,
+  aws_access_key_id <span class='op'>=</span> <span class='cn'>NULL</span>,
+  aws_secret_access_key <span class='op'>=</span> <span class='cn'>NULL</span>,
+  aws_session_token <span class='op'>=</span> <span class='cn'>NULL</span>,
+  schema_name <span class='op'>=</span> <span class='st'>"default"</span>,
+  work_group <span class='op'>=</span> <span class='cn'>NULL</span>,
+  poll_interval <span class='op'>=</span> <span class='cn'>NULL</span>,
+  encryption_option <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"NULL"</span>, <span class='st'>"SSE_S3"</span>, <span class='st'>"SSE_KMS"</span>, <span class='st'>"CSE_KMS"</span><span class='op'>)</span>,
+  kms_key <span class='op'>=</span> <span class='cn'>NULL</span>,
+  profile_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  role_arn <span class='op'>=</span> <span class='cn'>NULL</span>,
+  role_session_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sprintf.html'>sprintf</a></span><span class='op'>(</span><span class='st'>"noctua-session-%s"</span>, <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+  duration_seconds <span class='op'>=</span> <span class='fl'>3600L</span>,
+  s3_staging_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  region_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  keyboard_interrupt <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>drv</th>
-      <td><p>an object that inherits from DBIDriver,
-or an existing DBIConnection
+      <td><p>an object that inherits from <a href='https://dbi.r-dbi.org/reference/DBIDriver-class.html'>DBIDriver</a>,
+or an existing <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection</a>
 object (in order to clone an existing connection).</p></td>
     </tr>
     <tr>
@@ -294,31 +294,32 @@ AWS region codes (region code example: Region = EU (Ireland)     <code> region_n
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Connect to Athena using your aws access keys</span>
- <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>DBI</span>)
- <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'>dbConnect</span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>(),
-                  <span class='kw'>aws_access_key_id</span><span class='kw'>=</span><span class='st'>'YOUR_ACCESS_KEY_ID'</span>, <span class='co'># </span>
-                  <span class='kw'>aws_secret_access_key</span><span class='kw'>=</span><span class='st'>'YOUR_SECRET_ACCESS_KEY'</span>,
-                  <span class='kw'>s3_staging_dir</span><span class='kw'>=</span><span class='st'>'s3://path/to/query/bucket/'</span>,
-                  <span class='kw'>region_name</span><span class='kw'>=</span><span class='st'>'us-west-2'</span>)
- <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-
+ <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://r-dbi.github.io/DBI'>DBI</a></span><span class='op'>)</span>
+ <span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'>dbConnect</span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>,
+                  aws_access_key_id<span class='op'>=</span><span class='st'>'YOUR_ACCESS_KEY_ID'</span>, <span class='co'># </span>
+                  aws_secret_access_key<span class='op'>=</span><span class='st'>'YOUR_SECRET_ACCESS_KEY'</span>,
+                  s3_staging_dir<span class='op'>=</span><span class='st'>'s3://path/to/query/bucket/'</span>,
+                  region_name<span class='op'>=</span><span class='st'>'us-west-2'</span><span class='op'>)</span>
+ <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
+ 
 <span class='co'># Connect to Athena using your profile name</span>
 <span class='co'># Profile name can be created by using AWS CLI</span>
- <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'>dbConnect</span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>(),
-                  <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='st'>"YOUR_PROFILE_NAME"</span>,
-                  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='st'>'s3://path/to/query/bucket/'</span>)
- <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-
+ <span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'>dbConnect</span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>,
+                  profile_name <span class='op'>=</span> <span class='st'>"YOUR_PROFILE_NAME"</span>,
+                  s3_staging_dir <span class='op'>=</span> <span class='st'>'s3://path/to/query/bucket/'</span><span class='op'>)</span>
+ <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
+ 
 <span class='co'># Connect to Athena using ARN role</span>
- <span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'>dbConnect</span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>(),
-                  <span class='kw'>profile_name</span> <span class='kw'>=</span> <span class='st'>"YOUR_PROFILE_NAME"</span>,
-                  <span class='kw'>role_arn</span> <span class='kw'>=</span> <span class='st'>"arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"</span>,
-                  <span class='kw'>s3_staging_dir</span> <span class='kw'>=</span> <span class='st'>'s3://path/to/query/bucket/'</span>)
-
- <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-}</div></pre>
+ <span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'>dbConnect</span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>,
+                  profile_name <span class='op'>=</span> <span class='st'>"YOUR_PROFILE_NAME"</span>,
+                  role_arn <span class='op'>=</span> <span class='st'>"arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"</span>,
+                  s3_staging_dir <span class='op'>=</span> <span class='st'>'s3://path/to/query/bucket/'</span><span class='op'>)</span>
+                 
+ <span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -334,7 +335,7 @@ AWS region codes (region code example: Region = EU (Ireland)     <code> region_n
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

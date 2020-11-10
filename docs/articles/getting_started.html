@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -101,7 +101,8 @@
 
       
 
-      </header><div class="row">
+      </header><link href="getting_started_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="getting_started_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Started</h1>
@@ -127,11 +128,12 @@
 <h1 class="hasAnchor">
 <a href="#installing-noctua" class="anchor"></a>Installing <code>noctua</code>:</h1>
 <p>As <code>noctua</code> utilising the R AWS SDK <code>paws</code> the installation of <code>noctua</code> is pretty straight forward:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># cran version</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"noctua"</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># cran version</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"noctua"</span><span class="op">)</span>
 
 <span class="co"># Dev version</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"dyfanjones/noctua"</span>)</pre></body></html></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"dyfanjones/noctua"</span><span class="op">)</span></code></pre></div>
 <div id="docker-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#docker-example" class="anchor"></a>Docker Example:</h2>
@@ -155,27 +157,29 @@ docker run \
 <div id="low---level-api" class="section level2">
 <h2 class="hasAnchor">
 <a href="#low---level-api" class="anchor"></a>Low - Level API:</h2>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua">noctua</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># list all current work groups in AWS Athena</span>
-<span class="fu"><a href="../reference/work_group.html">list_work_groups</a></span>(<span class="no">con</span>)
+<span class="fu"><a href="../reference/work_group.html">list_work_groups</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>
 
 <span class="co"># Create a new work group</span>
-<span class="fu"><a href="../reference/work_group.html">create_work_group</a></span>(<span class="no">con</span>, <span class="st">"demo_work_group"</span>, <span class="kw">description</span> <span class="kw">=</span> <span class="st">"This is a demo work group"</span>,
-                  <span class="kw">tags</span> <span class="kw">=</span> <span class="fu"><a href="../reference/work_group.html">tag_options</a></span>(<span class="kw">key</span><span class="kw">=</span> <span class="st">"demo_work_group"</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"demo_01"</span>))</pre></body></html></div>
+<span class="fu"><a href="../reference/work_group.html">create_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,
+                  tags <span class="op">=</span> <span class="fu"><a href="../reference/work_group.html">tag_options</a></span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="dbi" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dbi" class="anchor"></a>DBI:</h2>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Get metadata </span>
-<span class="fu"><a href="../reference/dbGetInfo.html">dbGetInfo</a></span>(<span class="no">con</span>)
+<span class="fu"><a href="../reference/dbGetInfo.html">dbGetInfo</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>
 
 <span class="co"># $profile_name</span>
 <span class="co"># [1] "default"</span>
@@ -211,9 +215,9 @@ docker run \
 <span class="co"># [1] "1.5.1"</span>
 
 <span class="co"># create table to AWS Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris limit 10"</span>)
+<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris limit 10"</span><span class="op">)</span>
 <span class="co"># Info: (Data scanned: 860 Bytes)</span>
 <span class="co">#  sepal_length sepal_width petal_length petal_width species</span>
 <span class="co"># 1:           5.1         3.5          1.4         0.2  setosa</span>
@@ -225,19 +229,20 @@ docker run \
 <span class="co"># 7:           4.6         3.4          1.4         0.3  setosa</span>
 <span class="co"># 8:           5.0         3.4          1.5         0.2  setosa</span>
 <span class="co"># 9:           4.4         2.9          1.4         0.2  setosa</span>
-<span class="co"># 10:          4.9         3.1          1.5         0.1  setosa</span></pre></body></html></div>
+<span class="co"># 10:          4.9         3.1          1.5         0.1  setosa</span></code></pre></div>
 </div>
 <div id="dplyr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dplyr" class="anchor"></a>dplyr:</h2>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="no">athena_iris</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
+<span class="va">athena_iris</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span>
 
-<span class="no">athena_iris</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">species</span>, <span class="no">sepal_length</span>, <span class="no">sepal_width</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a></span>()
+<span class="va">athena_iris</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">sepal_length</span>, <span class="va">sepal_width</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Info: (Data scanned: 860 Bytes)</span>
 <span class="co"># # A tibble: 10 x 3</span>
@@ -252,7 +257,7 @@ docker run \
 <span class="co"># 7 setosa            4.6         3.4</span>
 <span class="co"># 8 setosa            5           3.4</span>
 <span class="co"># 9 setosa            4.4         2.9</span>
-<span class="co"># 10 setosa           4.9         3.1</span></pre></body></html></div>
+<span class="co"># 10 setosa           4.9         3.1</span></code></pre></div>
 </div>
 </div>
 <div id="useful-links" class="section level1">
@@ -281,7 +286,7 @@ docker run \
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

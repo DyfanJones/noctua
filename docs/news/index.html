@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -149,13 +149,77 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-181" class="section level1">
-<h1 class="page-header" data-toc-text="1.8.1">
-<a href="#noctua-181" class="anchor"></a>noctua 1.8.1<small> Unreleased </small>
+    <div id="noctua-190" class="section level1">
+<h1 class="page-header" data-toc-text="1.9.0">
+<a href="#noctua-190" class="anchor"></a>noctua 1.9.0<small> Unreleased </small>
 </h1>
+<div id="minor-change" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-change" class="anchor"></a>Minor Change:</h2>
+<ul>
+<li>
+<code>dbRemoveTable</code> now removes AWS S3 objects using <code>delete_objects</code> instead of <code>delete_object</code>. This allows <code>noctua</code> to delete AWS S3 files in batches. This will reduce the number of api calls to AWS and comes with a performance improvement.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-datatable.com">data.table</a></span><span class="op">)</span>
+
+<span class="va">X</span> <span class="op">&lt;-</span> <span class="fl">1010</span>
+<span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">X</span>,
+                    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>, 
+                    z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># create a removable table with 1010 parquet files in AWS S3.</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"rm_tbl"</span>, <span class="va">value</span>, file.type <span class="op">=</span> <span class="st">"parquet"</span>, overwrite <span class="op">=</span> <span class="cn">T</span>, max.batch <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+
+<span class="co"># old method: delete_object</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span><span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"rm_tbl"</span>, confirm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+<span class="co"># user  system elapsed </span>
+<span class="co"># 31.004   8.152 115.906 </span>
+
+<span class="co"># new method: delete_objects</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span><span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"rm_tbl"</span>, confirm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+<span class="co"># user  system elapsed </span>
+<span class="co"># 17.319   0.370  22.709 </span></code></pre></div>
+</div>
+<div id="new-feature" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-feature" class="anchor"></a>New Feature</h2>
+<ul>
+<li>Move <code>sql_escape_date</code> into <code>dplyr_integration.R</code> backend (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/121"># 121</a>).</li>
+<li>Allow noctua to append to a static AWS s3 location using uuid</li>
+</ul>
+</div>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix" class="anchor"></a>Bug Fix:</h2>
+<ul>
+<li>parquet file.types now use parameter <code>use_deprecated_int96_timestamps</code> set to <code>TRUE</code>. This puts POSIXct data type in to <code>java.sql.Timestamp</code> compatible format, such as <code>yyyy-MM-dd HH:mm:ss[.f...]</code>. Thanks to Christian N Wolz for highlight this issue.</li>
+<li>When more than 1000 files exist in the back of an Athena table. <code>dbRemoveTable</code> will ask the user twice to confirm if they wish to remove the backend files:</li>
+</ul>
+<pre><code>Info: The S3 objects in prefix will be deleted:
+  s3://bucket/path/schema/table
+Info: The S3 objects in prefix will be deleted:
+  s3://bucket/path/schema/table</code></pre>
+<p>To overcome this <code>dbRemoveTable</code> will opt for <code>paws::s3()$list_objects_v2</code> instead of <code>paws::s3()$list_objects</code> when listing s3 objects to be deleted. This allows <code>noctua</code> to iterate over AWS s3 prefix using tokens, instead of deleting objects in chunks.</p>
+<ul>
+<li>
+<code>s3_upload_location</code> simplified how s3 location is built. Now s3.location parameter isn’t affected and instead only additional components e.g. name, schema and partition.</li>
+<li>
+<code>dbplyr v-2.0.0</code> function <code>in_schema</code> now wraps strings in quotes, this breaks <code>db_query_fields.AthenaConnection</code>. Now <code>db_query_fields.AthenaConnection</code> removes any quotation from the string so that it can search <code>AWS GLUE</code> for table metadata. (<a href='https://github.com/DyfanJones/noctua/issues/117'>#117</a>)</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-181" class="section level1">
+<h1 class="page-header" data-toc-text="1.8.1">
+<a href="#noctua-181" class="anchor"></a>noctua 1.8.1<small> 2020-09-25 </small>
+</h1>
+<div id="bug-fix-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Pass a uuid string to <code>start_query_execution</code> parameter <code>ClientRequestToken</code>. This so that the <code>ClientRequestToken</code> is “A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once).” (<a href='https://github.com/DyfanJones/noctua/issues/104'>#104</a>)</li>
 <li>Allowed cache_size to equal 100</li>
@@ -167,20 +231,22 @@
 <h1 class="page-header" data-toc-text="1.8.0">
 <a href="#noctua-180" class="anchor"></a>noctua 1.8.0<small> 2020-08-10 </small>
 </h1>
-<div id="new-feature" class="section level2">
+<div id="new-feature-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-1" class="anchor"></a>New Feature</h2>
 <ul>
 <li>noctua now supports Keyboard Interrupt and will stop AWS Athena running the query when the query has been interrupted. To keep the functionality of AWS Athena running when <code>R</code> has been interrupt a new parameter has been added to <code>dbConnect</code>, <code>keyboard_interrupt</code>. Example:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># Stop AWS Athena when R has been interrupted:</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># Stop AWS Athena when R has been interrupted:</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Let AWS Athena keep running when R has been interrupted:</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>(),
-                 <span class="kw">keyboard_interrupt</span> <span class="kw">=</span> <span class="no">F</span>)</pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                 keyboard_interrupt <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Added “AWS_DEFAULT_REGION” to supported environmental variables: <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#using-environment-variables" class="uri">https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#using-environment-variables</a>
 </li>
@@ -191,9 +257,9 @@
 <h1 class="page-header" data-toc-text="1.7.1">
 <a href="#noctua-171" class="anchor"></a>noctua 1.7.1<small> 2020-07-02 </small>
 </h1>
-<div id="minor-change" class="section level2">
+<div id="minor-change-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-1" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>Fixed issue where <code>noctua</code> would return a <code>data.frame</code> for utility <code>SQL</code> queries regardless of backend file parser. This is due to <code>AWS Athena</code> outputting <code>SQL UTILITY</code> queries as a text file that required to be read in line by line. Now <code>noctua</code> will return the correct data format based on file parser set in <code>noctua_options</code> for example: <code><a href="../reference/noctua_options.html">noctua_options("vroom")</a></code> will return <code>tibbles</code>.</li>
 </ul>
@@ -210,9 +276,9 @@
 <h1 class="page-header" data-toc-text="1.7.0">
 <a href="#noctua-170" class="anchor"></a>noctua 1.7.0<small> 2020-05-14 </small>
 </h1>
-<div id="new-feature-1" class="section level2">
+<div id="new-feature-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-1" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-2" class="anchor"></a>New Feature</h2>
 <ul>
 <li>functions that collect or push to AWS S3 now have a retry capability. Meaning if API call fails then the call is retried (<a href='https://github.com/DyfanJones/noctua/issues/79'>#79</a>)</li>
 <li>
@@ -220,10 +286,12 @@
 <li>
 <code>dbFetch</code> is able to return data from AWS Athena in chunk. This has been achieved by passing <code>NextToken</code> to <code>AthenaResult</code> s4 class. This method won’t be as fast <code>n = -1</code> as each chunk will have to be process into data frame format.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"select * from some_big_table limit 10000"</span>)
-<span class="fu"><a href="../reference/dbFetch.html">dbFetch</a></span>(<span class="no">res</span>, <span class="fl">5000</span>)</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from some_big_table limit 10000"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/dbFetch.html">dbFetch</a></span><span class="op">(</span><span class="va">res</span>, <span class="fl">5000</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>When creating/appending partitions to a table, <code>dbWriteTable</code> opts to use <code>alter table</code> instead of standard <code>msck repair table</code>. This is to improve performance when appending to tables with high number of existing partitions.</li>
 <li>
@@ -235,9 +303,9 @@
 <li>Added <code>region_name</code> check before making a connection to AWS Athena (<a href="https://github.com/DyfanJones/RAthena/issues/110">RAthena: # 110</a>)</li>
 </ul>
 </div>
-<div id="bug-fix-1" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbWriteTable</code> would throw <code>throttling error</code> every now and again, <code>retry_api_call</code> as been built to handle the parsing of data between R and AWS S3.</li>
@@ -262,9 +330,9 @@
 <h1 class="page-header" data-toc-text="1.6.0">
 <a href="#noctua-160" class="anchor"></a>noctua 1.6.0<small> 2020-03-17 </small>
 </h1>
-<div id="new-feature-2" class="section level2">
+<div id="new-feature-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-2" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-3" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Inspired by <code>pyathena</code>, <code>noctua_options</code> now has a new paramter <code>cache_size</code>. This implements local caching in R environments instead of using AWS <code>list_query_executions</code>. This is down to <code>dbClearResult</code> clearing S3’s Athena output when caching isn’t disabled</li>
 <li>
@@ -272,37 +340,41 @@
 <li>
 <code>dbRemoveTable</code> now utilise <code>AWS Glue</code> to remove tables from <code>AWS Glue</code> catalog. This has a performance enhancement:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># upload iris dataframe for removal test</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, <span class="va">iris</span><span class="op">)</span>
 
 <span class="co"># Athena method</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="kw">confirm</span> <span class="kw">=</span> <span class="no">T</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, confirm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># user  system elapsed </span>
 <span class="co"># 0.247   0.091   2.243 </span>
 
 <span class="co"># upload iris dataframe for removal test</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, <span class="va">iris</span><span class="op">)</span>
 
 <span class="co"># Glue method</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="kw">confirm</span> <span class="kw">=</span> <span class="no">T</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/dbRemoveTable.html">dbRemoveTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, confirm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># user  system elapsed </span>
-<span class="co"># 0.110   0.045   1.094 </span></pre></div>
+<span class="co"># 0.110   0.045   1.094 </span></code></pre></div>
 <ul>
 <li>
 <code>dbWriteTable</code> now supports uploading json lines (<a href="http://jsonlines.org/" class="uri">http://jsonlines.org/</a>) format up to <code>AWS Athena</code> (<a href='https://github.com/DyfanJones/noctua/issues/88'>#88</a>).</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">con</span> <span class="kw">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">RAthena</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span>())
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris2"</span>, <span class="no">iris</span>, <span class="kw">file.type</span> <span class="kw">=</span> <span class="st">"json"</span>)
-<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"select * from iris2"</span>)</pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">RAthena</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, <span class="va">iris</span>, file.type <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris2"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="bug-fix-2" class="section level2">
+<div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
@@ -341,89 +413,97 @@
 <h1 class="page-header" data-toc-text="1.5.1">
 <a href="#noctua-151" class="anchor"></a>noctua 1.5.1<small> 2020-02-16 </small>
 </h1>
-<div id="bug-fix-3" class="section level2">
+<div id="bug-fix-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-4" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">readr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">microbenchmark</span>)
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/">microbenchmark</a></span><span class="op">)</span>
 
 <span class="co"># creating some dummy data for testing</span>
-<span class="no">X</span> <span class="kw">&lt;-</span> <span class="fl">1e8</span>
-<span class="no">df</span> <span class="kw">&lt;-</span>
-<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
-    <span class="kw">w</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">X</span>),
-    <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">X</span>,
-    <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
-    <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
-<span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span>(<span class="no">df</span>, <span class="st">"test.csv"</span>)
+<span class="va">X</span> <span class="op">&lt;-</span> <span class="fl">1e8</span>
+<span class="va">df</span> <span class="op">&lt;-</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+    w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,
+    x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">X</span>,
+    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>, 
+    z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">df</span>, <span class="st">"test.csv"</span><span class="op">)</span>
 
 <span class="co"># read in text file into raw format</span>
-<span class="no">obj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readBin.html">readBin</a></span>(<span class="st">"test.csv"</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">"raw"</span>, <span class="kw">n</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.info.html">file.size</a></span>(<span class="st">"test.csv"</span>))
+<span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readBin.html">readBin</a></span><span class="op">(</span><span class="st">"test.csv"</span>, what <span class="op">=</span> <span class="st">"raw"</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.info.html">file.size</a></span><span class="op">(</span><span class="st">"test.csv"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span>(<span class="no">obj</span>), <span class="kw">units</span> <span class="kw">=</span> <span class="st">"auto"</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span>, units <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 <span class="co"># 3.3 Gb</span>
 
 <span class="co"># writeBin in a loop</span>
-<span class="no">write_bin</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(
-  <span class="no">value</span>,
-  <span class="no">filename</span>,
-  <span class="no">chunk_size</span> <span class="kw">=</span> <span class="fl">2L</span> ^ <span class="fl">20L</span>) {
+<span class="va">write_bin</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span>
+  <span class="va">value</span>,
+  <span class="va">filename</span>,
+  <span class="va">chunk_size</span> <span class="op">=</span> <span class="fl">2L</span> <span class="op">^</span> <span class="fl">20L</span><span class="op">)</span> <span class="op">{</span>
+  
+  <span class="va">total_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>
+  <span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">total_size</span>, <span class="va">chunk_size</span><span class="op">)</span>
+  
+  <span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/connections.html">file</a></span><span class="op">(</span><span class="va">filename</span>, <span class="st">"a+b"</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/on.exit.html">on.exit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">close</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span><span class="op">)</span>
+  
+  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">split_vec</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/readBin.html">writeBin</a></span><span class="op">(</span><span class="va">value</span><span class="op">[</span><span class="va">x</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">total_size</span>,<span class="op">(</span><span class="va">x</span><span class="op">+</span><span class="va">chunk_size</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,<span class="va">con</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="op">}</span>
 
-  <span class="no">total_size</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">value</span>)
-  <span class="no">split_vec</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>, <span class="no">total_size</span>, <span class="no">chunk_size</span>)
 
-  <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/connections.html">file</a></span>(<span class="no">filename</span>, <span class="st">"a+b"</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/on.exit.html">on.exit</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">close</a></span>(<span class="no">con</span>))
-
-  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="no">split_vec</span>, <span class="kw">function</span>(<span class="no">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/readBin.html">writeBin</a></span>(<span class="no">value</span>[<span class="no">x</span>:<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">total_size</span>,(<span class="no">x</span>+<span class="no">chunk_size</span>-<span class="fl">1</span>))],<span class="no">con</span>)})
-  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span>(<span class="fl">TRUE</span>)
-}
-
-
-<span class="fu">microbenchmark</span>(<span class="kw">writeBin_loop</span> <span class="kw">=</span> <span class="fu">write_bin</span>(<span class="no">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()),
-               <span class="kw">readr</span> <span class="kw">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html">write_file</a></span>(<span class="no">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()),
-               <span class="kw">times</span> <span class="kw">=</span> <span class="fl">5</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>writeBin_loop <span class="op">=</span> <span class="fu">write_bin</span><span class="op">(</span><span class="va">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+               readr <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html">write_file</a></span><span class="op">(</span><span class="va">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+               times <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 
 <span class="co"># Unit: seconds</span>
 <span class="co"># expr       min       lq      mean    median        uq       max neval</span>
 <span class="co"># R_loop 41.463273 41.62077 42.265778 41.908908 42.022042 44.313893     5</span>
-<span class="co"># readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5</span></pre></div>
+<span class="co"># readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5</span></code></pre></div>
 <ul>
 <li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for fixing date variables being incorrectly translated by <code>sql_translate_env</code> (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/44"># 44</a>)</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="co"># Before</span>
-<span class="fu">translate_sql</span>(<span class="st">"2019-01-01"</span>, <span class="kw">con</span> <span class="kw">=</span> <span class="no">con</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># Before</span>
+<span class="fu">translate_sql</span><span class="op">(</span><span class="st">"2019-01-01"</span>, con <span class="op">=</span> <span class="va">con</span><span class="op">)</span>
 <span class="co"># '2019-01-01'</span>
 
 <span class="co"># Now</span>
-<span class="fu">translate_sql</span>(<span class="st">"2019-01-01"</span>, <span class="kw">con</span> <span class="kw">=</span> <span class="no">con</span>)
-<span class="co"># DATE '2019-01-01'</span></pre></div>
+<span class="fu">translate_sql</span><span class="op">(</span><span class="st">"2019-01-01"</span>, con <span class="op">=</span> <span class="va">con</span><span class="op">)</span>
+<span class="co"># DATE '2019-01-01'</span></code></pre></div>
 <ul>
 <li>Dependency data.table now restricted to (&gt;=1.12.4) due to file compression being added to <code>fwrite</code> (&gt;=1.12.4) <a href="https://github.com/Rdatatable/data.table/blob/master/NEWS.md" class="uri">https://github.com/Rdatatable/data.table/blob/master/NEWS.md</a>
 </li>
 <li>R functions <code>paste</code>/<code>paste0</code> would use default <code>dplyr:sql-translate-env</code> (<code>concat_ws</code>). <code>paste0</code> now uses Presto’s <code>concat</code> function and <code>paste</code> now uses pipes to get extra flexibility for custom separating values.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="co"># R code:</span>
-<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"hi"</span>, <span class="st">"bye"</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"-"</span>)
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># R code:</span>
+<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"hi"</span>, <span class="st">"bye"</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>
 
 <span class="co"># SQL translation:</span>
-(<span class="st">'hi'</span><span class="kw">||</span><span class="st">'-'</span><span class="kw">||</span><span class="st">'bye'</span>)</pre></div>
+<span class="op">(</span><span class="st">'hi'</span><span class="op">||</span><span class="st">'-'</span><span class="op">||</span><span class="st">'bye'</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>If table exists and parameter <code>append</code> set to <code>TRUE</code> then existing s3.location will be utilised (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/73"># 73</a>)</li>
 <li>
 <code>db_compute</code> returned table name, however when a user wished to write table to another location (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/74"># 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code>.</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">RAthena</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">RAthena</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span>(<span class="kw">name</span> <span class="kw">=</span> <span class="st">"temp.iris"</span>)</pre></div>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"temp.iris"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>
 <code>dbListFields</code> didn’t display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.</li>
@@ -431,9 +511,9 @@
 </li>
 </ul>
 </div>
-<div id="new-feature-3" class="section level2">
+<div id="new-feature-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-3" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-4" class="anchor"></a>New Feature</h2>
 <ul>
 <li>
 <code>dbStatistics</code> is a wrapper around <code>paws</code> <code>get_query_execution</code> to return statistics for <code><a href="https://dbi.r-dbi.org/reference/dbSendQuery.html">noctua::dbSendQuery</a></code> results</li>
@@ -448,16 +528,18 @@
 </li>
 <li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for improving the speed of <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">dplyr::tbl</a></code> when calling Athena when using the ident method (<a href='https://github.com/DyfanJones/noctua/issues/64'>#64</a>):</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># ident method:</span>
-<span class="no">t1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>))
+<span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># sub query method:</span>
-<span class="no">t2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span>(<span class="st">"select * from iris"</span>)))
+<span class="va">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span><span class="op">(</span><span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># ident method</span>
 <span class="co"># user  system elapsed </span>
@@ -465,7 +547,7 @@
 
 <span class="co"># sub query method</span>
 <span class="co"># user  system elapsed </span>
-<span class="co"># 0.993   0.138   3.660 </span></pre></div>
+<span class="co"># 0.993   0.138   3.660 </span></code></pre></div>
 </div>
 <div id="unit-test" class="section level2">
 <h2 class="hasAnchor">
@@ -481,17 +563,19 @@
 <h1 class="page-header" data-toc-text="1.5.0">
 <a href="#noctua-150" class="anchor"></a>noctua 1.5.0<small> 2020-01-08 </small>
 </h1>
-<div id="new-feature-4" class="section level2">
+<div id="new-feature-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-4" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-5" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Added integration into Rstudio connections tab</li>
 <li>Added information message of amount of data scanned by AWS Athena</li>
 <li>Added method to change backend file parser so user can change file parser from <code>data.table</code> to <code>vroom</code>. From now on it is possible to change file parser using <code>noctua_options</code> for example:</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua">noctua</a></span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span>(<span class="st">"vroom"</span>)</pre></div>
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="st">"vroom"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>new function <code>dbGetTables</code> that returns Athena hierarchy as a data.frame</li>
 </ul>
@@ -522,11 +606,13 @@
 <ul>
 <li>Default delimited file uploaded to AWS Athena changed from “csv” to “tsv” this is due to separating value “,” in character variables. By using “tsv” file type JSON/Array objects can be passed to Athena through character types. To prevent this becoming a breaking change <code>dbWriteTable</code> <code>append</code> parameter checks and uses existing AWS Athena DDL file type. If <code>file.type</code> doesn’t match Athena DDL file type then user will receive a warning message:</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/warning.html">warning</a></span>(<span class="st">'Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "'</span>, <span class="no">File.Type</span>,<span class="st">'".'</span>, <span class="kw">call.</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/warning.html">warning</a></span><span class="op">(</span><span class="st">'Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "'</span>, <span class="va">File.Type</span>,<span class="st">'".'</span>, call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="bug-fix-4" class="section level2">
+<div id="bug-fix-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-4" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-5" class="anchor"></a>Bug fix</h2>
 <ul>
 <li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/50"># 50</a>), special characters have issue being processed when using flat file in the backend.</li>
 <li>Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
@@ -547,16 +633,16 @@
 <li>Updated dplyr <code>sql_translate_env</code> until test to cater bug fix</li>
 </ul>
 </div>
-<div id="new-feature-5" class="section level2">
+<div id="new-feature-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-5" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-6" class="anchor"></a>New Feature</h2>
 <ul>
 <li>Due to help from <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a>, <code>dbRemoveTable</code> can now remove S3 files for AWS Athena table being removed.</li>
 </ul>
 </div>
-<div id="minor-change-1" class="section level2">
+<div id="minor-change-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-1" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>Added AWS_ATHENA_WORK_GROUP environmental variable support</li>
 <li>Removed <code>tolower</code> conversion due to request (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
@@ -575,45 +661,49 @@
 <code>dbWriteTable</code> now will split <code>gzip</code> compressed files to improve AWS Athena performance. By default <code>gzip</code> compressed files will be split into 20.</li>
 </ul>
 <p>Performance results</p>
-<div class="sourceCode" id="cb12"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">X</span> <span class="kw">&lt;-</span> <span class="fl">1e8</span>
-<span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">w</span> <span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">X</span>),
-                 <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">X</span>,
-                 <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
-                 <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">X</span> <span class="op">&lt;-</span> <span class="fl">1e8</span>
+<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,
+                 x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">X</span>,
+                 y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>, 
+                 z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># upload dataframe with different splits</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># no splits</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split2"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fl">0.05</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># 20 splits</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split3"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">max.batch</span> <span class="kw">=</span> <span class="fl">0.1</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">df</span>), <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># 10 splits</span></pre></div>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"test_split1"</span>, <span class="va">df</span>, compress <span class="op">=</span> <span class="cn">T</span>, max.batch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="co"># no splits</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"test_split2"</span>, <span class="va">df</span>, compress <span class="op">=</span> <span class="cn">T</span>, max.batch <span class="op">=</span> <span class="fl">0.05</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="co"># 20 splits</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"test_split3"</span>, <span class="va">df</span>, compress <span class="op">=</span> <span class="cn">T</span>, max.batch <span class="op">=</span> <span class="fl">0.1</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="co"># 10 splits</span></code></pre></div>
 <p>AWS Athena performance results from AWS console (query executed: <code>select count(*) from ....</code> ):</p>
 <ul>
 <li>test_split1: (Run time: 38.4 seconds, Data scanned: 1.16 GB)</li>
 <li>test_split2: (Run time: 3.73 seconds, Data scanned: 1.16 GB)</li>
 <li>test_split3: (Run time: 5.47 seconds, Data scanned: 1.16 GB)</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">X</span> <span class="kw">&lt;-</span> <span class="fl">1e8</span>
-<span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">w</span> <span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">X</span>),
-                 <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">X</span>,
-                 <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="no">letters</span>, <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>),
-                 <span class="kw">z</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">TRUE</span>, <span class="fl">FALSE</span>), <span class="no">X</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="no">T</span>))
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"test_split1"</span>, <span class="no">df</span>, <span class="kw">compress</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="no">T</span>) <span class="co"># default will now split compressed file into 20 equal size files.</span></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">X</span> <span class="op">&lt;-</span> <span class="fl">1e8</span>
+<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,
+                 x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">X</span>,
+                 y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>, 
+                 z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">X</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"test_split1"</span>, <span class="va">df</span>, compress <span class="op">=</span> <span class="cn">T</span>, overwrite <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="co"># default will now split compressed file into 20 equal size files.</span></code></pre></div>
 <p>Added information message to inform user about what files have been added to S3 location if user is overwriting an Athena table.</p>
 </div>
-<div id="minor-change-2" class="section level2">
+<div id="minor-change-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-3" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>
 <code>copy_to</code> method now supports compress and max_batch, to align with <code>dbWriteTable</code>
 </li>
 </ul>
 </div>
-<div id="bug-fix-5" class="section level2">
+<div id="bug-fix-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-5" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-6" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Fixed bug in regards to Athena DDL being created incorrectly when passed from <code>dbWriteTable</code>
 </li>
@@ -659,9 +749,9 @@
 <h1 class="page-header" data-toc-text="1.2.0">
 <a href="#noctua-120" class="anchor"></a>noctua 1.2.0<small> 2019-11-14 </small>
 </h1>
-<div id="minor-change-3" class="section level2">
+<div id="minor-change-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-3" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-4" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>
 <code>s3.location</code> parameter is <code>dbWriteTable</code> can now be made nullable</li>
@@ -673,15 +763,17 @@
 <ul>
 <li>helper function <code>upload_data</code> has been rebuilt and removed the old “horrible” if statement with <code>paste</code> now the function relies on <code>sprintf</code> to construct the s3 location path. This method now is a lot clearer in how the s3 location is created plus it enables a <code>dbWriteTable</code> to be simplified. <code>dbWriteTable</code> can now upload data to the default s3_staging directory created in <code>dbConnect</code> this simplifies <code>dbWriteTable</code> to :</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span>())
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>)</pre></div>
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="bug-fix-6" class="section level2">
+<div id="bug-fix-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-6" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-7" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
@@ -694,17 +786,17 @@
 <code>data transfer</code> test now tests compress, and default s3.location when transferring data</li>
 </ul>
 </div>
-<div id="new-feature-6" class="section level2">
+<div id="new-feature-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-feature-6" class="anchor"></a>New Feature</h2>
+<a href="#new-feature-7" class="anchor"></a>New Feature</h2>
 <ul>
 <li>GZIP compression is now supported for “csv” and “tsv” file format in <code>dbWriteTable</code>
 </li>
 </ul>
 </div>
-<div id="minor-change-4" class="section level2">
+<div id="minor-change-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-4" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-5" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>
 <code>sqlCreateTable</code> info message will now only inform user if colnames have changed and display the column name that have changed</li>
@@ -724,9 +816,9 @@
 <code>BigInt</code> are now passed correctly into <code>integer64</code>
 </li>
 </ul>
-<div id="bug-fix-7" class="section level3">
+<div id="bug-fix-8" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fix-7" class="anchor"></a>Bug fix</h3>
+<a href="#bug-fix-8" class="anchor"></a>Bug fix</h3>
 <ul>
 <li>
 <code>AthenaResult</code> returned: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>. The function <code>do.call</code> was causing the issue, to address this <code>do.call</code> has been removed and the helper function <code>request</code> has been broken down into <code>ResultConfiguration</code> to return a single component of <code>start_query_execution</code>
@@ -743,9 +835,9 @@
 <li>Added <code>bigint</code> to <code>integer64</code> in data.transfer unit test</li>
 </ul>
 </div>
-<div id="minor-change-5" class="section level2">
+<div id="minor-change-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-change-5" class="anchor"></a>Minor Change</h2>
+<a href="#minor-change-6" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>dependency <code>paws</code> version has been set to a minimum of <code>0.1.5</code> due to latest change.</li>
 </ul>
@@ -810,7 +902,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

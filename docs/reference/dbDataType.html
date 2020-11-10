@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -156,24 +156,24 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaDriver,ANY</span>
-<span class='fu'>dbDataType</span>(<span class='no'>dbObj</span>, <span class='no'>obj</span>, <span class='no'>...</span>)
+<span class='fu'>dbDataType</span><span class='op'>(</span><span class='va'>dbObj</span>, <span class='va'>obj</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for AthenaDriver,list</span>
-<span class='fu'>dbDataType</span>(<span class='no'>dbObj</span>, <span class='no'>obj</span>, <span class='no'>...</span>)
+<span class='fu'>dbDataType</span><span class='op'>(</span><span class='va'>dbObj</span>, <span class='va'>obj</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for AthenaConnection,ANY</span>
-<span class='fu'>dbDataType</span>(<span class='no'>dbObj</span>, <span class='no'>obj</span>, <span class='no'>...</span>)
+<span class='fu'>dbDataType</span><span class='op'>(</span><span class='va'>dbObj</span>, <span class='va'>obj</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for AthenaConnection,data.frame</span>
-<span class='fu'>dbDataType</span>(<span class='no'>dbObj</span>, <span class='no'>obj</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>dbDataType</span><span class='op'>(</span><span class='va'>dbObj</span>, <span class='va'>obj</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dbObj</th>
-      <td><p>A object inheriting from DBIDriver
-or DBIConnection</p></td>
+      <td><p>A object inheriting from <a href='https://dbi.r-dbi.org/reference/DBIDriver-class.html'>DBIDriver</a>
+or <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection</a></p></td>
     </tr>
     <tr>
       <th>obj</th>
@@ -193,27 +193,36 @@ or DBIConnection</p></td>
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbDataType.html'>dbDataType</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>noctua</span>)
-<span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fl'>1</span>:<span class='fl'>5</span>)</div><div class='output co'>#&gt; [1] "INT"</div><div class='input'><span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] "DOUBLE"</div><div class='input'><span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "BOOLEAN"</div><div class='input'><span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>())</div><div class='output co'>#&gt; [1] "DATE"</div><div class='input'><span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>())</div><div class='output co'>#&gt; [1] "TIMESTAMP"</div><div class='input'><span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"abc"</span>))</div><div class='output co'>#&gt; [1] "STRING"</div><div class='input'><span class='fu'>dbDataType</span>(<span class='fu'><a href='athena.html'>athena</a></span>(), <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/raw.html'>raw</a></span>(<span class='fl'>10</span>), <span class='fu'><a href='https://rdrr.io/r/base/raw.html'>raw</a></span>(<span class='fl'>20</span>)))</div><div class='output co'>#&gt; [1] "STRING"</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>vapply</a></span>(<span class='no'>iris</span>, <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>dbDataType</span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>(), <span class='no'>x</span>),
-       <span class='kw'>FUN.VALUE</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>1</span>), <span class='kw'>USE.NAMES</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/DyfanJones/noctua'>noctua</a></span><span class='op'>)</span>
+<span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "INT"</div><div class='input'><span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "DOUBLE"</div><div class='input'><span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "BOOLEAN"</div><div class='input'><span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "DATE"</div><div class='input'><span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "TIMESTAMP"</div><div class='input'><span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"abc"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "STRING"</div><div class='input'><span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/raw.html'>raw</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/raw.html'>raw</a></span><span class='op'>(</span><span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "STRING"</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>vapply</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'>dbDataType</span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>x</span><span class='op'>)</span>,
+       FUN.VALUE <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>, USE.NAMES <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
 #&gt;     "DOUBLE"     "DOUBLE"     "DOUBLE"     "DOUBLE"     "STRING" </div><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Note: </span>
 <span class='co'># - Require AWS Account to run below example.</span>
 <span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>DBI</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://r-dbi.github.io/DBI'>DBI</a></span><span class='op'>)</span>
 
 <span class='co'># Demo connection to Athena using profile name </span>
-<span class='no'>con</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dbConnect-AthenaDriver-method.html'>dbConnect</a></span>(<span class='kw pkg'>noctua</span><span class='kw ns'>::</span><span class='fu'><a href='athena.html'>athena</a></span>())
+<span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Sending Queries to Athena</span>
-<span class='fu'>dbDataType</span>(<span class='no'>con</span>, <span class='no'>iris</span>)
+<span class='fu'>dbDataType</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>iris</span><span class='op'>)</span>
 
 <span class='co'># Disconnect conenction</span>
-<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>con</span>)
-}</div></pre>
+<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -229,7 +238,7 @@ or DBIConnection</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

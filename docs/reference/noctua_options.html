@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -157,13 +157,13 @@
  whether <code>noctua</code> should cache query ids locally and number of retries on a failed api call.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>noctua_options</span>(
-  <span class='kw'>file_parser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"data.table"</span>, <span class='st'>"vroom"</span>),
-  <span class='kw'>cache_size</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>clear_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>retry</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>retry_quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>noctua_options</span><span class='op'>(</span>
+  file_parser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"data.table"</span>, <span class='st'>"vroom"</span><span class='op'>)</span>,
+  cache_size <span class='op'>=</span> <span class='fl'>0</span>,
+  clear_cache <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  retry <span class='op'>=</span> <span class='fl'>5</span>,
+  retry_quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -196,13 +196,14 @@ determines the data format returned for example <code>data.table</code> will ret
     <p><code>noctua_options()</code> returns <code>NULL</code>, invisibly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>noctua</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/DyfanJones/noctua'>noctua</a></span><span class='op'>)</span>
 
 <span class='co'># change file parser from default data.table to vroom</span>
-<span class='fu'>noctua_options</span>(<span class='st'>"vroom"</span>)
+<span class='fu'>noctua_options</span><span class='op'>(</span><span class='st'>"vroom"</span><span class='op'>)</span>
 
 <span class='co'># cache queries locally</span>
-<span class='fu'>noctua_options</span>(<span class='kw'>cache_size</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div></pre>
+<span class='fu'>noctua_options</span><span class='op'>(</span>cache_size <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -218,7 +219,7 @@ determines the data format returned for example <code>data.table</code> will ret
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

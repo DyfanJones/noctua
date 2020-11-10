@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -122,9 +122,11 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation:</h2>
 <p>To install <code>noctua</code> you can get it from CRAN with:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"noctua"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"noctua"</span><span class="op">)</span></code></pre></div>
 <p>Or to get the development version from Github with:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"dyfanjones/noctua"</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"dyfanjones/noctua"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="connection-methods" class="section level2">
 <h2 class="hasAnchor">
@@ -133,13 +135,14 @@
 <h3 class="hasAnchor">
 <a href="#hard-coding" class="anchor"></a>Hard Coding</h3>
 <p>The most basic way to connect to AWS Athena is to hard-code your access key and secret access key. However this method is <strong>not</strong> recommended as your credentials are hard-coded.</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                <span class="kw">aws_access_key_id</span><span class="kw">=</span><span class="st">'YOUR_ACCESS_KEY_ID'</span>,
-                <span class="kw">aws_secret_access_key</span><span class="kw">=</span><span class="st">'YOUR_SECRET_ACCESS_KEY'</span>,
-                <span class="kw">s3_staging_dir</span><span class="kw">=</span><span class="st">'s3://path/to/query/bucket/'</span>,
-                <span class="kw">region_name</span><span class="kw">=</span><span class="st">'eu-west-1'</span>)</pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                aws_access_key_id<span class="op">=</span><span class="st">'YOUR_ACCESS_KEY_ID'</span>,
+                aws_secret_access_key<span class="op">=</span><span class="st">'YOUR_SECRET_ACCESS_KEY'</span>,
+                s3_staging_dir<span class="op">=</span><span class="st">'s3://path/to/query/bucket/'</span>,
+                region_name<span class="op">=</span><span class="st">'eu-west-1'</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="aws-profile-name" class="section level3">
 <h3 class="hasAnchor">
@@ -152,14 +155,16 @@
 <p>To install AWS CLI please refer to: <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html" class="uri">https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html</a>, to configure AWS CLI please refer to: <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html" class="uri">https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html</a></p>
 <p>Once AWS CLI has been set up you will be able to connect to Athena by only putting the <code>s3_staging_dir</code>.</p>
 <p>Using default profile name:</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                 <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                 s3_staging_dir <span class="op">=</span> <span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span></code></pre></div>
 <p>Connecting to Athena using profile name other than <code>default</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                 <span class="kw">profile_name</span> <span class="kw">=</span> <span class="st">"your_profile"</span>,
-                 <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                 profile_name <span class="op">=</span> <span class="st">"your_profile"</span>,
+                 s3_staging_dir <span class="op">=</span> <span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -168,20 +173,22 @@
 <a href="#assuming-arn-role-for-connection" class="anchor"></a>Assuming ARN Role for connection</h2>
 <p>Another method in connecting to Athena is to use Amazon Resource Name (ARN) role.</p>
 <p>Setting credentials in environmental variables:</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
-<span class="fu"><a href="reference/assume_role.html">assume_role</a></span>(<span class="kw">profile_name</span> <span class="kw">=</span> <span class="st">"YOUR_PROFILE_NAME"</span>,
-            <span class="kw">role_arn</span> <span class="kw">=</span> <span class="st">"arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"</span>,
-            <span class="kw">set_env</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua">noctua</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/assume_role.html">assume_role</a></span><span class="op">(</span>profile_name <span class="op">=</span> <span class="st">"YOUR_PROFILE_NAME"</span>,
+            role_arn <span class="op">=</span> <span class="st">"arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"</span>,
+            set_env <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="co"># Connect to Athena using temporary credentials</span>
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)</pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                s3_staging_dir <span class="op">=</span> <span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span></code></pre></div>
 <p>Connecting to Athena directly using ARN role:</p>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
- <span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                  <span class="kw">profile_name</span> <span class="kw">=</span> <span class="st">"YOUR_PROFILE_NAME"</span>,
-                  <span class="kw">role_arn</span> <span class="kw">=</span> <span class="st">"arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"</span>,
-                  <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)</pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+ <span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                  profile_name <span class="op">=</span> <span class="st">"YOUR_PROFILE_NAME"</span>,
+                  role_arn <span class="op">=</span> <span class="st">"arn:aws:sts::123456789012:assumed-role/role_name/role_session_name"</span>,
+                  s3_staging_dir <span class="op">=</span> <span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span></code></pre></div>
 <p>To change the duration of ARN role session please change the parameter <code>duration_seconds</code>. By default <code>duration_seconds</code> is set to 3600 seconds (1 hour).</p>
 </div>
 <div id="usage" class="section level2">
@@ -191,23 +198,26 @@
 <h3 class="hasAnchor">
 <a href="#basic-usage" class="anchor"></a>Basic Usage</h3>
 <p>Connect to athena, and send a query and return results back to R.</p>
-<div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
 
 <span class="co"># using default profile to connect</span>
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                 <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                 s3_staging_dir <span class="op">=</span> <span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span>
 
-<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="st">"SELECT * FROM one_row"</span>)
-<span class="fu"><a href="reference/dbFetch.html">dbFetch</a></span>(<span class="no">res</span>)
-<span class="fu"><a href="reference/dbClearResult.html">dbClearResult</a></span>(<span class="no">res</span>)</pre></div>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"SELECT * FROM one_row"</span><span class="op">)</span>
+<span class="fu"><a href="reference/dbFetch.html">dbFetch</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>
+<span class="fu"><a href="reference/dbClearResult.html">dbClearResult</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 <p>To retrieve query in 1 step.</p>
-<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="reference/dbGetQuery.html">dbGetQuery</a></span>(<span class="no">con</span>, <span class="st">"SELECT * FROM one_row"</span>)</pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"SELECT * FROM one_row"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="intermediate-usage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#intermediate-usage" class="anchor"></a>Intermediate Usage</h3>
 <p>To create a tables in athena, <code>dbExecute</code> will send the query to athena and wait until query has been executed. This makes it and idea method to create tables within athena.</p>
-<div class="sourceCode" id="cb10"><pre class="r"><span class="no">query</span> <span class="kw">&lt;-</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">query</span> <span class="op">&lt;-</span> 
   <span class="st">"CREATE EXTERNAL TABLE impressions (
       requestBeginTime string,
       adId string,
@@ -228,38 +238,42 @@
   ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
       with serdeproperties ( 'paths'='requestBeginTime, adId, impressionId, referrer, userAgent, userCookie, ip' )
   LOCATION 's3://elasticmapreduce/samples/hive-ads/tables/impressions/' ;"</span>
-
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span>(<span class="no">con</span>, <span class="no">query</span>)</pre></div>
+  
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">query</span><span class="op">)</span></code></pre></div>
 <p>noctua has 2 extra function to return extra information around Athena tables: <code>dbGetParitiions</code> and <code>dbShow</code></p>
 <p><code>dbGetPartitions</code> will return all the partitions (returns data.frame):</p>
-<div class="sourceCode" id="cb11"><pre class="r"><span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/dbGetPartition.html">dbGetPartition</a></span>(<span class="no">con</span>, <span class="st">"impressions"</span>)</pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/dbGetPartition.html">dbGetPartition</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"impressions"</span><span class="op">)</span></code></pre></div>
 <p><code>dbShow</code> will return the table’s ddl, so you will able to see how the table was constructed in Athena (returns SQL character):</p>
-<div class="sourceCode" id="cb12"><pre class="r"><span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/dbShow.html">dbShow</a></span>(<span class="no">con</span>, <span class="st">"impressions"</span>)</pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/dbShow.html">dbShow</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"impressions"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="advanced-usage" class="section level3">
 <h3 class="hasAnchor">
 <a href="#advanced-usage" class="anchor"></a>Advanced Usage</h3>
-<div class="sourceCode" id="cb13"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                 <span class="kw">s3_staging_dir</span> <span class="kw">=</span> <span class="st">'s3://path/to/query/bucket/'</span>)</pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                 s3_staging_dir <span class="op">=</span> <span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span></code></pre></div>
 <div id="sending-data-to-athena" class="section level4">
 <h4 class="hasAnchor">
 <a href="#sending-data-to-athena" class="anchor"></a>Sending data to Athena</h4>
 <p>noctua has created a method to send data.frame from R to Athena.</p>
-<div class="sourceCode" id="cb14"><pre class="r"><span class="co"># Check existing tables</span>
-<span class="fu"><a href="reference/dbListTables.html">dbListTables</a></span>(<span class="no">con</span>)
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Check existing tables</span>
+<span class="fu"><a href="reference/dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>
 <span class="co"># Upload iris to Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>, <span class="no">iris</span>,
-             <span class="kw">partition</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"TIMESTAMP"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span>(), <span class="st">"%Y%m%d"</span>)))
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span>, 
+             partition<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"TIMESTAMP"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Read in iris from Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html">dbReadTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)
+<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html">dbReadTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span>
 
 <span class="co"># Check new existing tables in Athena</span>
-<span class="fu"><a href="reference/dbListTables.html">dbListTables</a></span>(<span class="no">con</span>)
+<span class="fu"><a href="reference/dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>
 
 <span class="co"># Check if iris exists in Athena</span>
-<span class="fu"><a href="reference/dbExistsTable.html">dbExistsTable</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)</pre></div>
+<span class="fu"><a href="reference/dbExistsTable.html">dbExistsTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></code></pre></div>
 <p>Please check out <code>noctua</code> method for <a href="https://dyfanjones.github.io/noctua/reference/AthenaWriteTables.html"><code>dbWriteTable</code></a> for more information in how to upload data to AWS Athena and AWS S3.</p>
 <p>For more information around how to get the most out of AWS Athena when uploading data please check out: <a href="https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/">Top 10 Performance Tuning Tips for Amazon Athena</a></p>
 </div>
@@ -268,15 +282,16 @@
 <h3 class="hasAnchor">
 <a href="#tidyverse-usage" class="anchor"></a>Tidyverse Usage</h3>
 <p>Creating a connection to Athena and query and already existing table <code>iris</code> that was created in previous example.</p>
-<div class="sourceCode" id="cb15"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                <span class="kw">aws_access_key_id</span><span class="kw">=</span><span class="st">'YOUR_ACCESS_KEY_ID'</span>,
-                <span class="kw">aws_secret_access_key</span><span class="kw">=</span><span class="st">'YOUR_SECRET_ACCESS_KEY'</span>,
-                <span class="kw">s3_staging_dir</span><span class="kw">=</span><span class="st">'s3://path/to/query/bucket/'</span>,
-                <span class="kw">region_name</span><span class="kw">=</span><span class="st">'eu-west-1'</span>)
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span>(<span class="st">"SELECT * FROM iris"</span>))</pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                aws_access_key_id<span class="op">=</span><span class="st">'YOUR_ACCESS_KEY_ID'</span>,
+                aws_secret_access_key<span class="op">=</span><span class="st">'YOUR_SECRET_ACCESS_KEY'</span>,
+                s3_staging_dir<span class="op">=</span><span class="st">'s3://path/to/query/bucket/'</span>,
+                region_name<span class="op">=</span><span class="st">'eu-west-1'</span><span class="op">)</span>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span><span class="op">(</span><span class="st">"SELECT * FROM iris"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># Source:   SQL [?? x 5]</span></a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb16-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
@@ -293,7 +308,8 @@
 <a class="sourceLine" id="cb16-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </a>
 <a class="sourceLine" id="cb16-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
 <p>dplyr provides lazy querying with allows to short hand <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl(con, sql("SELECT * FROM iris"))</a></code> to <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl(con, "iris")</a></code>. For more information please look at <a href="https://db.rstudio.com/dplyr/" class="uri">https://db.rstudio.com/dplyr/</a>.</p>
-<div class="sourceCode" id="cb17"><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>)</pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co"># Source:   table&lt;iris&gt; [?? x 5]</span></a>
 <a class="sourceLine" id="cb18-2" title="2"><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb18-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
@@ -310,11 +326,11 @@
 <a class="sourceLine" id="cb18-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </a>
 <a class="sourceLine" id="cb18-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
 <p>Querying Athena with <code>profile_name</code> instead of hard coding <code>aws_access_key_id</code> and <code>aws_secret_access_key</code>. By using <code>profile_name</code> extra Meta Data is returned in the query to give users extra information.</p>
-<div class="sourceCode" id="cb19"><pre class="r">con &lt;- dbConnect(noctua::athena(),
-                profile_name = "your_profile",
-                s3_staging_dir='s3://path/to/query/bucket/')
-tbl(con, "iris")) %&gt;% 
-  filter(petal_length &lt; 1.3)</pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(noctua<span class="op">::</span><span class="kw">athena</span>(),</a>
+<a class="sourceLine" id="cb19-2" title="2">                <span class="dt">profile_name =</span> <span class="st">"your_profile"</span>,</a>
+<a class="sourceLine" id="cb19-3" title="3">                <span class="dt">s3_staging_dir=</span><span class="st">'s3://path/to/query/bucket/'</span>)</a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="kw">tbl</span>(con, <span class="st">"iris"</span>)<span class="er">)</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="st">  </span><span class="kw">filter</span>(petal_length <span class="op">&lt;</span><span class="st"> </span><span class="fl">1.3</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># Source:   lazy query [?? x 5]</span></a>
 <a class="sourceLine" id="cb20-2" title="2"><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb20-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
@@ -330,8 +346,9 @@ tbl(con, "iris")) %&gt;%
 <a class="sourceLine" id="cb20-13" title="13"> <span class="dv">9</span>          <span class="dv">5</span>           <span class="fl">3.5</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </a>
 <a class="sourceLine" id="cb20-14" title="14"><span class="dv">10</span>          <span class="fl">4.5</span>         <span class="fl">2.3</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </a>
 <a class="sourceLine" id="cb20-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"iris"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"sepal"</span>), <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">contains</a></span>(<span class="st">"petal"</span>))</pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"sepal"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"petal"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Source:   lazy query [?? x 4]</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></a>
 <a class="sourceLine" id="cb22-3" title="3">   sepal_length sepal_width petal_length petal_width</a>
@@ -348,45 +365,52 @@ tbl(con, "iris")) %&gt;%
 <a class="sourceLine" id="cb22-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span></a>
 <a class="sourceLine" id="cb22-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
 <p>Upload data using <code>dplyr</code> function <code>copy_to</code> and <code>compute</code>.</p>
-<div class="sourceCode" id="cb23"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                <span class="kw">profile_name</span> <span class="kw">=</span> <span class="st">"your_profile"</span>,
-                <span class="kw">s3_staging_dir</span><span class="kw">=</span><span class="st">'s3://path/to/query/bucket/'</span>)</pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                profile_name <span class="op">=</span> <span class="st">"your_profile"</span>,
+                s3_staging_dir<span class="op">=</span><span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span></code></pre></div>
 <p>Write data.frame to Athena table</p>
-<div class="sourceCode" id="cb24"><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(<span class="no">con</span>, <span class="no">mtcars</span>,
-        <span class="kw">s3_location</span> <span class="kw">=</span> <span class="st">"s3://mybucket/data/"</span>)</pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">mtcars</span>,
+        s3_location <span class="op">=</span> <span class="st">"s3://mybucket/data/"</span><span class="op">)</span></code></pre></div>
 <p>Write Athena table from tbl_sql</p>
-<div class="sourceCode" id="cb25"><pre class="r"><span class="no">athena_mtcars</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="no">con</span>, <span class="st">"mtcars"</span>)
-<span class="no">mtcars_filter</span> <span class="kw">&lt;-</span> <span class="no">athena_mtcars</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">gear</span> <span class="kw">&gt;=</span><span class="fl">4</span>)</pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">athena_mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span>
+<span class="va">mtcars_filter</span> <span class="op">&lt;-</span> <span class="va">athena_mtcars</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">gear</span> <span class="op">&gt;=</span><span class="fl">4</span><span class="op">)</span></code></pre></div>
 <p>Create athena with unique table name</p>
-<div class="sourceCode" id="cb26"><pre class="r"><span class="no">mtcars_filer</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span>()</pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mtcars_filer</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Create athena with specified name and s3 location</p>
-<div class="sourceCode" id="cb27"><pre class="r"><span class="no">mtcars_filer</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span>(<span class="st">"mtcars_filer"</span>,
-          <span class="kw">s3_location</span> <span class="kw">=</span> <span class="st">"s3://mybucket/mtcars_filer/"</span>)
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mtcars_filer</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span><span class="op">(</span><span class="st">"mtcars_filer"</span>,
+          s3_location <span class="op">=</span> <span class="st">"s3://mybucket/mtcars_filer/"</span><span class="op">)</span>
 
 <span class="co"># Disconnect from Athena</span>
-<span class="fu"><a href="reference/dbDisconnect.html">dbDisconnect</a></span>(<span class="no">con</span>)</pre></div>
+<span class="fu"><a href="reference/dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="work-groups" class="section level2">
 <h2 class="hasAnchor">
 <a href="#work-groups" class="anchor"></a>Work Groups</h2>
 <p>Creating work group:</p>
-<div class="sourceCode" id="cb28"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">noctua</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua">noctua</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-dbi.github.io/DBI">DBI</a></span><span class="op">)</span>
 
-<span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                <span class="kw">profile_name</span> <span class="kw">=</span> <span class="st">"your_profile"</span>,
-                <span class="kw">encryption_option</span> <span class="kw">=</span> <span class="st">"SSE_S3"</span>,
-                <span class="kw">s3_staging_dir</span><span class="kw">=</span><span class="st">'s3://path/to/query/bucket/'</span>)
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                profile_name <span class="op">=</span> <span class="st">"your_profile"</span>,
+                encryption_option <span class="op">=</span> <span class="st">"SSE_S3"</span>,
+                s3_staging_dir<span class="op">=</span><span class="st">'s3://path/to/query/bucket/'</span><span class="op">)</span>
 
-<span class="fu"><a href="reference/work_group.html">create_work_group</a></span>(<span class="no">con</span>, <span class="st">"demo_work_group"</span>, <span class="kw">description</span> <span class="kw">=</span> <span class="st">"This is a demo work group"</span>,
-                  <span class="kw">tags</span> <span class="kw">=</span> <span class="fu"><a href="reference/work_group.html">tag_options</a></span>(<span class="kw">key</span><span class="kw">=</span> <span class="st">"demo_work_group"</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"demo_01"</span>))</pre></div>
+<span class="fu"><a href="reference/work_group.html">create_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,
+                  tags <span class="op">=</span> <span class="fu"><a href="reference/work_group.html">tag_options</a></span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>List work groups:</p>
-<div class="sourceCode" id="cb29"><pre class="r"><span class="fu"><a href="reference/work_group.html">list_work_groups</a></span>(<span class="no">con</span>)</pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">list_work_groups</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">[[<span class="dv">1</span>]]</a>
 <a class="sourceLine" id="cb30-2" title="2">[[<span class="dv">1</span>]]<span class="op">$</span>Name</a>
 <a class="sourceLine" id="cb30-3" title="3">[<span class="dv">1</span>] <span class="st">"demo_work_group"</span></a>
@@ -414,9 +438,11 @@ tbl(con, "iris")) %&gt;%
 <a class="sourceLine" id="cb30-25" title="25">[[<span class="dv">2</span>]]<span class="op">$</span>CreationTime</a>
 <a class="sourceLine" id="cb30-26" title="26"><span class="dv">2019-08-22</span> <span class="dv">16</span><span class="op">:</span><span class="dv">14</span><span class="op">:</span><span class="fl">47.902000</span><span class="op">+</span><span class="dv">01</span><span class="op">:</span><span class="dv">00</span></a></code></pre></div>
 <p>Update work group:</p>
-<div class="sourceCode" id="cb31"><pre class="r"><span class="fu"><a href="reference/work_group.html">update_work_group</a></span>(<span class="no">con</span>, <span class="st">"demo_work_group"</span>, <span class="kw">description</span> <span class="kw">=</span> <span class="st">"This is a demo work group update"</span>)</pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">update_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group update"</span><span class="op">)</span></code></pre></div>
 <p>Return work group meta data:</p>
-<div class="sourceCode" id="cb32"><pre class="r"><span class="fu"><a href="reference/work_group.html">get_work_group</a></span>(<span class="no">con</span>, <span class="st">"demo_work_group"</span>)</pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">get_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="op">$</span>Name</a>
 <a class="sourceLine" id="cb33-2" title="2">[<span class="dv">1</span>] <span class="st">"demo_work_group"</span></a>
 <a class="sourceLine" id="cb33-3" title="3"></a>
@@ -453,10 +479,12 @@ tbl(con, "iris")) %&gt;%
 <a class="sourceLine" id="cb33-34" title="34"><span class="op">$</span>CreationTime</a>
 <a class="sourceLine" id="cb33-35" title="35"><span class="dv">2019-09-06</span> <span class="dv">18</span><span class="op">:</span><span class="dv">51</span><span class="op">:</span><span class="fl">28.902000</span><span class="op">+</span><span class="dv">01</span><span class="op">:</span><span class="dv">00</span></a></code></pre></div>
 <p>Connect to Athena using work group:</p>
-<div class="sourceCode" id="cb34"><pre class="r"><span class="no">con</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span>(<span class="kw pkg">noctua</span><span class="kw ns">::</span><span class="fu"><a href="reference/athena.html">athena</a></span>(),
-                <span class="kw">work_group</span> <span class="kw">=</span> <span class="st">"demo_work_group"</span>)</pre></div>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
+                work_group <span class="op">=</span> <span class="st">"demo_work_group"</span><span class="op">)</span></code></pre></div>
 <p>Delete work group:</p>
-<div class="sourceCode" id="cb35"><pre class="r"><span class="fu"><a href="reference/work_group.html">delete_work_group</a></span>(<span class="no">con</span>, <span class="st">"demo_work_group"</span>)</pre></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">delete_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="similar-projects" class="section level1">
@@ -548,7 +576,7 @@ tbl(con, "iris")) %&gt;%
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
