@@ -8,6 +8,12 @@ context("data transfer data.table")
 s3.location1 <- paste0(Sys.getenv("noctua_s3_tbl"),"test_df/")
 s3.location2 <- Sys.getenv("noctua_s3_tbl")
 
+df <- data.frame(w = as.POSIXct((Sys.time() -9):Sys.time(), origin = "1970-01-01"),
+                 x = 1:10,
+                 y = c(letters[1:8], c(" \\t\\t\\n 123 \" \\t\\t\\n ", ",15 \"")), 
+                 z = sample(c(TRUE, FALSE), 10, replace = T),
+                 stringsAsFactors = F)
+
 test_that("Testing data transfer between R and athena datatable", {
   skip_if_no_env()
   
@@ -15,12 +21,6 @@ test_that("Testing data transfer between R and athena datatable", {
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena(),
                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
-  
-  df <- data.frame(w = as.POSIXct((Sys.time() -9):Sys.time(), origin = "1970-01-01"),
-                   x = 1:10,
-                   y = c(letters[1:8], c(" \\t\\t\\n 123 \" \\t\\t\\n ", ",15 \"")), 
-                   z = sample(c(TRUE, FALSE), 10, replace = T),
-                   stringsAsFactors = F)
   
   # testing if bigint is transferred correctly
   df2 <- data.frame(var1 = sample(letters, 10, replace = T),
@@ -36,12 +36,6 @@ test_that("Testing data transfer between R and athena datatable", {
                              "DAY" = format(DATE, "%d")),
                s3.location = s3.location2)
   
-  if(dbExistsTable(con, "test_df3")){
-    dbRemoveTable(con, "test_df3", confirm = T)
-  }
-  
-  dbWriteTable(con, "test_df3", df, overwrite = T, file.type = "json")
-  
   dbWriteTable(con, "df_bigint", df2, overwrite = T, s3.location = s3.location2)
   dbWriteTable(con, "mtcars2", mtcars, overwrite = T, compress = T) # mtcars used to test data.frame with row.names
   
@@ -50,11 +44,24 @@ test_that("Testing data transfer between R and athena datatable", {
   test_df2 <- as.data.frame(dbGetQuery(con, paste0("select w, x, y, z from test_df2 where year = '", format(DATE, "%Y"), "' and month = '",format(DATE, "%m"), "' and day = '", format(DATE, "%d"),"'")))
   test_df3 <- as.data.frame(dbGetQuery(con, "select * from df_bigint"))
   test_df4 <- as.data.frame(dbGetQuery(con, "select * from mtcars2"))
-  test_df5 <- as.data.frame(dbGetQuery(con, "select * from test_df3"))
   
   expect_equal(test_df,sqlData(con, df))
   expect_equal(test_df2,sqlData(con, df))
   expect_equal(test_df3,df2)
   expect_equal(test_df4, sqlData(con, mtcars))
-  expect_equal(test_df5, df)
+})
+
+test_that("Testing data transfer between R and athena json file", {
+  skip_if_package_not_avialable("jsonlite")
+  con <- dbConnect(athena(),
+                   s3_staging_dir = Sys.getenv("noctua_s3_query"))
+  
+  if(dbExistsTable(con, "test_df3")){
+    dbRemoveTable(con, "test_df3", confirm = T)
+  }
+  
+  dbWriteTable(con, "test_df3", df, overwrite = T, file.type = "json")
+  
+  test_df <- as.data.frame(dbGetQuery(con, "select * from test_df3"))
+  expect_equal(test_df, df)
 })

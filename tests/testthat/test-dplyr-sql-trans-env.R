@@ -37,6 +37,7 @@ names(data_type3) = type_names
 
 test_that("Check RAthena s3 dplyr sql_translate_env method",{
   skip_if_no_env()
+  skip_if_package_not_avialable("vroom")
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena())
   
