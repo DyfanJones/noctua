@@ -617,10 +617,17 @@ setMethod(
           message("Info: Table deletion aborted.")
           return(invisible(NULL))}
       }
-      # Delete S3 files in batch size 1000
-      key_parts <- splitList(all_keys)
-      for(i in seq_along(key_parts))
-        conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
+      
+      # Only remove if files are found
+      if(length(all_keys) > 0){
+        # Delete S3 files in batch size 1000
+        key_parts <- splitList(all_keys)
+        for(i in seq_along(key_parts))
+          conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
+      } else {
+        warning(sprintf('Failed to remove AWS S3 files from: "s3://%s/%s/". Please check if AWS S3 files exist.',
+                        s3_path$bucket, s3_path$key), call. = F)
+      }
     }
     
     # use glue to remove table from glue catalog
