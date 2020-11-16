@@ -1,3 +1,21 @@
+# noctua 1.9.1
+## Note:
+* Added package checks to unit tests when testing a suggested dependency. This is to fix "CRAN Package Check Results for Package noctua" for operating system "r-patched-solaris-x86". Error message:
+```
+Error: write_parquet requires the arrow package, please install it first and try again
+```
+
+## Bug Fix:
+* `dbRemoveTable` would error if AWS S3 files for Athena table have been removed:
+```
+Error in seq.default(1, length(l), 1000) : wrong sign in 'by' argument
+```
+Now a warning message will be returned:
+```
+Warning message:
+Failed to remove AWS S3 files from: "s3://{bucket}/{prefix}/". Please check if AWS S3 files exist.
+```
+
 # noctua 1.9.0
 ## Minor Change:
 * `dbRemoveTable` now removes AWS S3 objects using `delete_objects` instead of `delete_object`. This allows `noctua` to delete AWS S3 files in batches. This will reduce the number of api calls to AWS and comes with a performance improvement.
