@@ -5,9 +5,11 @@ context("dplyr copy_to")
 # Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
 # Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
-library(dplyr)
 test_that("Check noctua s3 dplyr copy_to method",{
   skip_if_no_env()
+  skip_if_package_not_avialable("dplyr")
+  
+  library(dplyr)
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena())
   
