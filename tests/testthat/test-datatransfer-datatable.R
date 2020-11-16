@@ -52,7 +52,9 @@ test_that("Testing data transfer between R and athena datatable", {
 })
 
 test_that("Testing data transfer between R and athena json file", {
+  skip_if_no_env()
   skip_if_package_not_avialable("jsonlite")
+  
   con <- dbConnect(athena(),
                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
   
