@@ -13,7 +13,7 @@ This is a resubmission. In this version I have:
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## R devtools::check_rhub() results
-*  Days since last update: 5
+*  Days since last update: 6
 0 errors ✓ | 0 warnings ✓ | 1 note x
 
 **Notes**
