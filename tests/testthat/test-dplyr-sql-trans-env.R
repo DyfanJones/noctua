@@ -5,8 +5,6 @@ context("dplyr sql_translate_env")
 # Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
 # Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
-library(dbplyr)
-
 dt = data.table::data.table(Logicial = TRUE,
                             Integer = as.integer(1),
                             Integer64 = bit64::as.integer64(1),
@@ -37,6 +35,10 @@ names(data_type3) = type_names
 
 test_that("Check RAthena s3 dplyr sql_translate_env method",{
   skip_if_no_env()
+  skip_if_package_not_avialable("vroom")
+  skip_if_package_not_avialable("dbplyr")
+  
+  library(dbplyr)
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena())
   

@@ -6,6 +6,12 @@ skip_if_no_env <- function(){
   if(!have_arn || !have_query|| !have_tbl) skip("Environment variables are not set for testing")
 }
 
+# helper function to skip tests if we don't have the suggested package
+skip_if_package_not_avialable <- function(pkg) {
+  if (!requireNamespace(pkg, quietly = TRUE))
+    skip(sprintf("`%s` not available for testing", pkg))
+}
+
 # expected athena ddl's
 # expected athena ddl's
 tbl_ddl <- 

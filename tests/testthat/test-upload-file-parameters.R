@@ -2,12 +2,9 @@ context("upload file setup")
 
 library(data.table)
 
-test_that("test file parser parameter setup",{
+test_that("test file parser parameter setup delimited",{
+  skip_if_package_not_avialable("vroom")
   init_args = list()
-  
-  arg_1 <- noctua:::update_args(file.type = "parquet", init_args)
-  arg_2 <- noctua:::update_args(file.type = "parquet", init_args, compress = T)
-  arg_3 <- noctua:::update_args(file.type = "json", init_args)
   
   # data.table parser
   noctua_options()
@@ -18,14 +15,30 @@ test_that("test file parser parameter setup",{
   noctua_options(file_parser = "vroom")
   arg_6 <- noctua:::update_args(file.type = "csv", init_args)
   arg_7 <- noctua:::update_args(file.type = "tsv", init_args)
-  
-  expect_equal(arg_1, list(fun = arrow::write_parquet, use_deprecated_int96_timestamps = TRUE, compression = NULL))
-  expect_equal(arg_2, list(fun = arrow::write_parquet, use_deprecated_int96_timestamps = TRUE, compression = "snappy"))
-  expect_equal(arg_3, list(fun = jsonlite::stream_out, verbose = FALSE))
+
   expect_equal(arg_4, list(fun = data.table::fwrite, quote= FALSE, showProgress = FALSE, sep = ","))
   expect_equal(arg_5, list(fun = data.table::fwrite, quote= FALSE, showProgress = FALSE, sep = "\t"))
   expect_equal(arg_6, list(fun = vroom::vroom_write, quote= "none", progress = FALSE, escape = "none", delim = ","))
   expect_equal(arg_7, list(fun = vroom::vroom_write, quote= "none", progress = FALSE, escape = "none", delim = "\t"))
+})
+
+test_that("test file parser parameter setup parquet",{
+  skip_if_package_not_avialable("arrow")
+  
+  init_args = list()
+  
+  arg_1 <- noctua:::update_args(file.type = "parquet", init_args)
+  arg_2 <- noctua:::update_args(file.type = "parquet", init_args, compress = T)
+  expect_equal(arg_1, list(fun = arrow::write_parquet, use_deprecated_int96_timestamps = TRUE, compression = NULL))
+  expect_equal(arg_2, list(fun = arrow::write_parquet, use_deprecated_int96_timestamps = TRUE, compression = "snappy"))
+})
+
+test_that("test file parser parameter setup json",{
+  skip_if_package_not_avialable("jsonlite")
+  init_args = list()
+  
+  arg_3 <- noctua:::update_args(file.type = "json", init_args)
+  expect_equal(arg_3, list(fun = jsonlite::stream_out, verbose = FALSE))
 })
 
 default_split <- c(1, 1000001)
