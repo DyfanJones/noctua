@@ -90,6 +90,9 @@ setMethod(
 #' @param s3_staging_dir The location in Amazon S3 where your query results are stored, such as \code{s3://path/to/query/bucket/}
 #' @param region_name Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
 #'                    AWS region codes (region code example: Region = EU (Ireland) 	\code{ region_name = "eu-west-1"})
+#' @param bigint The R type that 64-bit integer types should be mapped to,
+#'   default is [bit64::integer64], which allows the full range of 64 bit
+#'   integers.
 #' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}
 #' @param ... other parameters for \code{paws} session
 #' @aliases dbConnect
@@ -139,6 +142,7 @@ setMethod(
            duration_seconds = 3600L,
            s3_staging_dir = NULL,
            region_name = NULL,
+           bigint = c("integer64", "integer", "numeric", "character"),
            keyboard_interrupt = TRUE,
            ...) {
     
@@ -157,6 +161,8 @@ setMethod(
               is.character(role_session_name),
               is.numeric(duration_seconds),
               is.logical(keyboard_interrupt))
+    
+    athena_option_env$bigint <- big_int(match.arg(bigint))
     
     encryption_option <- switch(encryption_option[1],
                                 "NULL" = NULL,
