@@ -6,9 +6,9 @@
 \alias{dbGetPartition,AthenaConnection-method}
 \title{Athena table partitions}
 \usage{
-dbGetPartition(conn, name, ...)
+dbGetPartition(conn, name, ..., .format = FALSE)
 
-\S4method{dbGetPartition}{AthenaConnection}(conn, name, ...)
+\S4method{dbGetPartition}{AthenaConnection}(conn, name, ..., .format = FALSE)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
@@ -17,6 +17,9 @@ dbGetPartition(conn, name, ...)
 \item{name}{A character string specifying a DBMS table name.}
 
 \item{...}{Other parameters passed on to methods.}
+
+\item{.format}{re-formats AWS Athena partitions format. So that each column represents a partition
+from the AWS Athena table. Default set to \code{FALSE} to prevent breaking previous package behaviour.}
 }
 \value{
 data.frame that returns all partitions in table, if no partitions in Athena table then

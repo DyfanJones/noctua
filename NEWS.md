@@ -1,3 +1,26 @@
+# noctua 1.9.999
+## New Feature
+* Added optional formatting to `dbGetPartition`. This simply tidies up the default AWS Athena partition format.
+```
+library(DBI)
+library(noctua)
+con <- dbConnect(athena())
+dbGetPartition(con, "test_df2", .format = T)
+# Info: (Data scanned: 0 Bytes)
+#    year month day
+# 1: 2020    11  17
+dbGetPartition(con, "test_df2")
+# Info: (Data scanned: 0 Bytes)
+#                    partition
+# 1: year=2020/month=11/day=17
+```
+* Support different formats for returning `bigint`, this is to align with other DBI interfaces i.e. `RPostgres`. Now `bigint` can be return in the possible formats: ["integer64", "integer", "numeric", "character"]
+```
+library(DBI)
+con <- dbConnect(noctua::athena(), bigint = "numeric")
+```
+When switching between the different file parsers the `bigint` to be represented according to the file parser i.e. `data.table`: "integer64" -> `vroom`: "I".
+
 # noctua 1.9.1
 ## Note:
 * Added package checks to unit tests when testing a suggested dependency. This is to fix "CRAN Package Check Results for Package noctua" for operating system "r-patched-solaris-x86". Error message:
