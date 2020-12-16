@@ -9,7 +9,7 @@ cache_dt = data.table("QueryId" = character(), "Query" = character(), "State"= c
 athena_option_env$cache_dt <-  cache_dt
 athena_option_env$retry <- 5
 athena_option_env$retry_quiet <- FALSE
-athena_option_env$bigint <- NULL
+athena_option_env$bigint <- "integer64"
 
 # ==========================================================================
 # helper function to handle big integers
@@ -18,7 +18,7 @@ big_int <- function(bigint){
   
   if(fp == "athena_data.table")
     return(switch(bigint,
-                  "I" = "integer64",
+                  "I" = bit64_check("integer64"),
                   "i" = "integer",
                   "d" = "double",
                   "c" = "character",
@@ -27,13 +27,19 @@ big_int <- function(bigint){
     )
   if(fp == "athena_vroom")
     return(switch(bigint,
-                  "integer64" = "I", 
+                  "integer64" = bit64_check("I"), 
                   "integer" = "i",
                   "numeric" = "d",
                   "double" = "d",
                   "character" = "c",
                   bigint)
     )
+}
+
+bit64_check <- function(value){
+  if(!requireNamespace("bit64", quietly = TRUE))
+    stop('integer64 is supported by `bit64`. Please install `bit64` package and try again', call. = F)
+  return(value)
 }
 
 # ==========================================================================
