@@ -21,6 +21,7 @@
   duration_seconds = 3600L,
   s3_staging_dir = NULL,
   region_name = NULL,
+  bigint = c("integer64", "integer", "numeric", "character"),
   keyboard_interrupt = TRUE,
   ...
 )
@@ -64,6 +65,10 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
 
 \item{region_name}{Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
 AWS region codes (region code example: Region = EU (Ireland)     \code{ region_name = "eu-west-1"})}
+
+\item{bigint}{The R type that 64-bit integer types should be mapped to,
+default is [bit64::integer64], which allows the full range of 64 bit
+integers.}
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
 

@@ -9,6 +9,38 @@ cache_dt = data.table("QueryId" = character(), "Query" = character(), "State"= c
 athena_option_env$cache_dt <-  cache_dt
 athena_option_env$retry <- 5
 athena_option_env$retry_quiet <- FALSE
+athena_option_env$bigint <- "integer64"
+
+# ==========================================================================
+# helper function to handle big integers
+big_int <- function(bigint){
+  fp <- class(athena_option_env$file_parser)
+  
+  if(fp == "athena_data.table")
+    return(switch(bigint,
+                  "I" = bit64_check("integer64"),
+                  "i" = "integer",
+                  "d" = "double",
+                  "c" = "character",
+                  "numeric" = "double",
+                  bigint)
+    )
+  if(fp == "athena_vroom")
+    return(switch(bigint,
+                  "integer64" = bit64_check("I"), 
+                  "integer" = "i",
+                  "numeric" = "d",
+                  "double" = "d",
+                  "character" = "c",
+                  bigint)
+    )
+}
+
+bit64_check <- function(value){
+  if(!requireNamespace("bit64", quietly = TRUE))
+    stop('integer64 is supported by `bit64`. Please install `bit64` package and try again', call. = F)
+  return(value)
+}
 
 # ==========================================================================
 # Setting file parser method
@@ -51,6 +83,7 @@ noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 
            stop("Please update `vroom` to  `1.2.0` or later", call. = FALSE))
   
   class(athena_option_env$file_parser) <- paste("athena", file_parser, sep = "_")
+  athena_option_env$bigint <- big_int(athena_option_env$bigint)
   
   athena_option_env$cache_size <- as.integer(cache_size)
   athena_option_env$retry <- as.integer(retry)
