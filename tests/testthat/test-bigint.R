@@ -11,15 +11,16 @@ s3.location2 <- Sys.getenv("noctua_s3_tbl")
 test_that("Testing data transfer between R and athena datatable", {
   skip_if_no_env()
   
+  noctua_options("vroom")
+  
   # default big integer as integer64
   con <- dbConnect(athena(),
                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
   
-  expect_equal(noctua:::athena_option_env$bigint, "integer64")
-  
-  noctua_options("vroom")
-  
   expect_equal(noctua:::athena_option_env$bigint, "I")
+  
+  noctua_options()
+  expect_equal(noctua:::athena_option_env$bigint, "integer64")
   
   # big integer as integer
   noctua_options()
@@ -30,7 +31,6 @@ test_that("Testing data transfer between R and athena datatable", {
   expect_equal(noctua:::athena_option_env$bigint, "integer")
   
   noctua_options("vroom")
-  
   expect_equal(noctua:::athena_option_env$bigint, "i")
   
   # big integer as numeric
@@ -42,7 +42,6 @@ test_that("Testing data transfer between R and athena datatable", {
   expect_equal(noctua:::athena_option_env$bigint, "double")
   
   noctua_options("vroom")
-  
   expect_equal(noctua:::athena_option_env$bigint, "d")
   
   # big integer as character
@@ -54,6 +53,5 @@ test_that("Testing data transfer between R and athena datatable", {
   expect_equal(noctua:::athena_option_env$bigint, "character")
   
   noctua_options("vroom")
-  
   expect_equal(noctua:::athena_option_env$bigint, "c")
 })
