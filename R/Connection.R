@@ -601,11 +601,14 @@ setMethod(
       tryCatch(
         s3_path <- split_s3_uri(
           conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
+      # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
+      if(!(grepl(".", s3_path$key) && endsWith("/", s3_path$key)))
+        s3_path$key <- sprintf("%s/", s3_path$key)
       all_keys <- list()
       token <- NULL
       # Get all s3 objects linked to table
       while(is.null(token) || length(token) != 0) {
-        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=paste0(s3_path$key, "/"), ContinuationToken = token)
+        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=s3_path$key, ContinuationToken = token)
         token <- objects$NextContinuationToken
         all_keys <- c(all_keys, lapply(objects$Contents, function(x) list(Key=x$Key)))
       }
