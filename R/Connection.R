@@ -554,6 +554,7 @@ setMethod(
 #' @param confirm Allows for S3 files to be deleted without the prompt check. It is recommend to leave this set to \code{FALSE}
 #'                   to avoid deleting other S3 files when the table's definition points to the root of S3 bucket.
 #' @seealso \code{\link[DBI]{dbRemoveTable}}
+#' @note If you are having difficulty removing AWS S3 files please check if the AWS S3 location following AWS best practises: \href{https://docs.aws.amazon.com/athena/latest/ug/tables-location-format.html}{Table Location in Amazon S3}
 #' @examples
 #' \dontrun{
 #' # Note: 
@@ -601,11 +602,14 @@ setMethod(
       tryCatch(
         s3_path <- split_s3_uri(
           conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
+      # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
+      if(!grepl("\\.|/$", s3_path$key))
+        s3_path$key <- sprintf("%s/", s3_path$key)
       all_keys <- list()
       token <- NULL
       # Get all s3 objects linked to table
       while(is.null(token) || length(token) != 0) {
-        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=paste0(s3_path$key, "/"), ContinuationToken = token)
+        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=s3_path$key, ContinuationToken = token)
         token <- objects$NextContinuationToken
         all_keys <- c(all_keys, lapply(objects$Contents, function(x) list(Key=x$Key)))
       }

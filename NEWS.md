@@ -21,6 +21,12 @@ con <- dbConnect(noctua::athena(), bigint = "numeric")
 ```
 When switching between the different file parsers the `bigint` to be represented according to the file parser i.e. `data.table`: "integer64" -> `vroom`: "I".
 
+## Bug Fix:
+* `dbRemoveTable`: Check if key has "." or ends with "/" before adding "/" to the end (#125)
+
+## Documentation:
+* Added note to dbRemoveTable doc string around aws athena table Location in Amazon S3.
+
 # noctua 1.9.1
 ## Note:
 * Added package checks to unit tests when testing a suggested dependency. This is to fix "CRAN Package Check Results for Package noctua" for operating system "r-patched-solaris-x86". Error message:

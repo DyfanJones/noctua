@@ -27,6 +27,9 @@ to avoid deleting other S3 files when the table's definition points to the root 
 \description{
 Removes Athena table but does not remove the data from Amazon S3 bucket.
 }
+\note{
+If you are having difficulty removing AWS S3 files please check if the AWS S3 location following AWS best practises: \href{https://docs.aws.amazon.com/athena/latest/ug/tables-location-format.html}{Table Location in Amazon S3}
+}
 \examples{
 \dontrun{
 # Note: 
