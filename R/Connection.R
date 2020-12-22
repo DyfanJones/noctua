@@ -602,7 +602,7 @@ setMethod(
         s3_path <- split_s3_uri(
           conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
-      if(!(grepl(".", s3_path$key) && endsWith("/", s3_path$key)))
+      if(!grepl("\\.|/$", s3_path$key))
         s3_path$key <- sprintf("%s/", s3_path$key)
       all_keys <- list()
       token <- NULL
