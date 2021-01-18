@@ -1,6 +1,12 @@
-## Resubmission
-This is a resubmission. In this version I have:
-* Ensure all Packages in Suggests should be used conditionally within unit tests, this is to fix: https://cran.r-project.org/web/checks/check_results_noctua.html
+## Submission
+This release contains a couple of new features
+
+### New Features:
+* `dbGetPartition` has an optional formatting option to return tidy output instead of default `AWS Athena` output
+* `dbConnect` now supports different options for `bigint`, this is to align with other `DBI` backend packages, that already support this feature.
+
+### Bug Fix:
+* `dbRemoveTable` now checks the `AWS S3` path returned from `AWS Glue` before modifying to remove `AWS S3` objects.
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
