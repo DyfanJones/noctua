@@ -1,4 +1,4 @@
-# noctua 1.9.999
+# noctua 1.10.0
 ## New Feature
 * Added optional formatting to `dbGetPartition`. This simply tidies up the default AWS Athena partition format.
 ```
