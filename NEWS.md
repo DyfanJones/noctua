@@ -23,6 +23,7 @@ When switching between the different file parsers the `bigint` to be represented
 
 ## Bug Fix:
 * `dbRemoveTable`: Check if key has "." or ends with "/" before adding "/" to the end (#125)
+* Added `uuid` minimum version to fix issue (#128)
 
 ## Documentation:
 * Added note to dbRemoveTable doc string around aws athena table Location in Amazon S3.
