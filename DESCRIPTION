@@ -15,7 +15,7 @@ Imports:
     paws (>= 0.1.5),
     stats,
     utils,
-    uuid (>=0.1-4)
+    uuid (>= 0.1-4)
 Suggests: 
     arrow,
     bit64,
