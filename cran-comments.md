@@ -19,11 +19,7 @@ This release contains a couple of new features
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## R devtools::check_rhub() results
-*  Days since last update: 6
-0 errors ✓ | 0 warnings ✓ | 1 note x
-
-**Notes**
-Apologises for the fast resubmission. This is to fix "CRAN Package Check Results for Package noctua"
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 **Side note:** ran devtools::check_rhub with following environment variables:
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
