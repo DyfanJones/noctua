@@ -10,8 +10,10 @@ athena_read.athena_data.table <-
     # Type2 is to handle issue with data.table fread 
     Type2[Type2 %in% "POSIXct"] <- "character"
     
+    fill <- any(c("array", "row", "map") %in% tolower(sapply(athena_types, function(x) x$Type)))
+    
     # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
-    output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), sep = ",", showProgress = F, na.strings="")
+    output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), sep = ",", showProgress = F, na.strings="", fill = fill)
     # formatting POSIXct: from string to POSIXct
     for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]]))
     # AWS Athena returns " values as "". Due to this "" will be reformatted back to "

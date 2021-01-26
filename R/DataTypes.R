@@ -39,6 +39,9 @@ AthenaToRDataType.athena_data.table <-
              varchar = "character",
              date = "Date",
              timestamp = "POSIXct",
+             array = "character",
+             row = "character",
+             map = "character",
              x)}
     output <- vapply(Types, athena_to_r, FUN.VALUE = character(1))
     names(output) <- Names
@@ -65,6 +68,9 @@ AthenaToRDataType.athena_vroom <-
              varchar = "c",
              date = "D",
              timestamp = "T",
+             array = "c",
+             row = "c",
+             map = "c",
              x)}
     output <- vapply(Types, athena_to_r, FUN.VALUE = character(1))
     names(output) <- Names
