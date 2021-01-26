@@ -93,6 +93,8 @@ setMethod(
 #' @param bigint The R type that 64-bit integer types should be mapped to,
 #'   default is [bit64::integer64], which allows the full range of 64 bit
 #'   integers.
+#' @param convert_array Attempt to converts AWS Athena arrays using \code{jsonlite:parse_json}. If it fails arrays will be returned as a characters.
+#'   Arrays are returned by default as characters. Default set to \code{FALSE}
 #' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}
 #' @param ... other parameters for \code{paws} session
 #' @aliases dbConnect
@@ -143,6 +145,7 @@ setMethod(
            s3_staging_dir = NULL,
            region_name = NULL,
            bigint = c("integer64", "integer", "numeric", "character"),
+           convert_array = FALSE,
            keyboard_interrupt = TRUE,
            ...) {
     
@@ -160,9 +163,11 @@ setMethod(
               is.null(role_arn) || is.character(role_arn),
               is.character(role_session_name),
               is.numeric(duration_seconds),
-              is.logical(keyboard_interrupt))
+              is.logical(keyboard_interrupt),
+              is.logical(convert_array))
     
     athena_option_env$bigint <- big_int(match.arg(bigint))
+    athena_option_env$array <- convert_array
     
     encryption_option <- switch(encryption_option[1],
                                 "NULL" = NULL,
