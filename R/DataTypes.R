@@ -22,8 +22,6 @@ AthenaToRDataType <- function(method, data_type) UseMethod("AthenaToRDataType")
 
 AthenaToRDataType.athena_data.table <- 
   function(method, data_type){
-    Names <- sapply(data_type, function(x) x$Name)
-    Types <- tolower(sapply(data_type, function(x) x$Type))
     athena_to_r <- function(x){
       switch(x,
              boolean = "logical",
@@ -43,15 +41,12 @@ AthenaToRDataType.athena_data.table <-
              row = "character",
              map = "character",
              x)}
-    output <- vapply(Types, athena_to_r, FUN.VALUE = character(1))
-    names(output) <- Names
+    output <- vapply(data_type, athena_to_r, FUN.VALUE = character(1))
     output
   }
 
 AthenaToRDataType.athena_vroom <- 
   function(method, data_type){
-    Names <- sapply(data_type, function(x) x$Name)
-    Types <- tolower(sapply(data_type, function(x) x$Type))
     athena_to_r <- function(x){
       switch(x,
              boolean = "l",
@@ -72,7 +67,6 @@ AthenaToRDataType.athena_vroom <-
              row = "c",
              map = "c",
              x)}
-    output <- vapply(Types, athena_to_r, FUN.VALUE = character(1))
-    names(output) <- Names
+    output <- vapply(data_type, athena_to_r, FUN.VALUE = character(1))
     output
   }
