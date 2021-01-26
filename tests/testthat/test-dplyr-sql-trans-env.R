@@ -24,12 +24,13 @@ data_types <- list(list(Name = type_names,
                         Type = c("boolean", "int",
                                  "integer", "tinyint",
                                  "smallint", "bigint",
-                                 "float", "decimal",
+                                 "float", "real",
+                                 "decimal",
                                  "string", "varchar",
                                  "date", "timestamp")))
 data_type2 = c("logical", "integer", "integer", "integer", "integer", "integer64", "double", "double", 
-               "character", "character","Date","POSIXct")
-data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "c", "c", "D", "T")
+               "double", "character", "character","Date","POSIXct")
+data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "d", "c", "c", "D", "T")
 names(data_type2) = type_names
 names(data_type3) = type_names
 
