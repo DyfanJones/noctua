@@ -6,11 +6,14 @@ athena_read <- function(method, File, athena_types, ...) {
 
 athena_read.athena_data.table <-
   function(method, File, athena_types , ...){
-    Type2 <- Type <- AthenaToRDataType(method, athena_types)
+    data_type <- tolower(sapply(athena_types, function(x) x$Type))
+    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    
+    Type2 <- Type <- AthenaToRDataType(method, data_type)
     # Type2 is to handle issue with data.table fread 
     Type2[Type2 %in% "POSIXct"] <- "character"
     
-    fill <- any(c("array", "row", "map") %in% tolower(sapply(athena_types, function(x) x$Type)))
+    fill <- any(c("array", "row", "map") %in% data_type)
     
     # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
     output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), sep = ",", showProgress = F, na.strings="", fill = fill)
@@ -19,15 +22,46 @@ athena_read.athena_data.table <-
     # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
     for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
     
+    if(athena_option_env$array){
+      # convert array from string
+      parse_json <- pkg_method("parse_json", "jsonlite")
+      for (col in names(data_type[data_type %in% "array"])) {
+        tryCatch({
+          set(output, j=col, value=lapply(output[[col]], parse_json))
+        },
+        error = function(e){
+          msg = sprintf("Column `%s` was unable to be converted. Returning column `%s` as character", col, col)
+          warning(msg, call. = F)
+        })
+      }
+    }
+    
     return(output)
   }
 
 athena_read.athena_vroom <- 
   function(method, File, athena_types, ...){
+    data_type <- tolower(sapply(athena_types, function(x) x$Type))
+    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    
     vroom <- pkg_method("vroom", "vroom")
-    Type <- AthenaToRDataType(method, athena_types)
+    Type <- AthenaToRDataType(method, data_type)
 
     output <- vroom(File, delim = ",", col_types = Type, progress = FALSE, trim_ws = FALSE, altrep = TRUE)
+    
+    if(athena_option_env$array){
+      # convert array from string
+      parse_json <- pkg_method("parse_json", "jsonlite")
+      for (col in names(data_type[data_type %in% "array"])) {
+        tryCatch({
+          set(output, j=col, value=lapply(output[[col]], parse_json))
+        },
+        error = function(e){
+          msg = sprintf("Column `%s` was unable to be converted. Returning column `%s` as character", col, col)
+          warning(msg, call. = F)
+        })
+      }
+    }
 
     return(output)
   }
