@@ -22,6 +22,7 @@
   s3_staging_dir = NULL,
   region_name = NULL,
   bigint = c("integer64", "integer", "numeric", "character"),
+  convert_array = FALSE,
   keyboard_interrupt = TRUE,
   ...
 )
@@ -69,6 +70,9 @@ AWS region codes (region code example: Region = EU (Ireland)     \code{ region_n
 \item{bigint}{The R type that 64-bit integer types should be mapped to,
 default is [bit64::integer64], which allows the full range of 64 bit
 integers.}
+
+\item{convert_array}{Attempt to converts AWS Athena arrays using \code{jsonlite:parse_json}. If it fails arrays will be returned as a characters.
+Arrays are returned by default as characters. Default set to \code{FALSE}}
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
 
