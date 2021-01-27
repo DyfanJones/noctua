@@ -10,7 +10,8 @@ athena_option_env$cache_dt <-  cache_dt
 athena_option_env$retry <- 5
 athena_option_env$retry_quiet <- FALSE
 athena_option_env$bigint <- "integer64"
-athena_option_env$array <- FALSE
+athena_option_env$binary <- "raw"
+athena_option_env$json <- "auto"
 
 # ==========================================================================
 # helper function to handle big integers

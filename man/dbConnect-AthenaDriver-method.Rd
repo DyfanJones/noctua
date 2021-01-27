@@ -22,7 +22,8 @@
   s3_staging_dir = NULL,
   region_name = NULL,
   bigint = c("integer64", "integer", "numeric", "character"),
-  convert_array = FALSE,
+  binary = c("raw", "character"),
+  json = c("auto", "character"),
   keyboard_interrupt = TRUE,
   ...
 )
@@ -71,8 +72,11 @@ AWS region codes (region code example: Region = EU (Ireland)     \code{ region_n
 default is [bit64::integer64], which allows the full range of 64 bit
 integers.}
 
-\item{convert_array}{Attempt to converts AWS Athena arrays using \code{jsonlite:parse_json}. If it fails arrays will be returned as a characters.
-Arrays are returned by default as characters. Default set to \code{FALSE}}
+\item{binary}{The R type that [binary/varbinary] types should be mapped to,
+default is [raw]. If the mapping fails R will resort to [character] type.}
+
+\item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
+Custom Json parsers can be provide by using a function with data frame parameter.}
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
 

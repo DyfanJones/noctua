@@ -93,8 +93,12 @@ setMethod(
 #' @param bigint The R type that 64-bit integer types should be mapped to,
 #'   default is [bit64::integer64], which allows the full range of 64 bit
 #'   integers.
-#' @param convert_array Attempt to converts AWS Athena arrays using \code{jsonlite:parse_json}. If it fails arrays will be returned as a characters.
-#'   Arrays are returned by default as characters. Default set to \code{FALSE}
+#' @param binary The R type that [binary/varbinary] types should be mapped to,
+#'   default is [raw]. If the mapping fails R will resort to [character] type.
+#'   To ignore data type conversion set to ["character"].
+#' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
+#'   Custom Json parsers can be provide by using a function with data frame parameter.
+#'   To ignore data type conversion set to ["character"].
 #' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}
 #' @param ... other parameters for \code{paws} session
 #' @aliases dbConnect
@@ -145,7 +149,8 @@ setMethod(
            s3_staging_dir = NULL,
            region_name = NULL,
            bigint = c("integer64", "integer", "numeric", "character"),
-           convert_array = FALSE,
+           binary = c("raw", "character"),
+           json = c("auto", "character"),
            keyboard_interrupt = TRUE,
            ...) {
     
@@ -164,10 +169,11 @@ setMethod(
               is.character(role_session_name),
               is.numeric(duration_seconds),
               is.logical(keyboard_interrupt),
-              is.logical(convert_array))
+              is.character(json) || is.function(json))
     
     athena_option_env$bigint <- big_int(match.arg(bigint))
-    athena_option_env$array <- convert_array
+    athena_option_env$binary <- match.arg(binary)
+    athena_option_env$json <- if(is.character(json)) json[[1]] else json
     
     encryption_option <- switch(encryption_option[1],
                                 "NULL" = NULL,
