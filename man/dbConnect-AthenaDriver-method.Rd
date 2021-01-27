@@ -25,6 +25,7 @@
   binary = c("raw", "character"),
   json = c("auto", "character"),
   keyboard_interrupt = TRUE,
+  rstudio_conn_tab = TRUE,
   ...
 )
 }
@@ -81,6 +82,9 @@ Custom Json parsers can be provide by using a function with data frame parameter
 To ignore data type conversion set to ["character"].}
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
+
+\item{rstudio_conn_tab}{Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
+Default set to \code{TRUE}.}
 
 \item{...}{other parameters for \code{paws} session}
 }

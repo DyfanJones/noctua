@@ -12,6 +12,7 @@ athena_option_env$retry_quiet <- FALSE
 athena_option_env$bigint <- "integer64"
 athena_option_env$binary <- "raw"
 athena_option_env$json <- "auto"
+athena_option_env$rstudio_conn_tab <- TRUE
 
 # ==========================================================================
 # helper function to handle big integers

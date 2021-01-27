@@ -100,6 +100,8 @@ setMethod(
 #'   Custom Json parsers can be provide by using a function with data frame parameter.
 #'   To ignore data type conversion set to ["character"].
 #' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}
+#' @param rstudio_conn_tab Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
+#'   Default set to \code{TRUE}.
 #' @param ... other parameters for \code{paws} session
 #' @aliases dbConnect
 #' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
@@ -152,6 +154,7 @@ setMethod(
            binary = c("raw", "character"),
            json = c("auto", "character"),
            keyboard_interrupt = TRUE,
+           rstudio_conn_tab = TRUE,
            ...) {
     
     # assert checks on parameters
@@ -169,11 +172,13 @@ setMethod(
               is.character(role_session_name),
               is.numeric(duration_seconds),
               is.logical(keyboard_interrupt),
-              is.character(json) || is.function(json))
+              is.character(json) || is.function(json),
+              is.logical(rstudio_conn_tab))
     
     athena_option_env$bigint <- big_int(match.arg(bigint))
     athena_option_env$binary <- match.arg(binary)
     athena_option_env$json <- if(is.character(json)) jsonlite_check(json[[1]]) else json
+    athena_option_env$rstudio_conn_tab <- rstudio_conn_tab
     
     encryption_option <- switch(encryption_option[1],
                                 "NULL" = NULL,
