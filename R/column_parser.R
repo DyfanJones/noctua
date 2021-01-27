@@ -22,6 +22,7 @@ raw_parser <- function(output, columns){
   }
 }
 
+# parse json string
 json_parser <- function(output, columns){
   # Get JSON conversion method
   if(identical(athena_option_env$json, "auto")){
