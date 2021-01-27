@@ -173,7 +173,7 @@ setMethod(
     
     athena_option_env$bigint <- big_int(match.arg(bigint))
     athena_option_env$binary <- match.arg(binary)
-    athena_option_env$json <- if(is.character(json)) json[[1]] else json
+    athena_option_env$json <- if(is.character(json)) jsonlite_check(json[[1]]) else json
     
     encryption_option <- switch(encryption_option[1],
                                 "NULL" = NULL,
