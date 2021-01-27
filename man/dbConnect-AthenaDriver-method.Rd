@@ -73,10 +73,12 @@ default is [bit64::integer64], which allows the full range of 64 bit
 integers.}
 
 \item{binary}{The R type that [binary/varbinary] types should be mapped to,
-default is [raw]. If the mapping fails R will resort to [character] type.}
+default is [raw]. If the mapping fails R will resort to [character] type.
+To ignore data type conversion set to ["character"].}
 
 \item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
-Custom Json parsers can be provide by using a function with data frame parameter.}
+Custom Json parsers can be provide by using a function with data frame parameter.
+To ignore data type conversion set to ["character"].}
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
 
