@@ -9,7 +9,7 @@ athena_read.athena_data.table <-
     data_type <- tolower(sapply(athena_types, function(x) x$Type))
     names(data_type) <- sapply(athena_types, function(x) x$Name)
     
-    Type2 <- Type <- AthenaToRDataType(method, athena_types)
+    Type2 <- Type <- AthenaToRDataType(method, data_type)
     # Type2 is to handle issue with data.table fread 
     Type2[Type2 %in% "POSIXct"] <- "character"
     
