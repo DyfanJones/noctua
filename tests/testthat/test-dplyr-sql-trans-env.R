@@ -20,14 +20,14 @@ data_type1 = c("BOOLEAN", "INT", "BIGINT", "DOUBLE", "DOUBLE",
 names(data_type1) = c("Logicial", "Integer", "Integer64", "Numeric", "Double", "Factor", "Character", "List", "Date", "Posixct")
 method <- "file_method"
 type_names <- sapply(1:12, function(x) paste0("var_", x))
-data_types <- list(list(Name = type_names,
-                        Type = c("boolean", "int",
-                                 "integer", "tinyint",
-                                 "smallint", "bigint",
-                                 "float", "real",
-                                 "decimal",
-                                 "string", "varchar",
-                                 "date", "timestamp")))
+data_types <- c("boolean", "int",
+                "integer", "tinyint",
+                "smallint", "bigint",
+                "float", "real",
+                "decimal",
+                "string", "varchar",
+                "date", "timestamp")
+names(data_types) <- type_names
 data_type2 = c("logical", "integer", "integer", "integer", "integer", "integer64", "double", "double", 
                "double", "character", "character","Date","POSIXct")
 data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "d", "c", "c", "D", "T")
