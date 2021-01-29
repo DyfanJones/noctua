@@ -6,6 +6,9 @@
 \usage{
 noctua_options(
   file_parser = c("data.table", "vroom"),
+  bigint = NULL,
+  binary = NULL,
+  json = NULL,
   cache_size = 0,
   clear_cache = FALSE,
   retry = 5,
@@ -15,6 +18,16 @@ noctua_options(
 \arguments{
 \item{file_parser}{Method to read and write tables to Athena, currently defaults to \code{data.table}. The file_parser also
 determines the data format returned for example \code{data.table} will return \code{data.table} and \code{vroom} will return \code{tibble}.}
+
+\item{bigint}{The R type that 64-bit integer types should be mapped to. Default \code{NULL} won't make any changes that \code{dbConnect} has set.
+Inbuilt bigint conversion types ["integer64", "integer", "numeric", "character"].}
+
+\item{binary}{The R type that [binary/varbinary] types should be mapped to. Default \code{NULL} won't make any changes that \code{dbConnect} has set.
+Inbuilt binary conversion types ["raw", "character"].}
+
+\item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. 
+Default \code{NULL} won't make any changes that \code{dbConnect} has set. Inbuilt json conversion types ["auto", "character"].
+Custom Json parsers can be provide by using a function with data frame parameter.}
 
 \item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries.}
 

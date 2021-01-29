@@ -49,6 +49,7 @@ Collate:
     'Table.R'
     'View.R'
     'athena_low_api.R'
+    'column_parser.R'
     'dplyr_integration.R'
     'sql_translate_env.R'
     'utils.R'

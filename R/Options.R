@@ -10,6 +10,9 @@ athena_option_env$cache_dt <-  cache_dt
 athena_option_env$retry <- 5
 athena_option_env$retry_quiet <- FALSE
 athena_option_env$bigint <- "integer64"
+athena_option_env$binary <- "raw"
+athena_option_env$json <- "auto"
+athena_option_env$rstudio_conn_tab <- TRUE
 
 # ==========================================================================
 # helper function to handle big integers
@@ -51,6 +54,13 @@ bit64_check <- function(value){
 #'  whether \code{noctua} should cache query ids locally and number of retries on a failed api call.
 #' @param file_parser Method to read and write tables to Athena, currently defaults to \code{data.table}. The file_parser also
 #'                    determines the data format returned for example \code{data.table} will return \code{data.table} and \code{vroom} will return \code{tibble}.
+#' @param bigint The R type that 64-bit integer types should be mapped to. Default \code{NULL} won't make any changes that \code{dbConnect} has set.
+#'    Inbuilt bigint conversion types ["integer64", "integer", "numeric", "character"].
+#' @param binary The R type that [binary/varbinary] types should be mapped to. Default \code{NULL} won't make any changes that \code{dbConnect} has set.
+#'    Inbuilt binary conversion types ["raw", "character"].
+#' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. 
+#'   Default \code{NULL} won't make any changes that \code{dbConnect} has set. Inbuilt json conversion types ["auto", "character"].
+#'   Custom Json parsers can be provide by using a function with data frame parameter.
 #' @param cache_size Number of queries to be cached. Currently only support caching up to 100 distinct queries.
 #' @param clear_cache Clears all previous cached query metadata
 #' @param retry Maximum number of requests to attempt.
@@ -65,7 +75,14 @@ bit64_check <- function(value){
 #' # cache queries locally
 #' noctua_options(cache_size = 5)
 #' @export
-noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 0, clear_cache = FALSE, retry = 5, retry_quiet = FALSE) {
+noctua_options <- function(file_parser = c("data.table", "vroom"),
+                           bigint = NULL,
+                           binary = NULL,
+                           json = NULL,
+                           cache_size = 0,
+                           clear_cache = FALSE,
+                           retry = 5,
+                           retry_quiet = FALSE) {
   file_parser = match.arg(file_parser)
   stopifnot(is.logical(clear_cache),
             is.numeric(retry),
@@ -82,6 +99,27 @@ noctua_options <- function(file_parser = c("data.table", "vroom"), cache_size = 
          "vroom" = if(packageVersion(file_parser) < '1.2.0')  
            stop("Please update `vroom` to  `1.2.0` or later", call. = FALSE))
   
+  # only change bigint when not null
+  if(!is.null(bigint)){
+    athena_option_env$bigint <- big_int(match.arg(bigint, c("integer64", "integer", "numeric", "character")))
+  }
+  
+  # only change binary when not null
+  if(!is.null(binary))
+    athena_option_env$binary <- match.arg(binary, c("raw", "character"))
+  
+  # only change json when not null  
+  if(!is.null(json)){
+    if(is.character(json)) {
+      athena_option_env$json <- match.arg(json, c("auto", "character"))
+    } else if(is.function(json)) {
+      athena_option_env$json <- json
+    } else{
+      stop('Unknown json parser. Please use defaults ["auto", "character"] or a custom function.',
+           call. = F)
+    }
+  }
+    
   class(athena_option_env$file_parser) <- paste("athena", file_parser, sep = "_")
   athena_option_env$bigint <- big_int(athena_option_env$bigint)
   

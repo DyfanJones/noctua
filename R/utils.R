@@ -308,3 +308,14 @@ splitList <- function(l){
     ll[[i]] <- l[chunks[i]:min(chunks[i]+999, length(l))]
   return(ll)
 }
+
+# check if jsonlite is present or not
+jsonlite_check <- function(method){
+  if(method == "auto") {
+    if (!requireNamespace("jsonlite", quietly = TRUE)) {
+      message('Info: `jsonlite` has not been detected, AWS Athena `json` data types will be returned as `character`.')
+      method <- "character"
+      }
+    }
+  return(method)
+}

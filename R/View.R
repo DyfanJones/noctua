@@ -309,6 +309,9 @@ on_connection_closed <- function(con) {
   if (is.null(observer))
     return(invisible(NULL))
   
+  if(!athena_option_env$rstudio_conn_tab)
+    return(invisible(NULL))
+  
   type <- "Athena"
   host <- computeHostName(con)
   observer$connectionClosed(type, host)
@@ -320,6 +323,9 @@ on_connection_updated <- function(con, hint) {
   if (is.null(observer))
     return(invisible(NULL))
   
+  if(!athena_option_env$rstudio_conn_tab)
+    return(invisible(NULL))
+  
   type <- "Athena"
   host <- computeHostName(con)
   observer$connectionUpdated(type, host, hint = hint)
@@ -329,6 +335,9 @@ on_connection_opened <- function(connection) {
   # make sure we have an observer
   observer <- getOption("connectionObserver")
   if (is.null(observer))
+    return(invisible(NULL))
+  
+  if(!athena_option_env$rstudio_conn_tab)
     return(invisible(NULL))
   
   # find an icon for this DBMS
