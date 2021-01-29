@@ -1,6 +1,64 @@
 # noctua 1.10.999
 ## New Feature:
-* Added support to `AWS Athena` data types array, row and map (#135).
+* Added support to `AWS Athena` data types `[array, row, map, json, binary, ipaddress]` (#135). Conversion types can be changed through `dbConnect` and `noctua_options`.
+```
+library(DBI)
+library(noctua)
+
+# default conversion methods
+con <- dbConnect(noctua::athena())
+
+# change json conversion method
+noctua_options(json = "character")
+noctua:::athena_option_env$json
+# [1] "character"
+
+# change json conversion to custom method
+noctua_options(json = jsonify::from_json)
+noctua:::athena_option_env$json
+# function (json, simplify = TRUE, fill_na = FALSE, buffer_size = 1024) 
+# {
+#   json_to_r(json, simplify, fill_na, buffer_size)
+# }
+# <bytecode: 0x7f823b9f6830>
+#   <environment: namespace:jsonify>
+
+# change bigint conversion without affecting custom json conversion methods
+noctua_options(bigint = "numeric")
+noctua:::athena_option_env$json
+# function (json, simplify = TRUE, fill_na = FALSE, buffer_size = 1024) 
+# {
+#   json_to_r(json, simplify, fill_na, buffer_size)
+# }
+# <bytecode: 0x7f823b9f6830>
+#   <environment: namespace:jsonify>
+
+noctua:::athena_option_env$bigint
+# [1] "numeric"
+
+# change binary conversion without affect, bigint or json methods
+noctua_options(binary = "character")
+noctua:::athena_option_env$json
+# function (json, simplify = TRUE, fill_na = FALSE, buffer_size = 1024) 
+# {
+#   json_to_r(json, simplify, fill_na, buffer_size)
+# }
+# <bytecode: 0x7f823b9f6830>
+#   <environment: namespace:jsonify>
+
+noctua:::athena_option_env$bigint
+# [1] "numeric"
+
+noctua:::athena_option_env$binary
+# [1] "character"
+
+# no conversion for json objects
+con2 <- dbConnect(noctua::athena(), json = "character")
+
+# use custom json parser
+con <- dbConnect(noctua::athena(), json = jsonify::from_json)
+```
+* Allow users to turn off RStudio Connection Tab when working in RStudio (#136). This can be done through parameter `rstudio_conn_tab` within `dbConnect`.
 
 ## Bug Fix:
 * `AWS Athena` uses `float` data type for the DDL only, `noctua` was wrongly parsing `float` data type back to R. Instead `AWS Athena` uses data type `real` in SQL functions like `select cast` https://docs.aws.amazon.com/athena/latest/ug/data-types.html. `nocuta` now correctly parses `real` to R's data type `double` (#133)
