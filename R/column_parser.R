@@ -75,7 +75,6 @@ json_parser <- function(output, columns){
           value=json_chunks(output[[col]], parse_json))
     },
     error = function(e){
-      message(e)
       warning(sprintf(.error_msg, col), call. = F)
     })
   }
