@@ -4,8 +4,16 @@
 
 # Takes a string and converts it to raw
 hex2raw <- function(string){
-  split_str = strsplit(string, split = " ", fixed = TRUE)
-  return(lapply(split_str, function(x) as.raw(as.hexmode(x))))
+  split_str <- strsplit(string, split = " ", fixed = TRUE)
+  output <- as.raw(as.hexmode(unlist(split_str)))
+  split_raw(output, sapply(split_str, length))
+}
+
+# helper function to split raw vector back into list format
+split_raw <- function(vec, splits){
+  start <- cumsum(c(1, splits))
+  end <- start[-1]-1
+  lapply(seq_along(splits), function(i) vec[start[i]:end[i]])
 }
 
 # applying string convertion across entire data frame
@@ -24,10 +32,9 @@ raw_parser <- function(output, columns){
 
 split_vec <- function(vec, len, max_len = length(vec)){
   chunks <- seq(1, max_len, len)
-  ll <- Map(function(i) list(), 1:length(chunks))
-  for (i in seq_along(chunks))
-    ll[[i]] <- vec[chunks[i]:min(chunks[i]+(len-1), max_len)]
-  return(ll)
+  lapply(seq_along(chunks), function(i){
+    vec[chunks[i]:min(chunks[i]+(len-1), max_len)]
+    })
 }
 
 create_json_string <- function(string){paste0("[", paste(string, collapse = ","), "]")}
