@@ -1,3 +1,9 @@
+format_athena_types <- function(athena_types){
+  data_type <- tolower(sapply(athena_types, function(x) x$Type))
+  names(data_type) <- sapply(athena_types, function(x) x$Name)
+  return(data_type)
+}
+
 # ==========================================================================
 # read in method
 athena_read <- function(method, File, athena_types, ...) {
@@ -6,8 +12,7 @@ athena_read <- function(method, File, athena_types, ...) {
 
 athena_read.athena_data.table <-
   function(method, File, athena_types , ...){
-    data_type <- tolower(sapply(athena_types, function(x) x$Type))
-    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    data_type <- format_athena_types(athena_types)
     
     Type2 <- Type <- AthenaToRDataType(method, data_type)
     # Type2 is to handle issue with data.table fread 
@@ -35,8 +40,7 @@ athena_read.athena_data.table <-
 
 athena_read.athena_vroom <- 
   function(method, File, athena_types, ...){
-    data_type <- tolower(sapply(athena_types, function(x) x$Type))
-    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    data_type <- format_athena_types(athena_types)
     
     vroom <- pkg_method("vroom", "vroom")
     Type <- AthenaToRDataType(method, data_type)
@@ -62,8 +66,7 @@ athena_read_lines <- function(method, File, athena_types, ...) {
 # Keep data.table formatting
 athena_read_lines.athena_data.table <-
   function(method, File, athena_types, ...){
-    data_type <- tolower(sapply(athena_types, function(x) x$Type))
-    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    data_type <- format_athena_types(athena_types)
     
     Type2 <- Type <- AthenaToRDataType(method, data_type)
     # Type2 is to handle issue with data.table fread 
@@ -76,19 +79,34 @@ athena_read_lines.athena_data.table <-
     # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
     for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
     
+    # convert raw
+    if(!identical(athena_option_env$binary, "character"))
+      raw_parser(output, data_type)
+    
+    # convert json
+    if(!identical(athena_option_env$json, "character"))
+      json_parser(output, data_type)
+    
     return(output)
   }
 
 athena_read_lines.athena_vroom <- 
   function(method, File, athena_types, ...){
-    data_type <- tolower(sapply(athena_types, function(x) x$Type))
-    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    data_type <- format_athena_types(athena_types)
     
     vroom <- pkg_method("vroom", "vroom")
     
     Type <- AthenaToRDataType(method, data_type)
     
     output <- vroom(File, col_names = names(Type), col_types = unname(Type), progress = FALSE, altrep = TRUE, trim_ws = FALSE, delim = "\n")
+    
+    # convert raw
+    if(!identical(athena_option_env$binary, "character"))
+      raw_parser(output, data_type)
+    
+    # convert json
+    if(!identical(athena_option_env$json, "character"))
+      json_parser(output, data_type)
     
     return(output)
   }
