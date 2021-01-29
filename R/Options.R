@@ -25,7 +25,7 @@ big_int <- function(bigint){
                   "i" = "integer",
                   "d" = "double",
                   "c" = "character",
-                  "n" = "double",
+                  "numeric" = "double",
                   bigint)
     )
   if(fp == "athena_vroom")
@@ -101,7 +101,7 @@ noctua_options <- function(file_parser = c("data.table", "vroom"),
   
   # only change bigint when not null
   if(!is.null(bigint)){
-    athena_option_env$bigint <- match.arg(bigint, c("integer64", "integer", "numeric", "character"))
+    athena_option_env$bigint <- big_int(match.arg(bigint, c("integer64", "integer", "numeric", "character")))
   }
   
   # only change binary when not null
