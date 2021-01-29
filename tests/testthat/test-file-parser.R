@@ -20,6 +20,18 @@ output_test_data <- function(N = 10000L, temp_file){
          quote = T)
 }
 
+output_test_error_data <- function(temp_file, N = 10000L, seed = 142L){
+  set.seed(seed)
+  dt <- data.table(
+    id=1:N,
+    original = rep("helloworld", N),
+    raw_string = rep("helloworld", N),
+    json = rep("[Name = Bob]", N))
+  fwrite(dt,
+         temp_file,
+         quote = T)
+}
+
 test_file <- tempfile()
 
 data_type <- list(list(Name = c("id", "original", "raw_string", "json"),
@@ -126,5 +138,45 @@ test_that("Custom json parser",{
   expect_equal(dt2$json[[1]], iris[1,1:2])
 })
 
+test_that("Custom json parser",{
+  size <- 1e1
+  output_test_data(size, test_file)
+  
+  noctua::noctua_options(json=jsonlite::fromJSON)
+  noctua::noctua_options(binary="character")
+  
+  dt1 <- noctua:::athena_read.athena_data.table(
+    method_1,
+    test_file,
+    data_type)
+  
+  dt2 <- noctua:::athena_read.athena_vroom(
+    method_2,
+    test_file,
+    data_type)
+  
+  expect_equal(dt1$json[[1]], iris[1,1:2])
+  expect_equal(dt2$json[[1]], iris[1,1:2])
+})
+
+test_file2 <- tempfile()
+
+test_that("Check if variable is returns as character when failed to convert",{
+  output_test_error_data(test_file2, 1)
+  
+  noctua::noctua_options(json="auto")
+  noctua::noctua_options(binary="raw")
+  
+  expect_warning(
+    dt <- noctua:::athena_read.athena_data.table(
+      method_1,
+      test_file2,
+      data_type))
+  
+  expect_true(is.character(dt$raw_string))
+  expect_true(is.character(dt$json))
+})
+
 # remove temporary file
 unlink(test_file)
+unlink(test_file2)
