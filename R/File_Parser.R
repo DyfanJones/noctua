@@ -9,7 +9,7 @@ athena_read.athena_data.table <-
     data_type <- tolower(sapply(athena_types, function(x) x$Type))
     names(data_type) <- sapply(athena_types, function(x) x$Name)
     
-    Type2 <- Type <- AthenaToRDataType(method, data_type)
+    Type2 <- Type <- AthenaToRDataType(method, athena_types)
     # Type2 is to handle issue with data.table fread 
     Type2[Type2 %in% "POSIXct"] <- "character"
     
@@ -62,7 +62,10 @@ athena_read_lines <- function(method, File, athena_types, ...) {
 # Keep data.table formatting
 athena_read_lines.athena_data.table <-
   function(method, File, athena_types, ...){
-    Type2 <- Type <- AthenaToRDataType(method, athena_types)
+    data_type <- tolower(sapply(athena_types, function(x) x$Type))
+    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    
+    Type2 <- Type <- AthenaToRDataType(method, data_type)
     # Type2 is to handle issue with data.table fread 
     Type2[Type2 %in% "POSIXct"] <- "character"
     
@@ -78,9 +81,12 @@ athena_read_lines.athena_data.table <-
 
 athena_read_lines.athena_vroom <- 
   function(method, File, athena_types, ...){
+    data_type <- tolower(sapply(athena_types, function(x) x$Type))
+    names(data_type) <- sapply(athena_types, function(x) x$Name)
+    
     vroom <- pkg_method("vroom", "vroom")
     
-    Type <- AthenaToRDataType(method, athena_types)
+    Type <- AthenaToRDataType(method, data_type)
     
     output <- vroom(File, col_names = names(Type), col_types = unname(Type), progress = FALSE, altrep = TRUE, trim_ws = FALSE, delim = "\n")
     
