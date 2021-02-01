@@ -319,3 +319,36 @@ jsonlite_check <- function(method){
     }
   return(method)
 }
+
+# get database list from glue catalog
+get_datases <- function(glue){
+  token <- NULL
+  data_list <- list()
+  while(!identical(token, character(0))){
+    retry_api_call(response <- glue$get_databases(NextToken = token))
+    data_list <- c(
+      data_list,
+      vapply(response$DatabaseList,function(x) x$Name, FUN.VALUE = character(1))
+    )
+    token <- response$NextToken
+  }
+  return(data_list)
+}
+
+# get list of tables from glue catalog
+get_table_list <- function(glue, schema){
+  token <- NULL
+  table_list <- list()
+  while(!identical(token, character(0))){
+    retry_api_call(response <- glue$get_tables(DatabaseName = schema, NextToken = token))
+    table_list <- c(
+      table_list, 
+      lapply(response$TableList,
+             function(x) {list(DatabaseName = x$DatabaseName,
+                               Name = x$Name, 
+                               TableType = x$TableType)})
+    )
+    token <- response$NextToken
+  }
+  return(table_list)
+}

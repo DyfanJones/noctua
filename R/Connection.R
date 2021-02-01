@@ -372,10 +372,17 @@ setMethod(
   "dbListTables", "AthenaConnection",
   function(conn, schema = NULL, ...){
     if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    if(is.null(schema)){
-      retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
-    tryCatch(output <- lapply(schema, function (x) tryCatch(conn@ptr$glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL)))
-    unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
+    glue <- conn@ptr$glue
+    if(is.null(schema))
+      schema <- get_datases(glue)
+    tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
+             error = function(cond) NULL)
+    return(
+      vapply(
+        unlist(output, recursive = FALSE),
+        function(y) y$Name,
+        FUN.VALUE = character(1))
+    )
   }
 )
 
@@ -414,16 +421,17 @@ setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
 
 #' @rdname dbGetTables
 #' @export
-setMethod("dbGetTables", "AthenaConnection",
-          function(conn, schema = NULL, ...){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-  if(is.null(schema)){
-    retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
-  tryCatch(output <- lapply(schema, function (x) tryCatch(conn@ptr$glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL)))
-  rbindlist(lapply(output, function(x) rbindlist(lapply(x, function(y) data.frame(Schema = y$DatabaseName,
-                                                                                  TableName=y$Name,
-                                                                                  TableType = y$TableType)))))
-})
+setMethod(
+  "dbGetTables", "AthenaConnection",
+  function(conn, schema = NULL, ...){
+    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    glue <- conn@ptr$glue
+    if(is.null(schema))
+      schema <- get_datases(glue)
+    tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
+             error = function(cond) NULL)
+    return(rbindlist(unlist(output, recursive = FALSE), use.names = TRUE))
+  })
 
 #' List Field names of Athena table
 #'

@@ -164,22 +164,22 @@ AthenaListColumns.default <- function(connection, table = NULL, view = NULL, dat
 AthenaTableTypes <- function(connection, database = NULL, name = NULL, ...) {
   if (!dbIsValid(connection)) {stop("Connection already closed.", call. = FALSE)}
   glue <- connection@ptr$glue
-  
-  if(is.null(database)) database <- sapply(glue$get_databases()$DatabaseList,function(x) x$Name)
+  if(is.null(database)) database <- unlist(get_datases(glue))
   if(is.null(name)){
-    output <- lapply(database, function (x) tryCatch(glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL))
-    tbl_meta <- unlist(lapply(output, function(x) sapply(x, TblMeta)))}
+    tryCatch({output <- lapply(database, function(i) get_table_list(glue = glue, schema = i))},
+             error = function(cond) NULL)
+    tbl_meta <- sapply(unlist(output, recursive = F), function(x) TblMeta(x))}
   else{
     output <- glue$get_table(DatabaseName = database, Name = name)$Table
     tbl_meta <- output$TableType
     names(tbl_meta) <- output$Name}
-  tbl_meta
+  return(tbl_meta)
 }
 
 AthenaDatabase <- function(connection, ...) {
   if (!dbIsValid(connection)) {stop("Connection already closed.", call. = FALSE)}
   glue <- connection@ptr$glue
-  sapply(glue$get_databases()$DatabaseList,function(x) x$Name)
+  return(unlist(get_datases(glue)))
 }
 
 # Preview the data in an object.

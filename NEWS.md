@@ -62,6 +62,7 @@ con <- dbConnect(noctua::athena(), json = jsonify::from_json)
 
 ## Bug Fix:
 * `AWS Athena` uses `float` data type for the DDL only, `noctua` was wrongly parsing `float` data type back to R. Instead `AWS Athena` uses data type `real` in SQL functions like `select cast` https://docs.aws.amazon.com/athena/latest/ug/data-types.html. `nocuta` now correctly parses `real` to R's data type `double` (#133)
+* Iterate through each token `AWS` returns to get all results from `AWS Glue` catalogue (#137)
 
 # noctua 1.10.0
 ## New Feature
