@@ -268,32 +268,41 @@ retry_api_call <- function(expr){
 # Create table With parameters
 ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NULL", compress = TRUE){
   if(file.type!="NULL" || !is.null(s3.location) || !is.null(partition)){
-    FILE <- switch(file.type,
-                   "csv" = "format = 'TEXTFILE',\nfield_delimiter = ','",
-                   "tsv" = "format = 'TEXTFILE',\nfield_delimiter = '\t'",
-                   "parquet" = "format = 'PARQUET'",
-                   "json" = "format = 'JSON'",
-                   "orc" = "format = 'ORC'",
-                   "")
+    FILE <- switch(
+      file.type,
+      "csv" = "format = 'TEXTFILE',\nfield_delimiter = ','",
+      "tsv" = "format = 'TEXTFILE',\nfield_delimiter = '\t'",
+      "parquet" = "format = 'PARQUET'",
+      "json" = "format = 'JSON'",
+      "orc" = "format = 'ORC'",
+      "")
     
     COMPRESSION <- ""
     if (compress) {
-      if(file.type %in% c("tsv", "csv", "json")) warning("Can only compress parquet or orc files: https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html", call. = FALSE)
-      COMPRESSION <- switch(file.type,
-                            "parquet" = ",\nparquet_compression = 'SNAPPY'",
-                            "orc" = ",\norc_compression = 'SNAPPY'",
-                            "")
+      if(file.type %in% c("tsv", "csv", "json"))
+        warning(
+          "Can only compress parquet or orc files: https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html",
+          call. = FALSE)
+      COMPRESSION <- switch(
+        file.type,
+        "parquet" = ",\nparquet_compression = 'SNAPPY'",
+        "orc" = ",\norc_compression = 'SNAPPY'",
+        "")
     }
     
     LOCATION <- if(!is.null(s3.location)){
-      if(file.type == "NULL") paste0("external_location ='", s3.location, "'")
-      else paste0(",\nexternal_location ='", s3.location, "'")
+      if(file.type == "NULL") 
+        paste0("external_location ='", s3.location, "'")
+      else 
+        paste0(",\nexternal_location ='", s3.location, "'")
     } else ""
     
     PARTITION <- if(!is.null(partition)){
       partition <- paste(partition, collapse = "','")
-      if(is.null(s3.location) && file.type == "NULL") paste0("partitioned_by = ARRAY['",partition,"']")
-      else paste0(",\npartitioned_by = ARRAY['",partition,"']")
+      if(is.null(s3.location) && file.type == "NULL") 
+        paste0("partitioned_by = ARRAY['",partition,"']")
+      else 
+        paste0(",\npartitioned_by = ARRAY['",partition,"']")
     } else ""
     
     paste0("WITH (", FILE, COMPRESSION, LOCATION, PARTITION,")\n")
@@ -302,11 +311,9 @@ ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NUL
 
 # split list into chunksize 1000
 splitList <- function(l){
-  chunks <- seq(1, length(l), 1000)
-  ll <- Map(function(i) list(), 1:length(chunks))
-  for (i in seq_along(chunks))
-    ll[[i]] <- l[chunks[i]:min(chunks[i]+999, length(l))]
-  return(ll)
+  len_l <- length(l)
+  chunks <- seq(1, len_l, 1000)
+  lapply(seq_along(chunks), function(i) l[chunks[i]:min(chunks[i]+999, len_l)])
 }
 
 # check if jsonlite is present or not
