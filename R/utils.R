@@ -309,13 +309,6 @@ ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NUL
   } else ""
 }
 
-# split list into chunksize 1000
-splitList <- function(l){
-  len_l <- length(l)
-  chunks <- seq(1, len_l, 1000)
-  lapply(seq_along(chunks), function(i) l[chunks[i]:min(chunks[i]+999, len_l)])
-}
-
 # check if jsonlite is present or not
 jsonlite_check <- function(method){
   if(method == "auto") {

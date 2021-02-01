@@ -633,7 +633,7 @@ setMethod(
       # Only remove if files are found
       if(length(all_keys) > 0){
         # Delete S3 files in batch size 1000
-        key_parts <- splitList(all_keys)
+        key_parts <- split_vec(all_keys, 1000)
         for(i in seq_along(key_parts))
           conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
       } else {
