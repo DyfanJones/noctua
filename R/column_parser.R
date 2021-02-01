@@ -6,10 +6,10 @@
 hex2raw <- function(string){
   split_str <- strsplit(string, split = " ", fixed = TRUE)
   output <- as.raw(as.hexmode(unlist(split_str)))
-  split_raw(output, sapply(split_str, length))
+  split_raw(output, lengths(split_str))
 }
 
-# helper function to split raw vector back into list format
+# split raw vector into list chunks
 split_raw <- function(vec, splits){
   start <- cumsum(c(1, splits))
   end <- start[-1]-1
@@ -18,7 +18,6 @@ split_raw <- function(vec, splits){
 
 # applying string convertion across entire data frame
 raw_parser <- function(output, columns){
-  
   # only convert Athena data types `varbinary`
   for (col in names(columns[columns %in% c("varbinary")])) {
     tryCatch({
@@ -30,19 +29,22 @@ raw_parser <- function(output, columns){
   }
 }
 
+# split lists or vectors into list chunks
 split_vec <- function(vec, len, max_len = length(vec)){
-  chunks <- seq(1, max_len, len)
-  lapply(seq_along(chunks), function(i){
-    vec[chunks[i]:min(chunks[i]+(len-1), max_len)]
-    })
+  start <- seq(1, max_len, len)
+  end <- chunks+(len-1)
+  lapply(seq_along(start), function(i){
+    vec[start[i]:min(end[i], max_len)]
+  })
 }
 
+# collapse json strings into 1 json string
 create_json_string <- function(string){paste0("[", paste(string, collapse = ","), "]")}
 
 # chunk up json strings then collapse json chunks before parsing them 
 json_chunks <- function(string, fun=jsonlite::parse_json, min_chunk = 10000L){
   if(length(string) < min_chunk){
-    output <- fun(paste0("[", paste(string, collapse = ","), "]"))
+    output <- fun(create_json_string(string))
   } else {
     len <- max(ceiling(length(string)/20), min_chunk)
     split_string <- split_vec(string, len)
