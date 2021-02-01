@@ -32,7 +32,7 @@ raw_parser <- function(output, columns){
 # split lists or vectors into list chunks
 split_vec <- function(vec, len, max_len = length(vec)){
   start <- seq(1, max_len, len)
-  end <- chunks+(len-1)
+  end <- start+(len-1)
   lapply(seq_along(start), function(i){
     vec[start[i]:min(end[i], max_len)]
   })
