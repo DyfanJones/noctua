@@ -34,8 +34,14 @@ output_test_error_data <- function(temp_file, N = 10000L, seed = 142L){
 
 test_file <- tempfile()
 
-data_type <- list(list(Name = c("id", "original", "raw_string", "json"),
-                       Type = c("integer", "string", "varbinary", "json")))
+data_type <- list(list(Name = "id",
+                       Type = "integer"),
+                  list(Name = "original",
+                       Type = "string"),
+                  list(Name = "raw_string",
+                       Type = "varbinary"),
+                  list(Name = "json",
+                       Type = "json"))
 
 method_1 <- "method"
 class(method_1) <- "athena_data.table"
