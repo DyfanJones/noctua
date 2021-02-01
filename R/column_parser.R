@@ -32,10 +32,8 @@ raw_parser <- function(output, columns){
 # split lists or vectors into list chunks
 split_vec <- function(vec, len, max_len = length(vec)){
   start <- seq(1, max_len, len)
-  end <- start+(len-1)
-  lapply(seq_along(start), function(i){
-    vec[start[i]:min(end[i], max_len)]
-  })
+  end <- c(start[-1]-1, max_len)
+  lapply(seq_along(start), function(i) vec[start[i]:end[i]])
 }
 
 # collapse json strings into 1 json string
