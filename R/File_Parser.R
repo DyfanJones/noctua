@@ -1,6 +1,6 @@
 format_athena_types <- function(athena_types){
-  data_type <- tolower(sapply(athena_types, function(x) x$Type))
-  names(data_type) <- sapply(athena_types, function(x) x$Name)
+  data_type <- tolower(vapply(athena_types, function(x) x$Type, FUN.VALUE = character(1)))
+  names(data_type) <- vapply(athena_types, function(x) x$Name, FUN.VALUE = character(1))
   return(data_type)
 }
 
