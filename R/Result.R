@@ -290,7 +290,7 @@ setMethod(
 setMethod(
   "dbGetInfo", "AthenaResult",
   function(dbObj, ...) {
-    con_error_msg(res, msg = "Result already cleared.")
+    con_error_msg(dbObj, msg = "Result already cleared.")
     info <- dbObj@info
     info
   })
@@ -381,16 +381,15 @@ setGeneric("dbStatistics",
 
 #' @rdname dbStatistics
 #'@export
-setMethod("dbStatistics", "AthenaResult",
-          function(res, ...){
-            con_error_msg(res, msg = "Result already cleared.")
-            # check status of query
-            result <- poll(res)
-            
-            # if query failed stop
-            if(result$QueryExecution$Status$State == "FAILED") {
-              stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
-            }
-            
-            result$QueryExecution$Statistics
-          })
+setMethod(
+  "dbStatistics", "AthenaResult",
+  function(res, ...){
+    con_error_msg(res, msg = "Result already cleared.")
+    # check status of query
+    result <- poll(res)
+    # if query failed stop
+    if(result$QueryExecution$Status$State == "FAILED") {
+      stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
+    }
+    return(result$QueryExecution$Statistics)
+})
