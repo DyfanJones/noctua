@@ -24,7 +24,7 @@ test_that("Returning meta data",{
   con_info_exp = names(dbGetInfo(con))
   list_tbl1 = any(grepl("test_df", dbListTables(con, "default")))
   list_tbl2 = nrow(dbGetTables(con, "default")[TableName == "test_df"]) == 1
-  list_tbl3 = nrow(dbGetTables(con)[Schema == "default" && TableName == "test_df"]) == 1
+  list_tbl3 = nrow(dbGetTables(con)[Schema == "default" & TableName == "test_df"]) == 1
   list_tbl4 = any(grepl("test_df", dbListTables(con)))
   partition1 = grepl("timestamp", dbGetPartition(con, "test_df")[[1]])
   
