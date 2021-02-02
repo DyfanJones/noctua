@@ -24,6 +24,8 @@ test_that("Returning meta data",{
   con_info_exp = names(dbGetInfo(con))
   list_tbl1 = any(grepl("test_df", dbListTables(con, "default")))
   list_tbl2 = nrow(dbGetTables(con, "default")[TableName == "test_df"]) == 1
+  list_tbl3 = nrow(dbGetTables(con)[Schema == "default" & TableName == "test_df"]) == 1
+  list_tbl4 = any(grepl("test_df", dbListTables(con)))
   partition1 = grepl("timestamp", dbGetPartition(con, "test_df")[[1]])
   
   partition2 = names(dbGetPartition(con, "test_df", .format = T)) == "timestamp"
@@ -34,6 +36,9 @@ test_that("Returning meta data",{
   db_show_ddl = gsub(", \n  'transient_lastDdlTime'.*",")", dbShow(con, "test_df"))
   db_info = dbGetInfo(con)
   
+  name1 <- db_detect(con, "table1")
+  name2 <- db_detect(con, "mydatabase.table1")
+
   dbClearResult(res)
   dbDisconnect(con)
   
@@ -42,6 +47,8 @@ test_that("Returning meta data",{
   expect_equal(con_info, con_info_exp)
   expect_true(list_tbl1)
   expect_true(list_tbl2)
+  expect_true(list_tbl3)
+  expect_true(list_tbl4)
   expect_true(partition1)
   expect_true(partition2)
   expect_true(partition3)
@@ -54,4 +61,7 @@ test_that("Returning meta data",{
   expect_true(res_out)
   expect_equal(names(res_info), c("QueryExecutionId", "NextToken"))
   expect_true(is.list(res_stat))
+  expect_error(con_error_msg(res, "dummy message"), "dummy message")
+  expect_equal(name1, list("dbms.name" = "default", "table" = "table1"))
+  expect_equal(name2, list("dbms.name" = "mydatabase", "table" = "table1"))
 })

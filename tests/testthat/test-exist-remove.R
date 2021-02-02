@@ -12,6 +12,9 @@ test_that("Check a table exist and remove table",{
   # Test connection is using AWS CLI to set profile_name 
   con <- dbConnect(athena())
   
+  if(dbExistsTable(con, "removable_table"))
+    dbRemoveTable(con, "removable_table", confirm = TRUE)
+  
   table_exist1 <- dbExistsTable(con, "removable_table")
   
   df <- data.frame(x = 1:10, y = letters[1:10], stringsAsFactors = F)

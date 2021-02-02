@@ -103,7 +103,7 @@ create_work_group <- function(conn,
                               bytes_scanned_cut_off = 10000000L,
                               description = NULL,
                               tags = tag_options(key = NULL, value = NULL)){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+  con_error_msg(conn, "Connection already closed.")
   stopifnot(is.character(work_group),
             is.logical(enforce_work_group_config),
             is.logical(publish_cloud_watch_metrics),
@@ -133,7 +133,7 @@ tag_options <- function(key = NULL,
 #' @rdname work_group
 #' @export
 delete_work_group <- function(conn, work_group = NULL, recursive_delete_option = FALSE){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+  con_error_msg(conn, "Connection already closed.")
   stopifnot(is.character(work_group),
             is.logical(recursive_delete_option))
   tryCatch(conn@ptr$Athena$delete_work_group(WorkGroup = work_group, RecursiveDeleteOption = recursive_delete_option))
@@ -143,7 +143,7 @@ delete_work_group <- function(conn, work_group = NULL, recursive_delete_option =
 #' @rdname work_group
 #' @export
 list_work_groups <- function(conn){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+  con_error_msg(conn, "Connection already closed.")
   tryCatch(response <- conn@ptr$Athena$list_work_groups())
   response[["WorkGroups"]]
 }
@@ -151,7 +151,7 @@ list_work_groups <- function(conn){
 #' @rdname work_group
 #' @export
 get_work_group <- function(conn, work_group = NULL){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+  con_error_msg(conn, "Connection already closed.")
   stopifnot(is.character(work_group))
   tryCatch(response <- conn@ptr$Athena$get_work_group(WorkGroup = work_group))
   response[["WorkGroup"]]
@@ -167,7 +167,7 @@ update_work_group <- function(conn,
                               bytes_scanned_cut_off = 10000000L,
                               description = NULL,
                               state = c("ENABLED", "DISABLED")){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+  con_error_msg(conn, "Connection already closed.")
   stopifnot(is.character(work_group),
             is.logical(remove_output_location),
             is.logical(enforce_work_group_config),

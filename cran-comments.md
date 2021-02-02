@@ -1,12 +1,8 @@
 ## Submission
-This release contains a couple of new features
 
 ### New Features:
-* `dbGetPartition` has an optional formatting option to return tidy output instead of default `AWS Athena` output
-* `dbConnect` now supports different options for `bigint`, this is to align with other `DBI` backend packages, that already support this feature.
 
 ### Bug Fix:
-* `dbRemoveTable` now checks the `AWS S3` path returned from `AWS Glue` before modifying to remove `AWS S3` objects.
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
@@ -25,7 +21,7 @@ This release contains a couple of new features
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
 
 ## unit tests (using testthat) results
-* OK:       127
+* OK:       181
 * Failed:   0
 * Warnings: 0
 * Skipped:  0

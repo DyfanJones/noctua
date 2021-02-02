@@ -109,7 +109,8 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t26, sql("\"iris\"['sepal_length']"))
   expect_equal(t27, sql('"iris"[1]'))
   expect_true(t28)
-  expect_error(explain(tbl(con, "iris")))
+  # suppress information messages
+  suppressMessages(expect_error(explain(tbl(con, "iris"))))
   expect_equal(t29, data_type1)
   expect_equal(t30, data_type2)
   expect_equal(t31, data_type3)

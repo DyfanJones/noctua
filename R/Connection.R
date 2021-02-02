@@ -215,7 +215,7 @@ setMethod(
   "dbSendQuery", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
     res
@@ -228,7 +228,7 @@ setMethod(
   "dbSendStatement", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
     res
@@ -241,7 +241,7 @@ setMethod(
   "dbExecute", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
     poll_result <- poll(res)
@@ -371,11 +371,18 @@ NULL
 setMethod(
   "dbListTables", "AthenaConnection",
   function(conn, schema = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    if(is.null(schema)){
-      retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
-    tryCatch(output <- lapply(schema, function (x) tryCatch(conn@ptr$glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL)))
-    unlist(lapply(output, function(x) sapply(x, function(y) y$Name)))
+    con_error_msg(conn, msg = "Connection already closed.")
+    glue <- conn@ptr$glue
+    if(is.null(schema))
+      schema <- get_datases(glue)
+    tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
+             error = function(cond) NULL)
+    return(
+      vapply(
+        unlist(output, recursive = FALSE),
+        function(y) y$Name,
+        FUN.VALUE = character(1))
+    )
   }
 )
 
@@ -414,16 +421,19 @@ setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
 
 #' @rdname dbGetTables
 #' @export
-setMethod("dbGetTables", "AthenaConnection",
-          function(conn, schema = NULL, ...){
-  if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-  if(is.null(schema)){
-    retry_api_call(schema <- sapply(conn@ptr$glue$get_databases()$DatabaseList,function(x) x$Name))}
-  tryCatch(output <- lapply(schema, function (x) tryCatch(conn@ptr$glue$get_tables(DatabaseName = x)$TableList, error = function(cond) NULL)))
-  rbindlist(lapply(output, function(x) rbindlist(lapply(x, function(y) data.frame(Schema = y$DatabaseName,
-                                                                                  TableName=y$Name,
-                                                                                  TableType = y$TableType)))))
-})
+setMethod(
+  "dbGetTables", "AthenaConnection",
+  function(conn, schema = NULL, ...){
+    con_error_msg(conn, msg = "Connection already closed.")
+    glue <- conn@ptr$glue
+    if(is.null(schema))
+      schema <- get_datases(glue)
+    tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
+             error = function(cond) NULL)
+    output <- rbindlist(unlist(output, recursive = FALSE), use.names = TRUE)
+    setnames(output, new = c("Schema", "TableName", "TableType"))
+    return(output)
+  })
 
 #' List Field names of Athena table
 #'
@@ -459,25 +469,20 @@ NULL
 
 #' @rdname dbListFields
 #' @export
-setMethod("dbListFields", c("AthenaConnection", "character") ,
-          function(conn, name, ...) {
-            if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-            
-            if (grepl("\\.", name)) {
-              dbms.name <- gsub("\\..*", "" , name)
-              Table <- gsub(".*\\.", "" , name)
-            } else {
-              dbms.name <- conn@info$dbms.name
-              Table <- name}
-            
-            tryCatch(
-              output <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
-                                               Name = Table)$Table)
-            col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
-            partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
-            
-            c(col_names, partitions)
-          })
+setMethod(
+  "dbListFields", c("AthenaConnection", "character") ,
+  function(conn, name, ...) {
+    con_error_msg(conn, msg = "Connection already closed.")
+    ll <- db_detect(conn, name)
+    retry_api_call(
+      output <- conn@ptr$glue$get_table(
+        DatabaseName = ll[["dbms.name"]],
+        Name = ll[["table"]])$Table)
+    
+    col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+    partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
+    c(col_names, partitions)
+})
 
 #' Does Athena table exist?
 #' 
@@ -516,16 +521,11 @@ NULL
 setMethod(
   "dbExistsTable", c("AthenaConnection", "character"),
   function(conn, name, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    
-    if(grepl("\\.", name)){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {dbms.name <- conn@info$dbms.name
-    Table <- tolower(name)}
+    con_error_msg(conn, msg = "Connection already closed.")
+    ll <- db_detect(conn, name)
     
     for (i in seq_len(athena_option_env$retry)) {
-      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), 
+      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]]), 
                        error = function(e) e)
       
       # exponential step back if error and not expected error
@@ -585,23 +585,17 @@ NULL
 setMethod(
   "dbRemoveTable", c("AthenaConnection", "character"),
   function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(delete_data),
               is.logical(confirm))
+    ll <- db_detect(conn, name)
     
-    if (grepl("\\.", name)) {
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {
-      dbms.name <- conn@info$dbms.name
-      Table <- name}
-    
-    TableType <- conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$TableType
+    TableType <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["TableType"]]
     
     if(delete_data && TableType == "EXTERNAL_TABLE"){
       tryCatch(
         s3_path <- split_s3_uri(
-          conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
+          conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["StorageDescriptor"]][["Location"]]))
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
       if(!grepl("\\.|/$", s3_path$key))
         s3_path$key <- sprintf("%s/", s3_path$key)
@@ -625,7 +619,7 @@ setMethod(
       # Only remove if files are found
       if(length(all_keys) > 0){
         # Delete S3 files in batch size 1000
-        key_parts <- splitList(all_keys)
+        key_parts <- split_vec(all_keys, 1000)
         for(i in seq_along(key_parts))
           conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
       } else {
@@ -635,10 +629,10 @@ setMethod(
     }
     
     # use glue to remove table from glue catalog
-    conn@ptr$glue$delete_table(DatabaseName = dbms.name, Name = Table)
+    conn@ptr$glue$delete_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])
     
     if(!delete_data) message("Info: Only Athena table has been removed.")
-    on_connection_updated(conn, Table)
+    on_connection_updated(conn, ll[["table"]])
     invisible(TRUE)
   })
 
@@ -678,7 +672,7 @@ setMethod(
   function(conn,
            statement = NULL, 
            statistics = FALSE, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics))
     rs <- dbSendQuery(conn, statement = statement)
     on.exit(dbClearResult(rs))
@@ -725,7 +719,7 @@ NULL
 setMethod(
   "dbGetInfo", "AthenaConnection",
   function(dbObj, ...) {
-    if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(dbObj, msg = "Connection already closed.")
     info <- dbObj@info
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
@@ -770,24 +764,21 @@ NULL
 
 #' @rdname dbGetPartition
 #' @export
-setGeneric("dbGetPartition",
-           def = function(conn, name, ..., .format = FALSE)  standardGeneric("dbGetPartition"),
-           valueClass = "data.frame")
+setGeneric(
+  "dbGetPartition",
+  def = function(conn, name, ..., .format = FALSE)  standardGeneric("dbGetPartition"),
+  valueClass = "data.frame"
+)
 
 #' @rdname dbGetPartition
 #' @export
 setMethod(
   "dbGetPartition", "AthenaConnection",
   function(conn, name, ..., .format = FALSE)  {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(.format))
-    
-    if(grepl("\\.", name)){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {dbms.name <- conn@info$dbms.name
-    Table <- name}
-    dt = dbGetQuery(conn, paste0("SHOW PARTITIONS ", dbms.name,".",Table))
+    ll <- db_detect(conn, name)
+    dt = dbGetQuery(conn, paste0("SHOW PARTITIONS ", ll[["dbms.name"]],".",ll[["table"]]))
     
     if(.format){
       # ensure returning format is data.table
@@ -803,7 +794,7 @@ setMethod(
         dt <- as_tibble(dt)}
     }
     return(dt)
-  })
+})
 
 #' Show Athena table's DDL
 #' 
@@ -839,23 +830,20 @@ NULL
 
 #' @rdname dbShow
 #' @export
-setGeneric("dbShow",
-           def = function(conn, name, ...) standardGeneric("dbShow"),
-           valueClass = "character")
+setGeneric(
+  "dbShow",
+  def = function(conn, name, ...) standardGeneric("dbShow"),
+  valueClass = "character"
+)
 
 #' @rdname dbShow
 #' @export
 setMethod(
   "dbShow", "AthenaConnection",
   function(conn, name, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    
-    if(grepl("\\.", name)){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {dbms.name <- conn@info$dbms.name
-    Table <- name}
-    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", dbms.name,".",Table))[[1]], collapse = "\n"))
+    con_error_msg(conn, msg = "Connection already closed.")
+    ll <- db_detect(conn, name)
+    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]],".",ll[["table"]]))[[1]], collapse = "\n"))
   })
 
 
@@ -915,8 +903,10 @@ NULL
 
 #' @rdname dbConvertTable
 #' @export
-setGeneric("dbConvertTable",
-           def = function(conn, obj, name, ...) standardGeneric("dbConvertTable"))
+setGeneric(
+  "dbConvertTable",
+  def = function(conn, obj, name, ...) standardGeneric("dbConvertTable")
+)
 
 #' @rdname dbConvertTable
 #' @export
@@ -931,7 +921,7 @@ setMethod(
            compress = TRUE,
            data = TRUE,
            ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.character(obj),
               is.character(name),
               is.null(partition) || is.character(partition),
@@ -950,4 +940,4 @@ setMethod(
     res <- dbExecute(conn, tt_sql)
     dbClearResult(res)
     return(invisible(TRUE))
-  })
+})

@@ -45,12 +45,19 @@ test_that("Testing data transfer between R and athena vroom", {
   test_df3 <- as.data.frame(dbGetQuery(con, "select * from df_bigint"))
   test_df4 <- as.data.frame(dbGetQuery(con, "select * from mtcars2"))
   
-  # vroom adds attribute spec. Attribute spec needs to be removed to unit test
+  # vroom adds attribute spec/problems. Attributes needs to be removed for unit test
+  # attribute spec
   attributes(test_df)$spec <- NULL
   attributes(test_df2)$spec <- NULL
   attributes(test_df3)$spec <- NULL
   attributes(test_df4)$spec <- NULL
   
+  # attribute problems
+  attributes(test_df)$problems <- NULL
+  attributes(test_df2)$problems <- NULL
+  attributes(test_df3)$problems <- NULL
+  attributes(test_df4)$problems <- NULL
+
   expect_equal(test_df,df)
   expect_equal(test_df2, sqlData(con, df))
   expect_equal(test_df3,df2)

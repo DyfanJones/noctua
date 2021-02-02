@@ -268,45 +268,45 @@ retry_api_call <- function(expr){
 # Create table With parameters
 ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NULL", compress = TRUE){
   if(file.type!="NULL" || !is.null(s3.location) || !is.null(partition)){
-    FILE <- switch(file.type,
-                   "csv" = "format = 'TEXTFILE',\nfield_delimiter = ','",
-                   "tsv" = "format = 'TEXTFILE',\nfield_delimiter = '\t'",
-                   "parquet" = "format = 'PARQUET'",
-                   "json" = "format = 'JSON'",
-                   "orc" = "format = 'ORC'",
-                   "")
+    FILE <- switch(
+      file.type,
+      "csv" = "format = 'TEXTFILE',\nfield_delimiter = ','",
+      "tsv" = "format = 'TEXTFILE',\nfield_delimiter = '\t'",
+      "parquet" = "format = 'PARQUET'",
+      "json" = "format = 'JSON'",
+      "orc" = "format = 'ORC'",
+      "")
     
     COMPRESSION <- ""
     if (compress) {
-      if(file.type %in% c("tsv", "csv", "json")) warning("Can only compress parquet or orc files: https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html", call. = FALSE)
-      COMPRESSION <- switch(file.type,
-                            "parquet" = ",\nparquet_compression = 'SNAPPY'",
-                            "orc" = ",\norc_compression = 'SNAPPY'",
-                            "")
+      if(file.type %in% c("tsv", "csv", "json"))
+        warning(
+          "Can only compress parquet or orc files: https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html",
+          call. = FALSE)
+      COMPRESSION <- switch(
+        file.type,
+        "parquet" = ",\nparquet_compression = 'SNAPPY'",
+        "orc" = ",\norc_compression = 'SNAPPY'",
+        "")
     }
     
     LOCATION <- if(!is.null(s3.location)){
-      if(file.type == "NULL") paste0("external_location ='", s3.location, "'")
-      else paste0(",\nexternal_location ='", s3.location, "'")
+      if(file.type == "NULL") 
+        paste0("external_location ='", s3.location, "'")
+      else 
+        paste0(",\nexternal_location ='", s3.location, "'")
     } else ""
     
     PARTITION <- if(!is.null(partition)){
       partition <- paste(partition, collapse = "','")
-      if(is.null(s3.location) && file.type == "NULL") paste0("partitioned_by = ARRAY['",partition,"']")
-      else paste0(",\npartitioned_by = ARRAY['",partition,"']")
+      if(is.null(s3.location) && file.type == "NULL") 
+        paste0("partitioned_by = ARRAY['",partition,"']")
+      else 
+        paste0(",\npartitioned_by = ARRAY['",partition,"']")
     } else ""
     
     paste0("WITH (", FILE, COMPRESSION, LOCATION, PARTITION,")\n")
   } else ""
-}
-
-# split list into chunksize 1000
-splitList <- function(l){
-  chunks <- seq(1, length(l), 1000)
-  ll <- Map(function(i) list(), 1:length(chunks))
-  for (i in seq_along(chunks))
-    ll[[i]] <- l[chunks[i]:min(chunks[i]+999, length(l))]
-  return(ll)
 }
 
 # check if jsonlite is present or not
@@ -318,4 +318,55 @@ jsonlite_check <- function(method){
       }
     }
   return(method)
+}
+
+# get database list from glue catalog
+get_datases <- function(glue){
+  token <- NULL
+  data_list <- list()
+  while(!identical(token, character(0))){
+    retry_api_call(response <- glue$get_databases(NextToken = token))
+    data_list <- c(
+      data_list,
+      vapply(response$DatabaseList,function(x) x$Name, FUN.VALUE = character(1))
+    )
+    token <- response$NextToken
+  }
+  return(data_list)
+}
+
+# get list of tables from glue catalog
+get_table_list <- function(glue, schema){
+  token <- NULL
+  table_list <- list()
+  while(!identical(token, character(0))){
+    retry_api_call(response <- glue$get_tables(DatabaseName = schema, NextToken = token))
+    table_list <- c(
+      table_list, 
+      lapply(response$TableList,
+             function(x) {list(DatabaseName = x$DatabaseName,
+                               Name = x$Name, 
+                               TableType = x$TableType)})
+    )
+    token <- response$NextToken
+  }
+  return(table_list)
+}
+
+# wrapper to return connection error when disconnected
+con_error_msg <- function(obj, msg = "Connection already closed."){
+  if (!dbIsValid(obj)) 
+    stop(msg, call. = FALSE)
+}
+
+# wrapper to detect database for paws api calls.
+db_detect <- function(conn, name){
+  ll <- list()
+  if(grepl("\\.", name)){
+    ll[["dbms.name"]] <- gsub("\\..*", "" , name)
+    ll[["table"]] <- gsub(".*\\.", "" , name)
+  } else {
+    ll[["dbms.name"]] <- conn@info$dbms.name
+    ll[["table"]] <- name}
+  return(ll)
 }
