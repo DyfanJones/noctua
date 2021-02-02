@@ -590,12 +590,12 @@ setMethod(
               is.logical(confirm))
     ll <- db_detect(conn, name)
     
-    TableType <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])$Table$TableType
+    TableType <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["TableType"]]
     
     if(delete_data && TableType == "EXTERNAL_TABLE"){
       tryCatch(
         s3_path <- split_s3_uri(
-          conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])$Table$StorageDescriptor$Location))
+          conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["StorageDescriptor"]][["Location"]]))
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
       if(!grepl("\\.|/$", s3_path$key))
         s3_path$key <- sprintf("%s/", s3_path$key)
@@ -632,7 +632,7 @@ setMethod(
     conn@ptr$glue$delete_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])
     
     if(!delete_data) message("Info: Only Athena table has been removed.")
-    on_connection_updated(conn, Table)
+    on_connection_updated(conn, ll[["table"]])
     invisible(TRUE)
   })
 
