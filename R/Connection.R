@@ -215,7 +215,7 @@ setMethod(
   "dbSendQuery", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
     res
@@ -228,7 +228,7 @@ setMethod(
   "dbSendStatement", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
     res
@@ -241,7 +241,7 @@ setMethod(
   "dbExecute", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
     res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
     poll_result <- poll(res)
@@ -371,7 +371,7 @@ NULL
 setMethod(
   "dbListTables", "AthenaConnection",
   function(conn, schema = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     glue <- conn@ptr$glue
     if(is.null(schema))
       schema <- get_datases(glue)
@@ -424,7 +424,7 @@ setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
 setMethod(
   "dbGetTables", "AthenaConnection",
   function(conn, schema = NULL, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     glue <- conn@ptr$glue
     if(is.null(schema))
       schema <- get_datases(glue)
@@ -472,7 +472,7 @@ NULL
 setMethod(
   "dbListFields", c("AthenaConnection", "character") ,
   function(conn, name, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     if (grepl("\\.", name)) {
       dbms.name <- gsub("\\..*", "" , name)
       Table <- gsub(".*\\.", "" , name)
@@ -526,8 +526,7 @@ NULL
 setMethod(
   "dbExistsTable", c("AthenaConnection", "character"),
   function(conn, name, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-    
+    con_error_msg(conn, msg = "Connection already closed.")
     if(grepl("\\.", name)){
       dbms.name <- gsub("\\..*", "" , name)
       Table <- gsub(".*\\.", "" , name)
@@ -595,7 +594,7 @@ NULL
 setMethod(
   "dbRemoveTable", c("AthenaConnection", "character"),
   function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(delete_data),
               is.logical(confirm))
     
@@ -688,7 +687,7 @@ setMethod(
   function(conn,
            statement = NULL, 
            statistics = FALSE, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics))
     rs <- dbSendQuery(conn, statement = statement)
     on.exit(dbClearResult(rs))
@@ -735,7 +734,7 @@ NULL
 setMethod(
   "dbGetInfo", "AthenaConnection",
   function(dbObj, ...) {
-    if (!dbIsValid(dbObj)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(dbObj, msg = "Connection already closed.")
     info <- dbObj@info
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
@@ -791,7 +790,7 @@ setGeneric(
 setMethod(
   "dbGetPartition", "AthenaConnection",
   function(conn, name, ..., .format = FALSE)  {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(.format))
     
     if(grepl("\\.", name)){
@@ -862,7 +861,7 @@ setGeneric(
 setMethod(
   "dbShow", "AthenaConnection",
   function(conn, name, ...) {
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     
     if(grepl("\\.", name)){
       dbms.name <- gsub("\\..*", "" , name)
@@ -947,7 +946,7 @@ setMethod(
            compress = TRUE,
            data = TRUE,
            ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.character(obj),
               is.character(name),
               is.null(partition) || is.character(partition),

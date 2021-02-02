@@ -352,3 +352,9 @@ get_table_list <- function(glue, schema){
   }
   return(table_list)
 }
+
+# wrapper to connection error: easier to test
+con_error_msg <- function(obj, msg = "Connection already closed."){
+  if (!dbIsValid(obj)) 
+    stop(msg, call. = FALSE)
+}

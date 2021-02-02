@@ -138,7 +138,7 @@ NULL
 setMethod(
   "dbFetch", "AthenaResult",
   function(res, n = -1, ...){
-    if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+    con_error_msg(res, msg = "Result already cleared.")
     # check status of query
     result <- poll(res)
     
@@ -268,7 +268,7 @@ NULL
 setMethod(
   "dbHasCompleted", "AthenaResult",
   function(res, ...) {
-    if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+    con_error_msg(res, msg = "Result already cleared.")
     retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
     
     if(query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED")) TRUE
@@ -290,7 +290,7 @@ setMethod(
 setMethod(
   "dbGetInfo", "AthenaResult",
   function(dbObj, ...) {
-    if (!dbIsValid(dbObj)) {stop("Result already cleared", call. = FALSE)}
+    con_error_msg(res, msg = "Result already cleared.")
     info <- dbObj@info
     info
   })
@@ -330,7 +330,7 @@ NULL
 setMethod(
   "dbColumnInfo", "AthenaResult",
   function(res, ...){
-    if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+    con_error_msg(res, msg = "Result already cleared.")
     result <- poll(res)
     if(result$QueryExecution$Status$State == "FAILED") {
       stop(result$QueryExecution$Status$StateChangeReason, call. = FALSE)
@@ -383,7 +383,7 @@ setGeneric("dbStatistics",
 #'@export
 setMethod("dbStatistics", "AthenaResult",
           function(res, ...){
-            if (!dbIsValid(res)) {stop("Result already cleared", call. = FALSE)}
+            con_error_msg(res, msg = "Result already cleared.")
             # check status of query
             result <- poll(res)
             

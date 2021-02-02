@@ -269,7 +269,7 @@ setMethod(
            row.names = NA, field.types = NULL, 
            partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     Athena_write_table(conn, name, value, overwrite, append,
                        row.names, field.types,
                        partition, s3.location, file.type, compress, max.batch)
@@ -283,7 +283,7 @@ setMethod(
            row.names = NA, field.types = NULL, 
            partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     Athena_write_table(conn, name, value, overwrite, append,
                        row.names, field.types,
                        partition, s3.location, file.type, compress, max.batch)
@@ -297,7 +297,7 @@ setMethod(
            row.names = NA, field.types = NULL, 
            partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...){
-    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(conn, msg = "Connection already closed.")
     Athena_write_table(conn, name, value, overwrite, append,
                        row.names, field.types,
                        partition, s3.location, file.type, compress, max.batch)
@@ -409,7 +409,7 @@ NULL
 setMethod("sqlCreateTable", "AthenaConnection",
   function(con, table, fields, field.types = NULL, partition = NULL, s3.location= NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, ...){
-    if (!dbIsValid(con)) {stop("Connection already closed.", call. = FALSE)}
+    con_error_msg(con, msg = "Connection already closed.")
     stopifnot(is.character(table),
               is.data.frame(fields),
               is.null(field.types) || is.character(field.types),
