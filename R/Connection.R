@@ -473,16 +473,11 @@ setMethod(
   "dbListFields", c("AthenaConnection", "character") ,
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    if (grepl("\\.", name)) {
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {
-      dbms.name <- conn@info$dbms.name
-      Table <- name}
+    ll <- db_detect(conn, name)
     retry_api_call(
       output <- conn@ptr$glue$get_table(
-        DatabaseName = dbms.name,
-        Name = Table)$Table)
+        DatabaseName = ll[["dbms.name"]],
+        Name = ll[["table"]])$Table)
     
     col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
     partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
@@ -527,14 +522,10 @@ setMethod(
   "dbExistsTable", c("AthenaConnection", "character"),
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    if(grepl("\\.", name)){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {dbms.name <- conn@info$dbms.name
-    Table <- tolower(name)}
+    ll <- db_detect(conn, name)
     
     for (i in seq_len(athena_option_env$retry)) {
-      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table), 
+      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]]), 
                        error = function(e) e)
       
       # exponential step back if error and not expected error
@@ -597,20 +588,14 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(delete_data),
               is.logical(confirm))
+    ll <- db_detect(conn, name)
     
-    if (grepl("\\.", name)) {
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {
-      dbms.name <- conn@info$dbms.name
-      Table <- name}
-    
-    TableType <- conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$TableType
+    TableType <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])$Table$TableType
     
     if(delete_data && TableType == "EXTERNAL_TABLE"){
       tryCatch(
         s3_path <- split_s3_uri(
-          conn@ptr$glue$get_table(DatabaseName = dbms.name, Name = Table)$Table$StorageDescriptor$Location))
+          conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])$Table$StorageDescriptor$Location))
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
       if(!grepl("\\.|/$", s3_path$key))
         s3_path$key <- sprintf("%s/", s3_path$key)
@@ -644,7 +629,7 @@ setMethod(
     }
     
     # use glue to remove table from glue catalog
-    conn@ptr$glue$delete_table(DatabaseName = dbms.name, Name = Table)
+    conn@ptr$glue$delete_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])
     
     if(!delete_data) message("Info: Only Athena table has been removed.")
     on_connection_updated(conn, Table)
@@ -792,13 +777,8 @@ setMethod(
   function(conn, name, ..., .format = FALSE)  {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(.format))
-    
-    if(grepl("\\.", name)){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {dbms.name <- conn@info$dbms.name
-    Table <- name}
-    dt = dbGetQuery(conn, paste0("SHOW PARTITIONS ", dbms.name,".",Table))
+    ll <- db_detect(conn, name)
+    dt = dbGetQuery(conn, paste0("SHOW PARTITIONS ", ll[["dbms.name"]],".",ll[["table"]]))
     
     if(.format){
       # ensure returning format is data.table
@@ -862,13 +842,8 @@ setMethod(
   "dbShow", "AthenaConnection",
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    
-    if(grepl("\\.", name)){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-    } else {dbms.name <- conn@info$dbms.name
-    Table <- name}
-    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", dbms.name,".",Table))[[1]], collapse = "\n"))
+    ll <- db_detect(conn, name)
+    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]],".",ll[["table"]]))[[1]], collapse = "\n"))
   })
 
 

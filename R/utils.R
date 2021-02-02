@@ -353,8 +353,20 @@ get_table_list <- function(glue, schema){
   return(table_list)
 }
 
-# wrapper to connection error: easier to test
+# wrapper to return connection error when disconnected
 con_error_msg <- function(obj, msg = "Connection already closed."){
   if (!dbIsValid(obj)) 
     stop(msg, call. = FALSE)
+}
+
+# wrapper to detect database for paws api calls.
+db_detect <- function(conn, name){
+  ll <- list()
+  if(grepl("\\.", name)){
+    ll[["dbms.name"]] <- gsub("\\..*", "" , name)
+    ll[["table"]] <- gsub(".*\\.", "" , name)
+  } else {
+    ll[["dbms.name"]] <- conn@info$dbms.name
+    ll[["table"]] <- name}
+  return(ll)
 }

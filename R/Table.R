@@ -114,34 +114,32 @@ Athena_write_table <-
     if(!is.null(partition) && is.null(names(partition))) stop("partition parameter requires to be a named vector or list", call. = FALSE)
     if(!is.null(partition)) {names(partition) <- tolower(names(partition))}
     
-    if(!grepl("\\.", name)) name <- paste(conn@info$dbms.name, name, sep = ".") 
+    ll <- db_detect(conn, name)
+    db_name <- paste(ll, collapse = ".")
     
     if (overwrite && append) stop("overwrite and append cannot both be TRUE", call. = FALSE)
     
     # Check if table already exists in the database
-    found <- dbExistsTable(conn, name)
+    found <- dbExistsTable(conn, db_name)
     
     if (found && !overwrite && !append) {
-      stop("Table ", name, " exists in database, and both overwrite and",
+      stop("Table ", db_name, " exists in database, and both overwrite and",
            " append are FALSE", call. = FALSE)
     }
     
     if(!found && append){
-      stop("Table ", name, " does not exist in database and append is set to TRUE", call. = T)
+      stop("Table ", db_name, " does not exist in database and append is set to TRUE", call. = FALSE)
     }
     
     if (found && overwrite) {
-      dbRemoveTable(conn, name, confirm = TRUE)
+      dbRemoveTable(conn, db_name, confirm = TRUE)
     }
     
     # Check file format if appending
     if(found && append){
-      dbms.name <- gsub("\\..*", "" , name)
-      Table <- gsub(".*\\.", "" , name)
-      
       tryCatch(
-      tbl_info <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
-                                 Name = Table)$Table)
+      tbl_info <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]],
+                                 Name = ll[["table"]])$Table)
       
       # Return correct file format when appending onto existing AWS Athena table
       File.Type <- switch(tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary, 
@@ -153,7 +151,7 @@ Athena_write_table <-
                           # json library support: https://docs.aws.amazon.com/athena/latest/ug/json.html#hivejson
                           "org.apache.hive.hcatalog.data.JsonSerDe" = "json",
                           "org.openx.data.jsonserde.JsonSerDe" = "json",
-                          stop("Unable to append onto table: ", name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
+                          stop("Unable to append onto table: ", db_name,"\n", tbl_info$StorageDescriptor$SerdeInfo$SerializationLibrary,
                                ": Is currently not supported by noctua", call. = F))
       
       # Return if existing files are compressed or not
@@ -209,10 +207,10 @@ Athena_write_table <-
     ############# update data to aws s3 ###########################
     
     # send data over to s3 bucket
-    upload_data(conn, FileLocation, name, partition, s3.location, file.type, compress, append)
+    upload_data(conn, FileLocation, db_name, partition, s3.location, file.type, compress, append)
     
     if (!append) {
-      sql <- sqlCreateTable(conn, table = name, fields = value, field.types = field.types, 
+      sql <- sqlCreateTable(conn, table = db_name, fields = value, field.types = field.types, 
                             partition = names(partition),
                             s3.location = s3.location, file.type = file.type,
                             compress = compress)
@@ -221,7 +219,7 @@ Athena_write_table <-
       dbClearResult(rs)}
     
     # Repair table
-    repair_table(conn, name, partition, s3.location, append)
+    repair_table(conn, db_name, partition, s3.location, append)
     
     on.exit({lapply(FileLocation, unlink)
       if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
@@ -423,19 +421,14 @@ setMethod("sqlCreateTable", "AthenaConnection",
     # use default s3_staging directory is s3.location isn't provided
     if (is.null(s3.location)) s3.location <- con@info$s3_staging
     
-    if (grepl("\\.", table)) {
-      schema <- gsub("\\..*", "" , table)
-      table1 <- gsub(".*\\.", "" , table)
-    } else {
-      schema <- con@info$dbms.name
-      table1 <- table}
+    ll <- db_detect(con, table)
     
     # create s3 location
     s3_location <- s3_upload_location(con, s3.location, table, NULL, FALSE)
     s3_location <- Filter(Negate(is.null), s3_location)
     s3_location <- sprintf("'s3://%s/'", paste(s3_location,collapse = "/"))
     
-    table <- paste0(quote_identifier(con,  c(schema,table1)), collapse = ".")
+    table <- paste0(quote_identifier(con,  c(ll[["dbms.name"]],ll[["table"]])), collapse = ".")
     
     SQL(paste0(
       "CREATE EXTERNAL TABLE ", table, " (\n",
@@ -524,12 +517,9 @@ quote_identifier <- function(conn, x, ...) {
 # moved s3 component builder to separate helper function to allow for unit tests
 s3_upload_location <- function(con, s3.location = NULL, name = NULL, partition = NULL, append = FALSE){
   # Get schema and name
-  if (grepl("\\.", name)) {
-    schema <- gsub("\\..*", "" , name)
-    name <- gsub(".*\\.", "" , name)
-  } else {
-    schema <- con@info$dbms.name
-    name <- name}
+  ll <- db_detect(con, name)
+  schema <- ll[["dbms.name"]]
+  name <- ll[["table"]]
   
   # s3 bucket and key split
   s3_info <- split_s3_uri(s3.location)
@@ -564,15 +554,10 @@ s3_upload_location <- function(con, s3.location = NULL, name = NULL, partition =
 
 # repair table using MSCK REPAIR TABLE for non partitioned and ALTER TABLE for partitioned tables
 repair_table <- function(con, name, partition = NULL, s3.location = NULL, append = FALSE){
-  if (grepl("\\.", name)) {
-    schema <- gsub("\\..*", "" , name)
-    table1 <- gsub(".*\\.", "" , name)
-  } else {
-    schema <- con@info$dbms.name
-    table1 <- name}
+  ll <- db_detect(con, name)
   
   # format table name for special characters
-  table <- paste0(quote_identifier(con,  c(schema,table1)), collapse = ".")
+  table <- paste0(quote_identifier(con,  c(ll[["dbms.name"]], ll[["table"]])), collapse = ".")
   
   if (is.null(partition)){
     query <- SQL(paste0("MSCK REPAIR TABLE ", table))

@@ -36,6 +36,9 @@ test_that("Returning meta data",{
   db_show_ddl = gsub(", \n  'transient_lastDdlTime'.*",")", dbShow(con, "test_df"))
   db_info = dbGetInfo(con)
   
+  name1 <- db_detect(con, "table1")
+  name2 <- db_detect(con, "mydatabase.table1")
+
   dbClearResult(res)
   dbDisconnect(con)
   
@@ -59,4 +62,6 @@ test_that("Returning meta data",{
   expect_equal(names(res_info), c("QueryExecutionId", "NextToken"))
   expect_true(is.list(res_stat))
   expect_error(con_error_msg(res, "dummy message"), "dummy message")
+  expect_equal(name1, list("dbms.name" = "default", "table" = "table1"))
+  expect_equal(name2, list("dbms.name" = "mydatabase", "table" = "table1"))
 })
