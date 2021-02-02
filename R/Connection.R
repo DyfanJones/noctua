@@ -430,7 +430,9 @@ setMethod(
       schema <- get_datases(glue)
     tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
              error = function(cond) NULL)
-    return(rbindlist(unlist(output, recursive = FALSE), use.names = TRUE))
+    output <- rbindlist(unlist(output, recursive = FALSE), use.names = TRUE)
+    setnames(output, new = c("Schema", "TableName", "TableType"))
+    return(output)
   })
 
 #' List Field names of Athena table
@@ -467,25 +469,25 @@ NULL
 
 #' @rdname dbListFields
 #' @export
-setMethod("dbListFields", c("AthenaConnection", "character") ,
-          function(conn, name, ...) {
-            if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
-            
-            if (grepl("\\.", name)) {
-              dbms.name <- gsub("\\..*", "" , name)
-              Table <- gsub(".*\\.", "" , name)
-            } else {
-              dbms.name <- conn@info$dbms.name
-              Table <- name}
-            
-            tryCatch(
-              output <- conn@ptr$glue$get_table(DatabaseName = dbms.name,
-                                               Name = Table)$Table)
-            col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
-            partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
-            
-            c(col_names, partitions)
-          })
+setMethod(
+  "dbListFields", c("AthenaConnection", "character") ,
+  function(conn, name, ...) {
+    if (!dbIsValid(conn)) {stop("Connection already closed.", call. = FALSE)}
+    if (grepl("\\.", name)) {
+      dbms.name <- gsub("\\..*", "" , name)
+      Table <- gsub(".*\\.", "" , name)
+    } else {
+      dbms.name <- conn@info$dbms.name
+      Table <- name}
+    retry_api_call(
+      output <- conn@ptr$glue$get_table(
+        DatabaseName = dbms.name,
+        Name = Table)$Table)
+    
+    col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+    partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
+    c(col_names, partitions)
+})
 
 #' Does Athena table exist?
 #' 
@@ -778,9 +780,11 @@ NULL
 
 #' @rdname dbGetPartition
 #' @export
-setGeneric("dbGetPartition",
-           def = function(conn, name, ..., .format = FALSE)  standardGeneric("dbGetPartition"),
-           valueClass = "data.frame")
+setGeneric(
+  "dbGetPartition",
+  def = function(conn, name, ..., .format = FALSE)  standardGeneric("dbGetPartition"),
+  valueClass = "data.frame"
+)
 
 #' @rdname dbGetPartition
 #' @export
@@ -811,7 +815,7 @@ setMethod(
         dt <- as_tibble(dt)}
     }
     return(dt)
-  })
+})
 
 #' Show Athena table's DDL
 #' 
@@ -847,9 +851,11 @@ NULL
 
 #' @rdname dbShow
 #' @export
-setGeneric("dbShow",
-           def = function(conn, name, ...) standardGeneric("dbShow"),
-           valueClass = "character")
+setGeneric(
+  "dbShow",
+  def = function(conn, name, ...) standardGeneric("dbShow"),
+  valueClass = "character"
+)
 
 #' @rdname dbShow
 #' @export
@@ -923,8 +929,10 @@ NULL
 
 #' @rdname dbConvertTable
 #' @export
-setGeneric("dbConvertTable",
-           def = function(conn, obj, name, ...) standardGeneric("dbConvertTable"))
+setGeneric(
+  "dbConvertTable",
+  def = function(conn, obj, name, ...) standardGeneric("dbConvertTable")
+)
 
 #' @rdname dbConvertTable
 #' @export
@@ -958,4 +966,4 @@ setMethod(
     res <- dbExecute(conn, tt_sql)
     dbClearResult(res)
     return(invisible(TRUE))
-  })
+})
