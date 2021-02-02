@@ -18,6 +18,7 @@ test_that("Check if dbDisconnect working as intended",{
   df <- data.frame(x = 1:10, y = letters[1:10], stringsAsFactors = F)
   
   expect_equal(dbIsValid(con), FALSE)
+  expect_error(con_error_msg(con, "dummy message."), "dummy message.")
   expect_error(dbExistsTable(con, "removable_table"))
   expect_error(dbWriteTable(con, "removable_table", df, s3.location = s3.location))
   expect_error(dbRemoveTable(con, "removable_table"))
