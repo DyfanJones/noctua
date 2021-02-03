@@ -164,7 +164,7 @@ AthenaListColumns.default <- function(connection, table = NULL, view = NULL, dat
 AthenaTableTypes <- function(connection, database = NULL, name = NULL, ...) {
   con_error_msg(connection, "Connection already closed.")
   glue <- connection@ptr$glue
-  if(is.null(database)) database <- unlist(get_datases(glue))
+  if(is.null(database)) database <- unlist(get_databases(glue))
   if(is.null(name)){
     tryCatch({output <- lapply(database, function(i) get_table_list(glue = glue, schema = i))},
              error = function(cond) NULL)
@@ -179,7 +179,7 @@ AthenaTableTypes <- function(connection, database = NULL, name = NULL, ...) {
 AthenaDatabase <- function(connection, ...) {
   con_error_msg(connection, "Connection already closed.")
   glue <- connection@ptr$glue
-  return(unlist(get_datases(glue)))
+  return(unlist(get_databases(glue)))
 }
 
 # Preview the data in an object.

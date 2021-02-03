@@ -374,7 +374,7 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     glue <- conn@ptr$glue
     if(is.null(schema))
-      schema <- get_datases(glue)
+      schema <- get_databases(glue)
     tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
              error = function(cond) NULL)
     return(
@@ -427,7 +427,7 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     glue <- conn@ptr$glue
     if(is.null(schema))
-      schema <- get_datases(glue)
+      schema <- get_databases(glue)
     tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
              error = function(cond) NULL)
     output <- rbindlist(unlist(output, recursive = FALSE), use.names = TRUE)
