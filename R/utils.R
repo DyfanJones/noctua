@@ -321,7 +321,7 @@ jsonlite_check <- function(method){
 }
 
 # get database list from glue catalog
-get_datases <- function(glue){
+get_databases <- function(glue){
   token <- NULL
   data_list <- list()
   while(!identical(token, character(0))){
