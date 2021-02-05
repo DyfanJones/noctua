@@ -1,6 +1,6 @@
 #' noctua: a DBI interface into Athena using paws SDK
 #' 
-#' noctua provides a seamless DBI interface into Athena using the python package 
+#' noctua provides a seamless DBI interface into Athena using the R package 
 #' \href{https://github.com/paws-r/paws}{paws}. 
 #' 
 #' @section Goal of Package:
