@@ -383,9 +383,9 @@ setMethod(
       MaxResults = as.integer(1)))
     
     Name <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
-                   function(x) x$Name, FUN.VALUE = character(1)))
+                   function(x) x$Name, FUN.VALUE = character(1))
     Type <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]], 
-                   function(x) x$Type, FUN.VALUE = character(1)))
+                   function(x) x$Type, FUN.VALUE = character(1))
     data.frame(field_name = Name,
                type = Type, stringsAsFactors = F)
   }
