@@ -107,7 +107,7 @@ db_save_query.AthenaConnection <- function(con, sql, name ,
                        sql, ";"))
   res <- dbExecute(con, tt_sql)
   dbClearResult(res)
-  name
+  return(name)
 }
 
 #' S3 implementation of \code{db_copy_to} for Athena
