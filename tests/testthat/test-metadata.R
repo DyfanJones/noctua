@@ -44,7 +44,7 @@ test_that("Returning meta data",{
   
   expect_equal(column_info1, df_col_info)
   expect_equal(column_info2, col_info_exp)
-  expect_equal(con_info, con_info_exp)
+  expect_equal(con_info[order(con_info)], con_info_exp[order(con_info_exp)])
   expect_true(list_tbl1)
   expect_true(list_tbl2)
   expect_true(list_tbl3)
@@ -59,9 +59,13 @@ test_that("Returning meta data",{
   expect_true(is.list(db_info))
   expect_error(dbGetInfo(con))
   expect_true(res_out)
-  expect_equal(names(res_info), c("QueryExecutionId", "NextToken"))
+  expect_equal(
+    names(res_info), 
+    c("WorkGroup", "StateChangeReason", "OutputLocation", "StatementType",
+      "Query", "Status", "QueryExecutionId", "Statistics"))
   expect_true(is.list(res_stat))
   expect_error(con_error_msg(res, "dummy message"), "dummy message")
   expect_equal(name1, list("dbms.name" = "default", "table" = "table1"))
   expect_equal(name2, list("dbms.name" = "mydatabase", "table" = "table1"))
 })
+
