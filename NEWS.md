@@ -1,5 +1,9 @@
 # noctua 1.10.999
-## New Feature:
+## API Change
+* `AthenaConnect` class: `ptr` and `info` slots changed from `list` to `environment` with in `AthenaConnect` class. This reduces the connection object size from `1.2 Mb` to `1.1 Kb` and helps to update `ptr` by reference.
+* `AthenaResult` class: `info` slot changed from `list` to `environment`. Helps with updating the class by reference, and reduce the number of `Athena` calls.
+
+## New Feature
 * Added support to `AWS Athena` data types `[array, row, map, json, binary, ipaddress]` (#135). Conversion types can be changed through `dbConnect` and `noctua_options`.
 ```r
 library(DBI)
