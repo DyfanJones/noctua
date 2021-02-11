@@ -145,27 +145,27 @@ setMethod(
     con_error_msg(res, msg = "Result already cleared.")
     
     # check status of query, skip poll if status found
-    if(is.null(res@info$Status))
+    if(is.null(res@info[["Status"]]))
       poll(res)
     
     # if query failed stop
-    if(res@info$Status == "FAILED")
-      stop(res@info$StateChangeReason, call. = FALSE)
+    if(res@info[["Status"]] == "FAILED")
+      stop(res@info[["StateChangeReason"]], call. = FALSE)
     
     # cache query metadata if caching is enabled
-    if (athena_option_env$cache_size > 0)
+    if (athena_option_env[["cache_size"]] > 0)
       cache_query(res)
     
-    result_info <- split_s3_uri(res@info$OutputLocation)
+    result_info <- split_s3_uri(res@info[["OutputLocation"]])
     
     # return metadata of athena data types
     retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(
-      QueryExecutionId = res@info$QueryExecutionId,
-      MaxResults = as.integer(1))$ResultSet$ResultSetMetadata$ColumnInfo)
+      QueryExecutionId = res@info[["QueryExecutionId"]],
+      MaxResults = as.integer(1))[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]])
     
     if(n >= 0 && n !=Inf){
       # assign token from AthenaResult class
-      token <- res@info$NextToken
+      token <- res@info[["NextToken"]]
       
       if(length(token) == 0) n <- as.integer(n + 1)
       chunk <- as.integer(n)
@@ -182,12 +182,12 @@ setMethod(
         
         # get chunk with retry api call if call fails
         retry_api_call(result <- res@connection@ptr$Athena$get_query_results(
-          QueryExecutionId = res@info$QueryExecutionId,
+          QueryExecutionId = res@info[["QueryExecutionId"]],
           NextToken = token,
           MaxResults = chunk))
         
         # process returned list
-        output <- lapply(result$ResultSet$Rows, function(x) (sapply(x$Data, function(x) if(length(x) == 0) NA else x)))
+        output <- lapply(result[["ResultSet"]][["Rows"]], function(x) (sapply(x$Data, function(x) if(length(x) == 0) NA else x)))
         suppressWarnings(staging_dt <- rbindlist(output, use.names = FALSE))
         
         # remove colnames from first row
@@ -202,21 +202,24 @@ setMethod(
         dt_list[[i]] <- staging_dt
         
         # if token hasn't changed or if no more tokens are available then break loop
-        if ((length(token) != 0 && token == result$NextToken) || length(result$NextToken) == 0) {break} else {token <- result$NextToken}
+        if ((length(token) != 0 && token == result[["NextToken"]]) || length(result[["NextToken"]]) == 0) {
+          break
+        } else {
+          token <- result[["NextToken"]]}
       }
       
       # combined all lists together
       dt <- rbindlist(dt_list, use.names = FALSE)
       
       # Update last token in s4 class
-      res@info$NextToken <- result$NextToken
+      res@info$NextToken <- result[["NextToken"]]
       
       # replace names with actual names
-      Names <- sapply(result_class, function(x) x$Name)
+      Names <- sapply(result_class, function(x) x[["Name"]])
       colnames(dt) <- Names
       
       # convert data.table to tibble if using vroom as backend
-      if(inherits(athena_option_env$file_parser, "athena_vroom")) {
+      if(inherits(athena_option_env[["file_parser"]], "athena_vroom")) {
         as_tibble <- pkg_method("as_tibble", "tibble")
         dt <- as_tibble(dt)}
       
@@ -224,7 +227,7 @@ setMethod(
     }
     
     # Added data scan information when returning data from athena
-    message("Info: (Data scanned: ", data_scanned(res@info$Statistics$DataScannedInBytes),")")
+    message("Info: (Data scanned: ", data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]),")")
     
     #create temp file
     File <- tempfile()
@@ -232,14 +235,14 @@ setMethod(
     
     # connect to s3 and create a bucket object
     # download athena output
-    retry_api_call(obj <- res@connection@ptr$S3$get_object(Bucket = result_info$bucket, Key = result_info$key))
+    retry_api_call(obj <- res@connection@ptr$S3$get_object(Bucket = result_info[["bucket"]], Key = result_info[["key"]]))
     
     write_bin(obj$Body, File)
     
-    if(grepl("\\.csv$", result_info$key)){
-      output <- athena_read(athena_option_env$file_parser, File, result_class)
+    if(grepl("\\.csv$", result_info[["key"]])){
+      output <- athena_read(athena_option_env[["file_parser"]], File, result_class)
     } else {
-      output <- athena_read_lines(athena_option_env$file_parser, File, result_class)
+      output <- athena_read_lines(athena_option_env[["file_parser"]], File, result_class)
     }
     
     return(output)
