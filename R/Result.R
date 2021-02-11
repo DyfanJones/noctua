@@ -74,13 +74,17 @@ setMethod(
     } else {
 
       # stops resource if query is still running
-      retry_api_call(res@connection@ptr$Athena$stop_query_execution(QueryExecutionId = res@info$QueryExecutionId))
+      retry_api_call(res@connection@ptr$Athena$stop_query_execution(
+        QueryExecutionId = res@info$QueryExecutionId))
       
       if(is.null(res@info[["Status"]])) {
         # checks status of query
-        retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info[["QueryExecutionId"]]))
-        res@info[["OutputLocation"]] <- query_execution[["QueryExecution"]][["ResultConfiguration"]][["OutputLocation"]]
-        res@info[["StatementType"]] <- query_execution[["QueryExecution"]][["StatementType"]]
+        retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
+          QueryExecutionId = res@info[["QueryExecutionId"]]))
+        res@info[["OutputLocation"]] <- 
+          query_execution[["QueryExecution"]][["ResultConfiguration"]][["OutputLocation"]]
+        res@info[["StatementType"]] <- 
+          query_execution[["QueryExecution"]][["StatementType"]]
       }
       
       # for caching s3 data is still required
@@ -96,9 +100,11 @@ setMethod(
                  error = function(e) cat(""))
         # remove manifest csv created with CTAS statements 
         if (res@info[["StatementType"]] == "DDL")
-          tryCatch(res@connection@ptr$S3$delete_object(
-            Bucket = result_info$bucket, Key = paste0(result_info$key, "-manifest.csv")),
-                   error = function(e) cat(""))
+          tryCatch({
+            res@connection@ptr$S3$delete_object(
+              Bucket = result_info[["bucket"]],
+              Key = paste0(result_info[["key"]], "-manifest.csv"))},
+            error = function(e) cat(""))
         }
       
       # remove query information
@@ -187,7 +193,9 @@ setMethod(
           MaxResults = chunk))
         
         # process returned list
-        output <- lapply(result[["ResultSet"]][["Rows"]], function(x) (sapply(x$Data, function(x) if(length(x) == 0) NA else x)))
+        output <- lapply(
+          result[["ResultSet"]][["Rows"]], 
+          function(x) (sapply(x$Data, function(x) if(length(x) == 0) NA else x)))
         suppressWarnings(staging_dt <- rbindlist(output, use.names = FALSE))
         
         # remove colnames from first row
@@ -202,7 +210,9 @@ setMethod(
         dt_list[[i]] <- staging_dt
         
         # if token hasn't changed or if no more tokens are available then break loop
-        if ((length(token) != 0 && token == result[["NextToken"]]) || length(result[["NextToken"]]) == 0) {
+        if ((length(token) != 0
+             && token == result[["NextToken"]])
+             || length(result[["NextToken"]]) == 0) {
           break
         } else {
           token <- result[["NextToken"]]}
@@ -227,7 +237,8 @@ setMethod(
     }
     
     # Added data scan information when returning data from athena
-    message("Info: (Data scanned: ", data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]),")")
+    message("Info: (Data scanned: ", data_scanned(
+      res@info[["Statistics"]][["DataScannedInBytes"]]),")")
     
     #create temp file
     File <- tempfile()
@@ -235,14 +246,17 @@ setMethod(
     
     # connect to s3 and create a bucket object
     # download athena output
-    retry_api_call(obj <- res@connection@ptr$S3$get_object(Bucket = result_info[["bucket"]], Key = result_info[["key"]]))
+    retry_api_call(obj <- res@connection@ptr$S3$get_object(
+      Bucket = result_info[["bucket"]], Key = result_info[["key"]]))
     
     write_bin(obj$Body, File)
     
     if(grepl("\\.csv$", result_info[["key"]])){
-      output <- athena_read(athena_option_env[["file_parser"]], File, result_class)
+      output <- athena_read(
+        athena_option_env[["file_parser"]], File, result_class)
     } else {
-      output <- athena_read_lines(athena_option_env[["file_parser"]], File, result_class)
+      output <- athena_read_lines(
+        athena_option_env[["file_parser"]], File, result_class)
     }
     
     return(output)
@@ -290,7 +304,8 @@ setMethod(
       return(TRUE)
     
     # get status of query
-    retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
+    retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
+      QueryExecutionId = res@info$QueryExecutionId))
     
     if(query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("SUCCEEDED", "FAILED", "CANCELLED"))
       return(TRUE)
