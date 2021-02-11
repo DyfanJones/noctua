@@ -363,11 +363,14 @@ setMethod(
     if(res@info[["Status"]] == "FAILED")
       stop(res@info[["StateChangeReason"]], call. = FALSE)
     
-    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info[["QueryExecutionId"]],
-                                                                   MaxResults = as.integer(1)))
+    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(
+      QueryExecutionId = res@info[["QueryExecutionId"]],
+      MaxResults = as.integer(1)))
     
-    Name <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Name)
-    Type <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Type)
+    Name <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
+                   function(x) x$Name, FUN.VALUE = character(1)))
+    Type <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]], 
+                   function(x) x$Type, FUN.VALUE = character(1)))
     data.frame(field_name = Name,
                type = Type, stringsAsFactors = F)
   }
@@ -421,5 +424,5 @@ setMethod(
     if(res@info[["Status"]] == "FAILED")
       stop(res@info$StateChangeReason, call. = FALSE)
 
-    return(res@info$Statistics)
+    return(res@info[["Statistics"]])
 })
