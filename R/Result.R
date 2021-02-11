@@ -75,7 +75,7 @@ setMethod(
 
       # stops resource if query is still running
       retry_api_call(res@connection@ptr$Athena$stop_query_execution(
-        QueryExecutionId = res@info$QueryExecutionId))
+        QueryExecutionId = res@info[["QueryExecutionId"]]))
       
       if(is.null(res@info[["Status"]])) {
         # checks status of query
@@ -222,7 +222,7 @@ setMethod(
       dt <- rbindlist(dt_list, use.names = FALSE)
       
       # Update last token in s4 class
-      res@info$NextToken <- result[["NextToken"]]
+      res@info[["NextToken"]] <- result[["NextToken"]]
       
       # replace names with actual names
       Names <- sapply(result_class, function(x) x[["Name"]])
@@ -305,7 +305,7 @@ setMethod(
     
     # get status of query
     retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
-      QueryExecutionId = res@info$QueryExecutionId))
+      QueryExecutionId = res@info[["QueryExecutionId"]]))
     
     if(query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("SUCCEEDED", "FAILED", "CANCELLED"))
       return(TRUE)
@@ -371,7 +371,7 @@ setMethod(
     con_error_msg(res, msg = "Result already cleared.")
     
     # check status of query, skip poll if status found
-    if(is.null(res@inf[["Status"]]))
+    if(is.null(res@info[["Status"]]))
       poll(res)
     
     # if query failed stop
@@ -437,7 +437,7 @@ setMethod(
     
     # if query failed stop
     if(res@info[["Status"]] == "FAILED")
-      stop(res@info$StateChangeReason, call. = FALSE)
+      stop(res@info[["StateChangeReason"]], call. = FALSE)
 
     return(res@info[["Statistics"]])
 })
