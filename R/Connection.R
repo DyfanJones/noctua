@@ -72,7 +72,7 @@ AthenaConnection <-
                  keyboard_interrupt = keyboard_interrupt,
                  region_name = RegionName)
     
-    res <- new("AthenaConnection",  ptr = list2env(ptr_ll), info = list2env(info), quote = "`")
+    res <- new("AthenaConnection",  ptr = list2env(ptr_ll, parent = emptyenv()), info = list2env(info, parent = emptyenv()), quote = "`")
   }
 
 #' @rdname AthenaConnection
