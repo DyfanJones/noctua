@@ -55,7 +55,7 @@ AthenaConnection <-
     }
     
     # return a subset of api function to reduce object size
-    ptr <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
+    ptr_ll <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
                                  "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
                 S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects_v2")],
                 glue = glue[c(".internal", "get_databases","get_tables","get_table","delete_table")])
@@ -72,7 +72,7 @@ AthenaConnection <-
                  keyboard_interrupt = keyboard_interrupt,
                  region_name = RegionName)
     
-    res <- new("AthenaConnection",  ptr = ptr, info = info, quote = "`")
+    res <- new("AthenaConnection",  ptr = list2env(ptr_ll), info = list2env(info), quote = "`")
   }
 
 #' @rdname AthenaConnection
@@ -81,8 +81,8 @@ setClass(
   "AthenaConnection",
   contains = "DBIConnection",
   slots = list(
-    ptr = "list",
-    info = "list",
+    ptr = "environment",
+    info = "environment",
     quote = "character")
 )
 
@@ -128,7 +128,7 @@ setMethod(
       warning("Connection already closed.", call. = FALSE)
     } else {
       on_connection_closed(conn)
-      eval.parent(substitute(conn@ptr <- list()))}
+      rm(list = ls(all.names = TRUE, envir = conn@ptr), envir = conn@ptr)}
     invisible(NULL)
   })
 
@@ -217,8 +217,9 @@ setMethod(
            statement = NULL, ...){
     con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
-    res <- AthenaResult(conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
-    res
+    res <- AthenaResult(
+      conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
+    return(res)
   }
 )
 
@@ -230,8 +231,9 @@ setMethod(
            statement = NULL, ...){
     con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
-    res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
-    res
+    res <- AthenaResult(
+      conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
+    return(res)
   }
 )
 
@@ -243,18 +245,19 @@ setMethod(
            statement = NULL, ...){
     con_error_msg(conn, msg = "Connection already closed.")
     s3_staging_dir <- conn@info$s3_staging
-    res <- AthenaResult(conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
-    poll_result <- poll(res)
+    res <- AthenaResult(
+      conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
+    poll(res)
     
     # if query failed stop
-    if(poll_result$QueryExecution$Status$State == "FAILED") {
-      stop(poll_result$QueryExecution$Status$StateChangeReason, call. = FALSE)
-    }
+    if(res@info$Status == "FAILED")
+      stop(res@info$StateChangeReason, call. = FALSE)
     
     # cache query metadata if caching is enabled
-    if (athena_option_env$cache_size > 0) cache_query(poll_result)
+    if (athena_option_env$cache_size > 0)
+      cache_query(res)
     
-    res
+    return(res)
   }
 )
 
@@ -720,11 +723,11 @@ setMethod(
   "dbGetInfo", "AthenaConnection",
   function(dbObj, ...) {
     con_error_msg(dbObj, msg = "Connection already closed.")
-    info <- dbObj@info
+    info <- as.list(dbObj@info)
     paws <- as.character(packageVersion("paws"))
     noctua <- as.character(packageVersion("noctua"))
     info <- c(info, paws = paws, noctua = noctua)
-    info
+    return(info)
   })
 
 #' Athena table partitions
