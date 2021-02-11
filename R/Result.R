@@ -76,15 +76,15 @@ setMethod(
       # stops resource if query is still running
       retry_api_call(res@connection@ptr$Athena$stop_query_execution(QueryExecutionId = res@info$QueryExecutionId))
       
-      if(is.null(res@info$Status)) {
+      if(is.null(res@info[["Status"]])) {
         # checks status of query
         retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info[["QueryExecutionId"]]))
-        res@info[["OutputLocation"]] <- query_execution[["QueryExecution"]]$ResultConfiguration$OutputLocation
-        res@info[["StatementType"]] <- query_execution$QueryExecution$StatementType
+        res@info[["OutputLocation"]] <- query_execution[["QueryExecution"]][["ResultConfiguration"]][["OutputLocation"]]
+        res@info[["StatementType"]] <- query_execution[["QueryExecution"]][["StatementType"]]
       }
       
       # for caching s3 data is still required
-      if (athena_option_env$cache_size == 0){
+      if (athena_option_env[["cache_size"]] == 0){
         result_info <- split_s3_uri(res@info[["OutputLocation"]])
         
         # Out put error as warning if s3 resource can't be dropped
@@ -286,15 +286,15 @@ setMethod(
     con_error_msg(res, msg = "Result already cleared.")
     
     # if status has already return then output TRUE
-    if(!is.null(res@info$Status))
+    if(!is.null(res@info[["Status"]]))
       return(TRUE)
     
     # get status of query
     retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
     
-    if(query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED"))
+    if(query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("SUCCEEDED", "FAILED", "CANCELLED"))
       return(TRUE)
-    else if (query_execution$QueryExecution$Status$State == "RUNNING")
+    else if (query_executionp[["QueryExecution"]][["Status"]][["State"]] == "RUNNING")
       return(FALSE)
   })
 
@@ -356,14 +356,14 @@ setMethod(
     con_error_msg(res, msg = "Result already cleared.")
     
     # check status of query, skip poll if status found
-    if(is.null(res@info$Status))
+    if(is.null(res@inf[["Status"]]))
       poll(res)
     
     # if query failed stop
-    if(res@info$Status == "FAILED")
-      stop(res@info$StateChangeReason, call. = FALSE)
+    if(res@info[["Status"]] == "FAILED")
+      stop(res@info[["StateChangeReason"]], call. = FALSE)
     
-    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info$QueryExecutionId,
+    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(QueryExecutionId = res@info[["QueryExecutionId"]],
                                                                    MaxResults = as.integer(1)))
     
     Name <- sapply(result$ResultSet$ResultSetMetadata$ColumnInfo, function(x) x$Name)
@@ -414,11 +414,11 @@ setMethod(
     con_error_msg(res, msg = "Result already cleared.")
     
     # check status of query, skip poll if status found
-    if(is.null(res@info$Status))
+    if(is.null(res@info[["Status"]]))
       poll(res)
     
     # if query failed stop
-    if(res@info$Status == "FAILED")
+    if(res@info[["Status"]] == "FAILED")
       stop(res@info$StateChangeReason, call. = FALSE)
 
     return(res@info$Statistics)
