@@ -1,5 +1,55 @@
 # noctua 1.10.999
-## New Feature:
+## API Change
+* `AthenaConnection` class: `ptr` and `info` slots changed from `list` to `environment` with in `AthenaConnect` class. Allows class to be updated by reference. Simplifies notation when viewing class from RStudio environment tab.
+* `AthenaResult` class: `info` slot changed from `list` to `environment`. Allows class to be updated by reference. 
+
+By utilising environments for `AthenaConnection` and `AthenaResult`, all `AthenaResult` classes created from `AthenaConnection` will point to the same `ptr` and `info` environments for it's connection. Previously `ptr` and `info` would make a copy. This means if it was modified it would not affect the child or parent class for example:
+
+```r
+# Old Method
+library(DBI)
+con <- dbConnect(noctua::athena(),
+                 rstudio_conn_tab = F)
+
+res <- dbExecute(con, "select 'helloworld'")
+
+# modifying parent class to influence child
+con@info$made_up <- "helloworld"
+
+# nothing happened
+res@connection@info$made_up
+# > NULL
+
+# modifying child class to influence parent
+res@connection@info$made_up <- "oh no!"
+
+# nothing happened
+con@info$made_up
+# > "helloworld"
+
+# New Method
+library(DBI)
+con <- dbConnect(noctua::athena(),
+                 rstudio_conn_tab = F)
+
+res <- dbExecute(con, "select 'helloworld'")
+
+# modifying parent class to influence child
+con@info$made_up <- "helloworld"
+
+# picked up change
+res@connection@info$made_up
+# > "helloworld"
+
+# modifying child class to influence parent
+res@connection@info$made_up <- "oh no!"
+
+# picked up change
+con@info$made_up
+# > "oh no!"
+```
+
+## New Feature
 * Added support to `AWS Athena` data types `[array, row, map, json, binary, ipaddress]` (#135). Conversion types can be changed through `dbConnect` and `noctua_options`.
 ```r
 library(DBI)
