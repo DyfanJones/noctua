@@ -183,6 +183,24 @@ test_that("Check if variable is returns as character when failed to convert",{
   expect_true(is.character(dt$json))
 })
 
+test_that("Check accepted bigint options",{
+  BigInt <- c("integer64", "integer", "numeric", "character")
+  for(i in BigInt){
+    expect_invisible(noctua::noctua_options(bigint=i))
+  }
+  expect_error(noctua::noctua_options(bigint="character2"))
+})
+
+test_that("Check accepted json options",{
+  Json <- c("auto", "character")
+  for(i in Json){
+    expect_invisible(noctua::noctua_options(json=i))
+  }
+  
+  expect_invisible(noctua::noctua_options(json=jsonlite::fromJSON))
+  expect_error(noctua::noctua_options(json=1))
+})
+
 # remove temporary file
 unlink(test_file)
 unlink(test_file2)
