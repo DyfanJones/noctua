@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -159,6 +159,9 @@
 
     <pre class="usage"><span class='fu'>noctua_options</span><span class='op'>(</span>
   file_parser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"data.table"</span>, <span class='st'>"vroom"</span><span class='op'>)</span>,
+  bigint <span class='op'>=</span> <span class='cn'>NULL</span>,
+  binary <span class='op'>=</span> <span class='cn'>NULL</span>,
+  json <span class='op'>=</span> <span class='cn'>NULL</span>,
   cache_size <span class='op'>=</span> <span class='fl'>0</span>,
   clear_cache <span class='op'>=</span> <span class='cn'>FALSE</span>,
   retry <span class='op'>=</span> <span class='fl'>5</span>,
@@ -172,6 +175,22 @@
       <th>file_parser</th>
       <td><p>Method to read and write tables to Athena, currently defaults to <code>data.table</code>. The file_parser also
 determines the data format returned for example <code>data.table</code> will return <code>data.table</code> and <code>vroom</code> will return <code>tibble</code>.</p></td>
+    </tr>
+    <tr>
+      <th>bigint</th>
+      <td><p>The R type that 64-bit integer types should be mapped to. Default <code>NULL</code> won't make any changes that <code>dbConnect</code> has set.
+Inbuilt bigint conversion types ["integer64", "integer", "numeric", "character"].</p></td>
+    </tr>
+    <tr>
+      <th>binary</th>
+      <td><p>The R type that [binary/varbinary] types should be mapped to. Default <code>NULL</code> won't make any changes that <code>dbConnect</code> has set.
+Inbuilt binary conversion types ["raw", "character"].</p></td>
+    </tr>
+    <tr>
+      <th>json</th>
+      <td><p>Attempt to converts AWS Athena data types [arrays, json] using <code>jsonlite:parse_json</code>. 
+Default <code>NULL</code> won't make any changes that <code>dbConnect</code> has set. Inbuilt json conversion types ["auto", "character"].
+Custom Json parsers can be provide by using a function with data frame parameter.</p></td>
     </tr>
     <tr>
       <th>cache_size</th>

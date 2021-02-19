@@ -94,7 +94,7 @@ NOTE: If you have set any environmental variables in .Renviron please restart yo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -201,7 +201,10 @@ of supported environment variables:</p><ul>
   s3_staging_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
   region_name <span class='op'>=</span> <span class='cn'>NULL</span>,
   bigint <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"integer64"</span>, <span class='st'>"integer"</span>, <span class='st'>"numeric"</span>, <span class='st'>"character"</span><span class='op'>)</span>,
+  binary <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"raw"</span>, <span class='st'>"character"</span><span class='op'>)</span>,
+  json <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"character"</span><span class='op'>)</span>,
   keyboard_interrupt <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rstudio_conn_tab <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -284,8 +287,25 @@ default is [bit64::integer64], which allows the full range of 64 bit
 integers.</p></td>
     </tr>
     <tr>
+      <th>binary</th>
+      <td><p>The R type that [binary/varbinary] types should be mapped to,
+default is [raw]. If the mapping fails R will resort to [character] type.
+To ignore data type conversion set to ["character"].</p></td>
+    </tr>
+    <tr>
+      <th>json</th>
+      <td><p>Attempt to converts AWS Athena data types [arrays, json] using <code>jsonlite:parse_json</code>. If the mapping fails R will resort to [character] type.
+Custom Json parsers can be provide by using a function with data frame parameter.
+To ignore data type conversion set to ["character"].</p></td>
+    </tr>
+    <tr>
       <th>keyboard_interrupt</th>
       <td><p>Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to <code>TRUE</code></p></td>
+    </tr>
+    <tr>
+      <th>rstudio_conn_tab</th>
+      <td><p>Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
+Default set to <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
