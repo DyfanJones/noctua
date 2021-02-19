@@ -1,4 +1,4 @@
-# noctua 1.10.999
+# noctua 2.0.0
 ## API Change
 * `AthenaConnection` class: `ptr` and `info` slots changed from `list` to `environment` with in `AthenaConnect` class. Allows class to be updated by reference. Simplifies notation when viewing class from RStudio environment tab.
 * `AthenaResult` class: `info` slot changed from `list` to `environment`. Allows class to be updated by reference. 
