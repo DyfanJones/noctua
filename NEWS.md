@@ -1,4 +1,4 @@
-# noctua 1.10.999
+# noctua 2.0.0
 ## API Change
 * `AthenaConnection` class: `ptr` and `info` slots changed from `list` to `environment` with in `AthenaConnect` class. Allows class to be updated by reference. Simplifies notation when viewing class from RStudio environment tab.
 * `AthenaResult` class: `info` slot changed from `list` to `environment`. Allows class to be updated by reference. 
@@ -110,7 +110,7 @@ con <- dbConnect(noctua::athena(), json = jsonify::from_json)
 ```
 * Allow users to turn off RStudio Connection Tab when working in RStudio (#136). This can be done through parameter `rstudio_conn_tab` within `dbConnect`.
 
-## Bug Fix:
+## Bug Fix
 * `AWS Athena` uses `float` data type for the DDL only, `noctua` was wrongly parsing `float` data type back to R. Instead `AWS Athena` uses data type `real` in SQL functions like `select cast` https://docs.aws.amazon.com/athena/latest/ug/data-types.html. `noctua` now correctly parses `real` to R's data type `double` (#133)
 * Iterate through each token `AWS` returns to get all results from `AWS Glue` catalogue (#137)
 
@@ -137,21 +137,21 @@ con <- dbConnect(noctua::athena(), bigint = "numeric")
 ```
 When switching between the different file parsers the `bigint` to be represented according to the file parser i.e. `data.table`: "integer64" -> `vroom`: "I".
 
-## Bug Fix:
+## Bug Fix
 * `dbRemoveTable`: Check if key has "." or ends with "/" before adding "/" to the end (#125)
 * Added `uuid` minimum version to fix issue (#128)
 
-## Documentation:
+## Documentation
 * Added note to dbRemoveTable doc string around aws athena table Location in Amazon S3.
 
 # noctua 1.9.1
-## Note:
+## Note
 * Added package checks to unit tests when testing a suggested dependency. This is to fix "CRAN Package Check Results for Package noctua" for operating system "r-patched-solaris-x86". Error message:
 ```
 Error: write_parquet requires the arrow package, please install it first and try again
 ```
 
-## Bug Fix:
+## Bug Fix
 * `dbRemoveTable` would error if AWS S3 files for Athena table have been removed:
 ```
 Error in seq.default(1, length(l), 1000) : wrong sign in 'by' argument
@@ -163,7 +163,7 @@ Failed to remove AWS S3 files from: "s3://{bucket}/{prefix}/". Please check if A
 ```
 
 # noctua 1.9.0
-## Minor Change:
+## Minor Change
 * `dbRemoveTable` now removes AWS S3 objects using `delete_objects` instead of `delete_object`. This allows `noctua` to delete AWS S3 files in batches. This will reduce the number of api calls to AWS and comes with a performance improvement.
 ```r
 library(DBI)
@@ -194,7 +194,7 @@ system.time({dbRemoveTable(con, "rm_tbl", confirm = T)})
 * Move `sql_escape_date` into `dplyr_integration.R` backend (RAthena: [# 121](https://github.com/DyfanJones/RAthena/issues/121)).
 * Allow noctua to append to a static AWS s3 location using uuid
 
-## Bug Fix:
+## Bug Fix
 * parquet file.types now use parameter `use_deprecated_int96_timestamps` set to `TRUE`. This puts POSIXct data type in to `java.sql.Timestamp` compatible format, such as `yyyy-MM-dd HH:mm:ss[.f...]`. Thanks to Christian N Wolz for highlight this issue.
 * When more than 1000 files exist in the back of an Athena table. `dbRemoveTable` will ask the user twice to confirm if they wish to remove the backend files:
 ```

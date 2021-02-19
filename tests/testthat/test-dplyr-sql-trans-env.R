@@ -19,18 +19,29 @@ data_type1 = c("BOOLEAN", "INT", "BIGINT", "DOUBLE", "DOUBLE",
               "STRING", "STRING", "STRING", "DATE", "TIMESTAMP")
 names(data_type1) = c("Logicial", "Integer", "Integer64", "Numeric", "Double", "Factor", "Character", "List", "Date", "Posixct")
 method <- "file_method"
-type_names <- sapply(1:12, function(x) paste0("var_", x))
+type_names <- sapply(1:20, function(x) paste0("var_", x))
 data_types <- c("boolean", "int",
                 "integer", "tinyint",
                 "smallint", "bigint",
                 "float", "real",
-                "decimal",
-                "string", "varchar",
-                "date", "timestamp")
+                "decimal","string",
+                "varchar", "char",
+                "date", "timestamp",
+                "array", "row",
+                "map", "json",
+                "ipaddress", "varbinary")
 names(data_types) <- type_names
-data_type2 = c("logical", "integer", "integer", "integer", "integer", "integer64", "double", "double", 
-               "double", "character", "character","Date","POSIXct")
-data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "d", "c", "c", "D", "T")
+data_type2 = c("logical", "integer",
+               "integer", "integer",
+               "integer", "integer64",
+               "double", "double", 
+               "double", "character",
+               "character", "character",
+               "Date", "POSIXct",
+               "character", "character",
+               "character", "character",
+               "character", "character")
+data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "d", "c", "c", "c", "D", "T", "c", "c", "c", "c", "c", "c")
 names(data_type2) = type_names
 names(data_type3) = type_names
 

@@ -1,8 +1,15 @@
 ## Submission
+This release brings in new features, update api change to connection classes and some bug fixes.
+
+### API Change:
+* Classes switched from utilising list to environmnents, this allows to update classes by reference. This allows the connection class to update result class by reference.
 
 ### New Features:
+* Added support to `AWS Athena` data types `[array, row, map, json, binary, ipaddress]`
+* Allow users to turn off RStudio Connection Tab when working in RStudio
 
 ### Bug Fix:
+* Iterate through each`AWS` token to get all results from `AWS Glue` catalogue.
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
@@ -21,7 +28,7 @@
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
 
 ## unit tests (using testthat) results
-* OK:       181
+* OK:       221
 * Failed:   0
 * Warnings: 0
 * Skipped:  0

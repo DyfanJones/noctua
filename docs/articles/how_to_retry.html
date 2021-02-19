@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="how_to_retry_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>How to Retry?</h1>
@@ -120,7 +120,7 @@
 <h1 class="hasAnchor">
 <a href="#how-to-handle-noctuas-retry" class="anchor"></a>How to handle <code>noctua</code>’s retry?</h1>
 <p>By default <code>noctua</code> performs a retry noisily, this means it will report the exception it has encountered and let the user know how long <code>noctua</code> will wait until it retries again. This is reported in the following format:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">{expection message} <span class="op">+</span><span class="st"> "Request failed. Retrying in "</span> <span class="op">+</span><span class="st"> </span>{wait time}  <span class="op">+</span><span class="st"> " seconds..."</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{expection message} <span class="sc">+</span> <span class="st">"Request failed. Retrying in "</span> <span class="sc">+</span> {wait time}  <span class="sc">+</span> <span class="st">" seconds..."</span></span></code></pre></div>
 <p>This is to keep the user informed in what <code>noctua</code> is doing behind the scenes.</p>
 <div id="configure" class="section level2">
 <h2 class="hasAnchor">

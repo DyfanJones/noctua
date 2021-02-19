@@ -298,19 +298,19 @@ setMethod(
   "dbHasCompleted", "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
-    
+    output <- TRUE
     # if status has already return then output TRUE
     if(!is.null(res@info[["Status"]]))
-      return(TRUE)
+      return(output)
     
     # get status of query
     retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
       QueryExecutionId = res@info[["QueryExecutionId"]]))
     
-    if(query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("SUCCEEDED", "FAILED", "CANCELLED"))
-      return(TRUE)
-    else if (query_executionp[["QueryExecution"]][["Status"]][["State"]] == "RUNNING")
-      return(FALSE)
+    if (query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("RUNNING", "QUEUED"))
+      output <- FALSE
+    
+    return(output)
   })
 
 #' @rdname dbIsValid

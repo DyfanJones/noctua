@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -292,78 +292,78 @@
                 s3_staging_dir<span class="op">=</span><span class="st">'s3://path/to/query/bucket/'</span>,
                 region_name<span class="op">=</span><span class="st">'eu-west-1'</span><span class="op">)</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span><span class="op">(</span><span class="st">"SELECT * FROM iris"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># Source:   SQL [?? x 5]</span></a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></a>
-<a class="sourceLine" id="cb16-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
-<a class="sourceLine" id="cb16-4" title="4">          <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">        </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb16-5" title="5"><span class="st"> </span><span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-6" title="6"> <span class="dv">2</span>          <span class="fl">4.9</span>         <span class="dv">3</span>            <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-7" title="7"> <span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-8" title="8"> <span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-9" title="9"> <span class="dv">5</span>          <span class="dv">5</span>           <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-10" title="10"> <span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span> setosa </a>
-<a class="sourceLine" id="cb16-11" title="11"> <span class="dv">7</span>          <span class="fl">4.6</span>         <span class="fl">3.4</span>          <span class="fl">1.4</span>         <span class="fl">0.3</span> setosa </a>
-<a class="sourceLine" id="cb16-12" title="12"> <span class="dv">8</span>          <span class="dv">5</span>           <span class="fl">3.4</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-13" title="13"> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb16-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </a>
-<a class="sourceLine" id="cb16-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Source:   SQL [?? x 5]</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>   sepal_length sepal_width petal_length petal_width species</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>          <span class="sc">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>  </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span>          <span class="fl">4.9</span>         <span class="dv">3</span>            <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span>          <span class="dv">5</span>           <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span> setosa </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span>          <span class="fl">4.6</span>         <span class="fl">3.4</span>          <span class="fl">1.4</span>         <span class="fl">0.3</span> setosa </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span>          <span class="dv">5</span>           <span class="fl">3.4</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># … with more rows</span></span></code></pre></div>
 <p>dplyr provides lazy querying with allows to short hand <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl(con, sql("SELECT * FROM iris"))</a></code> to <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl(con, "iris")</a></code>. For more information please look at <a href="https://db.rstudio.com/dplyr/" class="uri">https://db.rstudio.com/dplyr/</a>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co"># Source:   table&lt;iris&gt; [?? x 5]</span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></a>
-<a class="sourceLine" id="cb18-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
-<a class="sourceLine" id="cb18-4" title="4">          <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">        </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb18-5" title="5"><span class="st"> </span><span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-6" title="6"> <span class="dv">2</span>          <span class="fl">4.9</span>         <span class="dv">3</span>            <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-7" title="7"> <span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-8" title="8"> <span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-9" title="9"> <span class="dv">5</span>          <span class="dv">5</span>           <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-10" title="10"> <span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span> setosa </a>
-<a class="sourceLine" id="cb18-11" title="11"> <span class="dv">7</span>          <span class="fl">4.6</span>         <span class="fl">3.4</span>          <span class="fl">1.4</span>         <span class="fl">0.3</span> setosa </a>
-<a class="sourceLine" id="cb18-12" title="12"> <span class="dv">8</span>          <span class="dv">5</span>           <span class="fl">3.4</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-13" title="13"> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb18-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </a>
-<a class="sourceLine" id="cb18-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Source:   table&lt;iris&gt; [?? x 5]</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Database: Athena 0.1.4 [eu-west-1/default]</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>   sepal_length sepal_width petal_length petal_width species</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>          <span class="sc">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>  </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span>          <span class="fl">4.9</span>         <span class="dv">3</span>            <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span>          <span class="dv">5</span>           <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span> setosa </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span>          <span class="fl">4.6</span>         <span class="fl">3.4</span>          <span class="fl">1.4</span>         <span class="fl">0.3</span> setosa </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span>          <span class="dv">5</span>           <span class="fl">3.4</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span> setosa </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># … with more rows</span></span></code></pre></div>
 <p>Querying Athena with <code>profile_name</code> instead of hard coding <code>aws_access_key_id</code> and <code>aws_secret_access_key</code>. By using <code>profile_name</code> extra Meta Data is returned in the query to give users extra information.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(noctua<span class="op">::</span><span class="kw">athena</span>(),</a>
-<a class="sourceLine" id="cb19-2" title="2">                <span class="dt">profile_name =</span> <span class="st">"your_profile"</span>,</a>
-<a class="sourceLine" id="cb19-3" title="3">                <span class="dt">s3_staging_dir=</span><span class="st">'s3://path/to/query/bucket/'</span>)</a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="kw">tbl</span>(con, <span class="st">"iris"</span>)<span class="er">)</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb19-5" title="5"><span class="st">  </span><span class="kw">filter</span>(petal_length <span class="op">&lt;</span><span class="st"> </span><span class="fl">1.3</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># Source:   lazy query [?? x 5]</span></a>
-<a class="sourceLine" id="cb20-2" title="2"><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></a>
-<a class="sourceLine" id="cb20-3" title="3">   sepal_length sepal_width petal_length petal_width species</a>
-<a class="sourceLine" id="cb20-4" title="4">          <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">        </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb20-5" title="5"><span class="st"> </span><span class="dv">1</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb20-6" title="6"> <span class="dv">2</span>          <span class="fl">4.3</span>         <span class="dv">3</span>            <span class="fl">1.1</span>         <span class="fl">0.1</span> setosa </a>
-<a class="sourceLine" id="cb20-7" title="7"> <span class="dv">3</span>          <span class="fl">5.8</span>         <span class="dv">4</span>            <span class="fl">1.2</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb20-8" title="8"> <span class="dv">4</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.3</span>         <span class="fl">0.4</span> setosa </a>
-<a class="sourceLine" id="cb20-9" title="9"> <span class="dv">5</span>          <span class="fl">4.6</span>         <span class="fl">3.6</span>          <span class="dv">1</span>           <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb20-10" title="10"> <span class="dv">6</span>          <span class="dv">5</span>           <span class="fl">3.2</span>          <span class="fl">1.2</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb20-11" title="11"> <span class="dv">7</span>          <span class="fl">5.5</span>         <span class="fl">3.5</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb20-12" title="12"> <span class="dv">8</span>          <span class="fl">4.4</span>         <span class="dv">3</span>            <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </a>
-<a class="sourceLine" id="cb20-13" title="13"> <span class="dv">9</span>          <span class="dv">5</span>           <span class="fl">3.5</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </a>
-<a class="sourceLine" id="cb20-14" title="14"><span class="dv">10</span>          <span class="fl">4.5</span>         <span class="fl">2.3</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </a>
-<a class="sourceLine" id="cb20-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(noctua<span class="sc">::</span><span class="fu">athena</span>(),</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">profile_name =</span> <span class="st">"your_profile"</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">s3_staging_dir=</span><span class="st">'s3://path/to/query/bucket/'</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl</span>(con, <span class="st">"iris"</span>)<span class="er">)</span> <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(petal_length <span class="sc">&lt;</span> <span class="fl">1.3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Source:   lazy query [?? x 5]</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>   sepal_length sepal_width petal_length petal_width species</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>          <span class="sc">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>  </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span>          <span class="fl">4.3</span>         <span class="dv">3</span>            <span class="fl">1.1</span>         <span class="fl">0.1</span> setosa </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span>          <span class="fl">5.8</span>         <span class="dv">4</span>            <span class="fl">1.2</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.3</span>         <span class="fl">0.4</span> setosa </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span>          <span class="fl">4.6</span>         <span class="fl">3.6</span>          <span class="dv">1</span>           <span class="fl">0.2</span> setosa </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span>          <span class="dv">5</span>           <span class="fl">3.2</span>          <span class="fl">1.2</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span>          <span class="fl">5.5</span>         <span class="fl">3.5</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span>          <span class="fl">4.4</span>         <span class="dv">3</span>            <span class="fl">1.3</span>         <span class="fl">0.2</span> setosa </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span>          <span class="dv">5</span>           <span class="fl">3.5</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>          <span class="fl">4.5</span>         <span class="fl">2.3</span>          <span class="fl">1.3</span>         <span class="fl">0.3</span> setosa </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># … with more rows</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"sepal"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"petal"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Source:   lazy query [?? x 4]</span></a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></a>
-<a class="sourceLine" id="cb22-3" title="3">   sepal_length sepal_width petal_length petal_width</a>
-<a class="sourceLine" id="cb22-4" title="4">          <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">        </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></a>
-<a class="sourceLine" id="cb22-5" title="5"><span class="st"> </span><span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-6" title="6"> <span class="dv">2</span>          <span class="fl">4.9</span>         <span class="dv">3</span>            <span class="fl">1.4</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-7" title="7"> <span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-8" title="8"> <span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-9" title="9"> <span class="dv">5</span>          <span class="dv">5</span>           <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-10" title="10"> <span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span></a>
-<a class="sourceLine" id="cb22-11" title="11"> <span class="dv">7</span>          <span class="fl">4.6</span>         <span class="fl">3.4</span>          <span class="fl">1.4</span>         <span class="fl">0.3</span></a>
-<a class="sourceLine" id="cb22-12" title="12"> <span class="dv">8</span>          <span class="dv">5</span>           <span class="fl">3.4</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-13" title="13"> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb22-14" title="14"><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span></a>
-<a class="sourceLine" id="cb22-15" title="15"><span class="co"># … with more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Source:   lazy query [?? x 4]</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Database: Athena 0.1.4 [your_profile@eu-west-1/default]</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>   sepal_length sepal_width petal_length petal_width</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>          <span class="sc">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>        <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>       <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span>          <span class="fl">4.9</span>         <span class="dv">3</span>            <span class="fl">1.4</span>         <span class="fl">0.2</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span>          <span class="dv">5</span>           <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span>          <span class="fl">4.6</span>         <span class="fl">3.4</span>          <span class="fl">1.4</span>         <span class="fl">0.3</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span>          <span class="dv">5</span>           <span class="fl">3.4</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span>          <span class="fl">4.4</span>         <span class="fl">2.9</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>          <span class="fl">4.9</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.1</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># … with more rows</span></span></code></pre></div>
 <p>Upload data using <code>dplyr</code> function <code>copy_to</code> and <code>compute</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
@@ -411,73 +411,73 @@
 <p>List work groups:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">list_work_groups</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb30-2" title="2">[[<span class="dv">1</span>]]<span class="op">$</span>Name</a>
-<a class="sourceLine" id="cb30-3" title="3">[<span class="dv">1</span>] <span class="st">"demo_work_group"</span></a>
-<a class="sourceLine" id="cb30-4" title="4"></a>
-<a class="sourceLine" id="cb30-5" title="5">[[<span class="dv">1</span>]]<span class="op">$</span>State</a>
-<a class="sourceLine" id="cb30-6" title="6">[<span class="dv">1</span>] <span class="st">"ENABLED"</span></a>
-<a class="sourceLine" id="cb30-7" title="7"></a>
-<a class="sourceLine" id="cb30-8" title="8">[[<span class="dv">1</span>]]<span class="op">$</span>Description</a>
-<a class="sourceLine" id="cb30-9" title="9">[<span class="dv">1</span>] <span class="st">"This is a demo work group"</span></a>
-<a class="sourceLine" id="cb30-10" title="10"></a>
-<a class="sourceLine" id="cb30-11" title="11">[[<span class="dv">1</span>]]<span class="op">$</span>CreationTime</a>
-<a class="sourceLine" id="cb30-12" title="12"><span class="dv">2019-09-06</span> <span class="dv">18</span><span class="op">:</span><span class="dv">51</span><span class="op">:</span><span class="fl">28.902000</span><span class="op">+</span><span class="dv">01</span><span class="op">:</span><span class="dv">00</span></a>
-<a class="sourceLine" id="cb30-13" title="13"></a>
-<a class="sourceLine" id="cb30-14" title="14"></a>
-<a class="sourceLine" id="cb30-15" title="15">[[<span class="dv">2</span>]]</a>
-<a class="sourceLine" id="cb30-16" title="16">[[<span class="dv">2</span>]]<span class="op">$</span>Name</a>
-<a class="sourceLine" id="cb30-17" title="17">[<span class="dv">1</span>] <span class="st">"primary"</span></a>
-<a class="sourceLine" id="cb30-18" title="18"></a>
-<a class="sourceLine" id="cb30-19" title="19">[[<span class="dv">2</span>]]<span class="op">$</span>State</a>
-<a class="sourceLine" id="cb30-20" title="20">[<span class="dv">1</span>] <span class="st">"ENABLED"</span></a>
-<a class="sourceLine" id="cb30-21" title="21"></a>
-<a class="sourceLine" id="cb30-22" title="22">[[<span class="dv">2</span>]]<span class="op">$</span>Description</a>
-<a class="sourceLine" id="cb30-23" title="23">[<span class="dv">1</span>] <span class="st">""</span></a>
-<a class="sourceLine" id="cb30-24" title="24"></a>
-<a class="sourceLine" id="cb30-25" title="25">[[<span class="dv">2</span>]]<span class="op">$</span>CreationTime</a>
-<a class="sourceLine" id="cb30-26" title="26"><span class="dv">2019-08-22</span> <span class="dv">16</span><span class="op">:</span><span class="dv">14</span><span class="op">:</span><span class="fl">47.902000</span><span class="op">+</span><span class="dv">01</span><span class="op">:</span><span class="dv">00</span></a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>Name</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"demo_work_group"</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>State</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"ENABLED"</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>Description</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"This is a demo work group"</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>CreationTime</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="dv">2019-09-06</span> <span class="dv">18</span><span class="sc">:</span><span class="dv">51</span><span class="sc">:</span><span class="fl">28.902000</span><span class="sc">+</span><span class="dv">01</span><span class="sc">:</span><span class="dv">00</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>Name</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"primary"</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>State</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"ENABLED"</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>Description</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">""</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>CreationTime</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="dv">2019-08-22</span> <span class="dv">16</span><span class="sc">:</span><span class="dv">14</span><span class="sc">:</span><span class="fl">47.902000</span><span class="sc">+</span><span class="dv">01</span><span class="sc">:</span><span class="dv">00</span></span></code></pre></div>
 <p>Update work group:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">update_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group update"</span><span class="op">)</span></code></pre></div>
 <p>Return work group meta data:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/work_group.html">get_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="op">$</span>Name</a>
-<a class="sourceLine" id="cb33-2" title="2">[<span class="dv">1</span>] <span class="st">"demo_work_group"</span></a>
-<a class="sourceLine" id="cb33-3" title="3"></a>
-<a class="sourceLine" id="cb33-4" title="4"><span class="op">$</span>State</a>
-<a class="sourceLine" id="cb33-5" title="5">[<span class="dv">1</span>] <span class="st">"ENABLED"</span></a>
-<a class="sourceLine" id="cb33-6" title="6"></a>
-<a class="sourceLine" id="cb33-7" title="7"><span class="op">$</span>Configuration</a>
-<a class="sourceLine" id="cb33-8" title="8"><span class="op">$</span>Configuration<span class="op">$</span>ResultConfiguration</a>
-<a class="sourceLine" id="cb33-9" title="9"><span class="op">$</span>Configuration<span class="op">$</span>ResultConfiguration<span class="op">$</span>OutputLocation</a>
-<a class="sourceLine" id="cb33-10" title="10">[<span class="dv">1</span>] <span class="st">"s3://path/to/query/bucket/"</span></a>
-<a class="sourceLine" id="cb33-11" title="11"></a>
-<a class="sourceLine" id="cb33-12" title="12"><span class="op">$</span>Configuration<span class="op">$</span>ResultConfiguration<span class="op">$</span>EncryptionConfiguration</a>
-<a class="sourceLine" id="cb33-13" title="13"><span class="op">$</span>Configuration<span class="op">$</span>ResultConfiguration<span class="op">$</span>EncryptionConfiguration<span class="op">$</span>EncryptionOption</a>
-<a class="sourceLine" id="cb33-14" title="14">[<span class="dv">1</span>] <span class="st">"SSE_S3"</span></a>
-<a class="sourceLine" id="cb33-15" title="15"></a>
-<a class="sourceLine" id="cb33-16" title="16"></a>
-<a class="sourceLine" id="cb33-17" title="17"></a>
-<a class="sourceLine" id="cb33-18" title="18"><span class="op">$</span>Configuration<span class="op">$</span>EnforceWorkGroupConfiguration</a>
-<a class="sourceLine" id="cb33-19" title="19">[<span class="dv">1</span>] <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb33-20" title="20"></a>
-<a class="sourceLine" id="cb33-21" title="21"><span class="op">$</span>Configuration<span class="op">$</span>PublishCloudWatchMetricsEnabled</a>
-<a class="sourceLine" id="cb33-22" title="22">[<span class="dv">1</span>] <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb33-23" title="23"></a>
-<a class="sourceLine" id="cb33-24" title="24"><span class="op">$</span>Configuration<span class="op">$</span>BytesScannedCutoffPerQuery</a>
-<a class="sourceLine" id="cb33-25" title="25">[<span class="dv">1</span>] <span class="dv">10000000</span></a>
-<a class="sourceLine" id="cb33-26" title="26"></a>
-<a class="sourceLine" id="cb33-27" title="27"><span class="op">$</span>Configuration<span class="op">$</span>RequesterPaysEnabled</a>
-<a class="sourceLine" id="cb33-28" title="28">[<span class="dv">1</span>] <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb33-29" title="29"></a>
-<a class="sourceLine" id="cb33-30" title="30"></a>
-<a class="sourceLine" id="cb33-31" title="31"><span class="op">$</span>Description</a>
-<a class="sourceLine" id="cb33-32" title="32">[<span class="dv">1</span>] <span class="st">"This is a demo work group update"</span></a>
-<a class="sourceLine" id="cb33-33" title="33"></a>
-<a class="sourceLine" id="cb33-34" title="34"><span class="op">$</span>CreationTime</a>
-<a class="sourceLine" id="cb33-35" title="35"><span class="dv">2019-09-06</span> <span class="dv">18</span><span class="op">:</span><span class="dv">51</span><span class="op">:</span><span class="fl">28.902000</span><span class="op">+</span><span class="dv">01</span><span class="op">:</span><span class="dv">00</span></a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Name</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"demo_work_group"</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>State</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"ENABLED"</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>ResultConfiguration</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>ResultConfiguration<span class="sc">$</span>OutputLocation</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"s3://path/to/query/bucket/"</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>ResultConfiguration<span class="sc">$</span>EncryptionConfiguration</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>ResultConfiguration<span class="sc">$</span>EncryptionConfiguration<span class="sc">$</span>EncryptionOption</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"SSE_S3"</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>EnforceWorkGroupConfiguration</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="cn">FALSE</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>PublishCloudWatchMetricsEnabled</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="cn">FALSE</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>BytesScannedCutoffPerQuery</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">10000000</span></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Configuration<span class="sc">$</span>RequesterPaysEnabled</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="cn">FALSE</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>Description</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"This is a demo work group update"</span></span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>CreationTime</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a><span class="dv">2019-09-06</span> <span class="dv">18</span><span class="sc">:</span><span class="dv">51</span><span class="sc">:</span><span class="fl">28.902000</span><span class="sc">+</span><span class="dv">01</span><span class="sc">:</span><span class="dv">00</span></span></code></pre></div>
 <p>Connect to Athena using work group:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>,
