@@ -307,7 +307,7 @@ setMethod(
     retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
       QueryExecutionId = res@info[["QueryExecutionId"]]))
     
-    if (query_execution[["QueryExecution"]][["Status"]][["State"]] == "RUNNING")
+    if (query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("RUNNING", "QUEUED"))
       output <- FALSE
     
     return(output)
