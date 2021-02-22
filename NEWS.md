@@ -191,7 +191,7 @@ system.time({dbRemoveTable(con, "rm_tbl", confirm = T)})
 ```
 
 ## New Feature
-* Move `sql_escape_date` into `dplyr_integration.R` backend (RAthena: [# 121](https://github.com/DyfanJones/RAthena/issues/121)).
+* Move `sql_escape_date` into `dplyr_integration.R` backend ([RAthena: # 121](https://github.com/DyfanJones/RAthena/issues/121)).
 * Allow noctua to append to a static AWS s3 location using uuid
 
 ## Bug Fix
@@ -252,7 +252,7 @@ dbFetch(res, 5000)
 
 * When creating/appending partitions to a table, `dbWriteTable` opts to use `alter table` instead of standard `msck repair table`. This is to improve performance when appending to tables with high number of existing partitions.
 * `dbWriteTable` now allows json to be appended to json ddls created with the Openx-JsonSerDe library.
-* `dbConvertTable` brings `dplyr::compute` functionality to base package, allowing `noctua` to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (RAthena: [# 37](https://github.com/DyfanJones/RAthena/issues/37)).
+* `dbConvertTable` brings `dplyr::compute` functionality to base package, allowing `noctua` to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 ([RAthena: # 37](https://github.com/DyfanJones/RAthena/issues/37)).
 * Extended `dplyr::compute` to give same functionality of `dbConvertTable`
 * Added `region_name` check before making a connection to AWS Athena ([RAthena: # 110](https://github.com/DyfanJones/RAthena/issues/110))
 
@@ -297,7 +297,7 @@ system.time(dbRemoveTable(con, "iris2", confirm = T))
 
 ```r
 library(DBI)
-con = dbConnect(RAthena::athena())
+con = dbConnect(noctua::athena())
 dbWriteTable(con, "iris2", iris, file.type = "json")
 dbGetQuery(con, "select * from iris2")
 ```
@@ -370,7 +370,7 @@ microbenchmark(writeBin_loop = write_bin(obj, tempfile()),
 # readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5
 ```
 
-* Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` (RAthena: [# 44](https://github.com/DyfanJones/RAthena/issues/44))
+* Thanks to @OssiLehtinen for fixing date variables being incorrectly translated by `sql_translate_env` ([RAthena: # 44](https://github.com/DyfanJones/RAthena/issues/44))
 
 ```r
 # Before
@@ -393,14 +393,14 @@ paste("hi", "bye", sep = "-")
 ('hi'||'-'||'bye')
 ```
 
-* If table exists and parameter `append` set to `TRUE` then existing s3.location will be utilised (RAthena: [# 73](https://github.com/DyfanJones/RAthena/issues/73))
-* `db_compute` returned table name, however when a user wished to write table to another location (RAthena: [# 74](https://github.com/DyfanJones/RAthena/issues/74)). An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist` This has now been fixed with db_compute returning `dbplyr::in_schema`.
+* If table exists and parameter `append` set to `TRUE` then existing s3.location will be utilised ([RAthena: # 73](https://github.com/DyfanJones/RAthena/issues/73))
+* `db_compute` returned table name, however when a user wished to write table to another location ([RAthena: # 74](https://github.com/DyfanJones/RAthena/issues/74)). An error would be raised: `Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist` This has now been fixed with db_compute returning `dbplyr::in_schema`.
 
 ```r
 library(DBI)
 library(dplyr)
 
-con <- dbConnect(RAthena::athena())
+con <- dbConnect(noctua::athena())
 
 tbl(con, "iris") %>%
   compute(name = "temp.iris")
@@ -471,10 +471,10 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 ```
 
 ## Bug fix
-* Due to issue highlighted by @OssiLehtinen in (RAthena: [# 50](https://github.com/DyfanJones/RAthena/issues/50)), special characters have issue being processed when using flat file in the backend.
-* Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: [# 41](https://github.com/DyfanJones/RAthena/issues/41))
+* Due to issue highlighted by @OssiLehtinen in ([RAthena: # 50](https://github.com/DyfanJones/RAthena/issues/50)), special characters have issue being processed when using flat file in the backend.
+* Fixed issue where row.names not being correctly catered and returning NA in column names ([RAthena: # 41](https://github.com/DyfanJones/RAthena/issues/41))
 * Fixed issue with `INTEGER` being incorrectly translated in `sql_translate_env.R`
-* Fixed issue where `as.character` was getting wrongly translated (RAthena: [# 45](https://github.com/DyfanJones/RAthena/issues/45))
+* Fixed issue where `as.character` was getting wrongly translated ([RAthena: # 45](https://github.com/DyfanJones/RAthena/issues/45))
 
 ## Unit Tests
 * Special characters have been added to unit test `data-transfer`
@@ -487,7 +487,7 @@ warning('Appended `file.type` is not compatible with the existing Athena DDL fil
 
 ## Minor Change
 * Added AWS_ATHENA_WORK_GROUP environmental variable support
-* Removed `tolower` conversion due to request (RAthena: [# 41](https://github.com/DyfanJones/RAthena/issues/41))
+* Removed `tolower` conversion due to request ([RAthena: # 41](https://github.com/DyfanJones/RAthena/issues/41))
 
 # noctua 1.3.0
 ## Major Change

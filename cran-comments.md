@@ -2,7 +2,7 @@
 This release brings in new features, update api change to connection classes and some bug fixes.
 
 ### API Change:
-* Classes switched from utilising list to environmnents, this allows to update classes by reference. This allows the connection class to update result class by reference.
+* Classes switched from utilising list to environments, this allows to update classes by reference.
 
 ### New Features:
 * Added support to `AWS Athena` data types `[array, row, map, json, binary, ipaddress]`

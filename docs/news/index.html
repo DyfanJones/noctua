@@ -396,7 +396,7 @@ Failed to remove AWS S3 files from: "s3://{bucket}/{prefix}/". Please check if A
 <h2 class="hasAnchor">
 <a href="#new-feature-2" class="anchor"></a>New Feature</h2>
 <ul>
-<li>Move <code>sql_escape_date</code> into <code>dplyr_integration.R</code> backend (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/121"># 121</a>).</li>
+<li>Move <code>sql_escape_date</code> into <code>dplyr_integration.R</code> backend (<a href="https://github.com/DyfanJones/RAthena/issues/121">RAthena: # 121</a>).</li>
 <li>Allow noctua to append to a static AWS s3 location using uuid</li>
 </ul>
 </div>
@@ -504,7 +504,7 @@ Info: The S3 objects in prefix will be deleted:
 <li>
 <code>dbWriteTable</code> now allows json to be appended to json ddls created with the Openx-JsonSerDe library.</li>
 <li>
-<code>dbConvertTable</code> brings <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> functionality to base package, allowing <code>noctua</code> to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/37"># 37</a>).</li>
+<code>dbConvertTable</code> brings <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> functionality to base package, allowing <code>noctua</code> to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (<a href="https://github.com/DyfanJones/RAthena/issues/37">RAthena: # 37</a>).</li>
 <li>Extended <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> to give same functionality of <code>dbConvertTable</code>
 </li>
 <li>Added <code>region_name</code> check before making a connection to AWS Athena (<a href="https://github.com/DyfanJones/RAthena/issues/110">RAthena: # 110</a>)</li>
@@ -575,7 +575,7 @@ Info: The S3 objects in prefix will be deleted:
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
-<span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">RAthena</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, <span class="va">iris</span>, file.type <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris2"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -674,7 +674,7 @@ Info: The S3 objects in prefix will be deleted:
 <span class="co"># R_loop 41.463273 41.62077 42.265778 41.908908 42.022042 44.313893     5</span>
 <span class="co"># readr  2.291571  2.40495  2.496871  2.542544  2.558367  2.686921     5</span></code></pre></div>
 <ul>
-<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for fixing date variables being incorrectly translated by <code>sql_translate_env</code> (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/44"># 44</a>)</li>
+<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for fixing date variables being incorrectly translated by <code>sql_translate_env</code> (<a href="https://github.com/DyfanJones/RAthena/issues/44">RAthena: # 44</a>)</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -698,16 +698,16 @@ Info: The S3 objects in prefix will be deleted:
 <span class="co"># SQL translation:</span>
 <span class="op">(</span><span class="st">'hi'</span><span class="op">||</span><span class="st">'-'</span><span class="op">||</span><span class="st">'bye'</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>If table exists and parameter <code>append</code> set to <code>TRUE</code> then existing s3.location will be utilised (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/73"># 73</a>)</li>
+<li>If table exists and parameter <code>append</code> set to <code>TRUE</code> then existing s3.location will be utilised (<a href="https://github.com/DyfanJones/RAthena/issues/73">RAthena: # 73</a>)</li>
 <li>
-<code>db_compute</code> returned table name, however when a user wished to write table to another location (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/74"># 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code>.</li>
+<code>db_compute</code> returned table name, however when a user wished to write table to another location (<a href="https://github.com/DyfanJones/RAthena/issues/74">RAthena: # 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">dbplyr::in_schema</a></code>.</li>
 </ul>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">RAthena</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RAthena/man/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"temp.iris"</span><span class="op">)</span></code></pre></div>
@@ -821,11 +821,11 @@ Info: The S3 objects in prefix will be deleted:
 <h2 class="hasAnchor">
 <a href="#bug-fix-8" class="anchor"></a>Bug fix</h2>
 <ul>
-<li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/50"># 50</a>), special characters have issue being processed when using flat file in the backend.</li>
-<li>Fixed issue where row.names not being correctly catered and returning NA in column names (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
+<li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (<a href="https://github.com/DyfanJones/RAthena/issues/50">RAthena: # 50</a>), special characters have issue being processed when using flat file in the backend.</li>
+<li>Fixed issue where row.names not being correctly catered and returning NA in column names (<a href="https://github.com/DyfanJones/RAthena/issues/41">RAthena: # 41</a>)</li>
 <li>Fixed issue with <code>INTEGER</code> being incorrectly translated in <code>sql_translate_env.R</code>
 </li>
-<li>Fixed issue where <code>as.character</code> was getting wrongly translated (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/45"># 45</a>)</li>
+<li>Fixed issue where <code>as.character</code> was getting wrongly translated (<a href="https://github.com/DyfanJones/RAthena/issues/45">RAthena: # 45</a>)</li>
 </ul>
 </div>
 <div id="unit-tests-2" class="section level2">
@@ -852,7 +852,7 @@ Info: The S3 objects in prefix will be deleted:
 <a href="#minor-change-2" class="anchor"></a>Minor Change</h2>
 <ul>
 <li>Added AWS_ATHENA_WORK_GROUP environmental variable support</li>
-<li>Removed <code>tolower</code> conversion due to request (RAthena: <a href="https://github.com/DyfanJones/RAthena/issues/41"># 41</a>)</li>
+<li>Removed <code>tolower</code> conversion due to request (<a href="https://github.com/DyfanJones/RAthena/issues/41">RAthena: # 41</a>)</li>
 </ul>
 </div>
 </div>
