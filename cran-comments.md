@@ -31,4 +31,4 @@ Apologises for the quick re-release, this is a hot fix to fix "keyboard interrup
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
 
 ## unit tests (using testthat) results
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 226 ]
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 227 ]
