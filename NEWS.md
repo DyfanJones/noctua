@@ -1,3 +1,7 @@
+# noctua 2.0.1
+## Bug Fix:
+* Fix issue of keyboard interrupt failing to raise interrupt error.
+
 # noctua 2.0.0
 ## API Change
 * `AthenaConnection` class: `ptr` and `info` slots changed from `list` to `environment` with in `AthenaConnect` class. Allows class to be updated by reference. Simplifies notation when viewing class from RStudio environment tab.

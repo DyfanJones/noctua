@@ -1,15 +1,8 @@
 ## Submission
-This release brings in new features, update api change to connection classes and some bug fixes.
-
-### API Change:
-* Classes switched from utilising list to environments, this allows to update classes by reference.
-
-### New Features:
-* Added support to `AWS Athena` data types `[array, row, map, json, binary, ipaddress]`
-* Allow users to turn off RStudio Connection Tab when working in RStudio
+This is hot fix to fix issue of keyboard interrupt failing to raise interrupt error
 
 ### Bug Fix:
-* Iterate through each`AWS` token to get all results from `AWS Glue` catalogue.
+* fix issue were keyboard interrupt didn't raise interrupt error due to 2.0.0 release
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
@@ -22,7 +15,14 @@ This release brings in new features, update api change to connection classes and
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## R devtools::check_rhub() results
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
+0 errors ✓ | 0 warnings ✓ | 1 note x
+
+**Note:**
+Maintainer: 'Dyfan Jones <dyfan.r.jones@gmail.com>'
+Days since last update: 2
+
+**Author notes:** 
+Apologises for the quick re-release, this is a hot fix to fix "keyboard interrupt" failing to raise errors due to v-2.0.0 release
 
 **Side note:** ran devtools::check_rhub with following environment variables:
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
