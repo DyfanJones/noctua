@@ -44,6 +44,7 @@ test_that("Returning meta data",{
   dbClearResult(res1)
   dbDisconnect(con)
   
+  expect_equal(dbGetStatement(res2), "select * from test_df")
   expect_equal(column_info1, df_col_info)
   expect_equal(column_info2, col_info_exp)
   expect_equal(con_info[order(con_info)], con_info_exp[order(con_info_exp)])
