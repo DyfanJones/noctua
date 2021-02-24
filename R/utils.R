@@ -19,20 +19,7 @@ is.s3_uri <- function(x) {
 poll <- function(res){
   tryCatch(
     .poll(res),
-    interrupt = function(i){
-      if(res@connection@info$keyboard_interrupt){
-        msg = sprintf(
-          "Query '%s' has been cancelled by user.",
-          res@info[["QueryExecutionId"]])
-        dbClearResult(res)
-        stop(msg, call. = F)
-      } else {
-        msg = sprintf(
-          "Query '%s' has been cancelled by user but will carry on running in AWS Athena",
-          res@info[["QueryExecutionId"]])
-        stop(msg, call. = F)
-      }
-    }
+    interrupt = function(i) interrupt_athena(res)
   )
 }
 
@@ -44,7 +31,6 @@ poll <- function(res){
     tryCatch(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
     if (query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED")){
       # update info environment
-      res@info[["Query"]] <- query_execution[["QueryExecution"]][["Query"]]
       res@info[["Status"]] <- query_execution[["QueryExecution"]][["Status"]][["State"]]
       res@info[["StateChangeReason"]] <- query_execution[["QueryExecution"]][["Status"]][["StateChangeReason"]]
       res@info[["StatementType"]] <- query_execution[["QueryExecution"]][["StatementType"]]
@@ -54,6 +40,20 @@ poll <- function(res){
       break
     } else {Sys.sleep(poll_interval)}
   }
+}
+
+interrupt_athena <- function(res){
+  if(res@connection@info[["keyboard_interrupt"]]){
+    msg = sprintf(
+      "Query '%s' has been cancelled by user.",
+      res@info[["QueryExecutionId"]])
+    dbClearResult(res)
+  } else {
+    msg = sprintf(
+      "Query '%s' has been cancelled by user but will carry on running in AWS Athena",
+      res@info[["QueryExecutionId"]])
+  }
+  stop(msg, call. = F)
 }
 
 # added a random poll wait time
