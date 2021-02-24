@@ -31,7 +31,6 @@ poll <- function(res){
     tryCatch(query_execution <- res@connection@ptr$Athena$get_query_execution(QueryExecutionId = res@info$QueryExecutionId))
     if (query_execution$QueryExecution$Status$State %in% c("SUCCEEDED", "FAILED", "CANCELLED")){
       # update info environment
-      res@info[["Query"]] <- query_execution[["QueryExecution"]][["Query"]]
       res@info[["Status"]] <- query_execution[["QueryExecution"]][["Status"]][["State"]]
       res@info[["StateChangeReason"]] <- query_execution[["QueryExecution"]][["Status"]][["StateChangeReason"]]
       res@info[["StatementType"]] <- query_execution[["QueryExecution"]][["StatementType"]]

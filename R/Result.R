@@ -8,6 +8,7 @@ AthenaResult <- function(conn,
   stopifnot(is.character(statement))
   
   response <- new.env(parent = emptyenv())
+  response[["Query"]] <- statement
   if (athena_option_env$cache_size > 0)
     response[["QueryExecutionId"]] <- check_cache(statement, conn@info$work_group)
   if (is.null(response[["QueryExecutionId"]])) {
@@ -440,4 +441,39 @@ setMethod(
       stop(res@info[["StateChangeReason"]], call. = FALSE)
 
     return(res@info[["Statistics"]])
+})
+
+
+#' Get the statement associated with a result set
+#'
+#' Returns the statement that was passed to [dbSendQuery()]
+#' or [dbSendStatement()].
+#' @name dbGetStatement
+#' @inheritParams DBI::dbGetStatement
+#' @return \code{dbGetStatement()} returns a character.
+#' @seealso \code{\link[DBI]{dbGetStatement}}
+#' @examples
+#' \dontrun{
+#' # Note: 
+#' # - Require AWS Account to run below example.
+#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
+#' 
+#' library(DBI)
+#' 
+#' # Demo connection to Athena using profile name 
+#' con <- dbConnect(noctua::athena())
+#'
+#' rs <- dbSendQuery(con, "SHOW TABLES in default")
+#' dbGetStatement(rs)
+#' }
+#' @docType methods
+NULL
+
+#' @rdname dbGetStatement
+#' @export
+setMethod(
+  "dbGetStatement", "AthenaResult",
+  function(res, ...){
+    con_error_msg(res, msg = "Result already cleared.")
+    return(res@info[["Query"]])
 })
