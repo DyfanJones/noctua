@@ -1,6 +1,6 @@
 # noctua 2.0.1.999
 ## Bug Fix:
-* dbIsValid wrongly stated connection is valid for result class when connection class was disconnected. 
+* `dbIsValid` wrongly stated connection is valid for result class when connection class was disconnected. 
 
 # noctua 2.0.1
 ## Bug Fix:
