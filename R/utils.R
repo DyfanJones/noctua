@@ -70,7 +70,11 @@ resource_active.AthenaConnection <- function(dbObj){
 }
 
 resource_active.AthenaResult <- function(dbObj){
-  if(length(dbObj@info) !=0) return(TRUE) else (FALSE)
+  if(length(dbObj@info) !=0 &&
+     length(dbObj@connection@ptr) != 0) 
+    return(TRUE) 
+  else 
+    return(FALSE)
 }
 
 # set up athena request call

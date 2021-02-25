@@ -13,11 +13,16 @@ test_that("Check if dbDisconnect working as intended",{
   con <- dbConnect(athena(),
                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
   
+  res <- dbSendQuery(con, "select 'dummy'")
+  
   dbDisconnect(con)
   
   df <- data.frame(x = 1:10, y = letters[1:10], stringsAsFactors = F)
   
   expect_equal(dbIsValid(con), FALSE)
+  expect_equal(dbIsValid(res), FALSE)
+  expect_error(dbGetQuery(con, "select dummy"), "Connection already closed.")
+  expect_error(dbFetch(res), "Result already cleared.")
   expect_error(con_error_msg(con, "dummy message."), "dummy message.")
   expect_error(dbExistsTable(con, "removable_table"))
   expect_error(dbWriteTable(con, "removable_table", df, s3.location = s3.location))
