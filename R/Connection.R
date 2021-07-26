@@ -16,68 +16,65 @@ NULL
 
 class_cache <- new.env(parent = emptyenv())
 
-AthenaConnection <-
-  function(
-    aws_access_key_id = NULL,
-    aws_secret_access_key = NULL ,
-    aws_session_token = NULL,
-    schema_name = NULL,
-    work_group = NULL,
-    poll_interval = NULL,
-    encryption_option = NULL,
-    kms_key = NULL,
-    s3_staging_dir = NULL,
-    region_name = NULL,
-    profile_name = NULL, 
-    aws_expiration = NULL,
-    keyboard_interrupt = NULL,
-    ...){
-    
-    # get lower level paws methods
-    get_region <- pkg_method("get_region", "paws.common")
-    get_profile_name <- pkg_method("get_profile_name", "paws.common")
-    
-    # get region name
-    RegionName <- (region_name %||% get_region(profile_name)) %||% get_aws_env("AWS_DEFAULT_REGION")
-    
-    # get profile_name
-    prof_name <- if(!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
-    
-    # format credentials to pass to paws sdk
-    Config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, prof_name, RegionName)
-    
-    tryCatch({Athena <- paws::athena(config = Config)
-              S3 <- paws::s3(config = Config)
-              glue <- paws::glue(config = Config)})
-    
-    if(is.null(s3_staging_dir) && !is.null(work_group)){
-      tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation)
-    }
-    
-    # return a subset of api function to reduce object size
-    ptr_ll <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
-                                 "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
-                S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects_v2")],
-                glue = glue[c(".internal", "get_databases","get_tables","get_table","delete_table")])
-    
-    s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
-    
-    if(is.null(s3_staging_dir)) {stop("Please set `s3_staging_dir` either in parameter `s3_staging_dir`, environmental varaible `AWS_ATHENA_S3_STAGING_DIR`",
-                                      "or when work_group is defined in `create_work_group()`", call. = F)}
-    
-    info <- list(profile_name = prof_name, s3_staging = s3_staging_dir,
-                 dbms.name = schema_name, work_group = work_group %||% "primary",
-                 poll_interval = poll_interval, encryption_option = encryption_option,
-                 kms_key = kms_key, expiration = aws_expiration,
-                 timezone = character(),
-                 keyboard_interrupt = keyboard_interrupt,
-                 region_name = RegionName)
-    
-    res <- new(
-      "AthenaConnection",
-      ptr = list2env(ptr_ll, parent = emptyenv()),
-      info = list2env(info, parent = emptyenv()),
-      quote = "`")
+AthenaConnection <- function(aws_access_key_id = NULL,
+                             aws_secret_access_key = NULL ,
+                             aws_session_token = NULL,
+                             schema_name = NULL,
+                             work_group = NULL,
+                             poll_interval = NULL,
+                             encryption_option = NULL,
+                             kms_key = NULL,
+                             s3_staging_dir = NULL,
+                             region_name = NULL,
+                             profile_name = NULL, 
+                             aws_expiration = NULL,
+                             keyboard_interrupt = NULL,
+                             ...){
+  # get lower level paws methods
+  get_region <- pkg_method("get_region", "paws.common")
+  get_profile_name <- pkg_method("get_profile_name", "paws.common")
+  
+  # get region name
+  RegionName <- (region_name %||% get_region(profile_name)) %||% get_aws_env("AWS_DEFAULT_REGION")
+  
+  # get profile_name
+  prof_name <- if(!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
+  
+  # format credentials to pass to paws sdk
+  Config <- cred_set(aws_access_key_id, aws_secret_access_key, aws_session_token, prof_name, RegionName)
+  
+  tryCatch({Athena <- paws::athena(config = Config)
+            S3 <- paws::s3(config = Config)
+            glue <- paws::glue(config = Config)})
+  
+  if(is.null(s3_staging_dir) && !is.null(work_group)){
+    tryCatch(s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation)
+  }
+  
+  # return a subset of api function to reduce object size
+  ptr_ll <- list(Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
+                               "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
+              S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects_v2")],
+              glue = glue[c(".internal", "get_databases","get_tables","get_table","delete_table")])
+  
+  s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
+  
+  if(is.null(s3_staging_dir)) {stop("Please set `s3_staging_dir` either in parameter `s3_staging_dir`, environmental varaible `AWS_ATHENA_S3_STAGING_DIR`",
+                                    "or when work_group is defined in `create_work_group()`", call. = F)}
+  
+  info <- list(profile_name = prof_name, s3_staging = s3_staging_dir,
+               dbms.name = schema_name, work_group = work_group %||% "primary",
+               poll_interval = poll_interval, encryption_option = encryption_option,
+               kms_key = kms_key, expiration = aws_expiration,
+               timezone = character(),
+               keyboard_interrupt = keyboard_interrupt,
+               region_name = RegionName)
+  
+  res <- new(
+    "AthenaConnection",
+    ptr = list2env(ptr_ll, parent = emptyenv()),
+    info = list2env(info, parent = emptyenv()),
+    quote = "`")
 }
 
 #' @rdname AthenaConnection
