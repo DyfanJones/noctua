@@ -69,11 +69,16 @@ AthenaConnection <-
                  dbms.name = schema_name, work_group = work_group %||% "primary",
                  poll_interval = poll_interval, encryption_option = encryption_option,
                  kms_key = kms_key, expiration = aws_expiration,
+                 timezone = character(),
                  keyboard_interrupt = keyboard_interrupt,
                  region_name = RegionName)
     
-    res <- new("AthenaConnection",  ptr = list2env(ptr_ll, parent = emptyenv()), info = list2env(info, parent = emptyenv()), quote = "`")
-  }
+    res <- new(
+      "AthenaConnection",
+      ptr = list2env(ptr_ll, parent = emptyenv()),
+      info = list2env(info, parent = emptyenv()),
+      quote = "`")
+}
 
 #' @rdname AthenaConnection
 #' @export

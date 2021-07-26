@@ -99,6 +99,9 @@ setMethod(
 #' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
 #'   Custom Json parsers can be provide by using a function with data frame parameter.
 #'   To ignore data type conversion set to ["character"].
+#' @param timezone Sets the timezone for the connection. The default is `"UTC"`.
+#'   If `NULL` then no timezone is set, which defaults to the server's time zone.
+#'   `AWS Athena` accepted time zones: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html}.
 #' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}
 #' @param rstudio_conn_tab Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
 #'   Default set to \code{TRUE}.
@@ -153,6 +156,7 @@ setMethod(
            bigint = c("integer64", "integer", "numeric", "character"),
            binary = c("raw", "character"),
            json = c("auto", "character"),
+           timezone = "UTC",
            keyboard_interrupt = TRUE,
            rstudio_conn_tab = TRUE,
            ...) {
@@ -171,6 +175,7 @@ setMethod(
               is.null(role_arn) || is.character(role_arn),
               is.character(role_session_name),
               is.numeric(duration_seconds),
+              is.character(timezone) || is.null(timezone),
               is.logical(keyboard_interrupt),
               is.character(json) || is.function(json),
               is.logical(rstudio_conn_tab))
@@ -222,7 +227,20 @@ setMethod(
                             aws_expiration = aws_expiration,
                             keyboard_interrupt = keyboard_interrupt,
                             ...)
+    if (is.null(timezone)) {
+      timezone <- dbGetQuery(con, "select current_timezone()")[[1]]
+    }
+    # check if timezone is valid 
+    timezone <- check_timezone(timezone)
+    
+    con@info$timezone <- timezone
     # integrate with RStudio
     on_connection_opened(con)
     con
-  })
+})
+
+check_timezone <- function(timezone) {
+  if (!(timezone %in% OlsonNames()))
+    stop(sprintf('`timezone` "%s" is not supported in R.',timezone), call. = F)
+  return(timezone)
+}
