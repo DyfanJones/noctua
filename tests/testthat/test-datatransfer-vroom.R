@@ -17,7 +17,7 @@ test_that("Testing data transfer between R and athena vroom", {
   con <- dbConnect(athena(),
                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
   
-  df <- data.frame(w = as.POSIXct((Sys.time() -9):Sys.time(), origin = "1970-01-01"),
+  df <- data.frame(w = as.POSIXct((Sys.time() -9):Sys.time(), origin = "1970-01-01", tz = "UTC"),
                    x = 1:10,
                    y = c(letters[1:8], c(" \\t\\t\\n 123 \" \\t\\t\\n ", ",15 \"")), 
                    z = sample(c(TRUE, FALSE), 10, replace = T),
@@ -58,8 +58,8 @@ test_that("Testing data transfer between R and athena vroom", {
   attributes(test_df3)$problems <- NULL
   attributes(test_df4)$problems <- NULL
 
-  expect_equal(test_df,df)
-  expect_equal(test_df2, sqlData(con, df))
+  expect_equal(test_df, df)
+  expect_equal(test_df2, df)
   expect_equal(test_df3,df2)
   expect_equal(test_df4, sqlData(con, mtcars))
 })
