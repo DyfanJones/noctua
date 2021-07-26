@@ -191,9 +191,9 @@ sql_translate_env.AthenaConnection <- function(con) {
 athena_paste <- function(..., sep = " ", con) {
   escape <- pkg_method("escape", "dbplyr")
   sql <- pkg_method("sql", "dplyr")
-  sep <- paste0('||', escape(sep, con = con), '||')
-  pieces <- vapply(list(...), escape, con = con, collapse = sep, character(1))
-  sql(paste(pieces))
+  sep <- escape(sep, con = con)
+  pieces <- vapply(list(...), escape, con = con, character(1))
+  sql(paste(pieces, collapse = paste0('||', sep, '||')))
 }
 
 athena_regexpr <- function(pattern, text, ignore.case = FALSE, perl = FALSE, fixed = FALSE, 
