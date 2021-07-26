@@ -6,110 +6,162 @@ format_athena_types <- function(athena_types){
 
 # ==========================================================================
 # read in method
-athena_read <- function(method, File, athena_types, ...) {
+athena_read <- function(method, File, athena_types, con, ...) {
   UseMethod("athena_read")
 }
 
-athena_read.athena_data.table <-
-  function(method, File, athena_types , ...){
-    data_type <- format_athena_types(athena_types)
-    
-    Type2 <- Type <- AthenaToRDataType(method, data_type)
-    # Type2 is to handle issue with data.table fread 
-    Type2[Type2 %in% "POSIXct"] <- "character"
-    
-    fill <- any(c("array", "row", "map", "json") %in% data_type)
-    
-    # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
-    output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), sep = ",", showProgress = F, na.strings="", fill = fill)
+athena_read.athena_data.table <- function(method, File, athena_types, con, ...){
+  data_type <- format_athena_types(athena_types)
+  
+  Type2 <- Type <- AthenaToRDataType(method, data_type)
+  # Type2 is to handle issue with data.table fread 
+  Type2[Type2 %in% "POSIXct"] <- "character"
+  
+  fill <- any(c("array", "row", "map", "json") %in% data_type)
+  
+  # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
+  # https://github.com/Rdatatable/data.table/blob/master/NEWS.md#datatable-v1130--24-jul-2020
+  if(packageVersion("data.table") < package_version("1.13.0")){
+    output <- data.table::fread(
+      File,
+      col.names = names(Type2),
+      colClasses = unname(Type2),
+      sep = ",",
+      showProgress = F,
+      na.strings="",
+      fill = fill)
     # formatting POSIXct: from string to POSIXct
-    for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]]))
-    # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
-    for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
-    
-    # convert raw
-    if(!identical(athena_option_env$binary, "character"))
-      raw_parser(output, data_type)
-    
-    # convert json
-    if(!identical(athena_option_env$json, "character"))
-      json_parser(output, data_type)
-    
-    return(output)
+    for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]], tz = con@info$timezone))
+  } else {
+    output <- data.table::fread(
+      File,
+      col.names = names(Type),
+      colClasses = unname(Type),
+      tz = con@info$timezone,
+      sep = ",",
+      showProgress = F,
+      na.strings="",
+      fill = fill)
   }
+  # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
+  for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
+  
+  # convert raw
+  if(!identical(athena_option_env$binary, "character"))
+    raw_parser(output, data_type)
+  
+  # convert json
+  if(!identical(athena_option_env$json, "character"))
+    json_parser(output, data_type)
+  
+  return(output)
+}
 
-athena_read.athena_vroom <- 
-  function(method, File, athena_types, ...){
-    data_type <- format_athena_types(athena_types)
-    
-    vroom <- pkg_method("vroom", "vroom")
-    Type <- AthenaToRDataType(method, data_type)
-
-    output <- vroom(File, delim = ",", col_types = Type, progress = FALSE, trim_ws = FALSE, altrep = TRUE)
-    
-    # convert raw
-    if(!identical(athena_option_env$binary, "character"))
-      raw_parser(output, data_type)
-    
-    # convert json
-    if(!identical(athena_option_env$json, "character"))
-      json_parser(output, data_type)
-    
-    return(output)
-  }
+athena_read.athena_vroom <- function(method, File, athena_types, con, ...){
+  vroom <- pkg_method("vroom", "vroom")
+  locale <- pkg_method("locale", "vroom")
+  
+  data_type <- format_athena_types(athena_types)
+  Type <- AthenaToRDataType(method, data_type)
+  output <- vroom(
+    File,
+    delim = ",",
+    col_types = Type,
+    locale = locale(tz = con@info$timezone),
+    progress = FALSE,
+    trim_ws = FALSE,
+    altrep = TRUE
+  )
+  # convert raw
+  if(!identical(athena_option_env$binary, "character"))
+    raw_parser(output, data_type)
+  
+  # convert json
+  if(!identical(athena_option_env$json, "character"))
+    json_parser(output, data_type)
+  
+  return(output)
+}
 
 # Read in .txt files line by line and return them as a data.frame
-athena_read_lines <- function(method, File, athena_types, ...) {
+athena_read_lines <- function(method, File, athena_types, con, ...) {
   UseMethod("athena_read_lines")
 }
 
 # Keep data.table formatting
-athena_read_lines.athena_data.table <-
-  function(method, File, athena_types, ...){
-    data_type <- format_athena_types(athena_types)
+athena_read_lines.athena_data.table <- function(method, File, athena_types, con, ...){
+  data_type <- format_athena_types(athena_types)
     
-    Type2 <- Type <- AthenaToRDataType(method, data_type)
-    # Type2 is to handle issue with data.table fread 
-    Type2[Type2 %in% "POSIXct"] <- "character"
-    
-    # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
-    output <- data.table::fread(File, col.names = names(Type2), colClasses = unname(Type2), sep = "\n", showProgress = F, na.strings="", header = F, strip.white= F)
+  Type2 <- Type <- AthenaToRDataType(method, data_type)
+  # Type2 is to handle issue with data.table fread 
+  Type2[Type2 %in% "POSIXct"] <- "character"
+  
+  # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
+  # https://github.com/Rdatatable/data.table/blob/master/NEWS.md#datatable-v1130--24-jul-2020
+  if(packageVersion("data.table") < package_version("1.13.0")){
+    output <- data.table::fread(
+      File,
+      col.names = names(Type2),
+      colClasses = unname(Type2),
+      sep = "\n",
+      showProgress = F,
+      na.strings="",
+      header = F,
+      strip.white= F)
     # formatting POSIXct: from string to POSIXct
-    for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]]))
-    # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
-    for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
-    
-    # convert raw
-    if(!identical(athena_option_env$binary, "character"))
-      raw_parser(output, data_type)
-    
-    # convert json
-    if(!identical(athena_option_env$json, "character"))
-      json_parser(output, data_type)
-    
-    return(output)
+    for (col in names(Type[Type %in% "POSIXct"])) set(output, j=col, value=as.POSIXct(output[[col]], tz = con@info$timezone))
+  } else {
+    output <- data.table::fread(
+      File,
+      col.names = names(Type),
+      colClasses = unname(Type),
+      tz = con@info$timezone,
+      sep = "\n",
+      showProgress = F,
+      na.strings="",
+      header = F,
+      strip.white= F)
   }
+  # AWS Athena returns " values as "". Due to this "" will be reformatted back to "
+  for (col in names(Type[Type %in% "character"])) set(output, j=col, value=gsub('""' , '"', output[[col]]))
+  
+  # convert raw
+  if(!identical(athena_option_env$binary, "character"))
+    raw_parser(output, data_type)
+  
+  # convert json
+  if(!identical(athena_option_env$json, "character"))
+    json_parser(output, data_type)
+  
+  return(output)
+}
 
-athena_read_lines.athena_vroom <- 
-  function(method, File, athena_types, ...){
-    data_type <- format_athena_types(athena_types)
-    
-    vroom <- pkg_method("vroom", "vroom")
-    
-    Type <- AthenaToRDataType(method, data_type)
-    
-    output <- vroom(File, col_names = names(Type), col_types = unname(Type), progress = FALSE, altrep = TRUE, trim_ws = FALSE, delim = "\n")
-    
-    # convert raw
-    if(!identical(athena_option_env$binary, "character"))
-      raw_parser(output, data_type)
-    
-    # convert json
-    if(!identical(athena_option_env$json, "character"))
-      json_parser(output, data_type)
-    
-    return(output)
-  }
+athena_read_lines.athena_vroom <- function(method, File, athena_types, con, ...){
+  vroom <- pkg_method("vroom", "vroom")
+  locale <- pkg_method("locale", "vroom")
+  
+  data_type <- format_athena_types(athena_types)
+  Type <- AthenaToRDataType(method, data_type)
+  output <- vroom(
+    File,
+    col_names = names(Type),
+    col_types = unname(Type),
+    locale = locale(tz = con@info$timezone),
+    progress = FALSE,
+    altrep = TRUE,
+    trim_ws = FALSE,
+    delim = "\n"
+  )
+  # convert raw
+  if(!identical(athena_option_env$binary, "character"))
+    raw_parser(output, data_type)
+  
+  # convert json
+  if(!identical(athena_option_env$json, "character"))
+    json_parser(output, data_type)
+  
+  return(output)
+}
 
 # ==========================================================================
 # write method
@@ -126,7 +178,7 @@ write_batch <- function(value, split_vec, fun, max.batch, max_row, path, file.ty
   # write 
   fun(chunk, file_con, ...)
   
-  path
+  return(path)
 }
 
 dt_split <- function(value, max.batch, file.type, compress){
