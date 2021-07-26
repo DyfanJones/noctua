@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.1.999</span>
       </span>
     </div>
 
@@ -149,13 +149,41 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-201" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.1">
-<a href="#noctua-201" class="anchor"></a>noctua 2.0.1<small> 2021-02-24 </small>
+    <div id="noctua-201999" class="section level1">
+<h1 class="page-header" data-toc-text="2.0.1.999">
+<a href="#noctua-201999" class="anchor"></a>noctua 2.0.1.999<small> Unreleased </small>
 </h1>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix" class="anchor"></a>Bug Fix:</h2>
+<ul>
+<li>
+<code>dbIsValid</code> wrongly stated connection is valid for result class when connection class was disconnected.</li>
+<li>
+<code>sql_translate_env.paste</code> broke with latest version of <code>dbplyr</code>. New method is compatible with <code>dbplyr&gt;=1.4.3</code>.</li>
+</ul>
+</div>
+<div id="feature" class="section level2">
+<h2 class="hasAnchor">
+<a href="#feature" class="anchor"></a>Feature:</h2>
+<ul>
+<li>
+<code>sql_translate_env</code>: add support for <code>stringr</code>/<code>lubridate</code> style functions, similar to <a href="https://github.com/tidyverse/dbplyr/blob/master/R/backend-postgres.R">Postgres backend</a>.</li>
+<li>
+<code>write_bin</code> now doesn’t chunk writeBin if R version is greater than 4.0.0 <a href="https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97" class="uri">https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97</a>
+</li>
+<li>
+<code>dbConnect</code> add <code>timezone</code> parameter so that time zone between <code>R</code> and <code>AWS Athena</code> is consistent.</li>
+</ul>
+</div>
+</div>
+    <div id="noctua-201" class="section level1">
+<h1 class="page-header" data-toc-text="2.0.1">
+<a href="#noctua-201" class="anchor"></a>noctua 2.0.1<small> 2021-02-24 </small>
+</h1>
+<div id="bug-fix-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix-1" class="anchor"></a>Bug Fix:</h2>
 <ul>
 <li>Fix issue of keyboard interrupt failing to raise interrupt error.</li>
 </ul>
@@ -239,7 +267,7 @@
 <span class="co"># [1] "character"</span>
 
 <span class="co"># change json conversion to custom method</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/jsonify/man/from_json.html">from_json</a></span><span class="op">)</span>
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va">from_json</span><span class="op">)</span>
 <span class="fu">noctua</span><span class="fu">:::</span><span class="va">athena_option_env</span><span class="op">$</span><span class="va">json</span>
 <span class="co"># function (json, simplify = TRUE, fill_na = FALSE, buffer_size = 1024) </span>
 <span class="co"># {</span>
@@ -281,14 +309,14 @@
 <span class="va">con2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>, json <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>
 
 <span class="co"># use custom json parser</span>
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>, json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/jsonify/man/from_json.html">from_json</a></span><span class="op">)</span></code></pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>, json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va">from_json</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Allow users to turn off RStudio Connection Tab when working in RStudio (<a href='https://github.com/DyfanJones/noctua/issues/136'>#136</a>). This can be done through parameter <code>rstudio_conn_tab</code> within <code>dbConnect</code>.</li>
 </ul>
 </div>
-<div id="bug-fix-1" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-1" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>AWS Athena</code> uses <code>float</code> data type for the DDL only, <code>noctua</code> was wrongly parsing <code>float</code> data type back to R. Instead <code>AWS Athena</code> uses data type <code>real</code> in SQL functions like <code>select cast</code> <a href="https://docs.aws.amazon.com/athena/latest/ug/data-types.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/data-types.html</a>. <code>noctua</code> now correctly parses <code>real</code> to R’s data type <code>double</code> (<a href='https://github.com/DyfanJones/noctua/issues/133'>#133</a>)</li>
@@ -326,9 +354,9 @@
 con &lt;- dbConnect(noctua::athena(), bigint = "numeric")</a></code></pre>
 <p>When switching between the different file parsers the <code>bigint</code> to be represented according to the file parser i.e. <code>data.table</code>: “integer64” -&gt; <code>vroom</code>: “I”.</p>
 </div>
-<div id="bug-fix-2" class="section level2">
+<div id="bug-fix-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-2" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbRemoveTable</code>: Check if key has “.” or ends with “/” before adding “/” to the end (<a href='https://github.com/DyfanJones/noctua/issues/125'>#125</a>)</li>
@@ -355,9 +383,9 @@ con &lt;- dbConnect(noctua::athena(), bigint = "numeric")</a></code></pre>
 </ul>
 <pre><code>Error: write_parquet requires the arrow package, please install it first and try again</code></pre>
 </div>
-<div id="bug-fix-3" class="section level2">
+<div id="bug-fix-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-3" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-4" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbRemoveTable</code> would error if AWS S3 files for Athena table have been removed:</li>
@@ -382,7 +410,7 @@ Failed to remove AWS S3 files from: "s3://{bucket}/{prefix}/". Please check if A
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://Rdatatable.gitlab.io/data.table">data.table</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span>
 
 <span class="va">X</span> <span class="op">&lt;-</span> <span class="fl">1010</span>
 <span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">X</span>,
@@ -412,9 +440,9 @@ Failed to remove AWS S3 files from: "s3://{bucket}/{prefix}/". Please check if A
 <li>Allow noctua to append to a static AWS s3 location using uuid</li>
 </ul>
 </div>
-<div id="bug-fix-4" class="section level2">
+<div id="bug-fix-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-4" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-5" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>parquet file.types now use parameter <code>use_deprecated_int96_timestamps</code> set to <code>TRUE</code>. This puts POSIXct data type in to <code>java.sql.Timestamp</code> compatible format, such as <code>yyyy-MM-dd HH:mm:ss[.f...]</code>. Thanks to Christian N Wolz for highlight this issue.</li>
 <li>When more than 1000 files exist in the back of an Athena table. <code>dbRemoveTable</code> will ask the user twice to confirm if they wish to remove the backend files:</li>
@@ -436,9 +464,9 @@ Info: The S3 objects in prefix will be deleted:
 <h1 class="page-header" data-toc-text="1.8.1">
 <a href="#noctua-181" class="anchor"></a>noctua 1.8.1<small> 2020-09-25 </small>
 </h1>
-<div id="bug-fix-5" class="section level2">
+<div id="bug-fix-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-5" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-6" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Pass a uuid string to <code>start_query_execution</code> parameter <code>ClientRequestToken</code>. This so that the <code>ClientRequestToken</code> is “A unique case-sensitive string used to ensure the request to create the query is idempotent (executes only once).” (<a href='https://github.com/DyfanJones/noctua/issues/104'>#104</a>)</li>
 <li>Allowed cache_size to equal 100</li>
@@ -522,9 +550,9 @@ Info: The S3 objects in prefix will be deleted:
 <li>Added <code>region_name</code> check before making a connection to AWS Athena (<a href="https://github.com/DyfanJones/RAthena/issues/110">RAthena: # 110</a>)</li>
 </ul>
 </div>
-<div id="bug-fix-6" class="section level2">
+<div id="bug-fix-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-6" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-7" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbWriteTable</code> would throw <code>throttling error</code> every now and again, <code>retry_api_call</code> as been built to handle the parsing of data between R and AWS S3.</li>
@@ -591,9 +619,9 @@ Info: The S3 objects in prefix will be deleted:
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris2"</span>, <span class="va">iris</span>, file.type <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris2"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="bug-fix-7" class="section level2">
+<div id="bug-fix-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-7" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-8" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>dbConnect</code> didn’t correct pass <code>.internal</code> metadata for paws objects.</li>
@@ -632,9 +660,9 @@ Info: The S3 objects in prefix will be deleted:
 <h1 class="page-header" data-toc-text="1.5.1">
 <a href="#noctua-151" class="anchor"></a>noctua 1.5.1<small> 2020-02-16 </small>
 </h1>
-<div id="bug-fix-8" class="section level2">
+<div id="bug-fix-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-8" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-9" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>
 <code>writeBin</code>: Only 2^31 - 1 bytes can be written in a single call (and that is the maximum capacity of a raw vector on 32-bit platforms). This means that it will error out with large raw connections. To over come this <code>writeBin</code> can be called in chunks. If <code>readr</code> is available on system then <code><a href="https://readr.tidyverse.org/reference/read_file.html">readr::write_file</a></code> is used for extra speed.</li>
@@ -829,9 +857,9 @@ Info: The S3 objects in prefix will be deleted:
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/warning.html">warning</a></span><span class="op">(</span><span class="st">'Appended `file.type` is not compatible with the existing Athena DDL file type and has been converted to "'</span>, <span class="va">File.Type</span>,<span class="st">'".'</span>, call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="bug-fix-9" class="section level2">
+<div id="bug-fix-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-9" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-10" class="anchor"></a>Bug fix</h2>
 <ul>
 <li>Due to issue highlighted by <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> in (<a href="https://github.com/DyfanJones/RAthena/issues/50">RAthena: # 50</a>), special characters have issue being processed when using flat file in the backend.</li>
 <li>Fixed issue where row.names not being correctly catered and returning NA in column names (<a href="https://github.com/DyfanJones/RAthena/issues/41">RAthena: # 41</a>)</li>
@@ -920,9 +948,9 @@ Info: The S3 objects in prefix will be deleted:
 </li>
 </ul>
 </div>
-<div id="bug-fix-10" class="section level2">
+<div id="bug-fix-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-10" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-11" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Fixed bug in regards to Athena DDL being created incorrectly when passed from <code>dbWriteTable</code>
 </li>
@@ -990,9 +1018,9 @@ Info: The S3 objects in prefix will be deleted:
 
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="bug-fix-11" class="section level2">
+<div id="bug-fix-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix-11" class="anchor"></a>Bug Fix</h2>
+<a href="#bug-fix-12" class="anchor"></a>Bug Fix</h2>
 <ul>
 <li>Info message wasn’t being return when colnames needed changing for Athena DDL</li>
 </ul>
@@ -1035,9 +1063,9 @@ Info: The S3 objects in prefix will be deleted:
 <code>BigInt</code> are now passed correctly into <code>integer64</code>
 </li>
 </ul>
-<div id="bug-fix-12" class="section level3">
+<div id="bug-fix-13" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fix-12" class="anchor"></a>Bug fix</h3>
+<a href="#bug-fix-13" class="anchor"></a>Bug fix</h3>
 <ul>
 <li>
 <code>AthenaResult</code> returned: <code>Error in call[[2]] : object of type 'closure' is not subsettable</code>. The function <code>do.call</code> was causing the issue, to address this <code>do.call</code> has been removed and the helper function <code>request</code> has been broken down into <code>ResultConfiguration</code> to return a single component of <code>start_query_execution</code>

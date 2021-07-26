@@ -3,6 +3,15 @@ context("file_parser")
 library(data.table)
 library(dplyr)
 
+
+setClass(
+  "mock_con",
+  slots = list(
+    info = "list")
+)
+
+con <- new("mock_con", info = list(timezone="UTC"))
+
 test_data <- function(N = 10000L, seed = 142L){
   set.seed(seed)
   data.table(
@@ -58,12 +67,14 @@ test_that("Check if json has been correctly parser under chunk method",{
   dt1 <- noctua:::athena_read.athena_data.table(
     method_1,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   dt2 <- noctua:::athena_read.athena_vroom(
     method_2,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   expect_equal(jsonlite::toJSON(dt1$json[[1]], auto_unbox = T), jsonlite::toJSON(iris[1,1:2]))
   expect_equal(jsonlite::toJSON(dt2$json[[1]], auto_unbox = T), jsonlite::toJSON(iris[1,1:2]))
@@ -81,12 +92,14 @@ test_that("Binary and json conversion",{
   dt1 <- noctua:::athena_read.athena_data.table(
     method_1,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   dt2 <- noctua:::athena_read.athena_vroom(
     method_2,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   dt1[, string := sapply(raw_string, rawToChar)]
   
@@ -112,12 +125,14 @@ test_that("Check in conversion is turned off",{
   dt1 <- noctua:::athena_read.athena_data.table(
     method_1,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   dt2 <- noctua:::athena_read.athena_vroom(
     method_2,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   expect_equal(dt1$json[[1]], as.character(jsonlite::toJSON(iris[1,1:2])))
   expect_equal(dt2$json[[1]], as.character(jsonlite::toJSON(iris[1,1:2])))
@@ -138,12 +153,14 @@ test_that("Custom json parser",{
   dt1 <- noctua:::athena_read.athena_data.table(
     method_1,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   dt2 <- noctua:::athena_read.athena_vroom(
     method_2,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   expect_equal(dt1$json[[1]], iris[1,1:2])
   expect_equal(dt2$json[[1]], iris[1,1:2])
@@ -161,12 +178,14 @@ test_that("Custom json parser",{
   dt1 <- noctua:::athena_read.athena_data.table(
     method_1,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   dt2 <- noctua:::athena_read.athena_vroom(
     method_2,
     test_file,
-    data_type)
+    data_type,
+    con)
   
   expect_equal(dt1$json[[1]], iris[1,1:2])
   expect_equal(dt2$json[[1]], iris[1,1:2])
@@ -184,7 +203,8 @@ test_that("Check if variable is returns as character when failed to convert",{
     dt <- noctua:::athena_read.athena_data.table(
       method_1,
       test_file,
-      data_type))
+      data_type,
+      con))
   
   expect_true(is.character(dt$raw_string))
   expect_true(is.character(dt$json))

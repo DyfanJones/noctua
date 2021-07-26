@@ -94,7 +94,7 @@ NOTE: If you have set any environmental variables in .Renviron please restart yo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.1.999</span>
       </span>
     </div>
 
@@ -203,6 +203,7 @@ of supported environment variables:</p><ul>
   bigint <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"integer64"</span>, <span class='st'>"integer"</span>, <span class='st'>"numeric"</span>, <span class='st'>"character"</span><span class='op'>)</span>,
   binary <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"raw"</span>, <span class='st'>"character"</span><span class='op'>)</span>,
   json <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"character"</span><span class='op'>)</span>,
+  timezone <span class='op'>=</span> <span class='st'>"UTC"</span>,
   keyboard_interrupt <span class='op'>=</span> <span class='cn'>TRUE</span>,
   rstudio_conn_tab <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
@@ -213,8 +214,8 @@ of supported environment variables:</p><ul>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>drv</th>
-      <td><p>an object that inherits from <a href='https://dbi.r-dbi.org/reference/DBIDriver-class.html'>DBIDriver</a>,
-or an existing <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection</a>
+      <td><p>an object that inherits from DBIDriver,
+or an existing DBIConnection
 object (in order to clone an existing connection).</p></td>
     </tr>
     <tr>
@@ -297,6 +298,12 @@ To ignore data type conversion set to ["character"].</p></td>
       <td><p>Attempt to converts AWS Athena data types [arrays, json] using <code>jsonlite:parse_json</code>. If the mapping fails R will resort to [character] type.
 Custom Json parsers can be provide by using a function with data frame parameter.
 To ignore data type conversion set to ["character"].</p></td>
+    </tr>
+    <tr>
+      <th>timezone</th>
+      <td><p>Sets the timezone for the connection. The default is `UTC`.
+If `NULL` then no timezone is set, which defaults to the server's time zone.
+`AWS Athena` accepted time zones: <a href='https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html'>https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html</a>.</p></td>
     </tr>
     <tr>
       <th>keyboard_interrupt</th>
