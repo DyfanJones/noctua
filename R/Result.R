@@ -254,10 +254,10 @@ setMethod(
     
     if(grepl("\\.csv$", result_info[["key"]])){
       output <- athena_read(
-        athena_option_env[["file_parser"]], File, result_class)
+        athena_option_env[["file_parser"]], File, result_class, res@connection)
     } else {
       output <- athena_read_lines(
-        athena_option_env[["file_parser"]], File, result_class)
+        athena_option_env[["file_parser"]], File, result_class, res@connection)
     }
     
     return(output)
