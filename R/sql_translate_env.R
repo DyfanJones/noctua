@@ -42,6 +42,13 @@ sql_translate_env.AthenaConnection <- function(con) {
   sql_variant(
     sql_translator(.parent = base_scalar,
       ifelse = sql_prefix("IF"),
+      Sys.Date = function() build_sql("current_date"),
+      Sys.time = function(tz=NULL){
+        if(is.null(tz))
+          build_sql("now()")
+        else
+          build_sql("now() at time zone ", tz)
+      },
       as = function(column, type) {
         sql_type <- toupper(dbDataType(athena(), type)) # using toupper to keep dependencies low
         build_sql('CAST(', column, ' AS ', sql(sql_type), ')')
@@ -52,6 +59,12 @@ sql_translate_env.AthenaConnection <- function(con) {
       as.integer = sql_cast("INTEGER"), # https://docs.aws.amazon.com/athena/latest/ug/data-types.html#type-integer
       as.integer64 = sql_cast("BIGINT"), # as.integer64 reflects bigint for AWS Athena
       as.Date = sql_cast("DATE"),
+      as.POSIXct = function(x, tz){
+        if(is.null(tz))
+          build_sql("timestamp ", x)
+        else
+          build_sql("timestamp ", x, " at time zone ", tz)
+      },
       as.logical = sql_cast("BOOLEAN"),
       as.raw = sql_cast("VARBINARY"),
       tolower = sql_prefix("LOWER"),
@@ -80,11 +93,15 @@ sql_translate_env.AthenaConnection <- function(con) {
         build_sql("strpos(",string, ",", pattern, ")")
       },
       str_detect = function(string, pattern, negate = FALSE){
-        if(negative)
-          build_sql('REGEXP_LIKE(', text,",", pattern, ')')
-        else
-          build_sql('NOT REGEXP_LIKE(', text,",", pattern, ')')
+        if(isTRUE(negate)){
+          build_sql('NOT REGEXP_LIKE(', string,",", pattern, ')')
+        } else {
+          build_sql('REGEXP_LIKE(', string,",", pattern, ')')
+        }
       },
+      # Currently `str_replace` replaces every instance 
+      # of the substring matched by the regular expression pattern in string with replacement
+      # https://prestodb.io/docs/current/functions/regexp.html#id2
       str_replace = function(string, pattern, replacement){
         build_sql("regexp_replace(",string, ",", pattern, ",", replacement, ")")
       },
@@ -94,6 +111,9 @@ sql_translate_env.AthenaConnection <- function(con) {
       str_squish = function(string){
         build_sql("trim(", "regexp_replace(", string,", '\\s+', ' '))")
       },
+      # Currently `str_remove` replaces every instance 
+      # of the substring matched by the regular expression pattern in string with replacement
+      # https://prestodb.io/docs/current/functions/regexp.html#id2
       str_remove =  function(string, pattern){
         build_sql("regexp_replace(",string, ",", pattern, ")")
       },
@@ -101,18 +121,28 @@ sql_translate_env.AthenaConnection <- function(con) {
         build_sql("regexp_replace(",string, ",", pattern, ")")
       },
       str_split = function(string, pattern, n = Inf, simplify = FALSE){
+        if(simplify)
+          stop("`simplify` is not supported in Athena.")
         build_sql("regexp_split(", string, ",", pattern, ")")
+      },
+      str_extract = function(string, pattern){
+        build_sql("regexp_extract(",string, ",", pattern, ")")
+      },
+      str_extract_all = function(string, pattern, simplify = FALSE){
+        if(simplify)
+          stop("`simplify` is not supported in Athena.")
+        build_sql("regexp_extract_all(",string, ",", pattern, ")")
       },
       
       # lubridate functions
       month = function(x, label = FALSE, abbr = TRUE){
         if(!label){
-          build_sql("date_format(", w, ', %m)')
+          build_sql("date_format(", x, ", '%m')")
         } else {
           if(abbr)
-            build_sql("date_format(", w, ', %b)')
+            build_sql("date_format(", x, ", '%b')")
           else
-            build_sql("date_format(", w, ', %M)')
+            build_sql("date_format(", x, ", '%M')")
         }
       },
       quarter = function(x, with_year = FALSE, fiscal_start = 1) {
@@ -171,12 +201,25 @@ sql_translate_env.AthenaConnection <- function(con) {
         x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " year")
       },
-      
       floor_date = function(x, unit = "second"){
-        unit <- arg_match(unit,
+        unit <- match.arg(unit,
           c("second", "minute", "hour", "day", "week", "month", "quarter", "year")
         )
-        build_sql("date_trunc(", unit, x, ")")
+        build_sql("date_trunc(", unit, ", ",  x, ")")
+      },
+      today = function() {build_sql("current_date")},
+      as_date = sql_cast("DATE"),
+      as_datetime = function(x, tz = NULL){
+        if(is.null(tz))
+          build_sql("timestamp ", x)
+        else
+          build_sql("timestamp ", x, " at time zone ", tz)
+      },
+      now = function(tz=NULL){
+        if(is.null(tz))
+          build_sql("now()")
+        else
+          build_sql("now() at time zone ", tz)
       }
     ),
     
