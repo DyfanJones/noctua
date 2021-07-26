@@ -3,7 +3,14 @@ context("file_parser")
 library(data.table)
 library(dplyr)
 
-con <- dbConnect(athena())
+
+setClass(
+  "mock_con",
+  slots = list(
+    info = "list")
+)
+
+con <- new("mock_con", info = list(timezone="UTC"))
 
 test_data <- function(N = 10000L, seed = 142L){
   set.seed(seed)
