@@ -209,26 +209,41 @@ data_scanned <-
   }
 
 # Write large raw connections in chunks
-write_bin <- function(
-  value,
-  filename,
-  chunk_size = 2L ^ 20L) {
+write_bin <- function(value,
+                      filename,
+                      chunk_size = 2^31 - 2) {
   
   # if readr is avialable then use readr::write_file else loop writeBin
   if (requireNamespace("readr", quietly = TRUE)) {
     write_file <- pkg_method("write_file", "readr")
     write_file(value, filename)
-    return(invisible(TRUE))}
-  
-  total_size <- length(value)
-  split_vec <- seq(1, total_size, chunk_size)
-  
+    return(invisible(TRUE))
+  }
+  base_write_raw(value, filename, chunk_size)
+  return(invisible(TRUE))
+}
+
+base_write_raw <- function(obj,
+                           filename,
+                           chunk_size = 2^31-2){ # Only 2^31 - 1 bytes can be written in a single call
+  # Open for reading and appending.
   con <- file(filename, "a+b")
   on.exit(close(con))
   
-  if (length(split_vec) == 1) writeBin(value,con) 
-  else sapply(split_vec, function(x){writeBin(value[x:min(total_size,(x+chunk_size-1))],con)})
-  invisible(TRUE)
+  # If R version is 4.0.0 + then don't need to chunk writeBin
+  # https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97
+  if (getRversion() > R_system_version("4.0.0")){
+    writeBin(obj,con)
+  } else {
+    max_len <- length(obj)
+    start <- seq(1, max_len, chunk_size)
+    end <- c(start[-1]-1, max_len)
+    
+    if (length(start) == 1) {
+      writeBin(obj,con)
+    } else {
+      sapply(seq_along(start), function(i){writeBin(obj[start[i]:end[i]],con)})}
+  }
 }
 
 # caching function to added metadata to cache data.table
