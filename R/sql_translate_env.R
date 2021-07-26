@@ -15,33 +15,29 @@ NULL
 #' @name sql_translate_env
 NULL
 
-athena_window_functions <- function() {
-  # using pkg_method to retrieve external pkg methods
-  base_win <- pkg_method('base_win', "dbplyr")
-  sql_translator <- pkg_method('sql_translator', "dbplyr")
-  win_absent <- pkg_method('win_absent', "dbplyr")
-  win_recycled <- pkg_method('win_recycled', "dbplyr")
-  return(sql_translator(
-    .parent=base_win,
-    all=win_recycled('bool_and'),
-    any=win_recycled('bool_or'),
-    n_distinct=win_absent('n_distinct'),
-    sd=win_recycled("stddev_samp")
-  ))
-}
-
-
 #' @rdname sql_translate_env
 #' @export
 sql_translate_env.AthenaConnection <- function(con) {
+  # base methods
   sql_variant <- pkg_method("sql_variant", "dbplyr")
   sql_translator <- pkg_method("sql_translator", "dbplyr")
   sql_prefix <- pkg_method("sql_prefix", "dbplyr")
   sql_cast <- pkg_method('sql_cast', "dbplyr")
   sql <- pkg_method('sql', "dplyr")
   build_sql <- pkg_method('build_sql', "dbplyr")
+  
+  # scalar methods
   base_scalar <- pkg_method('base_scalar', "dbplyr")
+  
+  # aggregate methods
   base_agg <- pkg_method('base_agg', "dbplyr")
+  sql_aggregate <- pkg_method("sql_aggregate", "dbplyr")
+  sql_aggregate_2 <- pkg_method("sql_aggregate_2", "dbplyr")
+  
+  # window methods
+  base_win <- pkg_method('base_win', "dbplyr")
+  win_aggregate <- pkg_method('win_aggregate', "dbplyr")
+  win_aggregate_2 <- pkg_method('win_aggregate_2', "dbplyr")
   
   sql_variant(
     sql_translator(.parent = base_scalar,
@@ -148,24 +144,31 @@ sql_translate_env.AthenaConnection <- function(con) {
       
       # https://prestodb.io/docs/current/functions/datetime.html#date-and-time-operators
       seconds = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " second")
       },
       minutes = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " minute")
       },
       hours = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " hour")
       },
       days = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " day")
       },
       weeks = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " week")
       },
       months = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " month")
       },
       years = function(x){
+        x <- as.character(as.integer(x))
         build_sql("INTERVAL ", x, " year")
       },
       
@@ -176,14 +179,29 @@ sql_translate_env.AthenaConnection <- function(con) {
         build_sql("date_trunc(", unit, x, ")")
       }
     ),
+    
+    # Align aggregate functions to Postgres
+    # https://github.com/tidyverse/dbplyr/blob/master/R/backend-postgres.R#L186-L191
     sql_translator(.parent = base_agg,
-      n = function() sql("COUNT(*)"),
-      sd =  sql_prefix("STDDEV_SAMP"),
-      var = sql_prefix("VAR_SAMP"),
-      all = sql_prefix("BOOL_AND"),
-      any = sql_prefix("BOOL_OR")
+      cor = sql_aggregate_2("CORR"),
+      cov = sql_aggregate_2("COVAR_SAMP"),
+      sd = sql_aggregate("STDDEV_SAMP", "sd"),
+      var = sql_aggregate("VAR_SAMP", "var"),
+      all = sql_aggregate("BOOL_AND", "all"),
+      any = sql_aggregate("BOOL_OR", "any")
     ),
-    athena_window_functions()
+    
+    # Align window functions to Postgres
+    # https://github.com/tidyverse/dbplyr/blob/master/R/backend-postgres.R#L194-L200
+    sql_translator(
+      .parent=base_win,
+      cor = win_aggregate_2("CORR"),
+      cov = win_aggregate_2("COVAR_SAMP"),
+      sd =  win_aggregate("STDDEV_SAMP"),
+      var = win_aggregate("VAR_SAMP"),
+      all = win_aggregate("BOOL_AND"),
+      any = win_aggregate("BOOL_OR")
+    )
   )
 }
 
