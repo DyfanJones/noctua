@@ -1,8 +1,13 @@
 ## Submission
-This is hot fix to fix issue of keyboard interrupt failing to raise interrupt error
+This release brings in new features, and some bug fixes.
 
 ### Bug Fix:
-* fix issue were keyboard interrupt didn't raise interrupt error due to 2.0.0 release
+* `sql_translate_env` `paste` method broke due to latest `dbplyr` release. `sql_translate_env` `paste` method now works intended from version `1.4.3` + 
+
+### Feature:
+  * `sql_translate_env` add support for `lubridate` / `stringr` functions
+  * `write_bin` now doesn't chunk `writeBin` when `R` is greater than version `4.0.0`
+  * `sql_translate_env` add support to base `R` `grepl`.
 
 ### Unit test:
 * check if interrupt function successfully interrupts Athena when user manually triggers a keyboard interrupt
