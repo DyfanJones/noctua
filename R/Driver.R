@@ -99,7 +99,7 @@ setMethod(
 #' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
 #'   Custom Json parsers can be provide by using a function with data frame parameter.
 #'   To ignore data type conversion set to ["character"].
-#' @param timezone Sets the timezone for the connection. The default is `"UTC"`.
+#' @param timezone Sets the timezone for the connection. The default is `UTC`.
 #'   If `NULL` then no timezone is set, which defaults to the server's time zone.
 #'   `AWS Athena` accepted time zones: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html}.
 #' @param keyboard_interrupt Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}

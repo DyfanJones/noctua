@@ -214,8 +214,8 @@ of supported environment variables:</p><ul>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>drv</th>
-      <td><p>an object that inherits from <a href='https://dbi.r-dbi.org/reference/DBIDriver-class.html'>DBIDriver</a>,
-or an existing <a href='https://dbi.r-dbi.org/reference/DBIConnection-class.html'>DBIConnection</a>
+      <td><p>an object that inherits from DBIDriver,
+or an existing DBIConnection
 object (in order to clone an existing connection).</p></td>
     </tr>
     <tr>
@@ -301,7 +301,7 @@ To ignore data type conversion set to ["character"].</p></td>
     </tr>
     <tr>
       <th>timezone</th>
-      <td><p>Sets the timezone for the connection. The default is `"UTC"`.
+      <td><p>Sets the timezone for the connection. The default is `UTC`.
 If `NULL` then no timezone is set, which defaults to the server's time zone.
 `AWS Athena` accepted time zones: <a href='https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html'>https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html</a>.</p></td>
     </tr>
