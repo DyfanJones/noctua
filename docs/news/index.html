@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.1.999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.0</span>
       </span>
     </div>
 
@@ -149,9 +149,9 @@
       <small>Source: <a href='https://github.com/DyfanJones/noctua/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="noctua-201999" class="section level1">
-<h1 class="page-header" data-toc-text="2.0.1.999">
-<a href="#noctua-201999" class="anchor"></a>noctua 2.0.1.999<small> Unreleased </small>
+    <div id="noctua-210" class="section level1">
+<h1 class="page-header" data-toc-text="2.1.0">
+<a href="#noctua-210" class="anchor"></a>noctua 2.1.0<small> Unreleased </small>
 </h1>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
@@ -160,7 +160,7 @@
 <li>
 <code>dbIsValid</code> wrongly stated connection is valid for result class when connection class was disconnected.</li>
 <li>
-<code>sql_translate_env.paste</code> broke with latest version of <code>dbplyr</code>. New method is compatible with <code>dbplyr&gt;=1.4.3</code>.</li>
+<code>sql_translate_env.paste</code> broke with latest version of <code>dbplyr</code>. New method is compatible with <code>dbplyr&gt;=1.4.3</code> (<a href='https://github.com/DyfanJones/noctua/issues/149'>#149</a>).</li>
 </ul>
 </div>
 <div id="feature" class="section level2">
@@ -170,8 +170,7 @@
 <li>
 <code>sql_translate_env</code>: add support for <code>stringr</code>/<code>lubridate</code> style functions, similar to <a href="https://github.com/tidyverse/dbplyr/blob/master/R/backend-postgres.R">Postgres backend</a>.</li>
 <li>
-<code>write_bin</code> now doesn’t chunk writeBin if R version is greater than 4.0.0 <a href="https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97" class="uri">https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97</a>
-</li>
+<code>write_bin</code> now doesn’t chunk writeBin if R version is greater than 4.0.0 <a href="https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97" class="uri">https://github.com/HenrikBengtsson/Wishlist-for-R/issues/97</a> (<a href='https://github.com/DyfanJones/noctua/issues/149'>#149</a>)</li>
 <li>
 <code>dbConnect</code> add <code>timezone</code> parameter so that time zone between <code>R</code> and <code>AWS Athena</code> is consistent.</li>
 </ul>
