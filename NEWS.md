@@ -1,3 +1,7 @@
+# noctua 2.1.0.9999
+## Feature:
+* support `AWS Athena` `timestamp with time zone` data type
+
 # noctua 2.1.0
 ## Bug Fix:
 * `dbIsValid` wrongly stated connection is valid for result class when connection class was disconnected.
