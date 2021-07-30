@@ -62,15 +62,12 @@ athena_read.athena_vroom <- function(method, File, athena_types, con, ...){
   locale <- pkg_method("locale", "vroom")
   
   data_type <- format_athena_types(athena_types)
-  Type2 <- Type <- AthenaToRDataType(method, data_type)
-  
-  # Type2 is to handle issue with data.table fread 
-  Type2[data_type %in% "timestamp with time zone"] <- "c"
+  Type <- AthenaToRDataType(method, data_type)
   
   output <- vroom(
     File,
     delim = ",",
-    col_types = Type2,
+    col_types = Type,
     locale = locale(tz = con@info$timezone),
     progress = FALSE,
     trim_ws = FALSE,
@@ -79,7 +76,7 @@ athena_read.athena_vroom <- function(method, File, athena_types, con, ...){
   # timestamp with time zone returns an unusual timestamp format: 
   # "2021-07-30 14:07:08.008 UTC"
   # To overcome this return as character and convert afterwards
-  for (col in names(Type2[data_type %in% "timestamp with time zone"])){
+  for (col in names(Type[data_type %in% "timestamp with time zone"])){
     output[[col]] <- as.POSIXct(output[[col]], tz = con@info$timezone)
   } 
   # convert raw
@@ -151,24 +148,22 @@ athena_read_lines.athena_vroom <- function(method, File, athena_types, con, ...)
   locale <- pkg_method("locale", "vroom")
   
   data_type <- format_athena_types(athena_types)
-  Type2 <- Type <- AthenaToRDataType(method, data_type)
-  
-  # Type2 is to handle issue with data.table fread 
-  Type2[data_type %in% "timestamp with time zone"] <- "c"
-  
+  Type <- AthenaToRDataType(method, data_type)
+
   output <- vroom(
     File,
-    delim = ",",
-    col_types = Type2,
+    col_names = names(Type),
+    col_types = unname(Type),
     locale = locale(tz = con@info$timezone),
     progress = FALSE,
+    altrep = TRUE,
     trim_ws = FALSE,
-    altrep = TRUE
+    delim = "\n"
   )
   # timestamp with time zone returns an unusual timestamp format: 
   # "2021-07-30 14:07:08.008 UTC"
   # To overcome this return as character and convert afterwards
-  for (col in names(Type2[data_type %in% "timestamp with time zone"])){
+  for (col in names(Type[data_type %in% "timestamp with time zone"])){
     output[[col]] <- as.POSIXct(output[[col]], tz = con@info$timezone)
   } 
   # convert raw
