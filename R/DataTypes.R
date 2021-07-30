@@ -1,20 +1,19 @@
-AthenaDataType <-
-  function(fields, ...) {
-    switch(
-      class(fields)[1],
-      logical =   "BOOLEAN",
-      integer =   "INT",
-      integer64 = "BIGINT",
-      numeric =   "DOUBLE",
-      double =    "DOUBLE",
-      factor =    "STRING",
-      character = "STRING",
-      list =      "STRING",
-      Date =      "DATE",
-      POSIXct =   "TIMESTAMP",
-      stop("Unknown class ", paste(class(fields), collapse = "/"), call. = FALSE)
-    )
-  }
+AthenaDataType <- function(fields, ...) {
+  switch(
+    class(fields)[1],
+    logical =   "BOOLEAN",
+    integer =   "INT",
+    integer64 = "BIGINT",
+    numeric =   "DOUBLE",
+    double =    "DOUBLE",
+    factor =    "STRING",
+    character = "STRING",
+    list =      "STRING",
+    Date =      "DATE",
+    POSIXct =   "TIMESTAMP",
+    stop("Unknown class ", paste(class(fields), collapse = "/"), call. = FALSE)
+  )
+}
 
 # ==========================================================================
 # convert Athena types to R classes
