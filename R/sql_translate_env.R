@@ -59,7 +59,7 @@ sql_translate_env.AthenaConnection <- function(con) {
       as.integer = sql_cast("INTEGER"), # https://docs.aws.amazon.com/athena/latest/ug/data-types.html#type-integer
       as.integer64 = sql_cast("BIGINT"), # as.integer64 reflects bigint for AWS Athena
       as.Date = sql_cast("DATE"),
-      as.POSIXct = function(x, tz){
+      as.POSIXct = function(x, tz=NULL){
         if(is.null(tz))
           build_sql("timestamp ", x)
         else
@@ -269,7 +269,6 @@ check_probs <- function(probs) {
     stop("SQL translation only supports single value for `probs`.", call. = FALSE)
   }
 }
-
 
 # helper function to support R function paste in sql_translation_env
 athena_paste <- function(..., sep = " ", con) {
