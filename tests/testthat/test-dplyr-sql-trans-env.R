@@ -17,9 +17,9 @@ dt = data.table::data.table(Logicial = TRUE,
                             Posixct = as.POSIXct(Sys.Date()))
 data_type1 = c("BOOLEAN", "INT", "BIGINT", "DOUBLE", "DOUBLE", 
               "STRING", "STRING", "STRING", "DATE", "TIMESTAMP")
-names(data_type1) = c("Logicial", "Integer", "Integer64", "Numeric", "Double", "Factor", "Character", "List", "Date", "Posixct")
+names(data_type1) = c("Logicial", "Integer", "Integer64", "Numeric",
+                      "Double", "Factor", "Character", "List", "Date", "Posixct")
 method <- "file_method"
-type_names <- sapply(1:20, function(x) paste0("var_", x))
 data_types <- c("boolean", "int",
                 "integer", "tinyint",
                 "smallint", "bigint",
@@ -29,7 +29,9 @@ data_types <- c("boolean", "int",
                 "date", "timestamp",
                 "array", "row",
                 "map", "json",
-                "ipaddress", "varbinary")
+                "ipaddress", "varbinary",
+                "timestamp with time zone")
+type_names <- paste0("var_", seq_along(data_types))
 names(data_types) <- type_names
 data_type2 = c("logical", "integer",
                "integer", "integer",
@@ -40,8 +42,11 @@ data_type2 = c("logical", "integer",
                "Date", "POSIXct",
                "character", "character",
                "character", "character",
-               "character", "character")
-data_type3 = c("l", "i", "i", "i", "i", "I", "d", "d", "d", "c", "c", "c", "D", "T", "c", "c", "c", "c", "c", "c")
+               "character", "character",
+               "POSIXct")
+data_type3 = c("l", "i", "i", "i", "i", "I", "d",
+               "d", "d", "c", "c", "c", "D", "T",
+               "c", "c", "c", "c", "c", "c", "c")
 names(data_type2) = type_names
 names(data_type3) = type_names
 
@@ -139,6 +144,13 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t73 <- translate_sql(Sys.Date(), con = con)
   t74 <- translate_sql(Sys.time(), con = con)
   t75 <- translate_sql(Sys.time('America/Los_Angeles'), con = con)
+  t76 <- translate_sql(as.POSIXct("2020-01-01"), con=con)
+  t77 <- translate_sql(as.POSIXct("2020-01-01", "UTC"), con=con)
+  
+  t78 <- translate_sql(median("column"), con = con)
+  t79 <- translate_sql(quantile("column",0.25), con = con)
+  expect_error(translate_sql(quantile("column", c(0.25, 0.5)), con = con))
+  expect_error(translate_sql(quantile("column","0.25"), con = con))
   
   expect_equal(t1 ,sql("CAST(1.0 AS VARCHAR)"))
   expect_equal(t2 ,sql("CAST('1' AS DOUBLE)"))
@@ -221,4 +233,17 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t73, sql("current_date"))
   expect_equal(t74, sql("now()"))
   expect_equal(t75, sql("now() at time zone 'America/Los_Angeles'"))
+  expect_equal(t76, sql("timestamp date '2020-01-01'"))
+  expect_equal(t77, sql("timestamp date '2020-01-01' at time zone 'UTC'"))
+  
+  expect_equal(t78, sql("APPROX_PERCENTILE('column', 0.5)"))
+  expect_equal(t79, sql("APPROX_PERCENTILE('column', 0.25)"))
+})
+
+test_that("Raise error for unknown data types", {
+  obj <- "dummy"
+  class(obj) <- "dummy"
+  
+  expect_error(dbDataType(con, obj))
+  expect_error(AthenaDataType(obj))
 })
