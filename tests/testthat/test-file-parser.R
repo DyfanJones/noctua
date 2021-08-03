@@ -228,3 +228,8 @@ test_that("Check accepted json options",{
   expect_invisible(noctua::noctua_options(json=jsonlite::fromJSON))
   expect_error(noctua::noctua_options(json=1))
 })
+
+test_that("Raise error for unexpected json parser.", {
+  noctua_options(json = "character")
+  expect_error(json_parser(iris, "raise_error"))
+})
