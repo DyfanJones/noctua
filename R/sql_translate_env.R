@@ -232,11 +232,8 @@ sql_translate_env.AthenaConnection <- function(con) {
       var = sql_aggregate("VAR_SAMP", "var"),
       all = sql_aggregate("BOOL_AND", "all"),
       any = sql_aggregate("BOOL_OR", "any"),
-      quantile = function(x, probs){
-        check_probs(probs)
-        build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
-      },
-      median = function(x){build_sql("APPROX_PERCENTILE(",x,", 0.5)")}
+      quantile = sql_quantile,
+      median = sql_median()
     ),
     
     # Align window functions to Postgres
@@ -249,17 +246,41 @@ sql_translate_env.AthenaConnection <- function(con) {
       var = win_aggregate("VAR_SAMP"),
       all = win_aggregate("BOOL_AND"),
       any = win_aggregate("BOOL_OR"),
-      quantile = function(x, probs){
-        check_probs(probs)
-        build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
-      },
-      median = function(x){build_sql("APPROX_PERCENTILE(",x,", 0.5)")}
+      quantile = sql_quantile,
+      median = sql_median()
     )
   )
 }
 
+sql_quantile <- function(x, probs){
+  build_sql <- pkg_method("build_sql", "dbplyr")
+  check_probs(probs)
+  build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
+}
+
+sql_median <- function(){
+  warned <- FALSE
+  function(x, na.rm = FALSE){
+    warned <<- check_na_rm(f, na.rm, warned)
+    sql_quantile(x, 0.5)
+  }
+}
+
+# mimic check_na_rm from dbplyr
+# https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-helpers.R#L213-L225
+check_na_rm <- function(f, na.rm, warned){
+  if(warned || identical(na.rm, TRUE))
+    return(warned)
+  warning(
+    "Missing values are always removed in SQL.\n", "Use `", 
+    "median(x, na.rm = TRUE)` to silence this warning\n",
+    "This warning is displayed only once per session.", 
+    call. = FALSE)
+  return(TRUE)
+}
+
 # re-create check_probs from dbplyr:
-# https://github.com/tidyverse/dbplyr/blob/47e53ce30402d41ae4b38c803de12e63d64a9b6c/R/translate-sql-quantile.R#L40-L48
+# https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-quantile.R#L40-L48
 check_probs <- function(probs) {
   if (!is.numeric(probs)) {
     stop("`probs` must be numeric", call. = FALSE)

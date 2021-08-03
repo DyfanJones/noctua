@@ -147,7 +147,8 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t76 <- translate_sql(as.POSIXct("2020-01-01"), con=con)
   t77 <- translate_sql(as.POSIXct("2020-01-01", "UTC"), con=con)
   
-  t78 <- translate_sql(median("column"), con = con)
+  expect_warning(translate_sql(median("column"), con = con))
+  t78 <- translate_sql(median("column", na.rm = TRUE), con = con)
   t79 <- translate_sql(quantile("column",0.25), con = con)
   expect_error(translate_sql(quantile("column", c(0.25, 0.5)), con = con))
   expect_error(translate_sql(quantile("column","0.25"), con = con))
