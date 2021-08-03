@@ -231,7 +231,12 @@ sql_translate_env.AthenaConnection <- function(con) {
       sd = sql_aggregate("STDDEV_SAMP", "sd"),
       var = sql_aggregate("VAR_SAMP", "var"),
       all = sql_aggregate("BOOL_AND", "all"),
-      any = sql_aggregate("BOOL_OR", "any")
+      any = sql_aggregate("BOOL_OR", "any"),
+      quantile = function(x, probs){
+        check_probs(probs)
+        build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
+      },
+      median = function(x){build_sql("APPROX_PERCENTILE(",x,", 0.5)")}
     ),
     
     # Align window functions to Postgres
@@ -243,10 +248,28 @@ sql_translate_env.AthenaConnection <- function(con) {
       sd =  win_aggregate("STDDEV_SAMP"),
       var = win_aggregate("VAR_SAMP"),
       all = win_aggregate("BOOL_AND"),
-      any = win_aggregate("BOOL_OR")
+      any = win_aggregate("BOOL_OR"),
+      quantile = function(x, probs){
+        check_probs(probs)
+        build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
+      },
+      median = function(x){build_sql("APPROX_PERCENTILE(",x,", 0.5)")}
     )
   )
 }
+
+# re-create check_probs from dbplyr:
+# https://github.com/tidyverse/dbplyr/blob/47e53ce30402d41ae4b38c803de12e63d64a9b6c/R/translate-sql-quantile.R#L40-L48
+check_probs <- function(probs) {
+  if (!is.numeric(probs)) {
+    stop("`probs` must be numeric", call. = FALSE)
+  }
+  
+  if (length(probs) > 1) {
+    stop("SQL translation only supports single value for `probs`.", call. = FALSE)
+  }
+}
+
 
 # helper function to support R function paste in sql_translation_env
 athena_paste <- function(..., sep = " ", con) {
