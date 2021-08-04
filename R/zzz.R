@@ -34,4 +34,7 @@ register_s3_method <- function(pkg, generic, class, fun = NULL) {
   )
 }
 
-readr_check <- function() if (!requireNamespace("readr", quietly = TRUE)) packageStartupMessage("Info: For extra speed please install `readr`.")
+readr_check <- function() {
+  if (!requireNamespace("readr", quietly = TRUE))
+    packageStartupMessage("Info: For extra speed please install `readr`.")
+}

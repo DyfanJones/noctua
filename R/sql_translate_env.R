@@ -59,7 +59,7 @@ sql_translate_env.AthenaConnection <- function(con) {
       as.integer = sql_cast("INTEGER"), # https://docs.aws.amazon.com/athena/latest/ug/data-types.html#type-integer
       as.integer64 = sql_cast("BIGINT"), # as.integer64 reflects bigint for AWS Athena
       as.Date = sql_cast("DATE"),
-      as.POSIXct = function(x, tz){
+      as.POSIXct = function(x, tz=NULL){
         if(is.null(tz))
           build_sql("timestamp ", x)
         else
@@ -231,7 +231,9 @@ sql_translate_env.AthenaConnection <- function(con) {
       sd = sql_aggregate("STDDEV_SAMP", "sd"),
       var = sql_aggregate("VAR_SAMP", "var"),
       all = sql_aggregate("BOOL_AND", "all"),
-      any = sql_aggregate("BOOL_OR", "any")
+      any = sql_aggregate("BOOL_OR", "any"),
+      quantile = sql_quantile,
+      median = sql_median()
     ),
     
     # Align window functions to Postgres
@@ -243,9 +245,50 @@ sql_translate_env.AthenaConnection <- function(con) {
       sd =  win_aggregate("STDDEV_SAMP"),
       var = win_aggregate("VAR_SAMP"),
       all = win_aggregate("BOOL_AND"),
-      any = win_aggregate("BOOL_OR")
+      any = win_aggregate("BOOL_OR"),
+      quantile = sql_quantile,
+      median = sql_median()
     )
   )
+}
+
+sql_quantile <- function(x, probs){
+  build_sql <- pkg_method("build_sql", "dbplyr")
+  check_probs(probs)
+  build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
+}
+
+sql_median <- function(){
+  warned <- FALSE
+  function(x, na.rm = FALSE){
+    warned <<- check_na_rm(f, na.rm, warned)
+    sql_quantile(x, 0.5)
+  }
+}
+
+# mimic check_na_rm from dbplyr
+# https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-helpers.R#L213-L225
+check_na_rm <- function(f, na.rm, warned){
+  if(warned || identical(na.rm, TRUE))
+    return(warned)
+  warning(
+    "Missing values are always removed in SQL.\n", "Use `", 
+    "median(x, na.rm = TRUE)` to silence this warning\n",
+    "This warning is displayed only once per session.", 
+    call. = FALSE)
+  return(TRUE)
+}
+
+# re-create check_probs from dbplyr:
+# https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-quantile.R#L40-L48
+check_probs <- function(probs) {
+  if (!is.numeric(probs)) {
+    stop("`probs` must be numeric", call. = FALSE)
+  }
+  
+  if (length(probs) > 1) {
+    stop("SQL translation only supports single value for `probs`.", call. = FALSE)
+  }
 }
 
 # helper function to support R function paste in sql_translation_env
