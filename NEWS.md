@@ -1,4 +1,4 @@
-# noctua 2.1.0.9999
+# noctua 2.1.1
 ## Bug Fix:
 * `sql_translate_env` correctly translates R functions `quantile` and `median` to `AWS Athena` equivalents (#153). Thanks to @ellmanj for spotting issue.
 
