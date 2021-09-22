@@ -79,3 +79,27 @@ json_parser <- function(output, columns){
     })
   }
 }
+
+# convert data frame variable to newline delimited JSON format
+# method: jsonify
+col_to_ndjson <- function(dt, col, batch = 1e4){
+  to_ndjson <- pkg_method("to_ndjson", "jsonify")
+  splits <- split_vec(dt[[col]], batch)
+  output <- lapply(splits, function(i) {
+      strsplit(to_ndjson(i,unbox = T, numeric_dates = F), split = "\n")[[1]]
+  })[[1]]
+  return(output)
+}
+
+# method: jsonlite
+# col_to_ndjson <- function(dt, col, batch = 1e4){
+#   stream_out <- pkg_method("stream_out", "jsonlite")
+#   con_raw <- rawConnection(raw(), open = "w")
+#   stream_out(subset(dt, select = col), con_raw, verbose = F, auto_unbox = T, pagesize = batch)
+#   con_out <- rawConnection(rawConnectionValue(con_raw))
+#   on.exit({
+#     close(con_raw)
+#     close(con_out)
+#   })
+#   return(readLines(con_out))
+# }

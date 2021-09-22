@@ -28,6 +28,7 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
+    jsonify,
     jsonlite
 VignetteBuilder: 
     knitr
