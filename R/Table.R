@@ -339,7 +339,7 @@ setMethod("sqlData", "AthenaConnection",
   
   # preprocessing list format
   list_cols <- names(Value)[sapply(col_types, function(x) "list" %in% x)]
-  for (col in list_cols) set(Value, j=col, value=sapply(Value[[col]], paste, collapse = "|"))
+  for (col in list_cols) set(Value, j=col, value=col_to_ndjson(Value, col))
   
   # handle special characters in character and factor column types
   special_char <- names(Value)[col_types %in% c("character", "factor")]

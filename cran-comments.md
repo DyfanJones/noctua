@@ -1,14 +1,12 @@
 ## Submission
-This release brings in new features, and some bug fixes.
+This release contains a few new features and bug fixes.
 
 ### Bug Fix:
-* `sql_translate_env` `paste` method broke due to latest `dbplyr` release. `sql_translate_env` `paste` method now works intended from version `1.4.3` + 
+  * `sql_translate_env` correctly translates R functions `quantile` and `median` to `AWS Athena`
 
 ### Feature:
-  * `sql_translate_env` add support for `lubridate` / `stringr` functions
-  * `write_bin` now doesn't chunk `writeBin` when `R` is greater than version `4.0.0`
-  * `sql_translate_env` add support to base `R` `grepl`.
-  * `dbConnect` add `timezone` parameter so that time zone between `R` and `AWS Athena` is consistent.
+  * Support `AWS Athena` `timestamp with time zone` data type.
+  * Properly support data type `list` when converting data to `AWS Athena` `SQL` format.
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run

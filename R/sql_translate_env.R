@@ -261,14 +261,14 @@ sql_quantile <- function(x, probs){
 sql_median <- function(){
   warned <- FALSE
   function(x, na.rm = FALSE){
-    warned <<- check_na_rm(f, na.rm, warned)
+    warned <<- check_na_rm(na.rm, warned)
     sql_quantile(x, 0.5)
   }
 }
 
 # mimic check_na_rm from dbplyr
 # https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-helpers.R#L213-L225
-check_na_rm <- function(f, na.rm, warned){
+check_na_rm <- function(na.rm, warned){
   if(warned || identical(na.rm, TRUE))
     return(warned)
   warning(
