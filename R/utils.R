@@ -353,7 +353,7 @@ ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NUL
 # check if jsonlite is present or not
 jsonlite_check <- function(method){
   if(method == "auto") {
-    if (!requireNamespace("jsonlite", quietly = TRUE)) {
+    if (!nzchar(system.file(package ="jsonlite"))) {
       message('Info: `jsonlite` has not been detected, AWS Athena `json` data types will be returned as `character`.')
       method <- "character"
       }

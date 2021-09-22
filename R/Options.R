@@ -40,7 +40,7 @@ big_int <- function(bigint){
 }
 
 bit64_check <- function(value){
-  if(!requireNamespace("bit64", quietly = TRUE))
+  if(!nzchar(system.file(package = "bit64")))
     stop('integer64 is supported by `bit64`. Please install `bit64` package and try again', call. = F)
   return(value)
 }
@@ -92,7 +92,7 @@ noctua_options <- function(file_parser = c("data.table", "vroom"),
   if(cache_size < 0 | cache_size > 100) stop("noctua currently only supports up to 100 queries being cached", call. = F)
   if(retry < 0) stop("Number of retries is required to be greater than 0.")
   
-  if (!requireNamespace(file_parser, quietly = TRUE)) 
+  if (!nzchar(system.file(package = file_parser))) 
     stop('Please install ', file_parser, ' package and try again', call. = F)
   
   switch(file_parser,
