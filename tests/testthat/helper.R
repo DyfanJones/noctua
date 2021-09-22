@@ -8,7 +8,7 @@ skip_if_no_env <- function(){
 
 # helper function to skip tests if we don't have the suggested package
 skip_if_package_not_avialable <- function(pkg) {
-  if (!requireNamespace(pkg, quietly = TRUE))
+  if (!nzchar(system.file(package = pkg)))
     skip(sprintf("`%s` not available for testing", pkg))
 }
 
