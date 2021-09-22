@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
       </span>
     </div>
 
@@ -153,53 +153,6 @@
 <h1 class="page-header" data-toc-text="2.2.0">
 <a href="#noctua-220" class="anchor"></a>noctua 2.2.0<small> Unreleased </small>
 </h1>
-<div id="feature-change" class="section level2">
-<h2 class="hasAnchor">
-<a href="#feature-change" class="anchor"></a>Feature Change:</h2>
-<ul>
-<li>Properly support data type list when converting data to sql format.</li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">5</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">=</span> <span class="fu">data.table</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">var1 =</span> <span class="fu">sample</span>(LETTERS, <span class="at">size =</span> x, T),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">var2 =</span> <span class="fu">rep</span>(<span class="fu">list</span>(<span class="fu">list</span>(<span class="st">"var3"</span><span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">"var4"</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="st">"var5"</span><span class="ot">=</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]))), x)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(noctua<span class="sc">::</span><span class="fu">athena</span>())</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Version: 2.2.0</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">sqlData</span>(con, dt)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Registered S3 method overwritten by 'jsonify':</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   method     from    </span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   print.json jsonlite</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Info: Special characters "\t" has been converted to " " to help with Athena reading file format tsv</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#    var1                                                   var2</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 1:    1 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 2:    2 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 3:    3 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 4:    4 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 5:    5 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Version: 2.1.0</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">sqlData</span>(con, dt)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Info: Special characters "\t" has been converted to " " to help with Athena reading file format tsv</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>   var1                                        var2</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span>    <span class="dv">1</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span><span class="sc">|</span><span class="fu">list</span>(<span class="at">var5 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>))</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">:</span>    <span class="dv">2</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span><span class="sc">|</span><span class="fu">list</span>(<span class="at">var5 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>))</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="sc">:</span>    <span class="dv">3</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span><span class="sc">|</span><span class="fu">list</span>(<span class="at">var5 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>))</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span><span class="sc">:</span>    <span class="dv">4</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span><span class="sc">|</span><span class="fu">list</span>(<span class="at">var5 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>))</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="sc">:</span>    <span class="dv">5</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span><span class="sc">|</span><span class="fu">list</span>(<span class="at">var5 =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>))</span></code></pre></div>
-<p>v-2.2.0 now converts lists into json lines format so that AWS Athena can parse with <code>sql</code> <code>array</code>/<code>mapping</code>/<code>json</code> functions. Small down side a s3 method conflict occurs when jsonify is called to convert lists into json lines. <code>jsonify</code> was choose in favor to <code>jsonlite</code> due to the performance improvements (<a href='https://github.com/DyfanJones/noctua/issues/156'>#156</a>).</p>
-</div>
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix" class="anchor"></a>Bug Fix:</h2>
@@ -212,8 +165,50 @@
 <h2 class="hasAnchor">
 <a href="#feature" class="anchor"></a>Feature:</h2>
 <ul>
-<li>support <code>AWS Athena</code> <code>timestamp with time zone</code> data type</li>
+<li>Support <code>AWS Athena</code> <code>timestamp with time zone</code> data type.</li>
+<li>Properly support data type <code>list</code> when converting data to <code>AWS Athena</code> <code>SQL</code> format.</li>
 </ul>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
+
+<span class="va">x</span> <span class="op">=</span> <span class="fl">5</span>
+
+<span class="va">dt</span> <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span>
+  var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">LETTERS</span>, size <span class="op">=</span> <span class="va">x</span>, <span class="cn">T</span><span class="op">)</span>,
+  var2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"var3"</span><span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="st">"var4"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"var5"</span><span class="op">=</span> <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="va">x</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co">#&gt; Version: 2.2.0</span>
+
+<span class="fu"><a href="../reference/sqlData.html">sqlData</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">dt</span><span class="op">)</span>
+
+<span class="co"># Registered S3 method overwritten by 'jsonify':</span>
+<span class="co">#   method     from    </span>
+<span class="co">#   print.json jsonlite</span>
+<span class="co"># Info: Special characters "\t" has been converted to " " to help with Athena reading file format tsv</span>
+<span class="co">#    var1                                                   var2</span>
+<span class="co"># 1:    1 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span>
+<span class="co"># 2:    2 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span>
+<span class="co"># 3:    3 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span>
+<span class="co"># 4:    4 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span>
+<span class="co"># 5:    5 {"var3":[1,2,3],"var4":{"var5":["a","b","c","d","e"]}}</span>
+
+<span class="co">#&gt; Version: 2.1.0</span>
+
+<span class="fu"><a href="../reference/sqlData.html">sqlData</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">dt</span><span class="op">)</span>
+
+<span class="co"># Info: Special characters "\t" has been converted to " " to help with Athena reading file format tsv</span>
+<span class="co">#    var1                                        var2</span>
+<span class="co"># 1:    1 1:3|list(var5 = c("a", "b", "c", "d", "e"))</span>
+<span class="co"># 2:    2 1:3|list(var5 = c("a", "b", "c", "d", "e"))</span>
+<span class="co"># 3:    3 1:3|list(var5 = c("a", "b", "c", "d", "e"))</span>
+<span class="co"># 4:    4 1:3|list(var5 = c("a", "b", "c", "d", "e"))</span>
+<span class="co"># 5:    5 1:3|list(var5 = c("a", "b", "c", "d", "e"))</span></code></pre></div>
+<p>v-2.2.0 now converts lists into json lines format so that AWS Athena can parse with <code>sql</code> <code>array</code>/<code>mapping</code>/<code>json</code> functions. Small down side a s3 method conflict occurs when jsonify is called to convert lists into json lines. <code>jsonify</code> was choose in favor to <code>jsonlite</code> due to the performance improvements (<a href='https://github.com/DyfanJones/noctua/issues/156'>#156</a>).</p>
 </div>
 </div>
     <div id="noctua-210" class="section level1">

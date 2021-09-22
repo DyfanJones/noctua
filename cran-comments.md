@@ -1,11 +1,12 @@
 ## Submission
-This release some bug fixes.
+This release contains a few new features and bug fixes.
 
 ### Bug Fix:
   * `sql_translate_env` correctly translates R functions `quantile` and `median` to `AWS Athena`
 
 ### Feature:
-  * support `AWS Athena` `timestamp with time zone` data type
+  * Support `AWS Athena` `timestamp with time zone` data type.
+  * Properly support data type `list` when converting data to `AWS Athena` `SQL` format.
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run

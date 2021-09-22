@@ -1,6 +1,10 @@
 # noctua 2.2.0
-## Feature Change:
-* Properly support data type list when converting data to sql format.
+## Bug Fix:
+* `sql_translate_env` correctly translates R functions `quantile` and `median` to `AWS Athena` equivalents (#153). Thanks to @ellmanj for spotting issue.
+
+## Feature:
+* Support `AWS Athena` `timestamp with time zone` data type.
+* Properly support data type `list` when converting data to `AWS Athena` `SQL` format.
 
 ```r
 library(data.table)
@@ -44,12 +48,6 @@ sqlData(con, dt)
 ```
 
 v-2.2.0 now converts lists into json lines format so that AWS Athena can parse with `sql` `array`/`mapping`/`json` functions. Small down side a s3 method conflict occurs when jsonify is called to convert lists into json lines. `jsonify` was choose in favor to `jsonlite` due to the performance improvements (#156).
-
-## Bug Fix:
-* `sql_translate_env` correctly translates R functions `quantile` and `median` to `AWS Athena` equivalents (#153). Thanks to @ellmanj for spotting issue.
-
-## Feature:
-* support `AWS Athena` `timestamp with time zone` data type
 
 # noctua 2.1.0
 ## Bug Fix:
