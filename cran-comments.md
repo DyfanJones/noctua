@@ -25,4 +25,4 @@ This release contains a few new features and bug fixes.
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
 
 ## unit tests (using testthat) results
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 276 ]
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 289 ]
