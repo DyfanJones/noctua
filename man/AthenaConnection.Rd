@@ -24,8 +24,6 @@ for AthenaConnection objects.
 
 \item{\code{info}}{a list of metadata objects}
 
-\item{\code{connection}}{contains the \code{AthenaConnection} class object}
-
 \item{\code{quote}}{syntax to quote sql query when creating Athena ddl}
 }}
 
