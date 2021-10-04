@@ -222,20 +222,11 @@ setMethod(
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
-    s3_staging_dir <- conn@info$s3_staging
-    s3_file = NULL
-    if(unload){
-      s3_file = uuid::UUIDgenerate()
-      statement <- sprintf(
-        "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
-        statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
-      )
-    }
     res <- AthenaResult(
       conn=conn,
       statement=statement,
-      s3_staging_dir=s3_staging_dir)
-    res@info[["unload_dir"]] = s3_file
+      s3_staging_dir=conn@info$s3_staging,
+      unload=unload)
     return(res)
 })
 
@@ -249,20 +240,11 @@ setMethod(
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
-    s3_staging_dir <- conn@info$s3_staging
-    s3_file = NULL
-    if(unload){
-      s3_file = uuid::UUIDgenerate()
-      statement <- sprintf(
-        "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
-        statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
-      )
-    }
     res <- AthenaResult(
       conn=conn,
       statement=statement,
-      s3_staging_dir=s3_staging_dir)
-    res@info[["unload_dir"]] = s3_file
+      s3_staging_dir=conn@info$s3_staging,
+      unload=unload)
     return(res)
 })
 
@@ -276,19 +258,10 @@ setMethod(
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
-    s3_staging_dir <- conn@info$s3_staging
-    s3_file = NULL
-    if(unload){
-      s3_file = uuid::UUIDgenerate()
-      statement <- sprintf(
-        "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
-        statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
-      )
-    }
     res <- AthenaResult(
       conn=conn,
       statement=statement,
-      s3_staging_dir=s3_staging_dir)
+      s3_staging_dir=conn@info$s3_staging)
     poll(res)
     
     # if query failed stop
@@ -298,8 +271,7 @@ setMethod(
     # cache query metadata if caching is enabled
     if (athena_option_env$cache_size > 0)
       cache_query(res)
-    
-    res@info[["unload_dir"]] = s3_file
+
     return(res)
 })
 
@@ -724,8 +696,8 @@ setMethod(
     stopifnot(is.logical(statistics), is.logical(unload))
     rs <- dbSendQuery(conn, statement = statement, unload = unload)
     if(statistics) print(dbStatistics(rs))
-    out <- dbFetch(res = rs, n = -1, unload = unload, ...)
-    dbClearResult(rs, unload = unload)
+    out <- dbFetch(res = rs, n = -1, ...)
+    dbClearResult(rs)
     return(out)
 })
 
