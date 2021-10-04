@@ -186,6 +186,8 @@ setMethod(
 #'              The \code{dbExecute()} method submits a query to Athena and waits for the query to be executed.
 #' @name Query
 #' @inheritParams DBI::dbSendQuery
+#' @param unload boolean input to modify `statement` to align with \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD},
+#'              default is set to \code{FALSE}.
 #' @return Returns \code{AthenaResult} s4 class.
 #' @seealso \code{\link[DBI]{dbSendQuery}}, \code{\link[DBI]{dbSendStatement}}, \code{\link[DBI]{dbExecute}}
 #' @examples
@@ -215,11 +217,25 @@ NULL
 setMethod(
   "dbSendQuery", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL, ...){
+           statement = NULL,
+           unload = FALSE,
+           ...){
     con_error_msg(conn, msg = "Connection already closed.")
+    stopifnot(is.logical(unload))
     s3_staging_dir <- conn@info$s3_staging
+    s3_file = NULL
+    if(unload){
+      s3_file = uuid::UUIDgenerate()
+      statement <- sprintf(
+        "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
+        statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
+      )
+    }
     res <- AthenaResult(
-      conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
+      conn=conn,
+      statement=statement,
+      s3_staging_dir=s3_staging_dir)
+    res@info[["unload_dir"]] = s3_file
     return(res)
 })
 
@@ -228,11 +244,25 @@ setMethod(
 setMethod(
   "dbSendStatement", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL, ...){
+           statement = NULL,
+           unload = FALSE,
+           ...){
     con_error_msg(conn, msg = "Connection already closed.")
+    stopifnot(is.logical(unload))
     s3_staging_dir <- conn@info$s3_staging
+    s3_file = NULL
+    if(unload){
+      s3_file = uuid::UUIDgenerate()
+      statement <- sprintf(
+        "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
+        statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
+      )
+    }
     res <- AthenaResult(
-      conn =conn, statement= statement, s3_staging_dir = s3_staging_dir)
+      conn=conn,
+      statement=statement,
+      s3_staging_dir=s3_staging_dir)
+    res@info[["unload_dir"]] = s3_file
     return(res)
 })
 
@@ -241,11 +271,24 @@ setMethod(
 setMethod(
   "dbExecute", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL, ...){
+           statement = NULL,
+           unload = FALSE,
+           ...){
     con_error_msg(conn, msg = "Connection already closed.")
+    stopifnot(is.logical(unload))
     s3_staging_dir <- conn@info$s3_staging
+    s3_file = NULL
+    if(unload){
+      s3_file = uuid::UUIDgenerate()
+      statement <- sprintf(
+        "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
+        statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
+      )
+    }
     res <- AthenaResult(
-      conn=conn, statement= statement, s3_staging_dir = s3_staging_dir)
+      conn=conn,
+      statement=statement,
+      s3_staging_dir=s3_staging_dir)
     poll(res)
     
     # if query failed stop
@@ -256,6 +299,7 @@ setMethod(
     if (athena_option_env$cache_size > 0)
       cache_query(res)
     
+    res@info[["unload_dir"]] = s3_file
     return(res)
 })
 
@@ -643,6 +687,8 @@ setMethod(
 #' @name dbGetQuery
 #' @inheritParams DBI::dbGetQuery
 #' @param statistics If set to \code{TRUE} will print out AWS Athena statistics of query.
+#' @param unload boolean input to modify `statement` to align with \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD},
+#'              default is set to \code{FALSE}.
 #' @return \code{dbGetQuery()} returns a dataframe.
 #' @seealso \code{\link[DBI]{dbGetQuery}}
 #' @examples
@@ -671,13 +717,15 @@ setMethod(
   "dbGetQuery", c("AthenaConnection", "character"),
   function(conn,
            statement = NULL, 
-           statistics = FALSE, ...){
+           statistics = FALSE,
+           unload = FALSE,
+           ...){
     con_error_msg(conn, msg = "Connection already closed.")
-    stopifnot(is.logical(statistics))
-    rs <- dbSendQuery(conn, statement = statement)
+    stopifnot(is.logical(statistics), is.logical(unload))
+    rs <- dbSendQuery(conn, statement = statement, unload = unload)
     if(statistics) print(dbStatistics(rs))
-    out <- dbFetch(res = rs, n = -1, ...)
-    dbClearResult(rs)
+    out <- dbFetch(res = rs, n = -1, unload = unload, ...)
+    dbClearResult(rs, unload = unload)
     return(out)
 })
 

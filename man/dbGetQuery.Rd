@@ -6,7 +6,7 @@
 \alias{dbGetQuery,AthenaConnection,character-method}
 \title{Send query, retrieve results and then clear result set}
 \usage{
-\S4method{dbGetQuery}{AthenaConnection,character}(conn, statement = NULL, statistics = FALSE, ...)
+\S4method{dbGetQuery}{AthenaConnection,character}(conn, statement = NULL, statistics = FALSE, unload = FALSE, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
@@ -15,6 +15,9 @@
 \item{statement}{a character string containing SQL.}
 
 \item{statistics}{If set to \code{TRUE} will print out AWS Athena statistics of query.}
+
+\item{unload}{boolean input to modify `statement` to align with \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD},
+default is set to \code{FALSE}.}
 
 \item{...}{Other parameters passed on to methods.}
 }

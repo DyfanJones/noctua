@@ -8,17 +8,20 @@
 \alias{dbExecute,AthenaConnection,character-method}
 \title{Execute a query on Athena}
 \usage{
-\S4method{dbSendQuery}{AthenaConnection,character}(conn, statement = NULL, ...)
+\S4method{dbSendQuery}{AthenaConnection,character}(conn, statement = NULL, unload = FALSE, ...)
 
-\S4method{dbSendStatement}{AthenaConnection,character}(conn, statement = NULL, ...)
+\S4method{dbSendStatement}{AthenaConnection,character}(conn, statement = NULL, unload = FALSE, ...)
 
-\S4method{dbExecute}{AthenaConnection,character}(conn, statement = NULL, ...)
+\S4method{dbExecute}{AthenaConnection,character}(conn, statement = NULL, unload = FALSE, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
 \code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{statement}{a character string containing SQL.}
+
+\item{unload}{boolean input to modify `statement` to align with \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD},
+default is set to \code{FALSE}.}
 
 \item{...}{Other parameters passed on to methods.}
 }
