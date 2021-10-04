@@ -5,14 +5,30 @@ NULL
 
 AthenaResult <- function(conn,
                          statement = NULL,
-                         s3_staging_dir = NULL){
+                         s3_staging_dir = NULL,
+                         unload=FALSE){
   
   stopifnot(is.character(statement))
   
   response <- new.env(parent = emptyenv())
   response[["Query"]] <- statement
-  if (athena_option_env$cache_size > 0)
-    response[["QueryExecutionId"]] <- check_cache(statement, conn@info$work_group)
+  
+  s3_file = NULL
+  
+  if (athena_option_env$cache_size > 0){
+    ll = check_cache(statement, conn@info$work_group)
+    response[["QueryExecutionId"]] <- ll[[1]]
+    s3_file <- ll[[2]]
+  }
+  # modify sql statement if user requests AWS Athena unload
+  if(unload){
+    s3_file = s3_file %||% uuid::UUIDgenerate()
+    statement <- sprintf(
+      "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
+      statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
+    )
+  }
+  
   if (is.null(response[["QueryExecutionId"]])) {
     retry_api_call(
       response[["QueryExecutionId"]] <- conn@ptr$Athena$start_query_execution(
@@ -22,6 +38,8 @@ AthenaResult <- function(conn,
         ResultConfiguration = ResultConfiguration(conn),
         WorkGroup = conn@info$work_group)$QueryExecutionId)}
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
+  
+  response[["unload_dir"]] = s3_file
   new("AthenaResult", connection = conn, info = response)
 }
 
@@ -45,8 +63,6 @@ setClass(
 #'       It is better use query caching \code{\link{noctua_options}} so that the warning doesn't repeatedly show.
 #' @name dbClearResult
 #' @inheritParams DBI::dbClearResult
-#' @param unload boolean to remove extra AWS S3 file objects \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD}
-#'          creates, default is set to \code{FALSE}.
 #' @return \code{dbClearResult()} returns \code{TRUE}, invisibly.
 #' @seealso \code{\link[DBI]{dbIsValid}}
 #' @examples
@@ -73,8 +89,7 @@ NULL
 #' @export
 setMethod(
   "dbClearResult", "AthenaResult",
-  function(res, unload = FALSE, ...){
-    stopifnot(is.logical(unload))
+  function(res, ...){
     if (!dbIsValid(res)) {
       warning("Result already cleared", call. = FALSE)
     } else {
@@ -111,7 +126,7 @@ setMethod(
           error = function(e) NULL)
         
         # remove AWS Athena results      
-        if(!unload){
+        if(is.null(res@info[["unload_dir"]])){
           
           tryCatch(
             res@connection@ptr$S3$delete_object(
@@ -158,8 +173,6 @@ setMethod(
 #' @name dbFetch
 #' @param n maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
 #'          Some implementations may recognize other special values. If entire dataframe is required use \code{n = -1} or \code{n = Inf}.
-#' @param unload boolean uses `arrow::read_parquet` to return \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD}
-#'          queries back to `R`, default is set to \code{FALSE}.
 #' @inheritParams DBI::dbFetch
 #' @return \code{dbFetch()} returns a data frame.
 #' @seealso \code{\link[DBI]{dbFetch}}
@@ -188,9 +201,8 @@ NULL
 #' @export
 setMethod(
   "dbFetch", "AthenaResult",
-  function(res, n = -1, unload = FALSE, ...){
+  function(res, n = -1, ...){
     con_error_msg(res, msg = "Result already cleared.")
-    stopifnot(is.logical(unload))
     
     # check status of query, skip poll if status found
     if(is.null(res@info[["Status"]]))
@@ -217,7 +229,7 @@ setMethod(
     message("Info: (Data scanned: ", data_scanned(
       res@info[["Statistics"]][["DataScannedInBytes"]]),")")
     
-    if (unload){
+    if (!is.null(res@info[["unload_dir"]])){
       .fetch_unload(res)
     } else {
       .fetch_file(res, result_class)
