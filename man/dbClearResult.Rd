@@ -6,13 +6,10 @@
 \alias{dbClearResult,AthenaResult-method}
 \title{Clear Results}
 \usage{
-\S4method{dbClearResult}{AthenaResult}(res, unload = FALSE, ...)
+\S4method{dbClearResult}{AthenaResult}(res, ...)
 }
 \arguments{
 \item{res}{An object inheriting from \linkS4class{DBIResult}.}
-
-\item{unload}{boolean to remove extra AWS S3 file objects \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD}
-creates, default is set to \code{FALSE}.}
 
 \item{...}{Other arguments passed on to methods.}
 }

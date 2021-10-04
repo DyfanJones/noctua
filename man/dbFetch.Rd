@@ -6,7 +6,7 @@
 \alias{dbFetch,AthenaResult-method}
 \title{Fetch records from previously executed query}
 \usage{
-\S4method{dbFetch}{AthenaResult}(res, n = -1, unload = FALSE, ...)
+\S4method{dbFetch}{AthenaResult}(res, n = -1, ...)
 }
 \arguments{
 \item{res}{An object inheriting from \linkS4class{DBIResult}, created by
@@ -14,9 +14,6 @@
 
 \item{n}{maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
 Some implementations may recognize other special values. If entire dataframe is required use \code{n = -1} or \code{n = Inf}.}
-
-\item{unload}{boolean uses `arrow::read_parquet` to return \href{https://docs.aws.amazon.com/athena/latest/ug/unload.html}{AWS Athena UNLOAD}
-queries back to `R`, default is set to \code{FALSE}.}
 
 \item{...}{Other arguments passed on to methods.}
 }
