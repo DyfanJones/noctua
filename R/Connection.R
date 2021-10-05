@@ -261,7 +261,8 @@ setMethod(
     res <- AthenaResult(
       conn=conn,
       statement=statement,
-      s3_staging_dir=conn@info$s3_staging)
+      s3_staging_dir=conn@info$s3_staging,
+      unload=unload)
     poll(res)
     
     # if query failed stop
