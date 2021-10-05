@@ -1,0 +1,133 @@
+---
+title: "AWS Athena Unload"
+author: "Dyfan Jones"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to Retry?}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+> Writes query results from a `SELECT` statement to the specified data format. Supported formats for `UNLOAD` include `Apache Parquet`, `ORC`, `Apache Avro`, and `JSON`. `CSV` is the only output format used by the `Athena` `SELECT` query, but you can use `UNLOAD` to write the output of a `SELECT` query to the formats that `UNLOAD` supports.
+>
+> Although you can use the `CTAS` statement to output data in formats other than `CSV`, those statements also require the creation of a table in Athena. The `UNLOAD` statement is useful when you want to output the results of a `SELECT` query in a `non-CSV` format but do not require the associated table. For example, a downstream application might require the results of a `SELECT` query to be in `JSON` format, and `Parquet` or `ORC` might provide a performance advantage over `CSV` if you intend to use the results of the `SELECT` query for additional analysis.
+>
+> (https://docs.aws.amazon.com/athena/latest/ug/unload.html)
+
+`noctua v-2.2.0.9000+` can now leverage this functionality with the `unload` parameter within `dbGetQuery`, `dbSendQuery`, `dbExecute`. This functionality offers faster performance for mid to large result sizes. 
+
+## Pros and Cons
+### **`unload=FALSE`** (Default)
+
+Regular query on `AWS Athena` and then reads the table data as `CSV` directly from `AWS S3`.
+
+**PROS:**
+
+  * Faster for small result sizes (less latency).
+  * Supports timestamp with time zone.
+  * Supports query caching
+  * Can handle some level of nested types.
+  
+**CONS:**
+
+  * Slower (But stills fairly fast)
+
+### **`unload=TRUE`**
+
+Wraps the query with a `UNLOAD` and then reads the table data as `parquet` directly from `AWS S3`.
+
+**PROS:**
+
+  * Faster for mid and big result sizes.
+  * Can handle some level of nested types.
+  * Supports query caching
+  
+**CONS:**
+
+  * Does not support timestamp with time zone
+  * Does not support columns with repeated names.
+  * Does not support columns with undefined data types.
+  
+  
+## Performance comparison:
+
+Set up `AWS Athena` table (example taken from [AWS Data Wrangler: Amazon Athena Tutorial](https://aws-data-wrangler.readthedocs.io/en/stable/tutorials/006%20-%20Amazon%20Athena.html)):
+
+```python
+# Python
+import awswrangler as wr
+
+import getpass
+bucket = getpass.getpass()
+path = f"s3://{bucket}/data/"
+
+if "awswrangler_test" not in wr.catalog.databases().values:
+    wr.catalog.create_database("awswrangler_test")
+
+cols = ["id", "dt", "element", "value", "m_flag", "q_flag", "s_flag", "obs_time"]
+
+df = wr.s3.read_csv(
+    path="s3://noaa-ghcn-pds/csv/189",
+    names=cols,
+    parse_dates=["dt", "obs_time"])  # Read 10 files from the 1890 decade (~1GB)
+
+wr.s3.to_parquet(
+    df=df,
+    path=path,
+    dataset=True,
+    mode="overwrite",
+    database="awswrangler_test",
+    table="noaa"
+);
+
+wr.catalog.table(database="awswrangler_test", table="noaa")
+```
+
+```r
+# R
+library(DBI)
+
+con <- dbConnect(noctua::athena())
+
+dbGetQuery(con, "select count(*) as n from awswrangler_test.noaa")
+# Info: (Data scanned: 0 Bytes)
+#           n
+# 1: 29554197
+
+# Query ran using CSV output
+system.time({
+  df = dbGetQuery(con, "SELECT * FROM awswrangler_test.noaa")
+})
+# Info: (Data scanned: 80.88 MB)
+#    user  system elapsed
+#  57.004   8.430 160.567 
+
+dim(df)
+# [1] 29554197        8
+
+noctua::noctua_options(cache_size = 1)
+
+# Query ran using UNLOAD Parquet output
+system.time({
+  df = dbGetQuery(con, "SELECT * FROM awswrangler_test.noaa", unload = T)
+})
+# Info: (Data scanned: 80.88 MB)
+#    user  system elapsed 
+#  21.622   2.350  39.232 
+
+dim(df)
+# [1] 29554197        8
+
+# Query ran using cached UNLOAD Parquet output
+system.time({
+  df = dbGetQuery(con, "SELECT * FROM awswrangler_test.noaa", unload = T)
+})
+# Info: (Data scanned: 80.88 MB)
+#    user  system elapsed 
+#  13.738   1.886  11.029 
+
+dim(df)
+# [1] 29554197        8
+```
+
+Benchmark ran on AWS Sagemaker `ml.t3.xlarge` instance.
