@@ -66,7 +66,7 @@ test_that("Returning meta data",{
   expect_true(inherits(res_out2, "logical"))
   expect_equal(
     names(res_info), 
-    c("WorkGroup", "StateChangeReason", "OutputLocation", "StatementType",
+    c("WorkGroup", "unload_dir", "StateChangeReason", "OutputLocation", "StatementType",
       "Query", "Status", "QueryExecutionId", "Statistics"))
   expect_true(is.list(res_stat))
   expect_error(con_error_msg(res1, "dummy message"), "dummy message")
