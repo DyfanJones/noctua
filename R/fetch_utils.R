@@ -94,11 +94,13 @@
   })
   
   # convert data.table to tibble if using vroom as backend
-  if(inherits(athena_option_env[["file_parser"]], "athena_vroom"))
-    combine <- function(x) do.call("rbind", x)
-  else 
+  if(inherits(athena_option_env[["file_parser"]], "athena_vroom")){
+    if (!requireNamespace("dplyr", quietly = TRUE)) {
+      stop('`dplyr` package is required, please install it first and try again', call. = F)}
+    combine <- function(x) dplyr::bind_rows(x)
+  } else {
     combine <- function(x) rbindlist(x)
-  
+  }
   return(combine(df_list))
 }
 
