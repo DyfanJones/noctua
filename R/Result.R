@@ -18,7 +18,7 @@ AthenaResult <- function(conn,
   if (athena_option_env$cache_size > 0){
     ll = check_cache(statement, conn@info$work_group)
     response[["QueryExecutionId"]] <- ll[[1]]
-    s3_file <- ll[[2]]
+    s3_file <- if(identical(ll[[2]], "")) NULL else ll[[2]]
   }
   # modify sql statement if user requests AWS Athena unload
   if(unload){
