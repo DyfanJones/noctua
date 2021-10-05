@@ -256,7 +256,7 @@ cache_query = function(res){
       "State"= res@info[["Status"]],
       "StatementType"= res@info[["StatementType"]],
       "WorkGroup" = res@info[["WorkGroup"]],
-      "UnloadDir" = res@info[["unload_dir"]] %||% character(1)
+      "UnloadDir" = res@info[["UnloadDir"]] %||% character(1)
     )
     new_query = fsetdiff(cache_append, athena_option_env[["cache_dt"]], all = TRUE)
     athena_option_env$cache_dt = head(

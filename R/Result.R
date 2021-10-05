@@ -39,7 +39,7 @@ AthenaResult <- function(conn,
         WorkGroup = conn@info$work_group)$QueryExecutionId)}
   on.exit(if(!is.null(conn@info$expiration)) time_check(conn@info$expiration))
   
-  response[["unload_dir"]] = s3_file
+  response[["UnloadDir"]] = s3_file
   new("AthenaResult", connection = conn, info = response)
 }
 
@@ -126,7 +126,7 @@ setMethod(
           error = function(e) NULL)
         
         # remove AWS Athena results      
-        if(is.null(res@info[["unload_dir"]])){
+        if(is.null(res@info[["UnloadDir"]])){
           
           tryCatch(
             res@connection@ptr$S3$delete_object(
@@ -137,7 +137,7 @@ setMethod(
         } else {
           # Check S3 Prefix for AWS Athena results
           result_info <- split_s3_uri(res@connection@info[["s3_staging"]])
-          result_info$key <- file.path(gsub("/$", "", result_info$key), res@info$unload_dir)
+          result_info$key <- file.path(gsub("/$", "", result_info$key), res@info$UnloadDir)
           all_keys <- list()
           token <- NULL
           # Get all s3 objects linked to table
@@ -229,7 +229,7 @@ setMethod(
     message("Info: (Data scanned: ", data_scanned(
       res@info[["Statistics"]][["DataScannedInBytes"]]),")")
     
-    if (!is.null(res@info[["unload_dir"]])){
+    if (!is.null(res@info[["UnloadDir"]])){
       .fetch_unload(res)
     } else {
       .fetch_file(res, result_class)

@@ -65,9 +65,9 @@ test_that("Returning meta data",{
   expect_true(res_out1)
   expect_true(inherits(res_out2, "logical"))
   expect_equal(
-    names(res_info), 
-    c("WorkGroup", "unload_dir", "StateChangeReason", "OutputLocation", "StatementType",
-      "Query", "Status", "QueryExecutionId", "Statistics"))
+    sort(names(res_info)), 
+    c("OutputLocation", "Query", "QueryExecutionId", "StateChangeReason", "StatementType",
+      "Statistics", "Status", "UnloadDir", "WorkGroup"))
   expect_true(is.list(res_stat))
   expect_error(con_error_msg(res1, "dummy message"), "dummy message")
   expect_equal(name1, list("dbms.name" = "default", "table" = "table1"))

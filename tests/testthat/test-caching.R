@@ -31,7 +31,7 @@ test_that("Testing if caching returns the same query id", {
   # expect query ids not to be the same
   exp1 = res1@info$QueryExecutionId == res2@info$QueryExecutionId
   exp2 = res3@info$QueryExecutionId == res4@info$QueryExecutionId
-  exp3 = res5@info$unload_dir == res6@info$unload_dir
+  exp3 = res5@info$UnloadDir == res6@info$UnloadDir
   exp4 = res5@info$QueryExecutionId == res6@info$QueryExecutionId
   expect_false(exp1)
   expect_true(exp2)
