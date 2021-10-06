@@ -47,6 +47,7 @@ Wraps the query with a `UNLOAD` and then reads the table data as `parquet` direc
   * Does not support timestamp with time zone
   * Does not support columns with repeated names.
   * Does not support columns with undefined data types.
+  * Does not support unnamed columns
   
   
 ## Performance comparison:
