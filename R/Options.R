@@ -5,7 +5,7 @@ athena_option_env$cache_size <- 0
 class(athena_option_env$file_parser) <- "athena_data.table"
 
 cache_dt = data.table("QueryId" = character(), "Query" = character(), "State"= character(),
-                      "StatementType"= character(),"WorkGroup" = character())
+                      "StatementType"= character(),"WorkGroup" = character(), "UnloadDir" = character())
 athena_option_env$cache_dt <-  cache_dt
 athena_option_env$retry <- 5
 athena_option_env$retry_quiet <- FALSE

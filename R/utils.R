@@ -250,11 +250,14 @@ base_write_raw <- function(obj,
 cache_query = function(res){
   # As Athena doesn't scanned data with Failed queries. Failed queries wont be cached: https://aws.amazon.com/athena/pricing/
   if(res@info$Status != "FAILED") {
-    cache_append = data.table("QueryId" = res@info[["QueryExecutionId"]],
-                              "Query" = res@info[["Query"]],
-                              "State"= res@info[["Status"]],
-                              "StatementType"= res@info[["StatementType"]],
-                              "WorkGroup" = res@info[["WorkGroup"]])
+    cache_append = data.table(
+      "QueryId" = res@info[["QueryExecutionId"]],
+      "Query" = res@info[["Query"]],
+      "State"= res@info[["Status"]],
+      "StatementType"= res@info[["StatementType"]],
+      "WorkGroup" = res@info[["WorkGroup"]],
+      "UnloadDir" = res@info[["UnloadDir"]] %||% character(1)
+    )
     new_query = fsetdiff(cache_append, athena_option_env[["cache_dt"]], all = TRUE)
     athena_option_env$cache_dt = head(
       rbind(new_query, athena_option_env[["cache_dt"]]),
@@ -268,8 +271,8 @@ check_cache = function(query, work_group){
                                         get("State") == "SUCCEEDED" &
                                         get("StatementType") == "DML" &
                                         get("WorkGroup") == work_group),
-                                        get("QueryId")]
-  if(length(query_id) == 0) return(NULL) else return(query_id[1])
+                                        list(get("QueryId"),get("UnloadDir"))]
+  if(nrow(query_id) == 0) return(list(NULL, NULL)) else return(list(query_id[[1]], query_id[[2]]))
 }
 
 # If api call fails retry call

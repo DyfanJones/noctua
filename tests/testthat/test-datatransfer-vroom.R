@@ -63,3 +63,20 @@ test_that("Testing data transfer between R and athena vroom", {
   expect_equal(test_df3,df2)
   expect_equal(test_df4, sqlData(con, mtcars))
 })
+
+test_that("Test unload athena query vroom",{
+  skip_if_no_env()
+  skip_if_package_not_avialable("arrow")
+  skip_if_package_not_avialable("dplyr")
+  
+  con <- dbConnect(
+    athena(),
+    s3_staging_dir = Sys.getenv("noctua_s3_query"))
+  
+  noctua::noctua_options("vroom")
+  
+  df = dbGetQuery(con, "select 1 as n", unload = T)
+  
+  expect_s3_class(df, "tbl_df")
+  expect_equal(df$n, 1)
+})

@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
       </span>
     </div>
 
@@ -104,6 +104,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/aws_athena_query_caching.html">AWS Athena Query Caching</a>
+    </li>
+    <li>
+      <a href="../articles/aws_athena_unload.html">AWS Athena Unload</a>
     </li>
     <li>
       <a href="../articles/aws_s3_backend.html">AWS S3 Backend</a>
@@ -156,7 +159,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for AthenaConnection,character</span>
-<span class='fu'>dbGetQuery</span><span class='op'>(</span><span class='va'>conn</span>, statement <span class='op'>=</span> <span class='cn'>NULL</span>, statistics <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>dbGetQuery</span><span class='op'>(</span><span class='va'>conn</span>, statement <span class='op'>=</span> <span class='cn'>NULL</span>, statistics <span class='op'>=</span> <span class='cn'>FALSE</span>, unload <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,6 +176,11 @@
     <tr>
       <th>statistics</th>
       <td><p>If set to <code>TRUE</code> will print out AWS Athena statistics of query.</p></td>
+    </tr>
+    <tr>
+      <th>unload</th>
+      <td><p>boolean input to modify `statement` to align with <a href='https://docs.aws.amazon.com/athena/latest/ug/unload.html'>AWS Athena UNLOAD</a>,
+default is set to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>

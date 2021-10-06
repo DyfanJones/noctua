@@ -1,7 +1,7 @@
 Package: noctua
 Type: Package
 Title: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)
-Version: 2.2.0
+Version: 2.2.0.9000
 Authors@R: person("Dyfan", "Jones", email="dyfan.r.jones@gmail.com", 
                   role= c("aut", "cre"))
 Description: Designed to be compatible with the 'R' package 'DBI' (Database Interface)
@@ -45,6 +45,8 @@ Collate:
     'DataTypes.R'
     'File_Parser.R'
     'Options.R'
+    'utils.R'
+    'fetch_utils.R'
     'Result.R'
     'Table.R'
     'View.R'
@@ -52,5 +54,4 @@ Collate:
     'column_parser.R'
     'dplyr_integration.R'
     'sql_translate_env.R'
-    'utils.R'
     'zzz.R'
