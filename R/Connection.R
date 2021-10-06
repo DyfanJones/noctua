@@ -615,14 +615,14 @@ setMethod(
           conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["StorageDescriptor"]][["Location"]]))
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
       if(!grepl("\\.|/$", s3_path$key))
-        s3_path$key <- sprintf("%s/", s3_path$key)
+        s3_path[["key"]] <- sprintf("%s/", s3_path[["key"]])
       all_keys <- list()
       token <- NULL
       # Get all s3 objects linked to table
       while(is.null(token) || length(token) != 0) {
-        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path$bucket, Prefix=s3_path$key, ContinuationToken = token)
-        token <- objects$NextContinuationToken
-        all_keys <- c(all_keys, lapply(objects$Contents, function(x) list(Key=x$Key)))
+        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path[["bucket"]], Prefix=s3_path[["key"]], ContinuationToken = token)
+        token <- objects[["NextContinuationToken"]]
+        all_keys <- c(all_keys, lapply(objects[["Contents"]], function(x) list(Key=x[["Key"]])))
       }
       message(paste0("Info: The S3 objects in prefix will be deleted:\n",
                      paste0("s3://", s3_path$bucket, "/", s3_path$key)))
