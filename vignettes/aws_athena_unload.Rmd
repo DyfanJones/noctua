@@ -3,7 +3,7 @@ title: "AWS Athena Unload"
 author: "Dyfan Jones"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to Retry?}
+  %\VignetteIndexEntry{AWS Athena Unload}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[UTF-8]{inputenc}
 ---
