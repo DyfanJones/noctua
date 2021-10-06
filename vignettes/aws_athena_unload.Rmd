@@ -48,7 +48,7 @@ Wraps the query with a `UNLOAD` and then reads the table data as `parquet` direc
   * Does not support columns with repeated names.
   * Does not support columns with undefined data types.
   * Does not support unnamed columns
-  
+  * Does not preserve `order by` due to multiple parquet files being produced by AWS Athena.
   
 ## Performance comparison:
 
