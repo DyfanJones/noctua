@@ -67,3 +67,17 @@ test_that("Testing data transfer between R and athena json file", {
   test_df <- as.data.frame(dbGetQuery(con, "select * from test_df3"))
   expect_equal(test_df, df)
 })
+
+test_that("Test unload athena query data.table",{
+  skip_if_no_env()
+  skip_if_package_not_avialable("arrow")
+  
+  con <- dbConnect(
+    athena(),
+    s3_staging_dir = Sys.getenv("noctua_s3_query"))
+  
+  df = dbGetQuery(con, "select 1 as n", unload = T)
+  
+  expect_s3_class(df, "data.table")
+  expect_equal(df$n, 1)
+})
