@@ -156,6 +156,71 @@
 <h1 class="page-header" data-toc-text="2.2.0.9000">
 <a href="#noctua-2209000" class="anchor"></a>noctua 2.2.0.9000<small> Unreleased </small>
 </h1>
+<div id="feature" class="section level2">
+<h2 class="hasAnchor">
+<a href="#feature" class="anchor"></a>Feature:</h2>
+<ul>
+<li>Add support to <a href="https://docs.aws.amazon.com/athena/latest/ug/unload.html"><code>AWS Athena UNLOAD</code></a> (<a href='https://github.com/DyfanJones/noctua/issues/160'>#160</a>). This is to take advantage of read/write speed <code>parquet</code> has to offer.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> awswrangler <span class="im">as</span> wr</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getpass</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>bucket <span class="op">=</span> getpass.getpass()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="ss">f"s3://</span><span class="sc">{</span>bucket<span class="sc">}</span><span class="ss">/data/"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"awswrangler_test"</span> <span class="kw">not</span> <span class="kw">in</span> wr.catalog.databases().values:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    wr.catalog.create_database(<span class="st">"awswrangler_test"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"dt"</span>, <span class="st">"element"</span>, <span class="st">"value"</span>, <span class="st">"m_flag"</span>, <span class="st">"q_flag"</span>, <span class="st">"s_flag"</span>, <span class="st">"obs_time"</span>]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> wr.s3.read_csv(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">"s3://noaa-ghcn-pds/csv/189"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    names<span class="op">=</span>cols,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    parse_dates<span class="op">=</span>[<span class="st">"dt"</span>, <span class="st">"obs_time"</span>])  <span class="co"># Read 10 files from the 1890 decade (~1GB)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>wr.s3.to_parquet(</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>df,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span>path,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    dataset<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span><span class="st">"overwrite"</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    database<span class="op">=</span><span class="st">"awswrangler_test"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    table<span class="op">=</span><span class="st">"noaa"</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>wr.catalog.table(database<span class="op">=</span><span class="st">"awswrangler_test"</span>, table<span class="op">=</span><span class="st">"noaa"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
+
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Query ran using CSV output</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
+  <span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"SELECT * FROM awswrangler_test.noaa"</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+<span class="co"># Info: (Data scanned: 80.88 MB)</span>
+<span class="co">#    user  system elapsed</span>
+<span class="co">#  57.004   8.430 160.567 </span>
+
+<span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+
+<span class="co"># Query ran using UNLOAD Parquet output</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
+  <span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"SELECT * FROM awswrangler_test.noaa"</span>, unload <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+<span class="co"># Info: (Data scanned: 80.88 MB)</span>
+<span class="co">#    user  system elapsed </span>
+<span class="co">#  21.622   2.350  39.232 </span>
+
+<span class="co"># Query ran using cache</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
+  <span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"SELECT * FROM awswrangler_test.noaa"</span>, unload <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+<span class="co"># Info: (Data scanned: 80.88 MB)</span>
+<span class="co">#    user  system elapsed </span>
+<span class="co">#  13.738   1.886  11.029 </span></code></pre></div>
+</div>
 </div>
     <div id="noctua-220" class="section level1">
 <h1 class="page-header" data-toc-text="2.2.0">
