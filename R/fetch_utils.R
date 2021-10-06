@@ -70,16 +70,16 @@
 
 .fetch_unload <- function(res){
   result_info <- split_s3_uri(res@connection@info[["s3_staging"]])
-  result_info$key <- file.path(gsub("/$", "", result_info$key), res@info$unload_dir)
+  result_info[["key"]] <- file.path(gsub("/$", "", result_info[["key"]]), res@info[["UnloadDir"]])
   
   all_keys <- list()
   token <- NULL
   # Get all s3 objects linked to table
   while(is.null(token) || length(token) != 0) {
     objects <- res@connection@ptr$S3$list_objects_v2(
-      Bucket=result_info$bucket, Prefix=result_info$key, ContinuationToken = token)
+      Bucket=result_info[["bucket"]], Prefix=result_info[["key"]], ContinuationToken = token)
     token <- objects$NextContinuationToken
-    all_keys <- c(all_keys, lapply(objects$Contents, function(x) list(Key=x$Key)))
+    all_keys <- c(all_keys, lapply(objects$Contents, function(x) list(Key=x[["Key"]])))
   }
   
   if (!requireNamespace("arrow", quietly = TRUE)) {
