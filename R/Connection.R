@@ -640,7 +640,7 @@ setMethod(
         for(i in seq_along(key_parts))
           conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
       } else {
-        warning(sprintf('Failed to remove AWS S3 files from: "s3://%s/%s/". Please check if AWS S3 files exist.',
+        warning(sprintf('Failed to remove AWS S3 files from: "s3://%s/%s". Please check if AWS S3 files exist.',
                         s3_path$bucket, s3_path$key), call. = F)
       }
     }

@@ -118,13 +118,14 @@ setMethod(
           error = function(e) warning(e, call. = F)
         )
         
-        # remove manifest csv created with CTAS statements 
-        tryCatch({
-          res@connection@ptr$S3$delete_object(
-            Bucket = result_info[["bucket"]],
-            Key = paste0(result_info[["key"]], "-manifest.csv"))},
-          error = function(e) NULL)
-        
+        # remove manifest csv created with CTAS statements
+        if (res@info[["StatementType"]] == "DDL" || !is.null(res@info[["UnloadDir"]])){
+          tryCatch({
+            res@connection@ptr$S3$delete_object(
+              Bucket = result_info[["bucket"]],
+              Key = paste0(result_info[["key"]], "-manifest.csv"))},
+            error = function(e) NULL)
+        }
         # remove AWS Athena results      
         if(is.null(res@info[["UnloadDir"]])){
           
