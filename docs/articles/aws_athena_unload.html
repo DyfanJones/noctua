@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -195,6 +195,7 @@
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>wr.catalog.table(database<span class="op">=</span><span class="st">"awswrangler_test"</span>, table<span class="op">=</span><span class="st">"noaa"</span>)</span></code></pre></div>
+<p>Benchmark <code>unload</code> method using <code>noctua</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># R</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
@@ -240,7 +241,29 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
 <span class="co"># [1] 29554197        8</span></code></pre></div>
-<p>Benchmark ran on AWS Sagemaker <code>ml.t3.xlarge</code> instance.</p>
+<table class="table">
+<thead><tr class="header">
+<th>Method</th>
+<th>Time (seconds)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>unload=FAlSE</code></td>
+<td>160.567</td>
+</tr>
+<tr class="even">
+<td><code>unload=TRUE</code></td>
+<td>39.232</td>
+</tr>
+<tr class="odd">
+<td>Cache <code>unload=TRUE</code>
+</td>
+<td>11.029</td>
+</tr>
+</tbody>
+</table>
+<p>From this simple benchmark test there is a significant improvement in the performance when querying <code>AWS Athena</code> while <code>unload=TRUE</code>.</p>
+<p><strong>Note:</strong> Benchmark ran on <code>AWS Sagemaker</code> <code>ml.t3.xlarge</code> instance.</p>
 </div>
   </div>
 

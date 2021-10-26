@@ -84,6 +84,8 @@ wr.s3.to_parquet(
 wr.catalog.table(database="awswrangler_test", table="noaa")
 ```
 
+Benchmark `unload` method using `noctua`.
+
 ```r
 # R
 library(DBI)
@@ -131,4 +133,12 @@ dim(df)
 # [1] 29554197        8
 ```
 
-Benchmark ran on AWS Sagemaker `ml.t3.xlarge` instance.
+Method|Time (seconds)
+----|----
+`unload=FAlSE`|160.567
+`unload=TRUE`|39.232
+Cache `unload=TRUE`|11.029
+
+From this simple benchmark test there is a significant improvement in the performance when querying `AWS Athena` while `unload=TRUE`.
+
+**Note:** Benchmark ran on `AWS Sagemaker` `ml.t3.xlarge` instance.
