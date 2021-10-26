@@ -1,12 +1,8 @@
 ## Submission
-This release contains a few new features and bug fixes.
-
-### Bug Fix:
-  * `sql_translate_env` correctly translates R functions `quantile` and `median` to `AWS Athena`
+This release contains a few new features.
 
 ### Feature:
-  * Support `AWS Athena` `timestamp with time zone` data type.
-  * Properly support data type `list` when converting data to `AWS Athena` `SQL` format.
+  *  Support `AWS Athena UNLOAD` within `DBI` methods.
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
@@ -25,4 +21,4 @@ This release contains a few new features and bug fixes.
 `devtools::check_rhub(env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always", LIBARROW_BINARY="true"))`
 
 ## unit tests (using testthat) results
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 289 ]
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 295 ]
