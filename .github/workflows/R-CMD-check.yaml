@@ -20,6 +20,7 @@ jobs:
       noctua_arn: ${{ secrets.noctua_arn }}
       noctua_s3_query: ${{ secrets.noctua_s3_query }}
       noctua_s3_tbl: ${{ secrets.noctua_s3_tbl }}
+      LIBARROW_MINIMAL: false
       ARROW_WITH_SNAPPY: ON
       R_KEEP_PKG_SOURCE: yes
     steps:
