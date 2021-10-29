@@ -20,7 +20,6 @@ jobs:
       noctua_arn: ${{ secrets.noctua_arn }}
       noctua_s3_query: ${{ secrets.noctua_s3_query }}
       noctua_s3_tbl: ${{ secrets.noctua_s3_tbl }}
-      LIBARROW_MINIMAL: false
       ARROW_WITH_SNAPPY: ON
       R_KEEP_PKG_SOURCE: yes
     steps:
@@ -35,6 +34,14 @@ jobs:
           extra-packages: |
             rcmdcheck
             covr
+
+      - name: Install Arrow
+        run: |
+          Sys.getenv("ARROW_WITH_SNAPPY")
+          install.packages("arrow")
+        shell: Rscript {0}
+          
+          
             
       - uses: r-lib/actions/check-r-package@v1
 
