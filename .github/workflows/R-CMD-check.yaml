@@ -34,14 +34,6 @@ jobs:
           extra-packages: |
             rcmdcheck
             covr
-
-      - name: Install Arrow
-        run: |
-          Sys.getenv("ARROW_WITH_SNAPPY")
-          install.packages("arrow")
-        shell: Rscript {0}
-          
-          
             
       - uses: r-lib/actions/check-r-package@v1
 
