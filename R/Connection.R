@@ -217,7 +217,7 @@ NULL
 setMethod(
   "dbSendQuery", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL,
+           statement,
            unload = FALSE,
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
@@ -235,7 +235,7 @@ setMethod(
 setMethod(
   "dbSendStatement", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL,
+           statement,
            unload = FALSE,
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
@@ -253,7 +253,7 @@ setMethod(
 setMethod(
   "dbExecute", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL,
+           statement,
            unload = FALSE,
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
@@ -689,7 +689,7 @@ NULL
 setMethod(
   "dbGetQuery", c("AthenaConnection", "character"),
   function(conn,
-           statement = NULL, 
+           statement, 
            statistics = FALSE,
            unload = FALSE,
            ...){
