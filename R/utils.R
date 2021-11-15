@@ -252,7 +252,8 @@ cache_query = function(res){
   if(res@info$Status != "FAILED") {
     cache_append = data.table(
       "QueryId" = res@info[["QueryExecutionId"]],
-      "Query" = res@info[["Query"]],
+      # ensure query is character class when caching
+      "Query" = as.character(res@info[["Query"]]),
       "State"= res@info[["Status"]],
       "StatementType"= res@info[["StatementType"]],
       "WorkGroup" = res@info[["WorkGroup"]],
