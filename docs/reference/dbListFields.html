@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -187,28 +187,28 @@
     <div class='dont-index'><p><code><a href='https://dbi.r-dbi.org/reference/dbListFields.html'>dbListFields</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Note: </span>
-<span class='co'># - Require AWS Account to run below example.</span>
-<span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span>
-
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dbi.r-dbi.org'>DBI</a></span><span class='op'>)</span>
-
-<span class='co'># Demo connection to Athena using profile name </span>
-<span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Write data.frame to Athena table</span>
-<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"mtcars"</span>, <span class='va'>mtcars</span>,
-             partition<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"TIMESTAMP"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"%Y%m%d"</span><span class='op'>)</span><span class='op'>)</span>,
-             s3.location <span class='op'>=</span> <span class='st'>"s3://mybucket/data/"</span><span class='op'>)</span>
-             
-<span class='co'># Return list of fields in table</span>
-<span class='fu'>dbListFields</span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"mtcars"</span><span class='op'>)</span>
-
-<span class='co'># Disconnect conenction</span>
-<span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Note: </span></span>
+<span class='r-in'><span class='co'># - Require AWS Account to run below example.</span></span>
+<span class='r-in'><span class='co'># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dbi.r-dbi.org'>DBI</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Demo connection to Athena using profile name </span></span>
+<span class='r-in'><span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Write data.frame to Athena table</span></span>
+<span class='r-in'><span class='fu'><a href='https://dbi.r-dbi.org/reference/dbWriteTable.html'>dbWriteTable</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"mtcars"</span>, <span class='va'>mtcars</span>,</span>
+<span class='r-in'>             partition<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"TIMESTAMP"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"%Y%m%d"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>             s3.location <span class='op'>=</span> <span class='st'>"s3://mybucket/data/"</span><span class='op'>)</span></span>
+<span class='r-in'>             </span>
+<span class='r-in'><span class='co'># Return list of fields in table</span></span>
+<span class='r-in'><span class='fu'>dbListFields</span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"mtcars"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Disconnect conenction</span></span>
+<span class='r-in'><span class='fu'><a href='dbDisconnect.html'>dbDisconnect</a></span><span class='op'>(</span><span class='va'>con</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

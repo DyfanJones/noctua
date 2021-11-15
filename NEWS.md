@@ -1,4 +1,7 @@
 # noctua (development version)
+## Bug Fix:
+* Ensure `dbGetQuery`, `dbExecute`, `dbSendQuery`, `dbSendStatement` work on older versions of `R` (#170). Thanks to @tyner for identifying issue.
+* Caching would fail when statement wasn't a character (#171). Thanks to @ramnathv for identifying issue.
 
 # noctua 2.3.0
 ## Feature:
