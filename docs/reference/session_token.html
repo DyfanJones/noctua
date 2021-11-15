@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
       </span>
     </div>
 
@@ -210,23 +210,23 @@ from 900 seconds (15 minutes) to 129,600 seconds (36 hours), with 3,600 seconds 
     <p><code>get_session_token()</code> returns a list containing: <code>"AccessKeyId"</code>, <code>"SecretAccessKey"</code>, <code>"SessionToken"</code> and <code>"Expiration"</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># Note: </span>
-<span class='co'># - Require AWS Account to run below example.</span>
-
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/DyfanJones/noctua'>noctua</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dbi.r-dbi.org'>DBI</a></span><span class='op'>)</span>
-
-<span class='co'># Create Temporary Credentials duration 1 hour</span>
-<span class='fu'>get_session_token</span><span class='op'>(</span><span class='st'>"YOUR_PROFILE_NAME"</span>,
-                  serial_number<span class='op'>=</span><span class='st'>'arn:aws:iam::123456789012:mfa/user'</span>,
-                  token_code <span class='op'>=</span> <span class='st'>"531602"</span>,
-                  set_env <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-
-<span class='co'># Connect to Athena using temporary credentials</span>
-<span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='co'># Note: </span></span>
+<span class='r-in'><span class='co'># - Require AWS Account to run below example.</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/DyfanJones/noctua'>noctua</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dbi.r-dbi.org'>DBI</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Create Temporary Credentials duration 1 hour</span></span>
+<span class='r-in'><span class='fu'>get_session_token</span><span class='op'>(</span><span class='st'>"YOUR_PROFILE_NAME"</span>,</span>
+<span class='r-in'>                  serial_number<span class='op'>=</span><span class='st'>'arn:aws:iam::123456789012:mfa/user'</span>,</span>
+<span class='r-in'>                  token_code <span class='op'>=</span> <span class='st'>"531602"</span>,</span>
+<span class='r-in'>                  set_env <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Connect to Athena using temporary credentials</span></span>
+<span class='r-in'><span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
