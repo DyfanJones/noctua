@@ -198,9 +198,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="backend_dbplyr.html">db_save_query.AthenaConnection()</a></code> <code><a href="backend_dbplyr.html">db_explain.AthenaConnection()</a></code> <code><a href="backend_dbplyr.html">db_query_fields.AthenaConnection()</a></code> <code><a href="backend_dbplyr.html">sql_escape_date.AthenaConnection()</a></code> <code><a href="backend_dbplyr.html">sql_escape_datetime.AthenaConnection()</a></code> </p>
+          <p><code><a href="backend_dbplyr_v1.html">db_save_query.AthenaConnection()</a></code> <code><a href="backend_dbplyr_v1.html">db_explain.AthenaConnection()</a></code> <code><a href="backend_dbplyr_v1.html">db_query_fields.AthenaConnection()</a></code> </p>
         </td>
-        <td><p>Athena S3 implementation of dbplyr backend functions</p></td>
+        <td><p>Athena S3 implementation of dbplyr backend functions (api version 1).</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="backend_dbplyr_v2.html">sql_query_save.AthenaConnection()</a></code> <code><a href="backend_dbplyr_v2.html">sql_query_explain.AthenaConnection()</a></code> <code><a href="backend_dbplyr_v2.html">sql_query_fields.AthenaConnection()</a></code> <code><a href="backend_dbplyr_v2.html">sql_escape_date.AthenaConnection()</a></code> <code><a href="backend_dbplyr_v2.html">sql_escape_datetime.AthenaConnection()</a></code> </p>
+        </td>
+        <td><p>Athena S3 implementation of dbplyr backend functions (api version 2).</p></td>
       </tr><tr>
         
         <td>
@@ -332,7 +338,15 @@
         <td>
           <p><code><a href="db_compute.html">db_compute.AthenaConnection()</a></code> </p>
         </td>
-        <td><p>S3 implementation of <code>db_compute</code> for Athena</p></td>
+        <td><p>S3 implementation of <code>db_compute</code> for Athena
+
+This is a backend function for dplyr's <code>compute</code> function. Users won't be required to access and run this function.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="db_connection_describe.html">db_connection_describe.AthenaConnection()</a></code> </p>
+        </td>
+        <td><p>S3 implementation of <code>db_connection_describe</code> for Athena (api version 2).</p></td>
       </tr><tr>
         
         <td>
@@ -344,7 +358,13 @@
         <td>
           <p><code><a href="db_desc.html">db_desc.AthenaConnection()</a></code> </p>
         </td>
-        <td><p>S3 implementation of <code>db_desc</code> for Athena</p></td>
+        <td><p>S3 implementation of <code>db_desc</code> for Athena (api version 1).</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dbplyr_edition.html">dbplyr_edition.AthenaConnection()</a></code> </p>
+        </td>
+        <td><p>Declare which version of dbplyr API is being called.</p></td>
       </tr><tr>
         
         <td>
@@ -378,9 +398,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="sql_translate_env.html">sql_translate_env.AthenaConnection()</a></code> <code><a href="sql_translate_env.html">sql_escape_string.AthenaConnection()</a></code> </p>
+          <p><code><a href="sql_translate_env.html">sql_translation.AthenaConnection()</a></code> <code><a href="sql_translate_env.html">sql_translate_env.AthenaConnection()</a></code> <code><a href="sql_translate_env.html">sql_escape_string.AthenaConnection()</a></code> </p>
         </td>
-        <td><p>AWS Athena backend dbplyr</p></td>
+        <td><p>AWS Athena backend dbplyr version 1 and 2</p></td>
       </tr><tr>
         
         <td>
