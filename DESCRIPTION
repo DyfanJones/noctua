@@ -53,5 +53,6 @@ Collate:
     'athena_low_api.R'
     'column_parser.R'
     'dplyr_integration.R'
+    'sql_translate_utils.R'
     'sql_translate_env.R'
     'zzz.R'

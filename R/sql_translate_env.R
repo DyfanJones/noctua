@@ -1,7 +1,8 @@
 #' @include Connection.R
+#' @include sql_translate_utils.R
 NULL
 
-#' AWS Athena backend dbplyr 
+#' AWS Athena backend dbplyr version 1 and 2
 #' 
 #' Create s3 implementation of \code{sql_translate_env} for AWS Athena sql translate environment based off
 #' \href{https://docs.aws.amazon.com/athena/latest/ug/data-types.html}{Athena Data Types} and 
@@ -17,7 +18,7 @@ NULL
 
 #' @rdname sql_translate_env
 #' @export
-sql_translate_env.AthenaConnection <- function(con) {
+sql_translation.AthenaConnection <- function(con) {
   # base methods
   sql_variant <- pkg_method("sql_variant", "dbplyr")
   sql_translator <- pkg_method("sql_translator", "dbplyr")
@@ -60,10 +61,13 @@ sql_translate_env.AthenaConnection <- function(con) {
       as.integer64 = sql_cast("BIGINT"), # as.integer64 reflects bigint for AWS Athena
       as.Date = sql_cast("DATE"),
       as.POSIXct = function(x, tz=NULL){
-        if(is.null(tz))
-          build_sql("timestamp ", x)
-        else
-          build_sql("timestamp ", x, " at time zone ", tz)
+        # pass POSIXct class to DBI
+        x=as.POSIXct(x)
+        if(is.null(tz)){
+          build_sql(x)
+        } else {
+          build_sql(x, " at time zone ", tz)
+        }
       },
       as.logical = sql_cast("BOOLEAN"),
       as.raw = sql_cast("VARBINARY"),
@@ -210,10 +214,13 @@ sql_translate_env.AthenaConnection <- function(con) {
       today = function() {build_sql("current_date")},
       as_date = sql_cast("DATE"),
       as_datetime = function(x, tz = NULL){
-        if(is.null(tz))
-          build_sql("timestamp ", x)
-        else
-          build_sql("timestamp ", x, " at time zone ", tz)
+        # pass POSIXct class to DBI
+        x=as.POSIXct(x)
+        if(is.null(tz)){
+          build_sql(x)
+        } else {
+          build_sql(x, " at time zone ", tz)
+        }
       },
       now = function(tz=NULL){
         if(is.null(tz))
@@ -252,69 +259,11 @@ sql_translate_env.AthenaConnection <- function(con) {
   )
 }
 
-sql_quantile <- function(x, probs){
-  build_sql <- pkg_method("build_sql", "dbplyr")
-  check_probs(probs)
-  build_sql("APPROX_PERCENTILE(",x,", ",probs,")")
-}
+#' @rdname sql_translate_env
+#' @export
+sql_translate_env.AthenaConnection <- sql_translation.AthenaConnection
 
-sql_median <- function(){
-  warned <- FALSE
-  function(x, na.rm = FALSE){
-    warned <<- check_na_rm(na.rm, warned)
-    sql_quantile(x, 0.5)
-  }
-}
-
-# mimic check_na_rm from dbplyr
-# https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-helpers.R#L213-L225
-check_na_rm <- function(na.rm, warned){
-  if(warned || identical(na.rm, TRUE))
-    return(warned)
-  warning(
-    "Missing values are always removed in SQL.\n", "Use `", 
-    "median(x, na.rm = TRUE)` to silence this warning\n",
-    "This warning is displayed only once per session.", 
-    call. = FALSE)
-  return(TRUE)
-}
-
-# re-create check_probs from dbplyr:
-# https://github.com/tidyverse/dbplyr/blob/master/R/translate-sql-quantile.R#L40-L48
-check_probs <- function(probs) {
-  if (!is.numeric(probs)) {
-    stop("`probs` must be numeric", call. = FALSE)
-  }
-  
-  if (length(probs) > 1) {
-    stop("SQL translation only supports single value for `probs`.", call. = FALSE)
-  }
-}
-
-# helper function to support R function paste in sql_translation_env
-athena_paste <- function(..., sep = " ", con) {
-  escape <- pkg_method("escape", "dbplyr")
-  sql <- pkg_method("sql", "dplyr")
-  sep <- escape(sep, con = con)
-  pieces <- vapply(list(...), escape, con = con, character(1))
-  sql(paste(pieces, collapse = paste0('||', sep, '||')))
-}
-
-athena_regexpr <- function(pattern, text, ignore.case = FALSE, perl = FALSE, fixed = FALSE, 
-                           useBytes = FALSE){
-  if (any(c(perl, fixed, useBytes))) {
-    stop("`perl`, `fixed` and `useBytes` parameters are unsupported", call. = F)
-  }
-  build_sql <- pkg_method('build_sql', "dbplyr")
-  if(!ignore.case){
-    build_sql('REGEXP_LIKE(', text,",", pattern, ')')
-  } else {
-    pattern <- paste0("(?i)", pattern)
-    build_sql('REGEXP_LIKE(', text,",", pattern, ')')
-  }
-}
-
-# Athena specifc S3 method for converting date variables and iso formateed date strings to date literals
+# Athena specifc S3 method for converting date variables and iso formatted date strings to date literals
 #' @rdname sql_translate_env
 #' @export
 sql_escape_string.AthenaConnection <- function(con, x) {

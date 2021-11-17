@@ -2,10 +2,13 @@
 % Please edit documentation in R/sql_translate_env.R
 \name{sql_translate_env}
 \alias{sql_translate_env}
+\alias{sql_translation.AthenaConnection}
 \alias{sql_translate_env.AthenaConnection}
 \alias{sql_escape_string.AthenaConnection}
-\title{AWS Athena backend dbplyr}
+\title{AWS Athena backend dbplyr version 1 and 2}
 \usage{
+sql_translation.AthenaConnection(con)
+
 sql_translate_env.AthenaConnection(con)
 
 sql_escape_string.AthenaConnection(con, x)
