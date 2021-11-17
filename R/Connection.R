@@ -348,9 +348,15 @@ setMethod(
   "dbQuoteString", c("AthenaConnection", "character"),
   function(conn, x, ...) {
     if(identical(dbplyr_env$major, 2L)){
-      all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x) & all(nchar(x) == 10)
+      timestamp_fmt = c("%Y-%m-%d %H:%M:%OS", "%Y/%m/%d %H:%M:%OS", "%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M")
+      date_fmt = c("%Y-%m-%d", "%Y/%m/%d")
+      
+      all_ts <- all(try(as.POSIXct(x, tryFormats = timestamp_fmt), silent=T) == x)
+      all_dates = all(try(as.Date(x, tryFormats = date_fmt), silent=T) == x) & all(nchar(x) == 10)
       if(all_dates & !is.na(all_dates)) {
-        return(paste0('date ', dbi_quote(conn, x, ...)))
+        return(paste0('date ', dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...)))
+      } else if (all_ts & !is.na(all_ts)){
+        return(paste0('timestamp ', dbi_quote(conn, strftime(x, "%Y-%m-%d %H:%M:%OS3"), ...)))
       }
     }
     return(dbi_quote(conn, x, ...))

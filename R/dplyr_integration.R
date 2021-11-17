@@ -282,7 +282,8 @@ sql_escape_date.AthenaConnection <- function(con, x) {
 #' @rdname backend_dbplyr_v2
 #' @export
 sql_escape_datetime.AthenaConnection <- function(con, x) {
-  dbQuoteString(con, x)
+  str = dbQuoteString(con, x)
+  return(gsub("^date ", "timestamp ", str))
 }
 
 ######################################################################
