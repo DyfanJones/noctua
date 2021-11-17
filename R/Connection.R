@@ -339,21 +339,42 @@ setMethod("dbDataType", c("AthenaConnection", "data.frame"), function(dbObj, obj
 #' @docType methods
 NULL
 
+# import DBI quote_string method
+dbi_quote = methods::getMethod("dbQuoteString", c("DBIConnection", "character"), asNamespace("DBI"))
+
 #' @rdname dbQuote
 #' @export
 setMethod(
   "dbQuoteString", c("AthenaConnection", "character"),
   function(conn, x, ...) {
-    # Optional
-    getMethod("dbQuoteString", c("DBIConnection", "character"), asNamespace("DBI"))(conn, x, ...)
-  })
+    if(identical(dbplyr_env$major, 2L)){
+      all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x) & all(nchar(x) == 10)
+      if(all_dates & !is.na(all_dates)) {
+        return(paste0('date ', dbi_quote(conn, x, ...)))
+      }
+    }
+    return(dbi_quote(conn, x, ...))
+})
+
+setMethod(
+  "dbQuoteString", c("AthenaConnection", "POSIXct"),
+  function(conn, x, ...) {
+    x <- strftime(x, "%Y-%m-%d %H:%M:%OS3")
+    paste0('timestamp ', dbi_quote(conn, x, ...))
+})
+
+setMethod(
+  "dbQuoteString", c("AthenaConnection", "Date"),
+  function(conn, x, ...) {
+    paste0('date ', dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...))
+})
 
 #' @rdname dbQuote
 #' @export
 setMethod(
   "dbQuoteIdentifier", c("AthenaConnection", "SQL"),
-  getMethod("dbQuoteIdentifier", c("DBIConnection", "SQL"), asNamespace("DBI")))
-
+  getMethod("dbQuoteIdentifier", c("DBIConnection", "SQL"), asNamespace("DBI"))
+)
 
 #' List Athena Tables
 #'
