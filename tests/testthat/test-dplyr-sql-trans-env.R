@@ -280,3 +280,12 @@ test_that("Raise error for unknown data types", {
   expect_error(dbDataType(con, obj))
   expect_error(AthenaDataType(obj))
 })
+
+test_that("Explain Plan", {
+  
+  sql = "select * from iris"
+  actual = athena_explain(con, sql)
+  
+  expected = "EXPLAIN (FORMAT text) 'select * from iris'"
+  expect_equal(dplyr::sql(expected), actual)
+})
