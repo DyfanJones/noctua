@@ -57,11 +57,27 @@ db_compute.AthenaConnection <- function(con,
                                         table,
                                         sql,
                                         ...) {
-  db_save_query <- pkg_method("db_save_query", "dplyr")
   in_schema <- pkg_method("in_schema", "dbplyr")
-  table <- db_save_query(con, sql, table, ...)
+  table <- athena_query_save(con, sql, table, ...)
   ll <- db_detect(con, table)
   in_schema(ll[["dbms.name"]], ll[["table"]])
+}
+
+athena_query_save <- function(con, sql, name , 
+                              file_type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
+                              s3_location = NULL,
+                              partition = NULL,
+                              compress = TRUE,
+                              ...){
+  stopifnot(is.null(s3_location) || is.s3_uri(s3_location))
+  file_type = match.arg(file_type)
+  
+  tt_sql <- SQL(paste0("CREATE TABLE ", paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
+                       " ", ctas_sql_with(partition, s3_location, file_type, compress), "AS ",
+                       sql, ";"))
+  res <- dbExecute(con, tt_sql)
+  dbClearResult(res)
+  return(name)
 }
 
 #' S3 implementation of \code{db_copy_to} for Athena
@@ -202,69 +218,40 @@ db_connection_describe.AthenaConnection <- function(con) {
 #' @name backend_dbplyr_v2
 #' @return
 #' \describe{
-#' \item{db_save_query}{Returns table name}
-#' \item{db_explain}{Raises an \code{error} as AWS Athena does not support \code{EXPLAIN} queries \href{https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html}{Athena Limitations}}
-#' \item{db_query_fields}{Returns sql query column names}
+#' \item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}}
+#' \item{sql_query_fields}{Returns sql query column names}
+#' \item{sql_escape_date}{Returns sql escaping from dates}
+#' \item{sql_escape_datetime}{Returns sql escaping from date times}
 #' }
 NULL
 
-athena_query_save <- function(con, sql, name , 
-                              file_type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
-                              s3_location = NULL,
-                              partition = NULL,
-                              compress = TRUE,
-                              ...){
-  stopifnot(is.null(s3_location) || is.s3_uri(s3_location))
-  file_type = match.arg(file_type)
-  tt_sql <- SQL(paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
-                       " ", ctas_sql_with(partition, s3_location, file_type, compress), "AS ",
-                       sql, ";"))
-  res <- dbExecute(con, tt_sql)
-  dbClearResult(res)
-  return(name)
-}
-
-#' @rdname backend_dbplyr_v2
-sql_query_save.AthenaConnection <- athena_query_save
-
-
-athena_explain <- function(con, sql, ...){
-  # AWS Athena does not support Explain statements https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html
-  stop("Athena does not support EXPLAIN statements.", call. = FALSE)
+athena_explain <- function(con, sql, format = "text", type=NULL, ...){
+  # AWS Athena now supports explain: https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html
+  format <- match.arg(format, c("text", "json"))
+  if(!is.null(type)) type <- match.arg(type, c("LOGICAL", "DISTRIBUTED", "VALIDATE", "IO"))
+  
+  build_sql <- pkg_method("build_sql", "dbplyr")
+  dplyr_sql <- pkg_method("sql", "dbplyr")
+  
+  build_sql(
+    "EXPLAIN ",
+    if (!is.null(format)) dplyr_sql(paste0("(FORMAT ", format, ") ")),
+    if (!is.null(type)) dplyr_sql(paste0("(TYPE ", type, ") ")),
+    sql,
+    con = con
+  )
 }
 
 #' @rdname backend_dbplyr_v2
 sql_query_explain.AthenaConnection <- athena_explain
 
-
-athena_query_fields_ident <- function(con, sql){
-  if (grepl("\\.", sql)) {
-    schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
-  } else {
-    schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))}
-  
-  # If dbplyr schema, get the fields from Glue
-  tryCatch(
-    output <- con@ptr$glue$get_table(DatabaseName = schema_parts[1],
-                                     Name = schema_parts[2])$Table)
-  
-  col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
-  partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
-  
-  return(c(col_names, partitions))
-}
-
 #' @rdname backend_dbplyr_v2
 sql_query_fields.AthenaConnection <- function(con, sql, ...) {
-  
-  # check if sql is dbplyr schema
-  in_schema <- inherits(sql, "ident")
-  
-  if(in_schema) {
-    return(athena_query_fields_ident(con, sql))
-  } else { 
-    # If a subquery, query Athena for the fields
-    # return dplyr methods
+  # pass ident class to dbGetQuery to continue same functionality as dbplyr v1 api.
+  if(inherits(sql, "ident")) {
+    return(sql)
+  } else {
+    # None ident class uses dbplyr:::sql_query_fields.DBIConnection method
     dbplyr_query_select <- pkg_method("dbplyr_query_select", "dbplyr")
     sql_subquery <- pkg_method("sql_subquery", "dplyr")
     dplyr_sql <- pkg_method("sql", "dplyr")
@@ -321,22 +308,42 @@ db_desc.AthenaConnection <- function(x) {
 #' @name backend_dbplyr_v1
 #' @return
 #' \describe{
-#' \item{db_save_query}{Returns table name}
-#' \item{db_explain}{Raises an \code{error} as AWS Athena does not support \code{EXPLAIN} queries \href{https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html}{Athena Limitations}}
+#' \item{db_explain}{Returns \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
 #' \item{db_query_fields}{Returns sql query column names}
 #' }
-db_save_query.AthenaConnection <- athena_query_save
 
 #' @rdname backend_dbplyr_v1
-db_explain.AthenaConnection <- athena_explain
+db_explain.AthenaConnection <- function(con, sql, ...){
+  sql <- athena_explain(con, sql, ...)
+  expl <- dbGetQuery(con, sql)
+  out <- utils::capture.output(print(expl))
+  paste(out, collapse = "\n")
+}
+
+# NOTE: dbplyr v2 integration has to use this in dbGetQuery
+athena_query_fields_ident <- function(con, sql){
+  if (grepl("\\.", sql)) {
+    schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
+  } else {
+    schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))
+  }
+  # If dbplyr schema, get the fields from Glue
+  tryCatch(
+    output <- con@ptr$glue$get_table(
+      DatabaseName = schema_parts[1],
+      Name = schema_parts[2])$Table
+  )
+  col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+  partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
+  
+  return(c(col_names, partitions))
+}
 
 #' @rdname backend_dbplyr_v1
 db_query_fields.AthenaConnection <- function(con, sql, ...) {
   
   # check if sql is dbplyr schema
-  in_schema <- inherits(sql, "ident")
-  
-  if(in_schema) {
+  if(inherits(sql, "ident")) {
     return(athena_query_fields_ident(con, sql))
   } else { 
     # If a subquery, query Athena for the fields
