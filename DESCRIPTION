@@ -39,20 +39,20 @@ RoxygenNote: 7.1.2
 URL: https://github.com/DyfanJones/noctua
 BugReports: https://github.com/DyfanJones/noctua/issues
 Collate: 
+    'utils.R'
+    'dplyr_integration.R'
     'noctua.R'
     'Driver.R'
     'Connection.R'
     'DataTypes.R'
     'File_Parser.R'
     'Options.R'
-    'utils.R'
     'fetch_utils.R'
     'Result.R'
     'Table.R'
     'View.R'
     'athena_low_api.R'
     'column_parser.R'
-    'dplyr_integration.R'
     'sql_translate_utils.R'
     'sql_translate_env.R'
     'zzz.R'
