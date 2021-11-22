@@ -162,18 +162,7 @@ The AWS Athena implementation give extra parameters to allow access the to stand
 utilise AWS Glue to speed up sql query execution.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>db_save_query.AthenaConnection</span><span class='op'>(</span>
-  <span class='va'>con</span>,
-  <span class='va'>sql</span>,
-  <span class='va'>name</span>,
-  file_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"NULL"</span>, <span class='st'>"csv"</span>, <span class='st'>"tsv"</span>, <span class='st'>"parquet"</span>, <span class='st'>"json"</span>, <span class='st'>"orc"</span><span class='op'>)</span>,
-  s3_location <span class='op'>=</span> <span class='cn'>NULL</span>,
-  partition <span class='op'>=</span> <span class='cn'>NULL</span>,
-  compress <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span>
-
-<span class='fu'>db_explain.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>sql</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>db_explain.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>sql</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>db_query_fields.AthenaConnection</span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>sql</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
@@ -187,6 +176,14 @@ utilise AWS Glue to speed up sql query execution.</p>
     <tr>
       <th>sql</th>
       <td><p>SQL code to be sent to AWS Athena</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other parameters, currently not implemented</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>R object to be transformed into athena equivalent</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -209,22 +206,13 @@ utilise AWS Glue to speed up sql query execution.</p>
       <th>compress</th>
       <td><p>Compress Athena table, currently can only compress ["parquet", "orc"] <a href='https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html'>AWS Athena CTAS</a></p></td>
     </tr>
-    <tr>
-      <th>...</th>
-      <td><p>other parameters, currently not implemented</p></td>
-    </tr>
-    <tr>
-      <th>x</th>
-      <td><p>R object to be transformed into athena equivalent</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     
 <dl>
-<dt>db_save_query</dt><dd><p>Returns table name</p></dd>
-<dt>db_explain</dt><dd><p>Raises an <code>error</code> as AWS Athena does not support <code>EXPLAIN</code> queries <a href='https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html'>Athena Limitations</a></p></dd>
+<dt>db_explain</dt><dd><p>Returns <a href='https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html'>AWS Athena explain statement</a></p></dd>
 <dt>db_query_fields</dt><dd><p>Returns sql query column names</p></dd>
 
 </dl>

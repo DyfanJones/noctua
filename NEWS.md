@@ -1,6 +1,6 @@
 # noctua (development version)
 ## Feature:
-* Add support `dplyr` 2.0.0 backend API.
+* Add support `dbplyr` 2.0.0 backend API.
 
 ## Bug Fix:
 * Ensure `dbGetQuery`, `dbExecute`, `dbSendQuery`, `dbSendStatement` work on older versions of `R` (#170). Thanks to @tyner for identifying issue.
