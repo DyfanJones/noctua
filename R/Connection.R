@@ -1,4 +1,5 @@
 #' @include Driver.R
+#' @include dplyr_integration.R
 NULL
 
 #' Athena Connection Methods
@@ -722,10 +723,26 @@ setMethod(
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics), is.logical(unload))
-    rs <- dbSendQuery(conn, statement = statement, unload = unload)
-    if(statistics) print(dbStatistics(rs))
-    out <- dbFetch(res = rs, n = -1, ...)
-    dbClearResult(rs)
+    
+    # dbplyr v2 support: dbplyr class ident
+    if(!inherits(statement, "ident")) {
+      rs <- dbSendQuery(conn, statement = statement, unload = unload)
+      if(statistics) print(dbStatistics(rs))
+      out <- dbFetch(res = rs, n = -1, ...)
+      dbClearResult(rs)
+    } else {
+      # Create an empty table using AWS GLUE to retrieve column names
+      field_names <- athena_query_fields_ident(conn, statement)
+      empty_shell <- rep(list(character()), length(field_names))
+      names(empty_shell) <- field_names
+      
+      if(inherits(athena_option_env[["file_parser"]], "athena_data.table")){
+        out <- as.data.table(empty_shell)
+      } else {
+        as_tibble <- pkg_method("as_tibble", "tibble")
+        out <- as_tibble(empty_shell)
+      }
+    }
     return(out)
 })
 
