@@ -2,22 +2,10 @@
 % Please edit documentation in R/dplyr_integration.R
 \name{backend_dbplyr_v1}
 \alias{backend_dbplyr_v1}
-\alias{db_save_query.AthenaConnection}
 \alias{db_explain.AthenaConnection}
 \alias{db_query_fields.AthenaConnection}
 \title{Athena S3 implementation of dbplyr backend functions (api version 1).}
 \usage{
-db_save_query.AthenaConnection(
-  con,
-  sql,
-  name,
-  file_type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
-  s3_location = NULL,
-  partition = NULL,
-  compress = TRUE,
-  ...
-)
-
 db_explain.AthenaConnection(con, sql, ...)
 
 db_query_fields.AthenaConnection(con, sql, ...)
@@ -26,6 +14,10 @@ db_query_fields.AthenaConnection(con, sql, ...)
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
 
 \item{sql}{SQL code to be sent to AWS Athena}
+
+\item{...}{other parameters, currently not implemented}
+
+\item{x}{R object to be transformed into athena equivalent}
 
 \item{name}{Table name if left default noctua will use default from 'dplyr''s \code{compute} function.}
 
@@ -37,15 +29,10 @@ db_query_fields.AthenaConnection(con, sql, ...)
 \item{partition}{Partition Athena table, requires to be a partitioned variable from previous table.}
 
 \item{compress}{Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}}
-
-\item{...}{other parameters, currently not implemented}
-
-\item{x}{R object to be transformed into athena equivalent}
 }
 \value{
 \describe{
-\item{db_save_query}{Returns table name}
-\item{db_explain}{Raises an \code{error} as AWS Athena does not support \code{EXPLAIN} queries \href{https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html}{Athena Limitations}}
+\item{db_explain}{Returns \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
 \item{db_query_fields}{Returns sql query column names}
 }
 }

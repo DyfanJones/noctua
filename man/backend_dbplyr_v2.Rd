@@ -2,25 +2,13 @@
 % Please edit documentation in R/dplyr_integration.R
 \name{backend_dbplyr_v2}
 \alias{backend_dbplyr_v2}
-\alias{sql_query_save.AthenaConnection}
 \alias{sql_query_explain.AthenaConnection}
 \alias{sql_query_fields.AthenaConnection}
 \alias{sql_escape_date.AthenaConnection}
 \alias{sql_escape_datetime.AthenaConnection}
 \title{Athena S3 implementation of dbplyr backend functions (api version 2).}
 \usage{
-sql_query_save.AthenaConnection(
-  con,
-  sql,
-  name,
-  file_type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
-  s3_location = NULL,
-  partition = NULL,
-  compress = TRUE,
-  ...
-)
-
-sql_query_explain.AthenaConnection(con, sql, ...)
+sql_query_explain.AthenaConnection(con, sql, format = "text", type = NULL, ...)
 
 sql_query_fields.AthenaConnection(con, sql, ...)
 
@@ -33,6 +21,10 @@ sql_escape_datetime.AthenaConnection(con, x)
 
 \item{sql}{SQL code to be sent to AWS Athena}
 
+\item{...}{other parameters, currently not implemented}
+
+\item{x}{R object to be transformed into athena equivalent}
+
 \item{name}{Table name if left default noctua will use default from 'dplyr''s \code{compute} function.}
 
 \item{file_type}{What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
@@ -43,17 +35,9 @@ sql_escape_datetime.AthenaConnection(con, x)
 \item{partition}{Partition Athena table, requires to be a partitioned variable from previous table.}
 
 \item{compress}{Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}}
-
-\item{...}{other parameters, currently not implemented}
-
-\item{x}{R object to be transformed into athena equivalent}
 }
 \value{
-\describe{
-\item{db_save_query}{Returns table name}
-\item{db_explain}{Raises an \code{error} as AWS Athena does not support \code{EXPLAIN} queries \href{https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html}{Athena Limitations}}
-\item{db_query_fields}{Returns sql query column names}
-}
+
 }
 \description{
 These functions are used to build the different types of SQL queries. 
