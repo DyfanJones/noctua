@@ -55,7 +55,7 @@ dbplyr_version <- function(){
     dbplyr_env$major <- dbplyr_v$major
     dbplyr_env$minor <- dbplyr_v$minor
   } else {
-    # default to minor supported dbplyr version
+    # default to minimum supported dbplyr version
     dbplyr_env$major = 1L
     dbplyr_env$minor = 4L
   }
