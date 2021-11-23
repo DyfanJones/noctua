@@ -363,6 +363,8 @@ setMethod(
     return(dbi_quote(conn, x, ...))
 })
 
+#' @rdname dbQuote
+#' @export
 setMethod(
   "dbQuoteString", c("AthenaConnection", "POSIXct"),
   function(conn, x, ...) {
@@ -370,6 +372,8 @@ setMethod(
     paste0('timestamp ', dbi_quote(conn, x, ...))
 })
 
+#' @rdname dbQuote
+#' @export
 setMethod(
   "dbQuoteString", c("AthenaConnection", "Date"),
   function(conn, x, ...) {
