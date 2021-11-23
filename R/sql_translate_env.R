@@ -267,8 +267,9 @@ sql_translate_env.AthenaConnection <- sql_translation.AthenaConnection
 #' @rdname sql_translate_env
 #' @export
 sql_escape_string.AthenaConnection <- function(con, x) {
+  # Keep same functionality as previous noctua versions
   # Added string restiction to prevent timestamps wrongly added to date format
-  all_dates <- all(try(as.Date(x, tryFormats = "%Y-%m-%d"), silent=T) == x) & all(nchar(x) == 10)
+  all_dates <- detect_date(x, try_format = "%Y-%m-%d")
   if(all_dates & !is.na(all_dates)) {
     paste0('date ', DBI::dbQuoteString(con, x))
   } else {

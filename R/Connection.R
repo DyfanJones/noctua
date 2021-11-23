@@ -343,17 +343,23 @@ NULL
 # import DBI quote_string method
 dbi_quote = methods::getMethod("dbQuoteString", c("DBIConnection", "character"), asNamespace("DBI"))
 
+detect_date <- function(x, try_format = c("%Y-%m-%d", "%Y/%m/%d")){
+  return(all_dates = all(try(as.Date(x, tryFormats = try_format), silent=T) == x) & all(nchar(x) == 10))
+}
+
+detect_date_time <- function(x){
+  timestamp_fmt = c("%Y-%m-%d %H:%M:%OS", "%Y/%m/%d %H:%M:%OS", "%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M")
+  return(all(try(as.POSIXct(x, tryFormats = timestamp_fmt), silent=T) == x))
+}
+
 #' @rdname dbQuote
 #' @export
 setMethod(
   "dbQuoteString", c("AthenaConnection", "character"),
   function(conn, x, ...) {
     if(identical(dbplyr_env$major, 2L)){
-      timestamp_fmt = c("%Y-%m-%d %H:%M:%OS", "%Y/%m/%d %H:%M:%OS", "%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M")
-      date_fmt = c("%Y-%m-%d", "%Y/%m/%d")
-      
-      all_ts <- all(try(as.POSIXct(x, tryFormats = timestamp_fmt), silent=T) == x)
-      all_dates = all(try(as.Date(x, tryFormats = date_fmt), silent=T) == x) & all(nchar(x) == 10)
+      all_ts <- detect_date_time(x)
+      all_dates <- detect_date(x)
       if(all_dates & !is.na(all_dates)) {
         return(paste0('date ', dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...)))
       } else if (all_ts & !is.na(all_ts)){
