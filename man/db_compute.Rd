@@ -65,5 +65,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\code{\link{backend_dbplyr}}
+\code{\link{AthenaWriteTables}} \code{\link{backend_dbplyr_v2}} \code{\link{backend_dbplyr_v1}}
 }

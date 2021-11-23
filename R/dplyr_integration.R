@@ -19,7 +19,7 @@
 #' @name db_compute
 #' @return
 #' \code{db_compute} returns table name
-#' @seealso \code{\link{backend_dbplyr}}
+#' @seealso \code{\link{AthenaWriteTables}} \code{\link{backend_dbplyr_v2}} \code{\link{backend_dbplyr_v1}}
 #' @examples 
 #' \dontrun{
 #' # Note: 
@@ -208,17 +208,13 @@ db_connection_describe.AthenaConnection <- function(con) {
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
 #' @param x R object to be transformed into athena equivalent
-#' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
-#' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
-#'                  \code{"NULL"} will let Athena set the file_type for you.
-#' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
-#' @param partition Partition Athena table, requires to be a partitioned variable from previous table.
-#' @param compress Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}
+#' @param format returning format for explain queries, default set to `"text"`. Other formats can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}
+#' @param type return plan for explain queries, default set to `NULL`. Other type can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}
 #' @param ... other parameters, currently not implemented
 #' @name backend_dbplyr_v2
 #' @return
 #' \describe{
-#' \item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}}
+#' \item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
 #' \item{sql_query_fields}{Returns sql query column names}
 #' \item{sql_escape_date}{Returns sql escaping from dates}
 #' \item{sql_escape_datetime}{Returns sql escaping from date times}
@@ -297,13 +293,6 @@ db_desc.AthenaConnection <- function(x) {
 #' utilise AWS Glue to speed up sql query execution.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
-#' @param x R object to be transformed into athena equivalent
-#' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
-#' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
-#'                  \code{"NULL"} will let Athena set the file_type for you.
-#' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
-#' @param partition Partition Athena table, requires to be a partitioned variable from previous table.
-#' @param compress Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}
 #' @param ... other parameters, currently not implemented
 #' @name backend_dbplyr_v1
 #' @return

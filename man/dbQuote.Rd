@@ -4,10 +4,16 @@
 \name{dbQuote}
 \alias{dbQuote}
 \alias{dbQuoteString,AthenaConnection,character-method}
+\alias{dbQuoteString,AthenaConnection,POSIXct-method}
+\alias{dbQuoteString,AthenaConnection,Date-method}
 \alias{dbQuoteIdentifier,AthenaConnection,SQL-method}
 \title{Quote Identifiers}
 \usage{
 \S4method{dbQuoteString}{AthenaConnection,character}(conn, x, ...)
+
+\S4method{dbQuoteString}{AthenaConnection,POSIXct}(conn, x, ...)
+
+\S4method{dbQuoteString}{AthenaConnection,Date}(conn, x, ...)
 
 \S4method{dbQuoteIdentifier}{AthenaConnection,SQL}(conn, x, ...)
 }

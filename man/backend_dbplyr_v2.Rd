@@ -21,23 +21,21 @@ sql_escape_datetime.AthenaConnection(con, x)
 
 \item{sql}{SQL code to be sent to AWS Athena}
 
+\item{format}{returning format for explain queries, default set to `"text"`. Other formats can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}}
+
+\item{type}{return plan for explain queries, default set to `NULL`. Other type can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}}
+
 \item{...}{other parameters, currently not implemented}
 
 \item{x}{R object to be transformed into athena equivalent}
-
-\item{name}{Table name if left default noctua will use default from 'dplyr''s \code{compute} function.}
-
-\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
-\code{"NULL"} will let Athena set the file_type for you.}
-
-\item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
-
-\item{partition}{Partition Athena table, requires to be a partitioned variable from previous table.}
-
-\item{compress}{Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}}
 }
 \value{
-
+\describe{
+\item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
+\item{sql_query_fields}{Returns sql query column names}
+\item{sql_escape_date}{Returns sql escaping from dates}
+\item{sql_escape_datetime}{Returns sql escaping from date times}
+}
 }
 \description{
 These functions are used to build the different types of SQL queries. 
