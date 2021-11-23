@@ -233,7 +233,7 @@ athena_explain <- function(con, sql, format = "text", type=NULL, ...){
     "EXPLAIN ",
     if (!is.null(format)) dplyr_sql(paste0("(FORMAT ", format, ") ")),
     if (!is.null(type)) dplyr_sql(paste0("(TYPE ", type, ") ")),
-    sql,
+    dplyr_sql(sql),
     con = con
   )
 }
