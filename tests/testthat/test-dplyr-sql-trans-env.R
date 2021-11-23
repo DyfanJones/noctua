@@ -50,14 +50,14 @@ data_type3 = c("l", "i", "i", "i", "i", "I", "d",
 names(data_type2) = type_names
 names(data_type3) = type_names
 
+# Test connection is using AWS CLI to set profile_name 
+con <- dbConnect(athena())
+
 test_that("Check RAthena s3 dplyr sql_translate_env method",{
   skip_if_no_env()
   skip_if_package_not_avialable("vroom")
   skip_if_package_not_avialable("dbplyr")
-  
   library(dbplyr)
-  # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(athena())
   
   test_date <- as.Date("2020-01-01")
   
@@ -280,12 +280,48 @@ test_that("Raise error for unknown data types", {
 })
 
 test_that("Explain Plan", {
-  # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(athena())
+  skip_if_no_env()
+  skip_if_package_not_avialable("dplyr")
   
   sql = "select * from iris"
-  actual = athena_explain(con, sql)
+  actual = noctua:::sql_query_explain.AthenaConnection(con, sql)
   
-  expected = "EXPLAIN (FORMAT text) 'select * from iris'"
+  expected = "EXPLAIN (FORMAT text) select * from iris"
   expect_equal(dplyr::sql(expected), actual)
+})
+
+test_that("dbplyr v2 db_connection_describe", {
+  skip_if_no_env()
+  
+  actual = noctua:::db_connection_describe.AthenaConnection(con)
+  
+  expect_true(grepl("Athena [0-9.]+ \\[.*@.*/.*\\]", actual))
+})
+
+#####################################################################
+# dbplyr v1
+#####################################################################
+
+test_that("dbplyr v1 db_explain", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dbplyr")
+  library(dbplyr)
+  
+  noctua::noctua_options()
+  actual = noctua:::db_explain.AthenaConnection(con, "select * from iris")
+  
+  expect_true(inherits(actual, "character"))
+})
+
+test_that("dbplyr v1 db_query_fields", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dbplyr")
+  library(dbplyr)
+  
+  actual1 = noctua:::db_query_fields.AthenaConnection(con, dbplyr::ident("iris"))
+  actual2 = noctua:::db_query_fields.AthenaConnection(con, dbplyr::sql("select * from iris"))
+  
+  expect = c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+  expect_equal(actual1, expect)
+  expect_equal(actual2, expect)
 })
