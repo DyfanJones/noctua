@@ -263,7 +263,7 @@ sql_translation.AthenaConnection <- function(con) {
 #' @export
 sql_translate_env.AthenaConnection <- sql_translation.AthenaConnection
 
-# Athena specifc S3 method for converting date variables and iso formatted date strings to date literals
+# Athena specific S3 method for converting date variables and iso formatted date strings to date literals
 #' @rdname sql_translate_env
 #' @export
 sql_escape_string.AthenaConnection <- function(con, x) {
