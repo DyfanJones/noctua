@@ -265,6 +265,56 @@
 <p>From this simple benchmark test there is a significant improvement in the performance when querying <code>AWS Athena</code> while <code>unload=TRUE</code>.</p>
 <p><strong>Note:</strong> Benchmark ran on <code>AWS Sagemaker</code> <code>ml.t3.xlarge</code> instance.</p>
 </div>
+<div id="set-unload-true-on-package-level" class="section level2">
+<h2 class="hasAnchor">
+<a href="#set-unload-true-on-package-level" class="anchor"></a>Set <code>unload = TRUE</code> on package level:</h2>
+<p>Another method to set <code>unload=TRUE</code> is to use <code><a href="../reference/noctua_options.html">noctua_options()</a></code>. By setting <code>noctua_options(unload=TRUE)</code>, <code>unload</code> is set to <code>TRUE</code> package level and all <code>DBI</code> functionality will use it when applicable.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org">DBI</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua">noctua</a></span><span class="op">)</span>
+
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="va">dbi_noaa</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from awswrangler_test.noaa"</span><span class="op">)</span></code></pre></div>
+<p>This also give benefits for when using <code>dplyr</code> functionality. When setting <code>noctua_options(unload=TRUE)</code> all <code>dplyr</code> lazy evaluation will start using <code>AWS Athena unload</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tbl_noaa</span> <span class="op">=</span> <span class="fu">tbl</span><span class="op">(</span><span class="va">con</span>, <span class="fu">dbplyr</span><span class="fu">::</span><span class="fu"><a href="https://dbplyr.tidyverse.org/reference/in_schema.html">in_schema</a></span><span class="op">(</span><span class="st">"awswrangler_test"</span>, <span class="st">"noaa"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">tbl_noaa</span> <span class="op">%&gt;%</span> <span class="fu">collect</span><span class="op">(</span><span class="op">)</span>
+
+<span class="co">#&gt; # A tibble: 29,554,197 × 8</span>
+<span class="co">#&gt;    id          dt                  element value m_flag q_flag s_flag obs_time</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dttm&gt;              &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   </span>
+<span class="co">#&gt;  1 ASN00074198 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  2 ASN00074222 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  3 ASN00074227 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  4 ASN00075001 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  5 ASN00075005 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  6 ASN00075006 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  7 ASN00075011 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  8 ASN00075013 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt;  9 ASN00075014 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt; 10 ASN00075018 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      </span>
+<span class="co">#&gt; # … with 29,554,187 more rows</span>
+
+<span class="va">noaa</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">element</span> <span class="op">==</span> <span class="st">"PRCP"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">collect</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 15,081,580 × 8</span>
+<span class="co">#&gt;    id          dt                  element value m_flag q_flag s_flag obs_time</span>
+<span class="co">#&gt;    &lt;chr&gt;       &lt;dttm&gt;              &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;   </span>
+<span class="co">#&gt;  1 SWE00140492 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      </span>
+<span class="co">#&gt;  2 SWE00140594 1890-01-06 00:00:00 PRCP        4 NA     NA     E      NA      </span>
+<span class="co">#&gt;  3 SWE00140746 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      </span>
+<span class="co">#&gt;  4 SWE00140828 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      </span>
+<span class="co">#&gt;  5 SWM00002080 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      </span>
+<span class="co">#&gt;  6 SWM00002485 1890-01-06 00:00:00 PRCP        1 NA     NA     E      NA      </span>
+<span class="co">#&gt;  7 SWM00002584 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      </span>
+<span class="co">#&gt;  8 TSE00147769 1890-01-06 00:00:00 PRCP       33 NA     NA     E      NA      </span>
+<span class="co">#&gt;  9 TSE00147775 1890-01-06 00:00:00 PRCP      150 NA     NA     E      NA      </span>
+<span class="co">#&gt; 10 UK000047811 1890-01-06 00:00:00 PRCP       49 NA     NA     E      NA      </span>
+<span class="co"># … with 15,081,570 more rows</span></code></pre></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

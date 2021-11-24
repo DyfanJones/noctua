@@ -142,3 +142,57 @@ Cache `unload=TRUE`|11.029
 From this simple benchmark test there is a significant improvement in the performance when querying `AWS Athena` while `unload=TRUE`.
 
 **Note:** Benchmark ran on `AWS Sagemaker` `ml.t3.xlarge` instance.
+
+## Set `unload = TRUE` on package level:
+
+Another method to set `unload=TRUE` is to use `noctua_options()`. By setting `noctua_options(unload=TRUE)`, `unload` is set to `TRUE` package level and all `DBI` functionality will use it when applicable.
+
+```r
+library(DBI)
+library(noctua)
+
+con <- dbConnect(athena())
+
+noctua_options(unload = TRUE)
+
+dbi_noaa = dbGetQuery(con, "select * from awswrangler_test.noaa")
+````
+
+This also give benefits for when using `dplyr` functionality. When setting `noctua_options(unload=TRUE)` all `dplyr` lazy evaluation will start using `AWS Athena unload`.
+
+```r
+tbl_noaa = tbl(con, dbplyr::in_schema("awswrangler_test", "noaa"))
+
+tbl_noaa %>% collect()
+
+#> # A tibble: 29,554,197 × 8
+#>    id          dt                  element value m_flag q_flag s_flag obs_time
+#>    <chr>       <dttm>              <chr>   <int> <chr>  <chr>  <chr>  <chr>   
+#>  1 ASN00074198 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  2 ASN00074222 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  3 ASN00074227 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  4 ASN00075001 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  5 ASN00075005 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  6 ASN00075006 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  7 ASN00075011 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  8 ASN00075013 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#>  9 ASN00075014 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#> 10 ASN00075018 1890-01-05 00:00:00 PRCP        0 NA     NA     a      NA      
+#> # … with 29,554,187 more rows
+
+noaa %>% filter(element == "PRCP") %>% collect()
+#> # A tibble: 15,081,580 × 8
+#>    id          dt                  element value m_flag q_flag s_flag obs_time
+#>    <chr>       <dttm>              <chr>   <int> <chr>  <chr>  <chr>  <chr>   
+#>  1 SWE00140492 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      
+#>  2 SWE00140594 1890-01-06 00:00:00 PRCP        4 NA     NA     E      NA      
+#>  3 SWE00140746 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      
+#>  4 SWE00140828 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      
+#>  5 SWM00002080 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      
+#>  6 SWM00002485 1890-01-06 00:00:00 PRCP        1 NA     NA     E      NA      
+#>  7 SWM00002584 1890-01-06 00:00:00 PRCP        0 NA     NA     E      NA      
+#>  8 TSE00147769 1890-01-06 00:00:00 PRCP       33 NA     NA     E      NA      
+#>  9 TSE00147775 1890-01-06 00:00:00 PRCP      150 NA     NA     E      NA      
+#> 10 UK000047811 1890-01-06 00:00:00 PRCP       49 NA     NA     E      NA      
+# … with 15,081,570 more rows
+```
