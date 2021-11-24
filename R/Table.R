@@ -215,15 +215,16 @@ Athena_write_table <-
                             s3.location = s3.location, file.type = file.type,
                             compress = compress)
       # create Athena table
-      rs <- dbExecute(conn, sql)
+      rs <- dbExecute(conn, sql, unload = FALSE)
       dbClearResult(rs)}
     
     # Repair table
     repair_table(conn, db_name, partition, s3.location, append)
     
-    on.exit({lapply(FileLocation, unlink)
-      if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)})
-    
+    on.exit({
+      lapply(FileLocation, unlink)
+      if(!is.null(conn@info$expiration)) time_check(conn@info$expiration)
+    })
     invisible(TRUE)
   }
 
@@ -561,7 +562,7 @@ repair_table <- function(con, name, partition = NULL, s3.location = NULL, append
   
   if (is.null(partition)){
     query <- SQL(paste0("MSCK REPAIR TABLE ", table))
-    res <- dbExecute(con, query)
+    res <- dbExecute(con, query, unload = FALSE)
     dbClearResult(res)
   } else {
     # create s3 location
@@ -575,7 +576,7 @@ repair_table <- function(con, name, partition = NULL, s3.location = NULL, append
     s3_location <- dbQuoteString(con, s3_location)
     
     query <- SQL(paste0("ALTER TABLE ", table, " ADD IF NOT EXISTS\nPARTITION (", partition, ")\nLOCATION ", s3_location))
-    res <- dbSendQuery(con, query)
+    res <- dbSendQuery(con, query, unload = FALSE)
     poll(res)
     on.exit(dbClearResult(res))
     # If query failed, due to glue permissions default back to msck repair table
@@ -584,7 +585,7 @@ repair_table <- function(con, name, partition = NULL, s3.location = NULL, append
       if(grepl(".*glue.*BatchCreatePartition.*AccessDeniedException", 
                res@info[["StateChangeReason"]])){
         query <- SQL(paste0("MSCK REPAIR TABLE ", table))
-        rs <- dbExecute(con, query)
+        rs <- dbExecute(con, query, unload = FALSE)
         return(dbClearResult(rs))}
       
       stop(res@info[["StateChangeReason"]], call. = FALSE)

@@ -230,7 +230,7 @@ setMethod(
     if (is.null(timezone)) {
       # set empty timezone initially
       con@info$timezone = ""
-      timezone <- dbGetQuery(con, "select current_timezone()")[[1]]
+      timezone <- dbGetQuery(con, "select current_timezone()", unload = FALSE)[[1]]
     }
     # check if timezone is valid 
     timezone <- check_timezone(timezone)
