@@ -68,7 +68,6 @@ test_that("test dbGetQuery dbplyr ident", {
   expect = c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
   
   expect_equal(names(empty_shell), expect)
-  expect_error(dbFetch(res, n = 100), "Result already cleared.")
 })
 
 test_that("test if dbGetQuery statistics returns named list correctly", {
