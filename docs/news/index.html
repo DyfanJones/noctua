@@ -161,6 +161,7 @@
 <a href="#feature" class="anchor"></a>Feature:</h2>
 <ul>
 <li>Add support <code>dbplyr</code> 2.0.0 backend API.</li>
+<li>Add method to set unload on a package level to allow <code>dplyr</code> to benefit from <code>AWS Athena unload</code> methods (<a href='https://github.com/DyfanJones/noctua/issues/174'>#174</a>).</li>
 </ul>
 </div>
 <div id="bug-fix" class="section level2">
@@ -698,8 +699,8 @@ Info: The S3 objects in prefix will be deleted:
 <li>
 <code>dbWriteTable</code> now allows json to be appended to json ddls created with the Openx-JsonSerDe library.</li>
 <li>
-<code>dbConvertTable</code> brings <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> functionality to base package, allowing <code>noctua</code> to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (<a href="https://github.com/DyfanJones/RAthena/issues/37">RAthena: # 37</a>).</li>
-<li>Extended <code><a href="https://dplyr.tidyverse.org/reference/compute.html">dplyr::compute</a></code> to give same functionality of <code>dbConvertTable</code>
+<code>dbConvertTable</code> brings <code><a href="https://rdrr.io/pkg/dplyr/man/compute.html">dplyr::compute</a></code> functionality to base package, allowing <code>noctua</code> to use the power of AWS Athena to convert tables and queries to more efficient file formats in AWS S3 (<a href="https://github.com/DyfanJones/RAthena/issues/37">RAthena: # 37</a>).</li>
+<li>Extended <code><a href="https://rdrr.io/pkg/dplyr/man/compute.html">dplyr::compute</a></code> to give same functionality of <code>dbConvertTable</code>
 </li>
 <li>Added <code>region_name</code> check before making a connection to AWS Athena (<a href="https://github.com/DyfanJones/RAthena/issues/110">RAthena: # 110</a>)</li>
 </ul>
@@ -903,8 +904,8 @@ Info: The S3 objects in prefix will be deleted:
 
 <span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">compute</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"temp.iris"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/compute.html">compute</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"temp.iris"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>
 <code>dbListFields</code> didn’t display partitioned columns. This has now been fixed with the call to AWS Glue being altered to include more metadata allowing for column names and partitions to be returned.</li>
@@ -927,7 +928,7 @@ Info: The S3 objects in prefix will be deleted:
 <li>File parser <code>vroom</code> has been restricted to &gt;= 1.2.0 due to integer64 support and changes to <code>vroom</code> api</li>
 </ul>
 </li>
-<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for improving the speed of <code><a href="https://dplyr.tidyverse.org/reference/tbl.html">dplyr::tbl</a></code> when calling Athena when using the ident method (<a href='https://github.com/DyfanJones/noctua/issues/64'>#64</a>):</li>
+<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for improving the speed of <code><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">dplyr::tbl</a></code> when calling Athena when using the ident method (<a href='https://github.com/DyfanJones/noctua/issues/64'>#64</a>):</li>
 </ul>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -937,10 +938,10 @@ Info: The S3 objects in prefix will be deleted:
 <span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect,AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># ident method:</span>
-<span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># sub query method:</span>
-<span class="va">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html">sql</a></span><span class="op">(</span><span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/tbl.html">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/sql.html">sql</a></span><span class="op">(</span><span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># ident method</span>
 <span class="co"># user  system elapsed </span>
@@ -1112,7 +1113,7 @@ Info: The S3 objects in prefix will be deleted:
 </li>
 <li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for discovering an issue with <code>NA</code> in string format. Before <code>noctua</code> would return <code>NA</code> in string class as <code>""</code> this has now been fixed.</li>
 <li>When returning a single column data.frame from Athena, <code>noctua</code> would translate output into a vector with current the method <code>dbFetch</code> n = 0.</li>
-<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for identifying issue around <code>sql_translate_env</code>. Previously <code>noctua</code> would take the default <code><a href="https://dplyr.tidyverse.org/reference/backend_dbplyr.html">dplyr::sql_translate_env</a></code>, now <code>noctua</code> has a custom method that uses Data types from: <a href="https://docs.aws.amazon.com/athena/latest/ug/data-types.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/data-types.html</a> and window functions from: <a href="https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html</a>
+<li>Thanks to <a href='https://github.com/OssiLehtinen'>@OssiLehtinen</a> for identifying issue around <code>sql_translate_env</code>. Previously <code>noctua</code> would take the default <code><a href="https://rdrr.io/pkg/dplyr/man/backend_dbplyr.html">dplyr::sql_translate_env</a></code>, now <code>noctua</code> has a custom method that uses Data types from: <a href="https://docs.aws.amazon.com/athena/latest/ug/data-types.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/data-types.html</a> and window functions from: <a href="https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html" class="uri">https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html</a>
 </li>
 </ul>
 <div id="unit-tests-3" class="section level3">
