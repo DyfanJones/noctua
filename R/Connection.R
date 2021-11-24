@@ -219,7 +219,7 @@ setMethod(
   "dbSendQuery", c("AthenaConnection", "character"),
   function(conn,
            statement,
-           unload = FALSE,
+           unload = athena_unload(),
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
@@ -237,7 +237,7 @@ setMethod(
   "dbSendStatement", c("AthenaConnection", "character"),
   function(conn,
            statement,
-           unload = FALSE,
+           unload = athena_unload(),
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
@@ -255,7 +255,7 @@ setMethod(
   "dbExecute", c("AthenaConnection", "character"),
   function(conn,
            statement,
-           unload = FALSE,
+           unload = athena_unload(),
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
@@ -729,7 +729,7 @@ setMethod(
   function(conn,
            statement, 
            statistics = FALSE,
-           unload = FALSE,
+           unload = athena_unload(),
            ...){
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics), is.logical(unload))
@@ -918,7 +918,7 @@ setMethod(
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
-    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]],".",ll[["table"]]))[[1]], collapse = "\n"))
+    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]],".",ll[["table"]]), unload = FALSE)[[1]], collapse = "\n"))
 })
 
 #' Simple wrapper to convert Athena backend file types
@@ -1011,7 +1011,7 @@ setMethod(
     tt_sql <- paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
                      " ", ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
                      ins,"\nWITH", with_data, "DATA", ";")
-    res <- dbExecute(conn, tt_sql)
+    res <- dbExecute(conn, tt_sql, unload = FALSE)
     dbClearResult(res)
     return(invisible(TRUE))
 })
