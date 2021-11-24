@@ -22,6 +22,11 @@ test_that("Check noctua s3 dplyr compute method",{
   athena_tbl <- tbl(con, sql("SELECT * FROM INFORMATION_SCHEMA.TABLES"))
   athena_tbl %>% compute("compute_tbl1", s3_location = paste0(Sys.getenv("noctua_s3_tbl"),"compute_tbl/"))
   athena_tbl %>% compute("compute_tbl2")
+  
+  noctua_options(unload = T)
+  expect_error(athena_tbl %>% compute("compute_tbl2"))
+  noctua_options()
+  
   result1 <- dbExistsTable(con, "compute_tbl1")
   result2 <- dbExistsTable(con, "compute_tbl2")
   
