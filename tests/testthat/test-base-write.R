@@ -12,7 +12,7 @@ exp_df = data.table(
   var2=1:26
 )
 
-test_that("Check if raw object is write out correctly", {
+test_that("Check if raw object is written out correctly", {
   temp_file1 = tempfile()
   temp_file2 = tempfile()
   

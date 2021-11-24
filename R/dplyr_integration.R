@@ -1,19 +1,10 @@
-#' S3 implementation of \code{db_desc} for Athena
-#' 
-#' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
-#' @param x A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
-#' @name db_desc
-#' @return
-#' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
-#' 
-#' \code{"Athena <paws version> [<profile_name>@region/database]"}
-db_desc.AthenaConnection <- function(x) {
-  info <- dbGetInfo(x)
-  profile <- if(!is.null(info$profile_name)) paste0(info$profile_name, "@")
-  paste0("Athena ",info$paws," [",profile,info$region_name,"/", info$dbms.name,"]")
-}
+#' @include utils.R
 
-#' S3 implementation of \code{db_compute} for Athena
+######################################################################
+# dplyr generic
+######################################################################
+
+#' @title S3 implementation of \code{db_compute} for Athena
 #' 
 #' This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
@@ -28,7 +19,7 @@ db_desc.AthenaConnection <- function(x) {
 #' @name db_compute
 #' @return
 #' \code{db_compute} returns table name
-#' @seealso \code{\link{backend_dbplyr}}
+#' @seealso \code{\link{AthenaWriteTables}} \code{\link{backend_dbplyr_v2}} \code{\link{backend_dbplyr_v1}}
 #' @examples 
 #' \dontrun{
 #' # Note: 
@@ -61,48 +52,27 @@ db_desc.AthenaConnection <- function(x) {
 #' # Disconnect from Athena
 #' dbDisconnect(con)
 #' }
+
 db_compute.AthenaConnection <- function(con,
                                         table,
                                         sql,
                                         ...) {
-  db_save_query <- pkg_method("db_save_query", "dplyr")
   in_schema <- pkg_method("in_schema", "dbplyr")
-  table <- db_save_query(con, sql, table, ...)
+  table <- athena_query_save(con, sql, table, ...)
   ll <- db_detect(con, table)
   in_schema(ll[["dbms.name"]], ll[["table"]])
 }
 
-#' Athena S3 implementation of dbplyr backend functions
-#' 
-#' These functions are used to build the different types of SQL queries. 
-#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
-#' utilise AWS Glue to speed up sql query execution.
-#' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
-#' @param sql SQL code to be sent to AWS Athena
-#' @param x R object to be transformed into athena equivalent
-#' @param name Table name if left default noctua will use default from 'dplyr''s \code{compute} function.
-#' @param file_type What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
-#'                  \code{"NULL"} will let Athena set the file_type for you.
-#' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
-#' @param partition Partition Athena table, requires to be a partitioned variable from previous table.
-#' @param compress Compress Athena table, currently can only compress ["parquet", "orc"] \href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS}
-#' @param ... other parameters, currently not implemented
-#' @name backend_dbplyr
-#' @return
-#' \describe{
-#' \item{db_save_query}{Returns table name}
-#' \item{db_explain}{Raises an \code{error} as AWS Athena does not support \code{EXPLAIN} queries \href{https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html}{Athena Limitations}}
-#' \item{db_query_fields}{Returns sql query column names}
-#' }
-db_save_query.AthenaConnection <- function(con, sql, name , 
-                                           file_type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
-                                           s3_location = NULL,
-                                           partition = NULL,
-                                           compress = TRUE,
-                                           ...){
+athena_query_save <- function(con, sql, name , 
+                              file_type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
+                              s3_location = NULL,
+                              partition = NULL,
+                              compress = TRUE,
+                              ...){
   stopifnot(is.null(s3_location) || is.s3_uri(s3_location))
   file_type = match.arg(file_type)
-  tt_sql <- SQL(paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
+  
+  tt_sql <- SQL(paste0("CREATE TABLE ", paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
                        " ", ctas_sql_with(partition, s3_location, file_type, compress), "AS ",
                        sql, ";"))
   res <- dbExecute(con, tt_sql)
@@ -174,7 +144,6 @@ db_save_query.AthenaConnection <- function(con, sql, name ,
 #' # Disconnect from Athena
 #' dbDisconnect(con)
 #' }
-
 db_copy_to.AthenaConnection <- function(con, table, values,
                                         overwrite = FALSE, append = FALSE,
                                         types = NULL, partition = NULL,
@@ -193,37 +162,180 @@ db_copy_to.AthenaConnection <- function(con, table, values,
                s3.location = s3_location, file.type = file_type,
                compress = compress,
                max.batch = max_batch)
-  table
+  return(table)
 }
 
-#' @rdname backend_dbplyr
+######################################################################
+# dplyr v2 api support
+######################################################################
+
+#' Declare which version of dbplyr API is being called.
+#' 
+#' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
+#' @name dbplyr_edition
+#' @return
+#' Integer for which version of `dbplyr` is going to be used.
+#' @export
+dbplyr_edition.AthenaConnection <- function(con) 2L
+
+#' S3 implementation of \code{db_connection_describe} for Athena (api version 2).
+#' 
+#' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
+#' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
+#' @name db_connection_describe
+#' @return
+#' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
+#' 
+#' \code{"Athena <paws version> [<profile_name>@region/database]"}
+NULL
+
+athena_conn_desc <- function(con){
+  info <- dbGetInfo(con)
+  profile <- if(!is.null(info$profile_name)) paste0(info$profile_name, "@")
+  paste0("Athena ",info$paws," [",profile,info$region_name,"/", info$dbms.name,"]")
+}
+
+#' @rdname db_connection_describe
+db_connection_describe.AthenaConnection <- function(con) {
+  athena_conn_desc(con)
+}
+
+#' Athena S3 implementation of dbplyr backend functions (api version 2).
+#' 
+#' These functions are used to build the different types of SQL queries. 
+#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
+#' utilise AWS Glue to speed up sql query execution.
+#' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
+#' @param sql SQL code to be sent to AWS Athena
+#' @param x R object to be transformed into athena equivalent
+#' @param format returning format for explain queries, default set to `"text"`. Other formats can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}
+#' @param type return plan for explain queries, default set to `NULL`. Other type can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}
+#' @param ... other parameters, currently not implemented
+#' @name backend_dbplyr_v2
+#' @return
+#' \describe{
+#' \item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
+#' \item{sql_query_fields}{Returns sql query column names}
+#' \item{sql_escape_date}{Returns sql escaping from dates}
+#' \item{sql_escape_datetime}{Returns sql escaping from date times}
+#' }
+NULL
+
+athena_explain <- function(con, sql, format = "text", type=NULL, ...){
+  # AWS Athena now supports explain: https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html
+  format <- match.arg(format, c("text", "json"))
+  if(!is.null(type)) {
+    type <- match.arg(type, c("LOGICAL", "DISTRIBUTED", "VALIDATE", "IO"))
+    format <- NULL
+  }
+  build_sql <- pkg_method("build_sql", "dbplyr")
+  dplyr_sql <- pkg_method("sql", "dbplyr")
+  
+  build_sql(
+    "EXPLAIN ",
+    if (!is.null(format)) dplyr_sql(paste0("(FORMAT ", format, ") ")),
+    if (!is.null(type)) dplyr_sql(paste0("(TYPE ", type, ") ")),
+    dplyr_sql(sql),
+    con = con
+  )
+}
+
+#' @rdname backend_dbplyr_v2
+sql_query_explain.AthenaConnection <- athena_explain
+
+#' @rdname backend_dbplyr_v2
+sql_query_fields.AthenaConnection <- function(con, sql, ...) {
+  # pass ident class to dbGetQuery to continue same functionality as dbplyr v1 api.
+  if(inherits(sql, "ident")) {
+    return(sql)
+  } else {
+    # None ident class uses dbplyr:::sql_query_fields.DBIConnection method
+    dbplyr_query_select <- pkg_method("dbplyr_query_select", "dbplyr")
+    sql_subquery <- pkg_method("sql_subquery", "dplyr")
+    dplyr_sql <- pkg_method("sql", "dplyr")
+    
+    return(dbplyr_query_select(con, dplyr_sql("*"), sql_subquery(con, sql), where = dplyr_sql("0 = 1")))
+  }
+}
+
+#' @rdname backend_dbplyr_v2
+#' @export
+sql_escape_date.AthenaConnection <- function(con, x) {
+  dbQuoteString(con, x)
+}
+
+#' @rdname backend_dbplyr_v2
+#' @export
+sql_escape_datetime.AthenaConnection <- function(con, x) {
+  str = dbQuoteString(con, x)
+  return(gsub("^date ", "timestamp ", str))
+}
+
+######################################################################
+# dplyr v1 api support
+######################################################################
+
+#' S3 implementation of \code{db_desc} for Athena (api version 1).
+#' 
+#' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
+#' @param x A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
+#' @name db_desc
+#' @return
+#' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
+#' 
+#' \code{"Athena <paws version> [<profile_name>@region/database]"}
+db_desc.AthenaConnection <- function(x) {
+  return(athena_conn_desc(x))
+}
+
+#' Athena S3 implementation of dbplyr backend functions (api version 1).
+#' 
+#' These functions are used to build the different types of SQL queries. 
+#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
+#' utilise AWS Glue to speed up sql query execution.
+#' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
+#' @param sql SQL code to be sent to AWS Athena
+#' @param ... other parameters, currently not implemented
+#' @name backend_dbplyr_v1
+#' @return
+#' \describe{
+#' \item{db_explain}{Returns \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
+#' \item{db_query_fields}{Returns sql query column names}
+#' }
+
+#' @rdname backend_dbplyr_v1
 db_explain.AthenaConnection <- function(con, sql, ...){
-  # AWS Athena does not support Explain statements https://docs.aws.amazon.com/athena/latest/ug/other-notable-limitations.html
-  stop("Athena does not support EXPLAIN statements.", call. = FALSE)
+  sql <- athena_explain(con, sql, ...)
+  expl <- dbGetQuery(con, sql)
+  out <- utils::capture.output(print(expl))
+  paste(out, collapse = "\n")
 }
 
-#' @rdname backend_dbplyr
+# NOTE: dbplyr v2 integration has to use this in dbGetQuery
+athena_query_fields_ident <- function(con, sql){
+  if (grepl("\\.", sql)) {
+    schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
+  } else {
+    schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))
+  }
+  # If dbplyr schema, get the fields from Glue
+  tryCatch(
+    output <- con@ptr$glue$get_table(
+      DatabaseName = schema_parts[1],
+      Name = schema_parts[2])$Table
+  )
+  col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+  partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
+  
+  return(c(col_names, partitions))
+}
+
+#' @rdname backend_dbplyr_v1
 db_query_fields.AthenaConnection <- function(con, sql, ...) {
   
   # check if sql is dbplyr schema
-  in_schema <- inherits(sql, "ident")
-  
-  if(in_schema) {
-    if (grepl("\\.", sql)) {
-      schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
-    } else {
-      schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))}
-    
-    # If dbplyr schema, get the fields from Glue
-    tryCatch(
-      output <- con@ptr$glue$get_table(DatabaseName = schema_parts[1],
-                                       Name = schema_parts[2])$Table)
-    
-    col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
-    partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
-    
-    c(col_names, partitions)
-    
+  if(inherits(sql, "ident")) {
+    return(athena_query_fields_ident(con, sql))
   } else { 
     # If a subquery, query Athena for the fields
     # return dplyr methods
@@ -236,18 +348,6 @@ db_query_fields.AthenaConnection <- function(con, sql, ...) {
     on.exit(dbClearResult(qry))
     
     res <- dbFetch(qry, 0)
-    names(res)
+    return(names(res))
   }
-}
-
-#' @rdname backend_dbplyr
-sql_escape_date.AthenaConnection <- function(con, x) {
-  paste0('date ', dbQuoteString(con, as.character(x)))
-}
-
-
-#' @rdname backend_dbplyr
-sql_escape_datetime.AthenaConnection <- function(con, x) {
-  x <- strftime(x, "%Y-%m-%d %H:%M:%OS %Z")
-  paste0('timestamp ', dbQuoteString(con, x))
 }

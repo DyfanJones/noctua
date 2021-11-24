@@ -50,14 +50,14 @@ data_type3 = c("l", "i", "i", "i", "i", "I", "d",
 names(data_type2) = type_names
 names(data_type3) = type_names
 
+# Test connection is using AWS CLI to set profile_name 
+con <- dbConnect(athena())
+
 test_that("Check RAthena s3 dplyr sql_translate_env method",{
   skip_if_no_env()
   skip_if_package_not_avialable("vroom")
   skip_if_package_not_avialable("dbplyr")
-  
   library(dbplyr)
-  # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(athena())
   
   test_date <- as.Date("2020-01-01")
   
@@ -94,8 +94,14 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t30 <- noctua:::AthenaToRDataType.athena_data.table(method, data_types)
   noctua_options("vroom")
   t31 <- noctua:::AthenaToRDataType.athena_vroom(method, data_types)
-  t32 <- noctua:::sql_escape_date.AthenaConnection(con, "2020-01-01")
-  t33 <- noctua:::sql_escape_datetime.AthenaConnection(con, "2020-01-01")
+  t32a <- dbplyr::sql_escape_date(con, "2020-01-01")
+  t32b <- dbplyr::sql_escape_date(con, "2020/01/01")
+  t33a <- dbplyr::sql_escape_datetime(con, "2020-01-01")
+  t33b <- dbplyr::sql_escape_datetime(con, "2020/01/01")
+  t33c <- dbplyr::sql_escape_datetime(con, "2020-01-01 12:10")
+  t33d <- dbplyr::sql_escape_datetime(con, "2020-01-01 12:10:10")
+  t33e <- dbplyr::sql_escape_datetime(con, "2020/01/01 12:10")
+  t33f <- dbplyr::sql_escape_datetime(con, "2020/01/01 12:10:10")
   t34 <- translate_sql(grepl("dummy", data_types), con = con)
   t35 <- translate_sql(grepl("dummy", data_types, ignore.case=TRUE), con = con)
   t36 <- translate_sql(regexpr("dummy", data_types), con = con)
@@ -181,13 +187,24 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t26, sql("\"iris\"['sepal_length']"))
   expect_equal(t27, sql('"iris"[1]'))
   expect_true(t28)
-  # suppress information messages
-  suppressMessages(expect_error(explain(tbl(con, "iris"))))
   expect_equal(t29, data_type1)
   expect_equal(t30, data_type2)
   expect_equal(t31, data_type3)
-  expect_equal(t32, "date '2020-01-01'")
-  expect_equal(t33, sprintf("timestamp '%s'", strftime("2020-01-01", "%Y-%m-%d %H:%M:%OS %Z")))
+  if(identical(dbplyr_env$major, 1L)){
+    expect_equal(t32a, "date '2020-01-01'")
+    expect_equal(t33a, sprintf("timestamp '%s'", strftime("2020-01-01", "%Y-%m-%d %H:%M:%OS %Z")))
+  } else {
+    expect_equal(t32a, "date '2020-01-01'")
+    expect_equal(t32b, "date '2020-01-01'")
+    expect_equal(t32a, "date '2020-01-01'")
+    expect_equal(t32b, "date '2020-01-01'")
+    expect_equal(t33a, "timestamp '2020-01-01'")
+    expect_equal(t33b, "timestamp '2020-01-01'")
+    expect_equal(t33c, "timestamp '2020-01-01 12:10:00.000'")
+    expect_equal(t33d, "timestamp '2020-01-01 12:10:10.000'")
+    expect_equal(t33e, "timestamp '2020-01-01 12:10:00.000'")
+    expect_equal(t33f, "timestamp '2020-01-01 12:10:10.000'")
+  }
   expect_equal(t34, sql("REGEXP_LIKE(\"data_types\",'dummy')"))
   expect_equal(t35, sql("REGEXP_LIKE(\"data_types\",'(?i)dummy')"))
   expect_error(translate_sql(grepl("dummy", data_types, perl=TRUE), con = con))
@@ -223,9 +240,16 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t63, sql("INTERVAL '1' week"))
   expect_equal(t64, sql("INTERVAL '1' month"))
   expect_equal(t65, sql("INTERVAL '1' year"))
-  expect_equal(t66, sql("date_trunc('second', timestamp '2021-07-26 14:45:50')"))
-  expect_equal(t67, sql("date_trunc('month', timestamp '2021-07-26 14:45:50')"))
-  expect_equal(t68, sql("timestamp '2021-07-26 14:45:50' at time zone 'America/Los_Angeles'"))
+  if(identical(dbplyr_env$major, 1L)){
+    posixct = strftime(as.POSIXct('2021-07-26 14:45:50'), "%Y-%m-%d %H:%M:%OS %Z")
+    expect_equal(t66, sql(sprintf("date_trunc('second', timestamp '%s')", posixct)))
+    expect_equal(t67, sql(sprintf("date_trunc('month', timestamp '%s')", posixct)))
+    expect_equal(t68, sql(sprintf("timestamp '%s' at time zone 'America/Los_Angeles'", posixct)))
+  } else {
+    expect_equal(t66, sql("date_trunc('second', timestamp '2021-07-26 14:45:50.000')"))
+    expect_equal(t67, sql("date_trunc('month', timestamp '2021-07-26 14:45:50.000')"))
+    expect_equal(t68, sql("timestamp '2021-07-26 14:45:50.000' at time zone 'America/Los_Angeles'"))
+  }
   expect_equal(t69, sql("current_date"))
   expect_equal(t70, sql("CAST(date '2020-01-01' AS DATE)"))
   expect_equal(t71, sql("now()"))
@@ -234,9 +258,15 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   expect_equal(t73, sql("current_date"))
   expect_equal(t74, sql("now()"))
   expect_equal(t75, sql("now() at time zone 'America/Los_Angeles'"))
-  expect_equal(t76, sql("timestamp date '2020-01-01'"))
-  expect_equal(t77, sql("timestamp date '2020-01-01' at time zone 'UTC'"))
   
+  if(identical(dbplyr_env$major, 1L)){
+    posixct = strftime(as.POSIXct("2020-01-01"), "%Y-%m-%d %H:%M:%OS %Z")
+    expect_equal(t76, sql(sprintf("timestamp '%s'", posixct)))
+    expect_equal(t77, sql(sprintf("timestamp '%s' at time zone 'UTC'", posixct)))
+  } else {
+    expect_equal(t76, sql("timestamp '2020-01-01 00:00:00.000'"))
+    expect_equal(t77, sql("timestamp '2020-01-01 00:00:00.000' at time zone 'UTC'"))
+  }
   expect_equal(t78, sql("APPROX_PERCENTILE('column', 0.5)"))
   expect_equal(t79, sql("APPROX_PERCENTILE('column', 0.25)"))
 })
@@ -247,4 +277,63 @@ test_that("Raise error for unknown data types", {
   
   expect_error(dbDataType(con, obj))
   expect_error(AthenaDataType(obj))
+})
+
+test_that("Explain Plan default", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dplyr")
+  
+  sql = "select * from iris"
+  actual = noctua:::sql_query_explain.AthenaConnection(con, sql)
+  
+  expected = "EXPLAIN (FORMAT text) select * from iris"
+  expect_equal(dplyr::sql(expected), actual)
+})
+
+test_that("Explain Plan type set to IO", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dplyr")
+  
+  sql = "select * from iris"
+  actual = noctua:::sql_query_explain.AthenaConnection(con, sql, type = "IO")
+  
+  expected = "EXPLAIN (TYPE IO) select * from iris"
+  expect_equal(dplyr::sql(expected), actual)
+})
+
+
+test_that("dbplyr v2 db_connection_describe", {
+  skip_if_no_env()
+  
+  actual = noctua:::db_connection_describe.AthenaConnection(con)
+  
+  expect_true(grepl("Athena [0-9.]+ \\[.*@.*/.*\\]", actual))
+})
+
+#####################################################################
+# dbplyr v1
+#####################################################################
+
+test_that("dbplyr v1 db_explain", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dbplyr")
+  library(dbplyr)
+  
+  noctua::noctua_options()
+  actual = noctua:::db_explain.AthenaConnection(con, "select * from iris")
+  
+  expect_true(inherits(actual, "character"))
+})
+
+test_that("dbplyr v1 db_query_fields", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dbplyr")
+  library(dbplyr)
+  
+  actual1 = noctua:::db_query_fields.AthenaConnection(con, dbplyr::ident("iris"))
+  actual2 = noctua:::db_query_fields.AthenaConnection(con, dbplyr::sql("select * from iris"))
+  
+  expect = c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+  expect_equal(actual1, expect)
+  expect_equal(actual2, expect)
 })
