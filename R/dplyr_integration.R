@@ -58,6 +58,12 @@ db_compute.AthenaConnection <- function(con,
                                         sql,
                                         ...) {
   in_schema <- pkg_method("in_schema", "dbplyr")
+  if(athena_unload()){
+    stop(
+      "Unable to create table when `noctua_options(unload = TRUE)`. Please run `noctua_options(unload = FALSE)` and try again.",
+      call. = FALSE
+    )
+  }
   table <- athena_query_save(con, sql, table, ...)
   ll <- db_detect(con, table)
   in_schema(ll[["dbms.name"]], ll[["table"]])
@@ -75,7 +81,7 @@ athena_query_save <- function(con, sql, name ,
   tt_sql <- SQL(paste0("CREATE TABLE ", paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
                        " ", ctas_sql_with(partition, s3_location, file_type, compress), "AS ",
                        sql, ";"))
-  res <- dbExecute(con, tt_sql)
+  res <- dbExecute(con, tt_sql, unload = FALSE)
   dbClearResult(res)
   return(name)
 }
@@ -222,6 +228,12 @@ db_connection_describe.AthenaConnection <- function(con) {
 NULL
 
 athena_explain <- function(con, sql, format = "text", type=NULL, ...){
+  if(athena_unload()){
+    stop(
+      "Unable to explain query plan when `noctua_options(unload = TRUE)`. Please run `noctua_options(unload = FALSE)` and try again.",
+      call. = FALSE
+    )
+  }
   # AWS Athena now supports explain: https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html
   format <- match.arg(format, c("text", "json"))
   if(!is.null(type)) {
@@ -306,7 +318,7 @@ db_desc.AthenaConnection <- function(x) {
 #' @rdname backend_dbplyr_v1
 db_explain.AthenaConnection <- function(con, sql, ...){
   sql <- athena_explain(con, sql, ...)
-  expl <- dbGetQuery(con, sql)
+  expl <- dbGetQuery(con, sql, unload = FALSE)
   out <- utils::capture.output(print(expl))
   paste(out, collapse = "\n")
 }

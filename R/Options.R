@@ -13,6 +13,7 @@ athena_option_env$bigint <- "integer64"
 athena_option_env$binary <- "raw"
 athena_option_env$json <- "auto"
 athena_option_env$rstudio_conn_tab <- TRUE
+athena_option_env$athena_unload <- FALSE
 
 # ==========================================================================
 # helper function to handle big integers
@@ -65,6 +66,7 @@ bit64_check <- function(value){
 #' @param clear_cache Clears all previous cached query metadata
 #' @param retry Maximum number of requests to attempt.
 #' @param retry_quiet If \code{FALSE}, will print a message from retry displaying how long until the next request.
+#' @param unload set AWS Athena unload functionality globally.
 #' @return \code{noctua_options()} returns \code{NULL}, invisibly.
 #' @examples
 #' library(noctua)
@@ -82,12 +84,14 @@ noctua_options <- function(file_parser = c("data.table", "vroom"),
                            cache_size = 0,
                            clear_cache = FALSE,
                            retry = 5,
-                           retry_quiet = FALSE) {
+                           retry_quiet = FALSE,
+                           unload = FALSE) {
   file_parser = match.arg(file_parser)
   stopifnot(is.logical(clear_cache),
             is.numeric(retry),
             is.numeric(cache_size),
-            is.logical(retry_quiet))
+            is.logical(retry_quiet),
+            is.logical(unload))
   
   if(cache_size < 0 | cache_size > 100) stop("noctua currently only supports up to 100 queries being cached", call. = F)
   if(retry < 0) stop("Number of retries is required to be greater than 0.")
@@ -128,6 +132,8 @@ noctua_options <- function(file_parser = c("data.table", "vroom"),
   athena_option_env$retry_quiet <- retry_quiet
   
   if(clear_cache) athena_option_env$cache_dt <- athena_option_env$cache_dt[0]
+  
+  athena_option_env$athena_unload <- unload
   
   invisible(NULL)
 } 

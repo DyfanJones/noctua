@@ -8,11 +8,11 @@
 \alias{dbExecute,AthenaConnection,character-method}
 \title{Execute a query on Athena}
 \usage{
-\S4method{dbSendQuery}{AthenaConnection,character}(conn, statement, unload = FALSE, ...)
+\S4method{dbSendQuery}{AthenaConnection,character}(conn, statement, unload = athena_unload(), ...)
 
-\S4method{dbSendStatement}{AthenaConnection,character}(conn, statement, unload = FALSE, ...)
+\S4method{dbSendStatement}{AthenaConnection,character}(conn, statement, unload = athena_unload(), ...)
 
-\S4method{dbExecute}{AthenaConnection,character}(conn, statement, unload = FALSE, ...)
+\S4method{dbExecute}{AthenaConnection,character}(conn, statement, unload = athena_unload(), ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by

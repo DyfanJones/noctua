@@ -181,31 +181,6 @@ utilise AWS Glue to speed up sql query execution.</p>
       <th>...</th>
       <td><p>other parameters, currently not implemented</p></td>
     </tr>
-    <tr>
-      <th>x</th>
-      <td><p>R object to be transformed into athena equivalent</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>Table name if left default noctua will use default from 'dplyr''s <code>compute</code> function.</p></td>
-    </tr>
-    <tr>
-      <th>file_type</th>
-      <td><p>What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
-<code>"NULL"</code> will let Athena set the file_type for you.</p></td>
-    </tr>
-    <tr>
-      <th>s3_location</th>
-      <td><p>s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")</p></td>
-    </tr>
-    <tr>
-      <th>partition</th>
-      <td><p>Partition Athena table, requires to be a partitioned variable from previous table.</p></td>
-    </tr>
-    <tr>
-      <th>compress</th>
-      <td><p>Compress Athena table, currently can only compress ["parquet", "orc"] <a href='https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html'>AWS Athena CTAS</a></p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

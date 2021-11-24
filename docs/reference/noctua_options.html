@@ -168,7 +168,8 @@
   cache_size <span class='op'>=</span> <span class='fl'>0</span>,
   clear_cache <span class='op'>=</span> <span class='cn'>FALSE</span>,
   retry <span class='op'>=</span> <span class='fl'>5</span>,
-  retry_quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
+  retry_quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  unload <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -210,6 +211,10 @@ Custom Json parsers can be provide by using a function with data frame parameter
     <tr>
       <th>retry_quiet</th>
       <td><p>If <code>FALSE</code>, will print a message from retry displaying how long until the next request.</p></td>
+    </tr>
+    <tr>
+      <th>unload</th>
+      <td><p>set AWS Athena unload functionality globally.</p></td>
     </tr>
     </table>
 
