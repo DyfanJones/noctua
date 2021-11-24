@@ -6,7 +6,7 @@
 \alias{dbGetQuery,AthenaConnection,character-method}
 \title{Send query, retrieve results and then clear result set}
 \usage{
-\S4method{dbGetQuery}{AthenaConnection,character}(conn, statement, statistics = FALSE, unload = FALSE, ...)
+\S4method{dbGetQuery}{AthenaConnection,character}(conn, statement, statistics = FALSE, unload = athena_unload(), ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
