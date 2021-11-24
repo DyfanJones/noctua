@@ -279,7 +279,7 @@ test_that("Raise error for unknown data types", {
   expect_error(AthenaDataType(obj))
 })
 
-test_that("Explain Plan", {
+test_that("Explain Plan default", {
   skip_if_no_env()
   skip_if_package_not_avialable("dplyr")
   
@@ -289,6 +289,18 @@ test_that("Explain Plan", {
   expected = "EXPLAIN (FORMAT text) select * from iris"
   expect_equal(dplyr::sql(expected), actual)
 })
+
+test_that("Explain Plan type set to IO", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dplyr")
+  
+  sql = "select * from iris"
+  actual = noctua:::sql_query_explain.AthenaConnection(con, sql, type = "IO")
+  
+  expected = "EXPLAIN (TYPE IO) select * from iris"
+  expect_equal(dplyr::sql(expected), actual)
+})
+
 
 test_that("dbplyr v2 db_connection_describe", {
   skip_if_no_env()
