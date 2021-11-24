@@ -55,3 +55,28 @@ test_that("fetch athena table on closed connection", {
   
   expect_error(dbFetch(res, n = 100), "Result already cleared.")
 })
+
+test_that("test dbGetQuery dbplyr ident", {
+  skip_if_no_env()
+  skip_if_package_not_avialable("dbplyr")
+  library(dbplyr)
+  
+  noctua::noctua_options("data.table")
+  
+  empty_shell = dbGetQuery(con, dbplyr::ident("iris"))
+  
+  expect = c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+  
+  expect_equal(names(empty_shell), expect)
+  expect_error(dbFetch(res, n = 100), "Result already cleared.")
+})
+
+test_that("test if dbGetQuery statistics returns named list correctly", {
+  skip_if_no_env()
+  
+  stat_out = utils::capture.output({exp = dbGetQuery(con, "select * from iris", statistics = T)})
+  
+  for (i in expected_stat_output){
+    expect_true(any(grepl(i, stat_out)))
+  }
+})
