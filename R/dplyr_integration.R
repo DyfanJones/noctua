@@ -224,8 +224,10 @@ NULL
 athena_explain <- function(con, sql, format = "text", type=NULL, ...){
   # AWS Athena now supports explain: https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html
   format <- match.arg(format, c("text", "json"))
-  if(!is.null(type)) type <- match.arg(type, c("LOGICAL", "DISTRIBUTED", "VALIDATE", "IO"))
-  
+  if(!is.null(type)) {
+    type <- match.arg(type, c("LOGICAL", "DISTRIBUTED", "VALIDATE", "IO"))
+    format <- NULL
+  }
   build_sql <- pkg_method("build_sql", "dbplyr")
   dplyr_sql <- pkg_method("sql", "dbplyr")
   
