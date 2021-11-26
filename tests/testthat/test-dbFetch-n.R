@@ -3,10 +3,10 @@
 # Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
 # Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
-con <- dbConnect(athena())
-
 test_that("fetch athena table in batch 100 data.table", {
   skip_if_no_env()
+  
+  con <- dbConnect(athena())
   
   noctua_options()
   res = dbExecute(con, "select * from iris")
@@ -25,6 +25,8 @@ test_that("fetch athena table in batch 100 data.table", {
 
 test_that("fetch athena table in batch 100 tibble", {
   skip_if_no_env()
+  
+  con <- dbConnect(athena())
   
   noctua_options("vroom")
   
@@ -46,6 +48,8 @@ test_that("fetch athena table in batch 100 tibble", {
 test_that("fetch athena table on closed connection", {
   skip_if_no_env()
   
+  con <- dbConnect(athena())
+  
   res = dbExecute(con, "select * from iris")
   
   fetch_iris = dbFetch(res, n = 100)
@@ -61,6 +65,8 @@ test_that("test dbGetQuery dbplyr ident", {
   skip_if_package_not_avialable("dbplyr")
   library(dbplyr)
   
+  con <- dbConnect(athena())
+  
   noctua::noctua_options("data.table")
   
   empty_shell = dbGetQuery(con, dbplyr::ident("iris"))
@@ -72,6 +78,8 @@ test_that("test dbGetQuery dbplyr ident", {
 
 test_that("test if dbGetQuery statistics returns named list correctly", {
   skip_if_no_env()
+  
+  con <- dbConnect(athena())
   
   stat_out = utils::capture.output({exp = dbGetQuery(con, "select * from iris", statistics = T)})
   

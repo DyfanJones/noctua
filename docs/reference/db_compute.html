@@ -85,7 +85,7 @@ This is a backend function for dplyr's compute function. Users won't be required
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
       </span>
     </div>
 
@@ -214,20 +214,20 @@ This is a backend function for dplyr's <code>compute</code> function. Users won'
 <span class='r-in'><span class='va'>con</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dbConnect,AthenaDriver-method.html'>dbConnect</a></span><span class='op'>(</span><span class='fu'>noctua</span><span class='fu'>::</span><span class='fu'><a href='athena.html'>athena</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Write data.frame to Athena table</span></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/copy_to.html'>copy_to</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>mtcars</span>,</span>
+<span class='r-in'><span class='fu'><a href='https://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='va'>mtcars</span>,</span>
 <span class='r-in'>        s3_location <span class='op'>=</span> <span class='st'>"s3://mybucket/data/"</span><span class='op'>)</span></span>
 <span class='r-in'>             </span>
 <span class='r-in'><span class='co'># Write Athena table from tbl_sql</span></span>
-<span class='r-in'><span class='va'>athena_mtcars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/tbl.html'>tbl</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"mtcars"</span><span class='op'>)</span></span>
-<span class='r-in'><span class='va'>mtcars_filter</span> <span class='op'>&lt;-</span> <span class='va'>athena_mtcars</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>gear</span> <span class='op'>&gt;=</span><span class='fl'>4</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>athena_mtcars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/tbl.html'>tbl</a></span><span class='op'>(</span><span class='va'>con</span>, <span class='st'>"mtcars"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>mtcars_filter</span> <span class='op'>&lt;-</span> <span class='va'>athena_mtcars</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>gear</span> <span class='op'>&gt;=</span><span class='fl'>4</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># create athena with unique table name</span></span>
 <span class='r-in'><span class='va'>mtcars_filer</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/compute.html'>compute</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/compute.html'>compute</a></span><span class='op'>(</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># create athena with specified name and s3 location</span></span>
 <span class='r-in'><span class='va'>mtcars_filer</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span class='r-in'>    <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/compute.html'>compute</a></span><span class='op'>(</span><span class='st'>"mtcars_filer"</span>,</span>
+<span class='r-in'>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/compute.html'>compute</a></span><span class='op'>(</span><span class='st'>"mtcars_filer"</span>,</span>
 <span class='r-in'>            s3_location <span class='op'>=</span> <span class='st'>"s3://mybucket/mtcars_filer/"</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Disconnect from Athena</span></span>
