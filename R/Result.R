@@ -226,9 +226,13 @@ setMethod(
       return(.fetch_n(res, result_class, n))
     }
     
-    # Added data scan information when returning data from athena
-    message("Info: (Data scanned: ", data_scanned(
-      res@info[["Statistics"]][["DataScannedInBytes"]]),")")
+    # Optionally output Data Scanned information
+    # https://github.com/DyfanJones/noctua/issues/178
+    if (athena_option_env$verbose) {
+      # Added data scan information when returning data from athena
+      message("Info: (Data scanned: ", data_scanned(
+        res@info[["Statistics"]][["DataScannedInBytes"]]),")")
+    }
     
     if (!is.null(res@info[["UnloadDir"]])){
       .fetch_unload(res)

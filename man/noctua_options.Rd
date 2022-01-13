@@ -13,7 +13,8 @@ noctua_options(
   clear_cache = FALSE,
   retry = 5,
   retry_quiet = FALSE,
-  unload = FALSE
+  unload = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ Custom Json parsers can be provide by using a function with data frame parameter
 \item{retry_quiet}{If \code{FALSE}, will print a message from retry displaying how long until the next request.}
 
 \item{unload}{set AWS Athena unload functionality globally.}
+
+\item{verbose}{output query data scanned information}
 }
 \value{
 \code{noctua_options()} returns \code{NULL}, invisibly.
