@@ -326,7 +326,7 @@ setMethod("sqlData", "AthenaConnection",
   field_names <- gsub("\\.", "_", make.names(names(Value), unique = TRUE))
   DIFF <- setdiff(field_names, names(Value))
   names(Value) <- field_names
-  if (length(DIFF) > 0) message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
+  if (length(DIFF) > 0) info_msg("data.frame colnames have been converted to align with Athena DDL naming convertions: \n",paste0(DIFF, collapse= ",\n"))
   # get R col types
   col_types <- sapply(Value, class)
   
@@ -347,10 +347,10 @@ setMethod("sqlData", "AthenaConnection",
   switch(file.type,
          csv = {# changed special character from "," to "." to avoid issue with parsing delimited files
            for (col in special_char) set(Value, j=col, value=gsub("," , "\\.", Value[[col]]))
-           message("Info: Special character \",\" has been converted to \".\" to help with Athena reading file format csv")},
+           info_msg("Special character \",\" has been converted to \".\" to help with Athena reading file format csv")},
          tsv = {# changed special character from "\t" to " " to avoid issue with parsing delimited files
            for (col in special_char) set(Value, j=col, value=gsub("\t" , " ", Value[[col]]))
-           message("Info: Special characters \"\\t\" has been converted to \" \" to help with Athena reading file format tsv")})
+           info_msg("Special characters \"\\t\" has been converted to \" \" to help with Athena reading file format tsv")})
   
   return(Value)
 })
@@ -455,9 +455,9 @@ createFields <- function(con, fields, field.types) {
   field_names <- gsub("\\.", "_", make.names(names(fields), unique = TRUE))
   DIFF <- setdiff(field_names, names(fields))
   if (length(DIFF) > 0) 
-    message("Info: data.frame colnames have been converted to align with Athena DDL naming convertions: \n",
-            paste0(DIFF, collapse= ",\n"))
-  
+    info_msg(
+      "data.frame colnames have been converted to align with Athena DDL naming convertions: \n", paste0(DIFF, collapse= ",\n")
+    )
   field_names <- quote_identifier(con, field_names)
   field.types <- unname(fields)
   paste0(field_names, " ", field.types)
@@ -496,7 +496,7 @@ Compress <- function(file.type, compress){
            "csv" = paste(file.type, "gz", sep = "."),
            "tsv" = paste(file.type, "gz", sep = "."),
            "parquet" = paste("snappy", file.type, sep = "."),
-           "json" = {message("Info: json format currently doesn't support compression")
+           "json" = {info_msg("json format currently doesn't support compression")
              file.type})
   } else {file.type}
 }

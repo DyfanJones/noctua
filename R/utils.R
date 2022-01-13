@@ -297,8 +297,7 @@ retry_api_call <- function(expr){
       
       backoff_len <- runif(n=1, min=0, max=(2^i - 1))
       
-      if(!athena_option_env$retry_quiet)
-        message(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
+      info_msg(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
       
       Sys.sleep(backoff_len)
     } else {break}
@@ -358,7 +357,7 @@ ctas_sql_with <- function(partition = NULL, s3.location = NULL, file.type = "NUL
 jsonlite_check <- function(method){
   if(method == "auto") {
     if (!nzchar(system.file(package ="jsonlite"))) {
-      message('Info: `jsonlite` has not been detected, AWS Athena `json` data types will be returned as `character`.')
+      info_msg('`jsonlite` has not been detected, AWS Athena `json` data types will be returned as `character`.')
       method <- "character"
       }
     }
@@ -418,4 +417,11 @@ db_detect <- function(conn, name){
 
 athena_unload = function(){
   return(athena_option_env$athena_unload)
+}
+
+# Ability to mute information messages
+# https://github.com/DyfanJones/noctua/issues/178
+info_msg = function(...){
+  if (athena_option_env$verbose)
+    message("INFO: ", ...)
 }
