@@ -587,7 +587,7 @@ setMethod(
       if(inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)){
         backoff_len <- runif(n=1, min=0, max=(2^i - 1))
         
-        if(!athena_option_env$retry_quiet) message(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
+        info_msg(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
         
         Sys.sleep(backoff_len)
       } else {break}
@@ -662,12 +662,14 @@ setMethod(
         token <- objects[["NextContinuationToken"]]
         all_keys <- c(all_keys, lapply(objects[["Contents"]], function(x) list(Key=x[["Key"]])))
       }
-      message(paste0("Info: The S3 objects in prefix will be deleted:\n",
-                     paste0("s3://", s3_path$bucket, "/", s3_path$key)))
+      info_msg(
+        "The S3 objects in prefix will be deleted:\n",
+        paste0("s3://", s3_path$bucket, "/", s3_path$key)
+      )
       if(!confirm) {
         confirm <- readline(prompt = "Delete files (y/n)?: ")
         if(trimws(tolower(confirm)) != "y") {
-          message("Info: Table deletion aborted.")
+          info_msg("Table deletion aborted.")
           return(invisible(NULL))}
       }
       
@@ -686,7 +688,7 @@ setMethod(
     # use glue to remove table from glue catalog
     conn@ptr$glue$delete_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])
     
-    if(!delete_data) message("Info: Only Athena table has been removed.")
+    if(!delete_data) info_msg("Only Athena table has been removed.")
     on_connection_updated(conn, ll[["table"]])
     invisible(TRUE)
 })

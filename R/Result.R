@@ -227,8 +227,9 @@ setMethod(
     }
     
     # Added data scan information when returning data from athena
-    message("Info: (Data scanned: ", data_scanned(
-      res@info[["Statistics"]][["DataScannedInBytes"]]),")")
+    info_msg(
+      "(Data scanned: ", data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]),")"
+    )
     
     if (!is.null(res@info[["UnloadDir"]])){
       .fetch_unload(res)

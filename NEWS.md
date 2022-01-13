@@ -1,3 +1,9 @@
+# noctua 2.4.0.9000
+## Feature:
+* Allow all information messages to be turned off (#178)
+* Allow `noctua_options` to change 1 parameter at a time without affecting other pre-configured settings
+* Return warning message for deprecated `retry_quiet` parameter in `noctua_options` function.
+
 # noctua 2.4.0
 ## Feature:
 * Add support `dbplyr` 2.0.0 backend API.
