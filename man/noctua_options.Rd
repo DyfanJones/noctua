@@ -5,43 +5,43 @@
 \title{A method to configure noctua backend options.}
 \usage{
 noctua_options(
-  file_parser = c("data.table", "vroom"),
-  bigint = NULL,
-  binary = NULL,
-  json = NULL,
-  cache_size = 0,
-  clear_cache = FALSE,
-  retry = 5,
-  retry_quiet = FALSE,
-  unload = FALSE,
-  verbose = FALSE
+  file_parser,
+  bigint,
+  binary,
+  json,
+  cache_size,
+  clear_cache,
+  retry,
+  retry_quiet,
+  unload,
+  verbose
 )
 }
 \arguments{
-\item{file_parser}{Method to read and write tables to Athena, currently defaults to \code{data.table}. The file_parser also
-determines the data format returned for example \code{data.table} will return \code{data.table} and \code{vroom} will return \code{tibble}.}
+\item{file_parser}{Method to read and write tables to Athena, currently default to \code{"data.table"}. The file_parser also
+determines the data format returned for example \code{"data.table"} will return \code{data.table} and \code{"vroom"} will return \code{tibble}.}
 
-\item{bigint}{The R type that 64-bit integer types should be mapped to. Default \code{NULL} won't make any changes that \code{dbConnect} has set.
-Inbuilt bigint conversion types ["integer64", "integer", "numeric", "character"].}
+\item{bigint}{The R type that 64-bit integer types should be mapped to (default: \code{"integer64"}).
+Inbuilt \code{bigint} conversion types ["integer64", "integer", "numeric", "character"].}
 
-\item{binary}{The R type that [binary/varbinary] types should be mapped to. Default \code{NULL} won't make any changes that \code{dbConnect} has set.
+\item{binary}{The R type that [binary/varbinary] types should be mapped to (default \code{"raw"}).
 Inbuilt binary conversion types ["raw", "character"].}
 
-\item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. 
-Default \code{NULL} won't make any changes that \code{dbConnect} has set. Inbuilt json conversion types ["auto", "character"].
+\item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json} (default: \code{"auto"}).
+Inbuilt json conversion types ["auto", "character"].
 Custom Json parsers can be provide by using a function with data frame parameter.}
 
-\item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries.}
+\item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries (default: \code{0}).}
 
 \item{clear_cache}{Clears all previous cached query metadata}
 
-\item{retry}{Maximum number of requests to attempt.}
+\item{retry}{Maximum number of requests to attempt (default: \code{5}).}
 
-\item{retry_quiet}{If \code{FALSE}, will print a message from retry displaying how long until the next request.}
+\item{retry_quiet}{This method is deprecated please use verbose instead.}
 
-\item{unload}{set AWS Athena unload functionality globally.}
+\item{unload}{set AWS Athena unload functionality globally (default: \code{FALSE})}
 
-\item{verbose}{output query data scanned information}
+\item{verbose}{print package info messages (default: \code{TRUE})}
 }
 \value{
 \code{noctua_options()} returns \code{NULL}, invisibly.
