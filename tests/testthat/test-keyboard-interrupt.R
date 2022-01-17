@@ -37,6 +37,9 @@ test_that("Check if Athena query has not been cancelled",{
   
   expect_error(noctua:::interrupt_athena(res), err_msg)
   
+  # give AWS Athena a chance to start query
+  Sys.sleep(5)
+  
   status <- res@connection@ptr$Athena$get_query_execution(
     QueryExecutionId = query_id)$QueryExecution$Status$State
 

@@ -1,4 +1,4 @@
-# noctua 2.4.0.9000
+# noctua 2.5.0
 ## Feature:
 * Allow all information messages to be turned off (#178)
 * Allow `noctua_options` to change 1 parameter at a time without affecting other pre-configured settings
