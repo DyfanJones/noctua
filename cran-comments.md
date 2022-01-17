@@ -1,13 +1,8 @@
 ## Submission
-This release contains a few new features and bug fixes.
+This release contains a new feature.
 
 ### Feature:
-  * Support `dbplyr` 2+
-  * Support `AWS Athena unload` functionality for `dplyr`
-
-## Bugf fix:
-  * Ensure `dbGetQuery`, `dbExecute`, `dbSendQuery`, `dbSendStatement` work on older versions of `R`
-  * Caching would fail when statement wasn't a character
+  * Allow toggle able information message
 
 ## Examples Note:
 * All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run

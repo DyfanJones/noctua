@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,18 +40,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -89,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/DyfanJones/noctua/">
+  <a href="https://github.com/DyfanJones/noctua/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -104,48 +100,48 @@
 
       
 
-      </header><script src="aws_s3_backend_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>AWS S3 Backend</h1>
-                        <h4 class="author">Dyfan Jones</h4>
+                        <h4 data-toc-skip class="author">Dyfan Jones</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/master/vignettes/aws_s3_backend.Rmd"><code>vignettes/aws_s3_backend.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/HEAD/vignettes/aws_s3_backend.Rmd" class="external-link"><code>vignettes/aws_s3_backend.Rmd</code></a></small>
       <div class="hidden name"><code>aws_s3_backend.Rmd</code></div>
 
     </div>
 
     
     
-<p><code>AWS Athena</code> allows SQL querying to be performed on <a href="https://aws.amazon.com/s3/">AWS S3 buckets</a>. To gain access to this, the correct permission level needs to be enabled.</p>
-<div id="aws-s3-structures" class="section level1">
-<h1 class="hasAnchor">
-<a href="#aws-s3-structures" class="anchor"></a>AWS S3 Structures</h1>
+<p><code>AWS Athena</code> allows SQL querying to be performed on <a href="https://aws.amazon.com/s3/" class="external-link">AWS S3 buckets</a>. To gain access to this, the correct permission level needs to be enabled.</p>
+<div class="section level1">
+<h1 id="aws-s3-structures">AWS S3 Structures<a class="anchor" aria-label="anchor" href="#aws-s3-structures"></a>
+</h1>
 <p><code>noctua</code> uploads the data into <code>AWS S3</code>, then registers the table in <code>AWS Athena</code>. When appending data to an existing <code>AWS Athena</code> table, <code>noctua</code> adds the data in the specified <code>AWS S3</code> partition and then repairs the <code>AWS Athena</code> table.</p>
 <p><code>noctua</code> uses the parameter: <code>s3.location</code> from the function <code>dbWriteTable</code> for the <code>AWS S3</code> location. If <code>s3.location</code> isn’t specified then the location is taken from the initial connection (<code>dbConnect</code>).</p>
-<p><code>noctua</code> aligns the <code>s3.location</code> to the following <code>AWS S3</code> structure: <code>{s3.location}/{schema}/{table_name}/{partition}/{file}</code> (remember that <code>s3.location</code> has to be in <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html">s3 uri format</a>: “s3://bucket-name/key-name”). This is to allow tables with same name to be uploaded to different schemas.</p>
+<p><code>noctua</code> aligns the <code>s3.location</code> to the following <code>AWS S3</code> structure: <code>{s3.location}/{schema}/{table_name}/{partition}/{file}</code> (remember that <code>s3.location</code> has to be in <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html" class="external-link">s3 uri format</a>: “s3://bucket-name/key-name”). This is to allow tables with same name to be uploaded to different schemas.</p>
 <p><img src="athena_s3_example.png" width="100%"></p>
 <p><strong>NOTE:</strong> <code>noctua</code> won’t duplicate the table name or schema if they have been provided in <code>s3.location</code>. For example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"myschema.table"</span>, <span class="va">table</span>, 
+<code class="sourceCode R"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"myschema.table"</span>, <span class="va">table</span>, 
              s3.location <span class="op">=</span> <span class="st">"s3://mybucket/myschema/table"</span>,
-             partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"year"</span> <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span><span class="op">)</span>
+             partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span> <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># AWS S3 location</span>
 <span class="st">"s3://mybucket/myschema/table/year=2020/table.tsv"</span></code></pre></div>
 </div>
-<div id="file-types" class="section level1">
-<h1 class="hasAnchor">
-<a href="#file-types" class="anchor"></a>File Types</h1>
-<p>Currently <code>noctua</code> supports the following file types <code>[".tsv", ".csv", ".parquet"]</code>. For <code>parquet</code> files, the package <a href="https://arrow.apache.org/docs/r/">arrow</a> is used. This package will have to be installed, before data can be sent to <code>AWS S3</code> in <code>parquet</code> format.</p>
-<p><code>noctua</code> also supports compression when uploading data to <code>AWS S3</code>. For delimited files (<code>".tsv"</code> and <code>".csv"</code>), <a href="https://en.wikipedia.org/wiki/Gzip">gunzip compression</a> is used. When using gunzip compression, <code>noctua</code> will split the zipped file into a maximum of 20 equal parts. This is to speed up how <code>AWS Athena</code> queries gunzip compressed files (<a href="https://github.com/DyfanJones/RAthena/issues/36">Default Compression Method for Flat Files</a>). <a href="https://en.wikipedia.org/wiki/Snappy_(compression)">Snappy</a> compression is used for compressing <code>parquet</code> files.</p>
+<div class="section level1">
+<h1 id="file-types">File Types<a class="anchor" aria-label="anchor" href="#file-types"></a>
+</h1>
+<p>Currently <code>noctua</code> supports the following file types <code>[".tsv", ".csv", ".parquet"]</code>. For <code>parquet</code> files, the package <a href="https://arrow.apache.org/docs/r/" class="external-link">arrow</a> is used. This package will have to be installed, before data can be sent to <code>AWS S3</code> in <code>parquet</code> format.</p>
+<p><code>noctua</code> also supports compression when uploading data to <code>AWS S3</code>. For delimited files (<code>".tsv"</code> and <code>".csv"</code>), <a href="https://en.wikipedia.org/wiki/Gzip" class="external-link">gunzip compression</a> is used. When using gunzip compression, <code>noctua</code> will split the zipped file into a maximum of 20 equal parts. This is to speed up how <code>AWS Athena</code> queries gunzip compressed files (<a href="https://github.com/DyfanJones/RAthena/issues/36" class="external-link">Default Compression Method for Flat Files</a>). <a href="https://en.wikipedia.org/wiki/Snappy_(compression)" class="external-link">Snappy</a> compression is used for compressing <code>parquet</code> files.</p>
 </div>
-<div id="useful-links" class="section level1">
-<h1 class="hasAnchor">
-<a href="#useful-links" class="anchor"></a>Useful links</h1>
+<div class="section level1">
+<h1 id="useful-links">Useful links<a class="anchor" aria-label="anchor" href="#useful-links"></a>
+</h1>
 <ul>
-<li><a href="https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/">AWS Athena performance tips</a></li>
+<li><a href="https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/" class="external-link">AWS Athena performance tips</a></li>
 </ul>
 </div>
   </div>
@@ -161,11 +157,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Dyfan Jones.</p>
+  <p></p>
+<p>Developed by Dyfan Jones.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -173,6 +171,8 @@
 
   
 
+
+  
 
   </body>
 </html>
