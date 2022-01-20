@@ -16,7 +16,7 @@ test_data <- function(N = 10000L, seed = 142L){
   set.seed(seed)
   data.table(
     id=1:N,
-    original=sapply(1:N, function(x) paste(sample(letters, sample(5:10)), collapse = ",")),
+    original=sapply(1:N, function(x) paste(sample(letters, sample(5:10, 1)), collapse = ",")),
     json = jsonlite::toJSON(iris[1,1:2]))
 }
 

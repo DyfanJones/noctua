@@ -22,6 +22,8 @@ jobs:
       noctua_s3_tbl: ${{ secrets.noctua_s3_tbl }}
       ARROW_WITH_SNAPPY: ON
       R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_LENGTH_1_CONDITION_: abort,verbose
+      _R_CHECK_LENGTH_1_LOGIC2_: abort,verbose
     steps:
       - uses: actions/checkout@v2
 

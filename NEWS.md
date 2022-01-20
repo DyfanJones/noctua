@@ -1,3 +1,7 @@
+# noctua 2.5.1
+## Bug Fix:
+* Fixed unit test helper function `test_data` to use `size` parameter explicitly.
+
 # noctua 2.5.0
 ## Feature:
 * Allow all information messages to be turned off (#178)
