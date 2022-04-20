@@ -437,7 +437,7 @@ set_endpoints = function(endpoint_override){
   }
   if (is.list(endpoint_override)){
     if(length(names(endpoint_override)) == 0){
-      stop("endpoint_override needed to be a named list", call.=F)
+      stop("endpoint_override needed to be a named list or character", call.=F)
     }
     if(any(!(tolower(names(endpoint_override)) %in% c("athena", "s3", "glue")))){
       stop(

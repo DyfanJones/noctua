@@ -20,6 +20,6 @@ test_that("Test unsupported aws services", {
   )
   expect_error(
     set_endpoints(list()), 
-    "endpoint_override needed to be a named list"
+    "endpoint_override needed to be a named list or character"
   )
 })
