@@ -27,6 +27,7 @@
   timezone = "UTC",
   keyboard_interrupt = TRUE,
   rstudio_conn_tab = TRUE,
+  endpoint_override = NULL,
   ...
 )
 }
@@ -91,7 +92,35 @@ If `NULL` then no timezone is set, which defaults to the server's time zone.
 \item{rstudio_conn_tab}{Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
 Default set to \code{TRUE}.}
 
-\item{...}{other parameters for \code{paws} session}
+\item{endpoint_override}{(character/list) The complete URL to use for the constructed client.
+Normally, paws will automatically construct the appropriate URL to use when
+communicating with a service. You can specify a complete URL (including the "http/https" scheme)
+to override this behaviour. If this value is provided, then \code{disable_ssl} is ignored.
+If \code{endpoint_override} is a character then AWS Athena endpoint is overridden. To override
+AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names ['athena', 's3', glue']
+for example \code{list(glue = "https://glue.eu-west-1.amazonaws.com")}}
+
+\item{...}{other parameters for \code{paws} session.
+\itemize{
+    \item{disable_ssl} {(boolean) Whether or not to use SSL. By default, SSL is used.
+        Note that not all services support non-ssl connections.
+    }
+    \item{timeout} {(numeric) The time in seconds till a timeout exception is
+        thrown when attempting to make a connection. The default is 60 seconds.
+    }
+    \item{disable_param_validation} {(bool) Whether parameter validation should occur
+        when serializing requests. The default is \code{FALSE} You can disable parameter
+        validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.
+    }
+    \item{s3_force_path_style} {Addressing style is always by path. Endpoints will be
+        addressed as such: s3.amazonaws.com/mybucket
+    }
+    \item{s3_use_accelerate} {Refers to whether to use the S3 Accelerate endpoint.
+        The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
+        If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.
+    }
+    \item{use_dual_stack} {Setting to \code{TRUE} enables dual stack endpoint resolution.}
+}}
 }
 \value{
 \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
