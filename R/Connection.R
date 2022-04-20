@@ -50,7 +50,7 @@ AthenaConnection <- function(aws_access_key_id = NULL,
     prof_name,
     RegionName
   )
-  if(!is.null(kwargs$endpoints))
+  if(!is.null(kwargs$endpoint))
     stop(
       "Please use `endpoint_override` to override AWS service endpoints.",
       call. = F
