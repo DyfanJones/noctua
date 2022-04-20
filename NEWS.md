@@ -1,3 +1,8 @@
+# noctua 2.5.1.9000
+## Feature:
+* Support extra paws parameters for ([RAthena # 169](https://github.com/DyfanJones/RAthena/issues/169))
+* Support `endpoint_override` parameter allow default endpoints for each service to be overridden accordingly ([RAthena # 169](https://github.com/DyfanJones/RAthena/issues/169))
+
 # noctua 2.5.1
 ## Bug Fix:
 * Fixed unit test helper function `test_data` to use `size` parameter explicitly.
