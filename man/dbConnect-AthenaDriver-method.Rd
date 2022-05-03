@@ -89,8 +89,8 @@ If `NULL` then no timezone is set, which defaults to the server's time zone.
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
 
-\item{rstudio_conn_tab}{Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
-Default set to \code{TRUE}.}
+\item{rstudio_conn_tab}{Optional to get AWS Athena Schema from AWS Glue Catalogue and display it in RStudio's Connections Tab.
+Default set to \code{TRUE}. For large `AWS Glue Catalogue` it is recommended to set `rstudio_conn_tab=FALSE` to ensure a fast connection.}
 
 \item{endpoint_override}{(character/list) The complete URL to use for the constructed client.
 Normally, paws will automatically construct the appropriate URL to use when
