@@ -230,7 +230,7 @@ update_args <- function(file.type = "tsv", init_args = list(), compress = FALSE)
     init_args <- c(init_args,
                    fun = stream_out,
                    verbose = FALSE)
-  } else if(class(athena_option_env$file_parser) == "athena_data.table") {
+  } else if(inherits(athena_option_env$file_parser, "athena_data.table")) {
     init_args <- c(init_args,
                    fun = data.table::fwrite,
                    quote = FALSE,
@@ -241,7 +241,7 @@ update_args <- function(file.type = "tsv", init_args = list(), compress = FALSE)
     if(file.type == "tsv")
       init_args <- c(init_args,
                      sep = "\t")
-  } else if(class(athena_option_env$file_parser) == "athena_vroom"){
+  } else if(inherits(athena_option_env$file_parser, "athena_vroom")) {
     vroom_write <- pkg_method("vroom_write", "vroom")
     init_args <- c(init_args,
                    fun = vroom_write,
