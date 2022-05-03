@@ -14,6 +14,7 @@ athena_option_env$json <- "auto"
 athena_option_env$rstudio_conn_tab <- TRUE
 athena_option_env$athena_unload <- FALSE
 athena_option_env$verbose <- TRUE
+athena_option_env$clear_s3_resource <- TRUE
 
 # ==========================================================================
 # helper function to handle big integers
@@ -67,6 +68,9 @@ bit64_check <- function(value){
 #' @param retry Maximum number of requests to attempt (default: \code{5}).
 #' @param retry_quiet This method is deprecated please use verbose instead.
 #' @param unload set AWS Athena unload functionality globally (default: \code{FALSE})
+#' @param clear_s3_resource Clear down `AWS Athena` `AWS S3` resource (`s3_staging_dir` location).
+#'    This is useful if users when user's AWS IAM role doesn't have permission to
+#'    delete from `s3_staging_dir` (default: \code{TRUE})
 #' @param verbose print package info messages (default: \code{TRUE})
 #' @return \code{noctua_options()} returns \code{NULL}, invisibly.
 #' @examples
@@ -87,13 +91,15 @@ noctua_options <- function(file_parser,
                            retry,
                            retry_quiet,
                            unload,
+                           clear_s3_resource,
                            verbose) {
   # Reset to defaults
   if(missing(file_parser) & missing(bigint)
      & missing(binary) & missing(json)
      & missing(cache_size) & missing(clear_cache)
      & missing(retry) & missing(retry_quiet)
-     & missing(unload) & missing(verbose)){
+     & missing(unload) & missing(clear_s3_resource)
+     & missing(verbose)){
     file_parser <- "data.table"
     bigint <- "integer64"
     binary <- "raw"
@@ -110,9 +116,9 @@ noctua_options <- function(file_parser,
       stop('Please install ', file_parser, ' package and try again', call. = F)
     
     switch(file_parser,
-           "vroom" = if(packageVersion(file_parser) < '1.2.0')  
-             stop("Please update `vroom` to  `1.2.0` or later", call. = FALSE))
-    
+      "vroom" = if(packageVersion(file_parser) < '1.2.0')  
+        stop("Please update `vroom` to  `1.2.0` or later", call. = FALSE)
+    )
     class(athena_option_env$file_parser) <- paste("athena", file_parser, sep = "_")
   }
   
@@ -153,6 +159,11 @@ noctua_options <- function(file_parser,
   })
   missing_expr(verbose, is.logical, sprintf("`verbose` is class `%s`. Please set `verbose` to logical", class(verbose)), {
     athena_option_env$verbose <- verbose
+  })
+  missing_expr(
+    clear_s3_resource, is.logical, 
+    sprintf("`clear_s3_resource` is class `%s`. Please set `clear_s3_resource` to logical", class(clear_s3_resource)), {
+      athena_option_env$clear_s3_resource <- clear_s3_resource
   })
   invisible(NULL)
 }

@@ -60,7 +60,9 @@ setClass(
 #' stopping query execution if still running and removed the connection resource locally.
 #' 
 #' @note If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
-#'       It is better use query caching \code{\link{noctua_options}} so that the warning doesn't repeatedly show.
+#'       For example \code{AccessDenied (HTTP 403). Access Denied}.
+#'       It is better use query caching or optionally prevent clear AWS S3 resource using \code{\link{noctua_options}}
+#'       so that the warning doesn't repeatedly show.
 #' @name dbClearResult
 #' @inheritParams DBI::dbClearResult
 #' @return \code{dbClearResult()} returns \code{TRUE}, invisibly.
@@ -107,8 +109,8 @@ setMethod(
           query_execution[["QueryExecution"]][["StatementType"]]
       }
       
-      # for caching s3 data is still required
-      if (athena_option_env[["cache_size"]] == 0){
+      # Don't clear S3 resource for caching or skipping
+      if (athena_option_env$cache_size == 0 & athena_option_env$clear_s3_resource){
         result_info <- split_s3_uri(res@info[["OutputLocation"]])
         
         # Output error as warning if S3 resource can't be dropped
