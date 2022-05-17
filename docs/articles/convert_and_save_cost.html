@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -104,7 +104,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Convert and Save Cost</h1>
-                        <h4 data-toc-skip class="author">Dyfan Jones</h4>
+                        <h4 data-toc-skip class="author">Dyfan
+Jones</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/HEAD/vignettes/convert_and_save_cost.Rmd" class="external-link"><code>vignettes/convert_and_save_cost.Rmd</code></a></small>
@@ -114,29 +115,55 @@
 
     
     
-<div class="section level1">
-<h1 id="pricing-details">Pricing Details<a class="anchor" aria-label="anchor" href="#pricing-details"></a>
-</h1>
+<div class="section level2">
+<h2 id="pricing-details">Pricing Details<a class="anchor" aria-label="anchor" href="#pricing-details"></a>
+</h2>
 <blockquote>
-<p>You are charged for the number of bytes scanned by Amazon Athena, rounded up to the nearest megabyte, with a 10MB minimum per query. There are no charges for Data Definition Language (DDL) statements like CREATE/ALTER/DROP TABLE, statements for managing partitions, or failed queries. Cancelled queries are charged based on the amount of data scanned.</p>
-<p>Compressing your data allows Athena to scan less data. Converting your data to columnar formats allows Athena to selectively read only required columns to process the data. Athena supports Apache ORC and Apache Parquet. Partitioning your data also allows Athena to restrict the amount of data scanned. This leads to cost savings and improved performance. You can see the amount of data scanned per query on the Athena console. <a href="https://aws.amazon.com/athena/pricing/" class="external-link">link</a> So it becomes more important to compress your data and convert it to the recommended file formats <a href="https://parquet.apache.org/" class="external-link">Apache Parquet</a> or <a href="https://orc.apache.org/" class="external-link">Apache ORC</a>.</p>
+<p>You are charged for the number of bytes scanned by Amazon Athena,
+rounded up to the nearest megabyte, with a 10MB minimum per query. There
+are no charges for Data Definition Language (DDL) statements like
+CREATE/ALTER/DROP TABLE, statements for managing partitions, or failed
+queries. Cancelled queries are charged based on the amount of data
+scanned.</p>
+<p>Compressing your data allows Athena to scan less data. Converting
+your data to columnar formats allows Athena to selectively read only
+required columns to process the data. Athena supports Apache ORC and
+Apache Parquet. Partitioning your data also allows Athena to restrict
+the amount of data scanned. This leads to cost savings and improved
+performance. You can see the amount of data scanned per query on the
+Athena console. <a href="https://aws.amazon.com/athena/pricing/" class="external-link">link</a> So it becomes
+more important to compress your data and convert it to the recommended
+file formats <a href="https://parquet.apache.org/" class="external-link">Apache Parquet</a> or
+<a href="https://orc.apache.org/" class="external-link">Apache ORC</a>.</p>
 </blockquote>
-<p><strong>DON’T WORRY!!! <code>noctua</code> is here to help!</strong></p>
+<p><strong>DON’T WORRY!!! <code>noctua</code> is here to
+help!</strong></p>
 </div>
-<div class="section level1">
-<h1 id="noctuas-help">
+<div class="section level2">
+<h2 id="noctuas-help">
 <code>noctua</code>’s help<a class="anchor" aria-label="anchor" href="#noctuas-help"></a>
-</h1>
-<p>For a lot of users, <a href="https://parquet.apache.org/" class="external-link">Apache Parquet</a> or <a href="https://orc.apache.org/" class="external-link">Apache ORC</a> are file formats that aren’t well known and as a result alto systems don’t have the software to create these formats. <code>noctua</code> offers some assists by firstly enabling <code>apache parquet</code> format to be uploaded through <a href="https://dyfanjones.github.io/noctua/reference/AthenaWriteTables.html" class="external-link"><code>dbWriteTable</code></a>, using the R package <a href="https://arrow.apache.org/docs/r/" class="external-link"><code>arrow</code></a> to create the parquet format.</p>
-<p>If uploading Apache Parquet is not possible or if the file format Apache ORC is preferred then <code>noctua</code> offers another solution. <code>noctua</code> can utilise the power of AWS Athena to convert file formats for you. What this allows you to do is:</p>
+</h2>
+<p>For a lot of users, <a href="https://parquet.apache.org/" class="external-link">Apache
+Parquet</a> or <a href="https://orc.apache.org/" class="external-link">Apache ORC</a> are file
+formats that aren’t well known and as a result alto systems don’t have
+the software to create these formats. <code>noctua</code> offers some
+assists by firstly enabling <code>apache parquet</code> format to be
+uploaded through <a href="https://dyfanjones.github.io/noctua/reference/AthenaWriteTables.html" class="external-link"><code>dbWriteTable</code></a>,
+using the R package <a href="https://arrow.apache.org/docs/r/" class="external-link"><code>arrow</code></a> to create
+the parquet format.</p>
+<p>If uploading Apache Parquet is not possible or if the file format
+Apache ORC is preferred then <code>noctua</code> offers another
+solution. <code>noctua</code> can utilise the power of AWS Athena to
+convert file formats for you. What this allows you to do is:</p>
 <ul>
-<li>Upload Data in an easier file format for example delimited format</li>
+<li>Upload Data in an easier file format for example delimited
+format</li>
 <li>Convert Data into Parquet or ORC using AWS Athena to save cost</li>
 <li>Finally insert into final table with ETL processes</li>
 </ul>
-<div class="section level2">
-<h2 id="upload-data-in-delimited-format">Upload Data in delimited format<a class="anchor" aria-label="anchor" href="#upload-data-in-delimited-format"></a>
-</h2>
+<div class="section level3">
+<h3 id="upload-data-in-delimited-format">Upload Data in delimited format<a class="anchor" aria-label="anchor" href="#upload-data-in-delimited-format"></a>
+</h3>
 <p>Uploading Data in delimited format is the easiest method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
@@ -152,11 +179,13 @@
 <span class="va">iris2</span><span class="op">$</span><span class="va">time_stamp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span>
 
 <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"temp.iris_delim"</span>, <span class="va">iris2</span><span class="op">)</span></code></pre></div>
-<p>However delimited file format isn’t the most cost effective when it comes to using AWS Athena. To overcome this we can convert this by using AWS Athena.</p>
+<p>However delimited file format isn’t the most cost effective when it
+comes to using AWS Athena. To overcome this we can convert this by using
+AWS Athena.</p>
 </div>
-<div class="section level2">
-<h2 id="convert-data-into-parquet-or-orc">Convert Data into Parquet or ORC<a class="anchor" aria-label="anchor" href="#convert-data-into-parquet-or-orc"></a>
-</h2>
+<div class="section level3">
+<h3 id="convert-data-into-parquet-or-orc">Convert Data into Parquet or ORC<a class="anchor" aria-label="anchor" href="#convert-data-into-parquet-or-orc"></a>
+</h3>
 <p>Converting table to a non-partitioned Parquet or ORC format.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># convert to parquet</span>
@@ -170,8 +199,11 @@
                obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,
                name <span class="op">=</span> <span class="st">"iris_orc"</span>,
                file.type <span class="op">=</span> <span class="st">"orc"</span><span class="op">)</span></code></pre></div>
-<p><strong>NOTE:</strong> By default <code>dbConvertTable</code> compresses Parquet/ ORC format using <code>snappy</code> compression.</p>
-<p><code>noctua</code> goes a step further by allowing tables to be converted with partitions.</p>
+<p><strong>NOTE:</strong> By default <code>dbConvertTable</code>
+compresses Parquet/ ORC format using <code>snappy</code>
+compression.</p>
+<p><code>noctua</code> goes a step further by allowing tables to be
+converted with partitions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># convert to parquet with partition time_stamp</span>
 <span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,
@@ -179,7 +211,8 @@
                name <span class="op">=</span> <span class="st">"iris_parquet_partition"</span>,
                partition <span class="op">=</span> <span class="st">"time_stamp"</span>,
                file.type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></code></pre></div>
-<p><code>noctua</code> even allows SQL queries to be converted into desired file format:</p>
+<p><code>noctua</code> even allows SQL queries to be converted into
+desired file format:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,
               obj <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/SQL.html" class="external-link">SQL</a></span><span class="op">(</span><span class="st">"select 
@@ -191,9 +224,9 @@
               partition <span class="op">=</span> <span class="st">"time_stamp"</span>,
               file.type <span class="op">=</span> <span class="st">"orc"</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="insert-into-table-for-etl-processes">Insert into table for ETL processes<a class="anchor" aria-label="anchor" href="#insert-into-table-for-etl-processes"></a>
-</h2>
+<div class="section level3">
+<h3 id="insert-into-table-for-etl-processes">Insert into table for ETL processes<a class="anchor" aria-label="anchor" href="#insert-into-table-for-etl-processes"></a>
+</h3>
 <p>As we have created partitioned data, we can easily insert into:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> 
@@ -204,13 +237,17 @@
                     date_format(date_add('date', 1, current_date) , '%Y%m%d') time_stamp 
                   from temp.iris_delim"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/dbClearResult.html">dbClearResult</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
-<p>What this all means is that you can create ETL processes by uploading data in basic file format (delimited), and then converting / inserting into the prefer file format.</p>
+<p>What this all means is that you can create ETL processes by uploading
+data in basic file format (delimited), and then converting / inserting
+into the prefer file format.</p>
 </div>
-<div class="section level2">
-<h2 id="dplyr-method">
+<div class="section level3">
+<h3 id="dplyr-method">
 <code>dplyr</code> method<a class="anchor" aria-label="anchor" href="#dplyr-method"></a>
-</h2>
-<p>The good news doesn’t stop there, <code>noctua</code> integrates with <code>dplyr</code> to allow converting to be done through <code>dplyr</code>.</p>
+</h3>
+<p>The good news doesn’t stop there, <code>noctua</code> integrates with
+<code>dplyr</code> to allow converting to be done through
+<code>dplyr</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
@@ -225,13 +262,16 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="st">"iris_dplyr_parquet"</span>, partition <span class="op">=</span> <span class="st">"time_stamp"</span>, file_type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="reading-material">Reading Material<a class="anchor" aria-label="anchor" href="#reading-material"></a>
-</h1>
+<div class="section level2">
+<h2 id="reading-material">Reading Material<a class="anchor" aria-label="anchor" href="#reading-material"></a>
+</h2>
 <ul>
-<li><a href="https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into-etl.html" class="external-link">CTAS insert into ETL</a></li>
-<li><a href="https://docs.aws.amazon.com/athena/latest/ug/considerations-ctas.html" class="external-link">Considerations and Limitations for CTAS Queries</a></li>
-<li><a href="https://docs.aws.amazon.com/athena/latest/ug/ctas-examples.html" class="external-link">Examples of CTAS Queries</a></li>
+<li><a href="https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into-etl.html" class="external-link">CTAS
+insert into ETL</a></li>
+<li><a href="https://docs.aws.amazon.com/athena/latest/ug/considerations-ctas.html" class="external-link">Considerations
+and Limitations for CTAS Queries</a></li>
+<li><a href="https://docs.aws.amazon.com/athena/latest/ug/ctas-examples.html" class="external-link">Examples
+of CTAS Queries</a></li>
 </ul>
 </div>
   </div>
@@ -253,7 +293,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

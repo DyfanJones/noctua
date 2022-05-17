@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -93,6 +93,7 @@
   <span class="va">retry</span>,
   <span class="va">retry_quiet</span>,
   <span class="va">unload</span>,
+  <span class="va">clear_s3_resource</span>,
   <span class="va">verbose</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -122,6 +123,10 @@ Custom Json parsers can be provide by using a function with data frame parameter
 <dd><p>This method is deprecated please use verbose instead.</p></dd>
 <dt>unload</dt>
 <dd><p>set AWS Athena unload functionality globally (default: <code>FALSE</code>)</p></dd>
+<dt>clear_s3_resource</dt>
+<dd><p>Clear down `AWS Athena` `AWS S3` resource (`s3_staging_dir` location).
+This is useful if users when user's AWS IAM role doesn't have permission to
+delete from `s3_staging_dir` (default: <code>TRUE</code>)</p></dd>
 <dt>verbose</dt>
 <dd><p>print package info messages (default: <code>TRUE</code>)</p></dd>
 </dl></div>
@@ -153,7 +158,7 @@ Custom Json parsers can be provide by using a function with data frame parameter
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

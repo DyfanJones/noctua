@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -104,7 +104,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Changing Backend File Parser</h1>
-                        <h4 data-toc-skip class="author">Dyfan Jones</h4>
+                        <h4 data-toc-skip class="author">Dyfan
+Jones</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/HEAD/vignettes/changing_backend_file_parser.Rmd" class="external-link"><code>vignettes/changing_backend_file_parser.Rmd</code></a></small>
@@ -114,10 +115,19 @@
 
     
     
-<div class="section level1">
-<h1 id="intro">Intro<a class="anchor" aria-label="anchor" href="#intro"></a>
-</h1>
-<p><code>noctua</code> is dependent on <code>data.table</code> to read data into <code>R</code>. This is down to the amazing speed <code>data.table</code> offers when reading files into <code>R</code>. However a new package, with equally impressive read speeds, has come onto the scene called <a href="https://github.com/r-lib/vroom" class="external-link"><code>vroom</code></a>. As <code>vroom</code> has been designed to only read data into <code>R</code>, similarly to <code>readr</code>, <code>data.table</code> is still used for all of the heavy lifting. However if a user wishes to use <code>vroom</code> as the file parser, <code>noctua_options</code> function has been created to enable this:</p>
+<div class="section level2">
+<h2 id="intro">Intro<a class="anchor" aria-label="anchor" href="#intro"></a>
+</h2>
+<p><code>noctua</code> is dependent on <code>data.table</code> to read
+data into <code>R</code>. This is down to the amazing speed
+<code>data.table</code> offers when reading files into <code>R</code>.
+However a new package, with equally impressive read speeds, has come
+onto the scene called <a href="https://github.com/r-lib/vroom" class="external-link"><code>vroom</code></a>. As
+<code>vroom</code> has been designed to only read data into
+<code>R</code>, similarly to <code>readr</code>, <code>data.table</code>
+is still used for all of the heavy lifting. However if a user wishes to
+use <code>vroom</code> as the file parser, <code>noctua_options</code>
+function has been created to enable this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
@@ -125,20 +135,24 @@
 <span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>file_parser <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data.table"</span>, <span class="st">"vroom"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>By setting the <code>file_parser</code> to <code>"vroom"</code> then the backend will change to allow <code>vroom</code>’s file parser to be used instead of <code>data.table</code>.</p>
+<p>By setting the <code>file_parser</code> to <code>"vroom"</code> then
+the backend will change to allow <code>vroom</code>’s file parser to be
+used instead of <code>data.table</code>.</p>
 </div>
-<div class="section level1">
-<h1 id="change-back-to-data-table">Change back to <code>data.table</code><a class="anchor" aria-label="anchor" href="#change-back-to-data-table"></a>
-</h1>
-<p>To go back to using <code>data.table</code> as the file parser it is a simple as calling the <code>noctua_options</code> function:</p>
+<div class="section level2">
+<h2 id="change-back-to-data-table">Change back to <code>data.table</code><a class="anchor" aria-label="anchor" href="#change-back-to-data-table"></a>
+</h2>
+<p>To go back to using <code>data.table</code> as the file parser it is
+a simple as calling the <code>noctua_options</code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># return to using data.table as file parser</span>
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="swapping-on-the-fly">Swapping on the fly<a class="anchor" aria-label="anchor" href="#swapping-on-the-fly"></a>
-</h1>
-<p>This makes it very flexible to swap between each file parser even between each query execution:</p>
+<div class="section level2">
+<h2 id="swapping-on-the-fly">Swapping on the fly<a class="anchor" aria-label="anchor" href="#swapping-on-the-fly"></a>
+</h2>
+<p>This makes it very flexible to swap between each file parser even
+between each query execution:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
@@ -159,10 +173,12 @@
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">df3</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="why-should-you-consider-vroom">Why should you consider <code>vroom</code>?<a class="anchor" aria-label="anchor" href="#why-should-you-consider-vroom"></a>
-</h1>
-<p>If you aren’t sure whether to use <code>vroom</code> over <code>data.table</code>, I draw your attention to <code>vroom</code> boasting a whopping 1.40GB/sec throughput.</p>
+<div class="section level2">
+<h2 id="why-should-you-consider-vroom">Why should you consider <code>vroom</code>?<a class="anchor" aria-label="anchor" href="#why-should-you-consider-vroom"></a>
+</h2>
+<p>If you aren’t sure whether to use <code>vroom</code> over
+<code>data.table</code>, I draw your attention to <code>vroom</code>
+boasting a whopping 1.40GB/sec throughput.</p>
 <blockquote>
 <p><em>Statistics taken from vroom’s github readme</em></p>
 </blockquote>
@@ -225,7 +241,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
