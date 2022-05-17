@@ -1,4 +1,4 @@
-# noctua 2.5.1.9001
+# noctua 2.6.0
 ## Feature:
 * Add clear_s3_resource parameter to RAthena_options to prevent AWS Athena output AWS S3 resource being cleared up by `dbClearResult` ([RAthena # 168](https://github.com/DyfanJones/RAthena/issues/168))
 
