@@ -99,3 +99,29 @@ test_that("test connection when timezone is NULL", {
   
   expect_equal(con@info$timezone, "UTC")
 })
+
+test_that("test endpoints", {
+  skip_if_no_env()
+  
+  con1 = dbConnect(athena(), endpoint_override = "https://athena.eu-west-2.amazonaws.com/")
+  con2 = dbConnect(
+    athena(),
+    region_name = "us-east-2",
+    
+    # Change default endpoints:
+    # athena: "https://athena.us-east-2.amazonaws.com"
+    # s3: "https://s3.us-east-2.amazonaws.com"
+    # glue: "https://glue.us-east-2.amazonaws.com"
+    
+    endpoint_override = list(
+      athena = "https://athena-fips.us-east-2.amazonaws.com/",
+      s3 = "https://s3-fips.us-east-2.amazonaws.com/",
+      glue = "https://glue-fips.us-east-2.amazonaws.com/"
+    )
+  )
+  
+  expect_equal(as.character(con1@ptr$Athena$.internal$config$endpoint), "https://athena.eu-west-2.amazonaws.com/")
+  expect_equal(as.character(con2@ptr$Athena$.internal$config$endpoint), "https://athena-fips.us-east-2.amazonaws.com/")
+  expect_equal(as.character(con2@ptr$S3$.internal$config$endpoint), "https://s3-fips.us-east-2.amazonaws.com/")
+  expect_equal(as.character(con2@ptr$glue$.internal$config$endpoint), "https://glue-fips.us-east-2.amazonaws.com/")
+})
