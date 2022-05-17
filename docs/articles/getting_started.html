@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -104,7 +104,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Started</h1>
-                        <h4 data-toc-skip class="author">Dyfan Jones</h4>
+                        <h4 data-toc-skip class="author">Dyfan
+Jones</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/HEAD/vignettes/getting_started.Rmd" class="external-link"><code>vignettes/getting_started.Rmd</code></a></small>
@@ -114,28 +115,47 @@
 
     
     
-<p>The <code>noctua</code> package aims to make it easier to work with data stored in <a href="https://aws.amazon.com/athena/" class="external-link"><code>AWS Athena</code></a>. <code>noctua</code> package attempts to provide three levels of interacting with AWS Athena:</p>
+<p>The <code>noctua</code> package aims to make it easier to work with
+data stored in <a href="https://aws.amazon.com/athena/" class="external-link"><code>AWS
+Athena</code></a>. <code>noctua</code> package attempts to provide three
+levels of interacting with AWS Athena:</p>
 <ul>
-<li>Low - level API: This provides more finer tuning of <code>AWS Athena</code> backend utilising the AWS SDK <a href="https://github.com/paws-r/paws" class="external-link"><code>paws</code></a>. This includes configuring <a href="https://aws.amazon.com/about-aws/whats-new/2019/02/athena_workgroups/" class="external-link"><code>AWS Athena Work Groups</code></a> to assuming different roles within <code>AWS</code> when connecting to <code>AWS Athena</code>.</li>
+<li>Low - level API: This provides more finer tuning of <code>AWS
+Athena</code> backend utilising the AWS SDK <a href="https://github.com/paws-r/paws" class="external-link"><code>paws</code></a>. This
+includes configuring <a href="https://aws.amazon.com/about-aws/whats-new/2019/02/athena_workgroups/" class="external-link"><code>AWS
+Athena Work Groups</code></a> to assuming different roles within
+<code>AWS</code> when connecting to <code>AWS Athena</code>.</li>
 <li>
-<a href="https://dbi.r-dbi.org/" class="external-link">DBI interface</a>: This is the primary goal of <code>noctua</code>, by providing a <code>DBI</code> interface to <code>AWS Athena</code>. Users are able to interact with <code>AWS Athena</code> utilising familiar functions and methods they have used for other Databases from R.</li>
+<a href="https://dbi.r-dbi.org/" class="external-link">DBI interface</a>: This is the
+primary goal of <code>noctua</code>, by providing a <code>DBI</code>
+interface to <code>AWS Athena</code>. Users are able to interact with
+<code>AWS Athena</code> utilising familiar functions and methods they
+have used for other Databases from R.</li>
 <li>
-<a href="https://dbplyr.tidyverse.org/" class="external-link">dplyr interface</a>: As <code>dplyr</code> is coming more popular, <code>noctua</code> aims to give <code>dplyr</code> a seamless interface into <code>AWS Athena</code>.</li>
+<a href="https://dbplyr.tidyverse.org/" class="external-link">dplyr interface</a>: As
+<code>dplyr</code> is coming more popular, <code>noctua</code> aims to
+give <code>dplyr</code> a seamless interface into <code>AWS
+Athena</code>.</li>
 </ul>
-<div class="section level1">
-<h1 id="installing-noctua">Installing <code>noctua</code>:<a class="anchor" aria-label="anchor" href="#installing-noctua"></a>
-</h1>
-<p>As <code>noctua</code> utilising the R AWS SDK <code>paws</code> the installation of <code>noctua</code> is pretty straight forward:</p>
+<div class="section level2">
+<h2 id="installing-noctua">Installing <code>noctua</code>:<a class="anchor" aria-label="anchor" href="#installing-noctua"></a>
+</h2>
+<p>As <code>noctua</code> utilising the R AWS SDK <code>paws</code> the
+installation of <code>noctua</code> is pretty straight forward:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># cran version</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"noctua"</span><span class="op">)</span>
 
 <span class="co"># Dev version</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dyfanjones/noctua"</span><span class="op">)</span></code></pre></div>
-<div class="section level2">
-<h2 id="docker-example">Docker Example:<a class="anchor" aria-label="anchor" href="#docker-example"></a>
-</h2>
-<p>To help with users wishing to run <code>noctua</code> in a <a href="https://hub.docker.com/" class="external-link">docker</a>, a simple docker file has been created <a href="https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile" class="external-link">here</a>. To set up the docker please refer to <a href="https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-temporary-credentials-docker/" class="external-link">link</a>. For demo purposes we will use the <a href="https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile" class="external-link">example docker</a> and run it locally:</p>
+<div class="section level3">
+<h3 id="docker-example">Docker Example:<a class="anchor" aria-label="anchor" href="#docker-example"></a>
+</h3>
+<p>To help with users wishing to run <code>noctua</code> in a <a href="https://hub.docker.com/" class="external-link">docker</a>, a simple docker file has been
+created <a href="https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile" class="external-link">here</a>.
+To set up the docker please refer to <a href="https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-temporary-credentials-docker/" class="external-link">link</a>.
+For demo purposes we will use the <a href="https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile" class="external-link">example
+docker</a> and run it locally:</p>
 <pre class="console"><code># build docker image
 docker build . -t noctua
 
@@ -146,15 +166,17 @@ docker run \
       -e AWS_SESSION_TOKEN="$(aws configure get aws_session_token)" \
       -e AWS_DEFAULT_REGION="$(aws configure get region)" \
       -it noctua</code></pre>
-<p><strong>NOTE:</strong> <code>readr</code> isn’t required for <code>noctua</code>, however it has been included in the docker file to improve performance when querying AWS Athena.</p>
+<p><strong>NOTE:</strong> <code>readr</code> isn’t required for
+<code>noctua</code>, however it has been included in the docker file to
+improve performance when querying AWS Athena.</p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="usage">Usage:<a class="anchor" aria-label="anchor" href="#usage"></a>
-</h1>
 <div class="section level2">
-<h2 id="low---level-api">Low - Level API:<a class="anchor" aria-label="anchor" href="#low---level-api"></a>
+<h2 id="usage">Usage:<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
+<div class="section level3">
+<h3 id="low---level-api">Low - Level API:<a class="anchor" aria-label="anchor" href="#low---level-api"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
@@ -168,9 +190,9 @@ docker run \
 <span class="fu"><a href="../reference/work_group.html">create_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,
                   tags <span class="op">=</span> <span class="fu"><a href="../reference/work_group.html">tag_options</a></span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="dbi">DBI:<a class="anchor" aria-label="anchor" href="#dbi"></a>
-</h2>
+<div class="section level3">
+<h3 id="dbi">DBI:<a class="anchor" aria-label="anchor" href="#dbi"></a>
+</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
 
@@ -229,9 +251,9 @@ docker run \
 <span class="co"># 9:           4.4         2.9          1.4         0.2  setosa</span>
 <span class="co"># 10:          4.9         3.1          1.5         0.1  setosa</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="dplyr">dplyr:<a class="anchor" aria-label="anchor" href="#dplyr"></a>
-</h2>
+<div class="section level3">
+<h3 id="dplyr">dplyr:<a class="anchor" aria-label="anchor" href="#dplyr"></a>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
@@ -258,13 +280,15 @@ docker run \
 <span class="co"># 10 setosa           4.9         3.1</span></code></pre></div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="useful-links">Useful Links:<a class="anchor" aria-label="anchor" href="#useful-links"></a>
-</h1>
+<div class="section level2">
+<h2 id="useful-links">Useful Links:<a class="anchor" aria-label="anchor" href="#useful-links"></a>
+</h2>
 <ul>
 <li><a href="https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html" class="external-link">SQL</a></li>
-<li><a href="https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/" class="external-link">AWS Athena performance tips</a></li>
-<li><a href="https://docs.aws.amazon.com/athena/latest/ug/athena-ug.pdf" class="external-link">AWS Athena User Guide</a></li>
+<li><a href="https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/" class="external-link">AWS
+Athena performance tips</a></li>
+<li><a href="https://docs.aws.amazon.com/athena/latest/ug/athena-ug.pdf" class="external-link">AWS
+Athena User Guide</a></li>
 </ul>
 </div>
   </div>
@@ -286,7 +310,7 @@ docker run \
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

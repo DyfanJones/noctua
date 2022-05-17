@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -104,7 +104,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>AWS Athena Unload</h1>
-                        <h4 data-toc-skip class="author">Dyfan Jones</h4>
+                        <h4 data-toc-skip class="author">Dyfan
+Jones</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/HEAD/vignettes/aws_athena_unload.Rmd" class="external-link"><code>vignettes/aws_athena_unload.Rmd</code></a></small>
@@ -115,11 +116,29 @@
     
     
 <blockquote>
-<p>Writes query results from a <code>SELECT</code> statement to the specified data format. Supported formats for <code>UNLOAD</code> include <code>Apache Parquet</code>, <code>ORC</code>, <code>Apache Avro</code>, and <code>JSON</code>. <code>CSV</code> is the only output format used by the <code>Athena</code> <code>SELECT</code> query, but you can use <code>UNLOAD</code> to write the output of a <code>SELECT</code> query to the formats that <code>UNLOAD</code> supports.</p>
-<p>Although you can use the <code>CTAS</code> statement to output data in formats other than <code>CSV</code>, those statements also require the creation of a table in Athena. The <code>UNLOAD</code> statement is useful when you want to output the results of a <code>SELECT</code> query in a <code>non-CSV</code> format but do not require the associated table. For example, a downstream application might require the results of a <code>SELECT</code> query to be in <code>JSON</code> format, and <code>Parquet</code> or <code>ORC</code> might provide a performance advantage over <code>CSV</code> if you intend to use the results of the <code>SELECT</code> query for additional analysis.</p>
+<p>Writes query results from a <code>SELECT</code> statement to the
+specified data format. Supported formats for <code>UNLOAD</code> include
+<code>Apache Parquet</code>, <code>ORC</code>, <code>Apache Avro</code>,
+and <code>JSON</code>. <code>CSV</code> is the only output format used
+by the <code>Athena</code> <code>SELECT</code> query, but you can use
+<code>UNLOAD</code> to write the output of a <code>SELECT</code> query
+to the formats that <code>UNLOAD</code> supports.</p>
+<p>Although you can use the <code>CTAS</code> statement to output data
+in formats other than <code>CSV</code>, those statements also require
+the creation of a table in Athena. The <code>UNLOAD</code> statement is
+useful when you want to output the results of a <code>SELECT</code>
+query in a <code>non-CSV</code> format but do not require the associated
+table. For example, a downstream application might require the results
+of a <code>SELECT</code> query to be in <code>JSON</code> format, and
+<code>Parquet</code> or <code>ORC</code> might provide a performance
+advantage over <code>CSV</code> if you intend to use the results of the
+<code>SELECT</code> query for additional analysis.</p>
 <p>(<a href="https://docs.aws.amazon.com/athena/latest/ug/unload.html" class="external-link uri">https://docs.aws.amazon.com/athena/latest/ug/unload.html</a>)</p>
 </blockquote>
-<p><code>noctua v-2.2.0.9000+</code> can now leverage this functionality with the <code>unload</code> parameter within <code>dbGetQuery</code>, <code>dbSendQuery</code>, <code>dbExecute</code>. This functionality offers faster performance for mid to large result sizes.</p>
+<p><code>noctua v-2.2.0.9000+</code> can now leverage this functionality
+with the <code>unload</code> parameter within <code>dbGetQuery</code>,
+<code>dbSendQuery</code>, <code>dbExecute</code>. This functionality
+offers faster performance for mid to large result sizes.</p>
 <div class="section level2">
 <h2 id="pros-and-cons">Pros and Cons<a class="anchor" aria-label="anchor" href="#pros-and-cons"></a>
 </h2>
@@ -127,7 +146,8 @@
 <h3 id="unloadfalse-default">
 <strong><code>unload=FALSE</code></strong> (Default)<a class="anchor" aria-label="anchor" href="#unloadfalse-default"></a>
 </h3>
-<p>Regular query on <code>AWS Athena</code> and then reads the table data as <code>CSV</code> directly from <code>AWS S3</code>.</p>
+<p>Regular query on <code>AWS Athena</code> and then reads the table
+data as <code>CSV</code> directly from <code>AWS S3</code>.</p>
 <p><strong>PROS:</strong></p>
 <ul>
 <li>Faster for small result sizes (less latency).</li>
@@ -144,7 +164,8 @@
 <h3 id="unloadtrue">
 <strong><code>unload=TRUE</code></strong><a class="anchor" aria-label="anchor" href="#unloadtrue"></a>
 </h3>
-<p>Wraps the query with a <code>UNLOAD</code> and then reads the table data as <code>parquet</code> directly from <code>AWS S3</code>.</p>
+<p>Wraps the query with a <code>UNLOAD</code> and then reads the table
+data as <code>parquet</code> directly from <code>AWS S3</code>.</p>
 <p><strong>PROS:</strong></p>
 <ul>
 <li>Faster for mid and big result sizes.</li>
@@ -157,14 +178,16 @@
 <li>Does not support columns with repeated names.</li>
 <li>Does not support columns with undefined data types.</li>
 <li>Does not support unnamed columns</li>
-<li>Does not preserve <code>order by</code> due to multiple parquet files being produced by AWS Athena.</li>
+<li>Does not preserve <code>order by</code> due to multiple parquet
+files being produced by AWS Athena.</li>
 </ul>
 </div>
 </div>
 <div class="section level2">
 <h2 id="performance-comparison">Performance comparison:<a class="anchor" aria-label="anchor" href="#performance-comparison"></a>
 </h2>
-<p>Set up <code>AWS Athena</code> table (example taken from <a href="https://aws-data-wrangler.readthedocs.io/en/stable/tutorials/006%20-%20Amazon%20Athena.html" class="external-link">AWS Data Wrangler: Amazon Athena Tutorial</a>):</p>
+<p>Set up <code>AWS Athena</code> table (example taken from <a href="https://aws-data-wrangler.readthedocs.io/en/stable/tutorials/006%20-%20Amazon%20Athena.html" class="external-link">AWS
+Data Wrangler: Amazon Athena Tutorial</a>):</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> awswrangler <span class="im">as</span> wr</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -259,13 +282,20 @@
 </tr>
 </tbody>
 </table>
-<p>From this simple benchmark test there is a significant improvement in the performance when querying <code>AWS Athena</code> while <code>unload=TRUE</code>.</p>
-<p><strong>Note:</strong> Benchmark ran on <code>AWS Sagemaker</code> <code>ml.t3.xlarge</code> instance.</p>
+<p>From this simple benchmark test there is a significant improvement in
+the performance when querying <code>AWS Athena</code> while
+<code>unload=TRUE</code>.</p>
+<p><strong>Note:</strong> Benchmark ran on <code>AWS Sagemaker</code>
+<code>ml.t3.xlarge</code> instance.</p>
 </div>
 <div class="section level2">
 <h2 id="set-unload-true-on-package-level">Set <code>unload = TRUE</code> on package level:<a class="anchor" aria-label="anchor" href="#set-unload-true-on-package-level"></a>
 </h2>
-<p>Another method to set <code>unload=TRUE</code> is to use <code><a href="../reference/noctua_options.html">noctua_options()</a></code>. By setting <code>noctua_options(unload=TRUE)</code>, <code>unload</code> is set to <code>TRUE</code> package level and all <code>DBI</code> functionality will use it when applicable.</p>
+<p>Another method to set <code>unload=TRUE</code> is to use
+<code><a href="../reference/noctua_options.html">noctua_options()</a></code>. By setting
+<code>noctua_options(unload=TRUE)</code>, <code>unload</code> is set to
+<code>TRUE</code> package level and all <code>DBI</code> functionality
+will use it when applicable.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
@@ -275,7 +305,10 @@
 <span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">dbi_noaa</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from awswrangler_test.noaa"</span><span class="op">)</span></code></pre></div>
-<p>This also give benefits for when using <code>dplyr</code> functionality. When setting <code>noctua_options(unload=TRUE)</code> all <code>dplyr</code> lazy evaluation will start using <code>AWS Athena unload</code>.</p>
+<p>This also give benefits for when using <code>dplyr</code>
+functionality. When setting <code>noctua_options(unload=TRUE)</code> all
+<code>dplyr</code> lazy evaluation will start using <code>AWS Athena
+unload</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tbl_noaa</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu">dbplyr</span><span class="fu">::</span><span class="fu"><a href="https://dbplyr.tidyverse.org/reference/in_schema.html" class="external-link">in_schema</a></span><span class="op">(</span><span class="st">"awswrangler_test"</span>, <span class="st">"noaa"</span><span class="op">)</span><span class="op">)</span>
 
@@ -331,7 +364,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

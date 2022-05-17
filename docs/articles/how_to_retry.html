@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -104,7 +104,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>How to Retry?</h1>
-                        <h4 data-toc-skip class="author">Dyfan Jones</h4>
+                        <h4 data-toc-skip class="author">Dyfan
+Jones</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DyfanJones/noctua/blob/HEAD/vignettes/how_to_retry.Rmd" class="external-link"><code>vignettes/how_to_retry.Rmd</code></a></small>
@@ -114,21 +115,37 @@
 
     
     
-<p>With most applications that connect to an API, unnecessary exceptions can be returned back to the caller in the case of transient network or service issues. To avoid this <code>noctua</code> has implemented a retry method with exponential backoff. This technique increases the reliability of the application with connecting to <code>AWS Athena</code>.</p>
-<div class="section level1">
-<h1 id="how-to-handle-noctuas-retry">How to handle <code>noctua</code>’s retry?<a class="anchor" aria-label="anchor" href="#how-to-handle-noctuas-retry"></a>
-</h1>
-<p>By default <code>noctua</code> performs a retry noisily, this means it will report the exception it has encountered and let the user know how long <code>noctua</code> will wait until it retries again. This is reported in the following format:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{expection message} <span class="sc">+</span> <span class="st">"Request failed. Retrying in "</span> <span class="sc">+</span> {wait time}  <span class="sc">+</span> <span class="st">" seconds..."</span></span></code></pre></div>
-<p>This is to keep the user informed in what <code>noctua</code> is doing behind the scenes.</p>
+<p>With most applications that connect to an API, unnecessary exceptions
+can be returned back to the caller in the case of transient network or
+service issues. To avoid this <code>noctua</code> has implemented a
+retry method with exponential backoff. This technique increases the
+reliability of the application with connecting to <code>AWS
+Athena</code>.</p>
 <div class="section level2">
-<h2 id="configure">Configure<a class="anchor" aria-label="anchor" href="#configure"></a>
+<h2 id="how-to-handle-noctuas-retry">How to handle <code>noctua</code>’s retry?<a class="anchor" aria-label="anchor" href="#how-to-handle-noctuas-retry"></a>
 </h2>
-<p>By default <code>noctua</code> retries 5 times and does it noisily. To configure this, <code>noctua_options</code> has been give 2 extra parameters <code>retry</code> and <code>retry_quiet</code>. <code>retry</code> is the number of retries <code>noctua</code> will perform. <code>retry_quiet</code> tells <code>noctua</code> to retry quietly or not.</p>
-<p>We can change the default retry settings so that <code>noctua</code> will retry 10 times and do it quietly:</p>
+<p>By default <code>noctua</code> performs a retry noisily, this means
+it will report the exception it has encountered and let the user know
+how long <code>noctua</code> will wait until it retries again. This is
+reported in the following format:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{expection message} <span class="sc">+</span> <span class="st">"Request failed. Retrying in "</span> <span class="sc">+</span> {wait time}  <span class="sc">+</span> <span class="st">" seconds..."</span></span></code></pre></div>
+<p>This is to keep the user informed in what <code>noctua</code> is
+doing behind the scenes.</p>
+<div class="section level3">
+<h3 id="configure">Configure<a class="anchor" aria-label="anchor" href="#configure"></a>
+</h3>
+<p>By default <code>noctua</code> retries 5 times and does it noisily.
+To configure this, <code>noctua_options</code> has been give 2 extra
+parameters <code>retry</code> and <code>retry_quiet</code>.
+<code>retry</code> is the number of retries <code>noctua</code> will
+perform. <code>retry_quiet</code> tells <code>noctua</code> to retry
+quietly or not.</p>
+<p>We can change the default retry settings so that <code>noctua</code>
+will retry 10 times and do it quietly:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>retry <span class="op">=</span> <span class="fl">10</span>, retry_quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p>If you wish to create your own custom retry function just set the <code>retry</code> to 0:</p>
+<p>If you wish to create your own custom retry function just set the
+<code>retry</code> to 0:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
@@ -148,17 +165,22 @@
 <span class="fu">custom_retry</span><span class="op">(</span><span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select ..."</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="requests">Requests<a class="anchor" aria-label="anchor" href="#requests"></a>
-</h1>
-<p>If you wish to increase the retry functionality of <code>noctua</code> for example the use of different backoff algorithms, please raise a ticket at <a href="https://github.com/DyfanJones/noctua/issues" class="external-link">issues</a> or raise a pull request.</p>
+<div class="section level2">
+<h2 id="requests">Requests<a class="anchor" aria-label="anchor" href="#requests"></a>
+</h2>
+<p>If you wish to increase the retry functionality of
+<code>noctua</code> for example the use of different backoff algorithms,
+please raise a ticket at <a href="https://github.com/DyfanJones/noctua/issues" class="external-link">issues</a> or raise a
+pull request.</p>
 </div>
-<div class="section level1">
-<h1 id="reading-material">Reading material<a class="anchor" aria-label="anchor" href="#reading-material"></a>
-</h1>
+<div class="section level2">
+<h2 id="reading-material">Reading material<a class="anchor" aria-label="anchor" href="#reading-material"></a>
+</h2>
 <ul>
-<li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" class="external-link">Exponential Backoff and Jitter</a></li>
-<li><a href="https://aws.amazon.com/blogs/messaging-and-targeting/how-to-handle-a-throttling-maximum-sending-rate-exceeded-error/" class="external-link">How to handle a “Throttling – Maximum sending rate exceeded” error</a></li>
+<li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" class="external-link">Exponential
+Backoff and Jitter</a></li>
+<li><a href="https://aws.amazon.com/blogs/messaging-and-targeting/how-to-handle-a-throttling-maximum-sending-rate-exceeded-error/" class="external-link">How
+to handle a “Throttling – Maximum sending rate exceeded” error</a></li>
 </ul>
 </div>
   </div>
@@ -180,7 +202,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

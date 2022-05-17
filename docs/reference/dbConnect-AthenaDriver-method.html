@@ -31,7 +31,7 @@ NOTE: If you have set any environmental variables in .Renviron please restart yo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -40,7 +40,7 @@ NOTE: If you have set any environmental variables in .Renviron please restart yo
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -129,6 +129,7 @@ of supported environment variables:</p><ul><li><p><strong>AWS_ACCESS_KEY_ID:</st
   timezone <span class="op">=</span> <span class="st">"UTC"</span>,
   keyboard_interrupt <span class="op">=</span> <span class="cn">TRUE</span>,
   rstudio_conn_tab <span class="op">=</span> <span class="cn">TRUE</span>,
+  endpoint_override <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -193,10 +194,31 @@ If `NULL` then no timezone is set, which defaults to the server's time zone.
 <dt>keyboard_interrupt</dt>
 <dd><p>Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to <code>TRUE</code></p></dd>
 <dt>rstudio_conn_tab</dt>
-<dd><p>Optional to get AWS Athena Schema and display it in RStudio's Connections Tab.
-Default set to <code>TRUE</code>.</p></dd>
+<dd><p>Optional to get AWS Athena Schema from AWS Glue Catalogue and display it in RStudio's Connections Tab.
+Default set to <code>TRUE</code>. For large `AWS Glue Catalogue` it is recommended to set `rstudio_conn_tab=FALSE` to ensure a fast connection.</p></dd>
+<dt>endpoint_override</dt>
+<dd><p>(character/list) The complete URL to use for the constructed client.
+Normally, paws will automatically construct the appropriate URL to use when
+communicating with a service. You can specify a complete URL (including the "http/https" scheme)
+to override this behaviour. If this value is provided, then <code>disable_ssl</code> is ignored.
+If <code>endpoint_override</code> is a character then AWS Athena endpoint is overridden. To override
+AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names ['athena', 's3', glue']
+for example <code>list(glue = "https://glue.eu-west-1.amazonaws.com")</code></p></dd>
 <dt>...</dt>
-<dd><p>other parameters for <code>paws</code> session</p></dd>
+<dd><p>other parameters for <code>paws</code> session.</p><ul><li><p>disable_ssl (boolean) Whether or not to use SSL. By default, SSL is used.
+        Note that not all services support non-ssl connections.</p></li>
+<li><p>timeout (numeric) The time in seconds till a timeout exception is
+        thrown when attempting to make a connection. The default is 60 seconds.</p></li>
+<li><p>disable_param_validation (bool) Whether parameter validation should occur
+        when serializing requests. The default is <code>FALSE</code> You can disable parameter
+        validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.</p></li>
+<li><p>s3_force_path_style Addressing style is always by path. Endpoints will be
+        addressed as such: s3.amazonaws.com/mybucket</p></li>
+<li><p>s3_use_accelerate Refers to whether to use the S3 Accelerate endpoint.
+        The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
+        If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.</p></li>
+<li><p>use_dual_stack Setting to <code>TRUE</code> enables dual stack endpoint resolution.</p></li>
+</ul></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -248,7 +270,7 @@ Default set to <code>TRUE</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

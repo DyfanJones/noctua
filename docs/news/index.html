@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -76,7 +76,22 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="2.5.1" id="noctua-251">noctua 2.5.1<a class="anchor" aria-label="anchor" href="#noctua-251"></a></h2>
+<h2 class="page-header" data-toc-text="2.6.0" id="noctua-260">noctua 2.6.0<a class="anchor" aria-label="anchor" href="#noctua-260"></a></h2>
+<div class="section level3">
+<h3 id="feature-2-6-0">Feature:<a class="anchor" aria-label="anchor" href="#feature-2-6-0"></a></h3>
+<ul><li>Add clear_s3_resource parameter to RAthena_options to prevent AWS Athena output AWS S3 resource being cleared up by <code>dbClearResult</code> (<a href="https://github.com/DyfanJones/RAthena/issues/168" class="external-link">RAthena # 168</a>)</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.5.1.9000" id="noctua-2519000">noctua 2.5.1.9000<a class="anchor" aria-label="anchor" href="#noctua-2519000"></a></h2>
+<div class="section level3">
+<h3 id="feature-2-5-1-9000">Feature:<a class="anchor" aria-label="anchor" href="#feature-2-5-1-9000"></a></h3>
+<ul><li>Support extra paws parameters for (<a href="https://github.com/DyfanJones/RAthena/issues/169" class="external-link">RAthena # 169</a>)</li>
+<li>Support <code>endpoint_override</code> parameter allow default endpoints for each service to be overridden accordingly (<a href="https://github.com/DyfanJones/RAthena/issues/169" class="external-link">RAthena # 169</a>)</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.5.1" id="noctua-251">noctua 2.5.1<small>2022-01-26</small><a class="anchor" aria-label="anchor" href="#noctua-251"></a></h2>
 <div class="section level3">
 <h3 id="bug-fix-2-5-1">Bug Fix:<a class="anchor" aria-label="anchor" href="#bug-fix-2-5-1"></a></h3>
 <ul><li>Fixed unit test helper function <code>test_data</code> to use <code>size</code> parameter explicitly.</li>
@@ -658,7 +673,7 @@ Info: The S3 objects in prefix will be deleted:
 <span class="op">}</span>
 
 
-<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>writeBin_loop <span class="op">=</span> <span class="fu">write_bin</span><span class="op">(</span><span class="va">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+<span class="fu">microbenchmark</span><span class="op">(</span>writeBin_loop <span class="op">=</span> <span class="fu">write_bin</span><span class="op">(</span><span class="va">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
                readr <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html" class="external-link">write_file</a></span><span class="op">(</span><span class="va">obj</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
                times <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 
@@ -981,7 +996,7 @@ Info: The S3 objects in prefix will be deleted:
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
