@@ -9,7 +9,7 @@ vignette: >
 ---
 
 # Intro
-`noctua` is dependent on `data.table` to read data into `R`. This is down to the amazing speed `data.table` offers when reading files into `R`. However a new package, with equally impressive read speeds, has come onto the scene called [`vroom`](https://github.com/r-lib/vroom). As `vroom` has been designed to only read data into `R`, similarly to `readr`, `data.table` is still used for all of the heavy lifting. However if a user wishes to use `vroom` as the file parser, `noctua_options` function has been created to enable this:
+`noctua` is dependent on `data.table` to read data into `R`. This is down to the amazing speed `data.table` offers when reading files into `R`. However a new package, with equally impressive read speeds, has come onto the scene called [`vroom`](https://github.com/tidyverse/vroom). As `vroom` has been designed to only read data into `R`, similarly to `readr`, `data.table` is still used for all of the heavy lifting. However if a user wishes to use `vroom` as the file parser, `noctua_options` function has been created to enable this:
 
 ```r
 library(DBI)
