@@ -205,19 +205,19 @@ If <code>endpoint_override</code> is a character then AWS Athena endpoint is ove
 AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names ['athena', 's3', glue']
 for example <code>list(glue = "https://glue.eu-west-1.amazonaws.com")</code></p></dd>
 <dt>...</dt>
-<dd><p>other parameters for <code>paws</code> session.</p><ul><li><p>disable_ssl (boolean) Whether or not to use SSL. By default, SSL is used.
+<dd><p>other parameters for <code>paws</code> session.</p><ul><li><p><strong>disable_ssl</strong> (boolean) Whether or not to use SSL. By default, SSL is used.
         Note that not all services support non-ssl connections.</p></li>
-<li><p>timeout (numeric) The time in seconds till a timeout exception is
+<li><p><strong>timeout</strong> (numeric) The time in seconds till a timeout exception is
         thrown when attempting to make a connection. The default is 60 seconds.</p></li>
-<li><p>disable_param_validation (bool) Whether parameter validation should occur
+<li><p><strong>disable_param_validation</strong> (bool) Whether parameter validation should occur
         when serializing requests. The default is <code>FALSE</code> You can disable parameter
         validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.</p></li>
-<li><p>s3_force_path_style Addressing style is always by path. Endpoints will be
+<li><p><strong>s3_force_path_style</strong> Addressing style is always by path. Endpoints will be
         addressed as such: s3.amazonaws.com/mybucket</p></li>
-<li><p>s3_use_accelerate Refers to whether to use the S3 Accelerate endpoint.
+<li><p><strong>s3_use_accelerate</strong> Refers to whether to use the S3 Accelerate endpoint.
         The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
         If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.</p></li>
-<li><p>use_dual_stack Setting to <code>TRUE</code> enables dual stack endpoint resolution.</p></li>
+<li><p><strong>use_dual_stack</strong> Setting to <code>TRUE</code> enables dual stack endpoint resolution.</p></li>
 </ul></dd>
 </dl></div>
     <div id="value">

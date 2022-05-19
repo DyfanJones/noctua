@@ -114,24 +114,24 @@ setMethod(
 #'  for example \code{list(glue = "https://glue.eu-west-1.amazonaws.com")}
 #' @param ... other parameters for \code{paws} session.
 #' \itemize{
-#'     \item{disable_ssl} {(boolean) Whether or not to use SSL. By default, SSL is used.
+#'     \item{\strong{disable_ssl}} {(boolean) Whether or not to use SSL. By default, SSL is used.
 #'         Note that not all services support non-ssl connections.
 #'     }
-#'     \item{timeout} {(numeric) The time in seconds till a timeout exception is
+#'     \item{\strong{timeout}} {(numeric) The time in seconds till a timeout exception is
 #'         thrown when attempting to make a connection. The default is 60 seconds.
 #'     }
-#'     \item{disable_param_validation} {(bool) Whether parameter validation should occur
+#'     \item{\strong{disable_param_validation}} {(bool) Whether parameter validation should occur
 #'         when serializing requests. The default is \code{FALSE} You can disable parameter
 #'         validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.
 #'     }
-#'     \item{s3_force_path_style} {Addressing style is always by path. Endpoints will be
+#'     \item{\strong{s3_force_path_style}} {Addressing style is always by path. Endpoints will be
 #'         addressed as such: s3.amazonaws.com/mybucket
 #'     }
-#'     \item{s3_use_accelerate} {Refers to whether to use the S3 Accelerate endpoint.
+#'     \item{\strong{s3_use_accelerate}} {Refers to whether to use the S3 Accelerate endpoint.
 #'         The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
 #'         If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.
 #'     }
-#'     \item{use_dual_stack} {Setting to \code{TRUE} enables dual stack endpoint resolution.}
+#'     \item{\strong{use_dual_stack}} {Setting to \code{TRUE} enables dual stack endpoint resolution.}
 #' }
 #' @aliases dbConnect
 #' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
