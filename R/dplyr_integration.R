@@ -6,7 +6,7 @@
 
 #' @title S3 implementation of \code{db_compute} for Athena
 #' 
-#' This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
+#' @description This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param table Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
 #' @param sql SQL code to be sent to the data
