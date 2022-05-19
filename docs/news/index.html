@@ -80,7 +80,7 @@
 <div class="section level3">
 <h3 id="feature-2-6-0">Feature:<a class="anchor" aria-label="anchor" href="#feature-2-6-0"></a></h3>
 <ul><li>Add clear_s3_resource parameter to RAthena_options to prevent AWS Athena output AWS S3 resource being cleared up by <code>dbClearResult</code> (<a href="https://github.com/DyfanJones/RAthena/issues/168" class="external-link">RAthena # 168</a>). Thanks to <a href="https://github.com/juhoautio" class="external-link">@juhoautio</a> for the request.</li>
-<li>Support extra paws parameters for (<a href="https://github.com/DyfanJones/RAthena/issues/169" class="external-link">RAthena # 169</a>)</li>
+<li>Support extra <code>paws</code> parameters (<a href="https://github.com/DyfanJones/RAthena/issues/169" class="external-link">RAthena # 169</a>)</li>
 <li>Support <code>endpoint_override</code> parameter allow default endpoints for each service to be overridden accordingly (<a href="https://github.com/DyfanJones/RAthena/issues/169" class="external-link">RAthena # 169</a>). Thanks to <a href="https://github.com/aoyh" class="external-link">@aoyh</a> for the request and checking the package in development.</li>
 </ul></div>
 </div>
@@ -328,7 +328,7 @@
 <span class="co"># [1] "character"</span>
 
 <span class="co"># change json conversion to custom method</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/jsonify/man/from_json.html" class="external-link">from_json</a></span><span class="op">)</span>
+<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va">from_json</span><span class="op">)</span>
 <span class="fu">noctua</span><span class="fu">:::</span><span class="va">athena_option_env</span><span class="op">$</span><span class="va">json</span>
 <span class="co"># function (json, simplify = TRUE, fill_na = FALSE, buffer_size = 1024) </span>
 <span class="co"># {</span>
@@ -370,7 +370,7 @@
 <span class="va">con2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>, json <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>
 
 <span class="co"># use custom json parser</span>
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>, json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/jsonify/man/from_json.html" class="external-link">from_json</a></span><span class="op">)</span></code></pre></div>
+<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span>, json <span class="op">=</span> <span class="fu">jsonify</span><span class="fu">::</span><span class="va">from_json</span><span class="op">)</span></code></pre></div>
 <ul><li>Allow users to turn off RStudio Connection Tab when working in RStudio (<a href="https://github.com/DyfanJones/noctua/issues/136" class="external-link">#136</a>). This can be done through parameter <code>rstudio_conn_tab</code> within <code>dbConnect</code>.</li>
 </ul></div>
 <div class="section level3">
@@ -697,7 +697,7 @@ Info: The S3 objects in prefix will be deleted:
 <span class="op">(</span><span class="st">'hi'</span><span class="op">||</span><span class="st">'-'</span><span class="op">||</span><span class="st">'bye'</span><span class="op">)</span></code></pre></div>
 <ul><li>If table exists and parameter <code>append</code> set to <code>TRUE</code> then existing s3.location will be utilised (<a href="https://github.com/DyfanJones/RAthena/issues/73" class="external-link">RAthena: # 73</a>)</li>
 <li>
-<code>db_compute</code> returned table name, however when a user wished to write table to another location (<a href="https://github.com/DyfanJones/RAthena/issues/74" class="external-link">RAthena: # 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code><a href="https://dbplyr.tidyverse.org/reference/in_schema.html" class="external-link">dbplyr::in_schema</a></code>.</li>
+<code>db_compute</code> returned table name, however when a user wished to write table to another location (<a href="https://github.com/DyfanJones/RAthena/issues/74" class="external-link">RAthena: # 74</a>). An error would be raised: <code>Error: SYNTAX_ERROR: line 2:6: Table awsdatacatalog.default.temp.iris does not exist</code> This has now been fixed with db_compute returning <code>dbplyr::in_schema</code>.</li>
 </ul><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
