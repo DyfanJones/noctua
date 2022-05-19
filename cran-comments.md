@@ -1,14 +1,13 @@
 ## Submission
-This release is a patch release addressing cran build.
+This release contains a couple of new features.
 
-### Bug Fix:
-  *  Unit test helper function `test_data` to use explicitly calls `size` parameter.
-
-## Examples Note:
-* All R examples with `\dontrun` have been given a note warning users that `AWS credentials` are required to run
+## Feature:
+* Add `clear_s3_resource` parameter to `RAthena_options` to prevent `Amazon Web Service Athena` output `Amazon Web Service S3`
+* Support extra paws parameters for
+* Support `endpoint_override` parameter allow default endpoints for each service to be overridden
 
 ## Test environments
-* local OS X install, 4.1.1
+* local OS X install, 4.2.0
 * rhub: windows-x86_64-devel, ubuntu-gcc-release, fedora-clang-devel
 
 ## R CMD check results (local)
@@ -16,14 +15,6 @@ This release is a patch release addressing cran build.
 
 ## R devtools::check_rhub() results
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
-
-## Maintainers Comments:
-Apologises for this fast turn around. This release is to address issues regarding cran build. To prevent this from happening in the future,
-
-> setenv _R_CHECK_LENGTH_1_CONDITION_ abort,verbose
-> setenv _R_CHECK_LENGTH_1_LOGIC2_ abort,verbose
- 
-Have been set for all unit test runs.
 
 **Side note:** ran devtools::check_rhub with following environment variables:
 ```
