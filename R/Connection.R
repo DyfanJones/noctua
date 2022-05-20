@@ -2,9 +2,9 @@
 #' @include dplyr_integration.R
 NULL
 
-#' Athena Connection Methods
+#' @title Athena Connection Methods
 #'
-#' Implementations of pure virtual functions defined in the `DBI` package
+#' @description Implementations of pure virtual functions defined in the `DBI` package
 #' for AthenaConnection objects.
 #' @slot ptr a list of connecting objects from the SDK paws package.
 #' @slot info a list of metadata objects
@@ -12,6 +12,7 @@ NULL
 #' @name AthenaConnection
 #' @keywords internal
 #' @inheritParams methods::show
+#' @importFrom utils modifyList
 NULL
 
 class_cache <- new.env(parent = emptyenv())
