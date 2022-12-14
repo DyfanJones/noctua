@@ -6,9 +6,9 @@
 \alias{db_query_fields.AthenaConnection}
 \title{Athena S3 implementation of dbplyr backend functions (api version 1).}
 \usage{
-\method{db_explain}{AthenaConnection}(con, sql, ...)
+db_explain.AthenaConnection(con, sql, ...)
 
-\method{db_query_fields}{AthenaConnection}(con, sql, ...)
+db_query_fields.AthenaConnection(con, sql, ...)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
