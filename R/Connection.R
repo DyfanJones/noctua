@@ -18,7 +18,7 @@ NULL
 class_cache <- new.env(parent = emptyenv())
 
 AthenaConnection <- function(aws_access_key_id = NULL,
-                             aws_secret_access_key = NULL ,
+                             aws_secret_access_key = NULL,
                              aws_session_token = NULL,
                              schema_name = NULL,
                              work_group = NULL,
@@ -27,22 +27,22 @@ AthenaConnection <- function(aws_access_key_id = NULL,
                              kms_key = NULL,
                              s3_staging_dir = NULL,
                              region_name = NULL,
-                             profile_name = NULL, 
+                             profile_name = NULL,
                              aws_expiration = NULL,
                              keyboard_interrupt = NULL,
                              endpoint_override = NULL,
-                             ...){
-  kwargs = list(...)
+                             ...) {
+  kwargs <- list(...)
   # get lower level paws methods
   get_region <- pkg_method("get_region", "paws.common")
   get_profile_name <- pkg_method("get_profile_name", "paws.common")
-  
+
   # get region name
   RegionName <- (region_name %||% get_region(profile_name)) %||% get_aws_env("AWS_DEFAULT_REGION")
-  
+
   # get profile_name
-  prof_name <- if(!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
-  
+  prof_name <- if (!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
+
   # format credentials to pass to paws sdk
   Config <- cred_set(
     aws_access_key_id,
@@ -51,39 +51,44 @@ AthenaConnection <- function(aws_access_key_id = NULL,
     prof_name,
     RegionName
   )
-  if(!is.null(kwargs$endpoint))
+  if (!is.null(kwargs$endpoint)) {
     stop(
       "Please use `endpoint_override` to override AWS service endpoints.",
       call. = F
     )
+  }
   # set up any endpoint url for each aws service: athena, s3, glue
-  endpoints = set_endpoints(endpoint_override)
-  
+  endpoints <- set_endpoints(endpoint_override)
+
   tryCatch({
-    Athena <- paws::athena(config = modifyList(Config, c(kwargs , list(endpoint = endpoints$athena))))
-    S3 <- paws::s3(config = modifyList(Config, c(kwargs , list(endpoint = endpoints$s3))))
-    glue <- paws::glue(config = modifyList(Config, c(kwargs , list(endpoint = endpoints$glue))))
+    Athena <- paws::athena(config = modifyList(Config, c(kwargs, list(endpoint = endpoints$athena))))
+    S3 <- paws::s3(config = modifyList(Config, c(kwargs, list(endpoint = endpoints$s3))))
+    glue <- paws::glue(config = modifyList(Config, c(kwargs, list(endpoint = endpoints$glue))))
   })
-  
-  if(is.null(s3_staging_dir) && !is.null(work_group)){
+
+  if (is.null(s3_staging_dir) && !is.null(work_group)) {
     tryCatch(
       s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation
     )
   }
   # return a subset of api function to reduce object size
   ptr_ll <- list(
-    Athena = Athena[c(".internal","start_query_execution", "get_query_execution","stop_query_execution", "get_query_results",
-        "get_work_group","list_work_groups","update_work_group","create_work_group","delete_work_group")],
-    S3 = S3[c(".internal", "put_object", "get_object","delete_object","delete_objects","list_objects_v2")],
-    glue = glue[c(".internal", "get_databases","get_tables","get_table","delete_table")]
+    Athena = Athena[c(
+      ".internal", "start_query_execution", "get_query_execution", "stop_query_execution", "get_query_results",
+      "get_work_group", "list_work_groups", "update_work_group", "create_work_group", "delete_work_group"
+    )],
+    S3 = S3[c(".internal", "put_object", "get_object", "delete_object", "delete_objects", "list_objects_v2")],
+    glue = glue[c(".internal", "get_databases", "get_tables", "get_table", "delete_table")]
   )
   s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
-  
-  if(is.null(s3_staging_dir))
+
+  if (is.null(s3_staging_dir)) {
     stop(
       "Please set `s3_staging_dir` either in parameter `s3_staging_dir`, environmental varaible `AWS_ATHENA_S3_STAGING_DIR`",
-      "or when work_group is defined in `create_work_group()`", call. = F
+      "or when work_group is defined in `create_work_group()`",
+      call. = F
     )
+  }
   info <- list(
     profile_name = prof_name, s3_staging = s3_staging_dir,
     dbms.name = schema_name, work_group = work_group %||% "primary",
@@ -98,7 +103,8 @@ AthenaConnection <- function(aws_access_key_id = NULL,
     "AthenaConnection",
     ptr = list2env(ptr_ll, parent = emptyenv()),
     info = list2env(info, parent = emptyenv()),
-    quote = "`")
+    quote = "`"
+  )
 }
 
 #' @rdname AthenaConnection
@@ -109,22 +115,24 @@ setClass(
   slots = list(
     ptr = "environment",
     info = "environment",
-    quote = "character")
+    quote = "character"
+  )
 )
 
 #' @rdname AthenaConnection
 #' @export
 setMethod(
   "show", "AthenaConnection",
-  function(object){
+  function(object) {
     cat("<AthenaConnection>\n")
     if (!dbIsValid(object)) {
       cat("  DISCONNECTED\n")
     }
-})
+  }
+)
 
 #' Disconnect (close) an Athena connection
-#' 
+#'
 #' This closes the connection to Athena.
 #' @name dbDisconnect
 #' @inheritParams DBI::dbDisconnect
@@ -132,15 +140,15 @@ setMethod(
 #' @seealso \code{\link[DBI]{dbDisconnect}}
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -156,12 +164,14 @@ setMethod(
       warning("Connection already closed.", call. = FALSE)
     } else {
       on_connection_closed(conn)
-      rm(list = ls(all.names = TRUE, envir = conn@ptr), envir = conn@ptr)}
+      rm(list = ls(all.names = TRUE, envir = conn@ptr), envir = conn@ptr)
+    }
     invisible(NULL)
-})
+  }
+)
 
 #' Is this DBMS object still valid?
-#' 
+#'
 #' This method tests whether the \code{dbObj} is still valid.
 #' @name dbIsValid
 #' @inheritParams DBI::dbIsValid
@@ -169,26 +179,26 @@ setMethod(
 #' @seealso \code{\link[DBI]{dbIsValid}}
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
 #'
 #' # Check is connection is valid
 #' dbIsValid(con)
-#' 
+#'
 #' # Check is query is valid
 #' res <- dbSendQuery(con, "show databases")
 #' dbIsValid(res)
-#' 
+#'
 #' # Check if query is valid after clearing result
 #' dbClearResult(res)
 #' dbIsValid(res)
-#' 
+#'
 #' # Check if connection if valid after closing connection
 #' dbDisconnect(con)
 #' dbIsValid(con)
@@ -200,13 +210,14 @@ NULL
 #' @export
 setMethod(
   "dbIsValid", "AthenaConnection",
-  function(dbObj, ...){
+  function(dbObj, ...) {
     resource_active(dbObj)
-})
+  }
+)
 
 #' Execute a query on Athena
-#' 
-#' @description The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to Athena but does not wait for query to execute. 
+#'
+#' @description The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to Athena but does not wait for query to execute.
 #'              \code{\link{dbHasCompleted}} method will need to ran to check if query has been completed or not.
 #'              The \code{dbExecute()} method submits a query to Athena and waits for the query to be executed.
 #' @name Query
@@ -217,20 +228,20 @@ setMethod(
 #' @seealso \code{\link[DBI]{dbSendQuery}}, \code{\link[DBI]{dbSendStatement}}, \code{\link[DBI]{dbExecute}}
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Sending Queries to Athena
 #' res1 <- dbSendQuery(con, "show databases")
 #' res2 <- dbSendStatement(con, "show databases")
 #' res3 <- dbExecute(con, "show databases")
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -244,16 +255,18 @@ setMethod(
   function(conn,
            statement,
            unload = athena_unload(),
-           ...){
+           ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
     res <- AthenaResult(
-      conn=conn,
-      statement=statement,
-      s3_staging_dir=conn@info$s3_staging,
-      unload=unload)
+      conn = conn,
+      statement = statement,
+      s3_staging_dir = conn@info$s3_staging,
+      unload = unload
+    )
     return(res)
-})
+  }
+)
 
 #' @rdname Query
 #' @export
@@ -262,16 +275,18 @@ setMethod(
   function(conn,
            statement,
            unload = athena_unload(),
-           ...){
+           ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
     res <- AthenaResult(
-      conn=conn,
-      statement=statement,
-      s3_staging_dir=conn@info$s3_staging,
-      unload=unload)
+      conn = conn,
+      statement = statement,
+      s3_staging_dir = conn@info$s3_staging,
+      unload = unload
+    )
     return(res)
-})
+  }
+)
 
 #' @rdname Query
 #' @export
@@ -280,29 +295,33 @@ setMethod(
   function(conn,
            statement,
            unload = athena_unload(),
-           ...){
+           ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
     res <- AthenaResult(
-      conn=conn,
-      statement=statement,
-      s3_staging_dir=conn@info$s3_staging,
-      unload=unload)
+      conn = conn,
+      statement = statement,
+      s3_staging_dir = conn@info$s3_staging,
+      unload = unload
+    )
     poll(res)
-    
+
     # if query failed stop
-    if(res@info$Status == "FAILED")
+    if (res@info$Status == "FAILED") {
       stop(res@info$StateChangeReason, call. = FALSE)
-    
+    }
+
     # cache query metadata if caching is enabled
-    if (athena_option_env$cache_size > 0)
+    if (athena_option_env$cache_size > 0) {
       cache_query(res)
+    }
 
     return(res)
-})
+  }
+)
 
 #' Determine SQL data type of object
-#' 
+#'
 #' Returns a character string that describes the Athena SQL data type for the \code{obj} object.
 #' @name dbDataType
 #' @inheritParams DBI::dbDataType
@@ -317,23 +336,24 @@ setMethod(
 #' dbDataType(athena(), Sys.time())
 #' dbDataType(athena(), c("x", "abc"))
 #' dbDataType(athena(), list(raw(10), raw(20)))
-#' 
+#'
 #' vapply(iris, function(x) dbDataType(noctua::athena(), x),
-#'        FUN.VALUE = character(1), USE.NAMES = TRUE)
-#' 
+#'   FUN.VALUE = character(1), USE.NAMES = TRUE
+#' )
+#'
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Sending Queries to Athena
 #' dbDataType(con, iris)
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -355,7 +375,7 @@ setMethod("dbDataType", c("AthenaConnection", "data.frame"), function(dbObj, obj
 
 
 #' Quote Identifiers
-#' 
+#'
 #' Call this method to generate string that is suitable for use in a query as a column or table name.
 #' @name dbQuote
 #' @inheritParams DBI::dbQuoteString
@@ -365,15 +385,15 @@ setMethod("dbDataType", c("AthenaConnection", "data.frame"), function(dbObj, obj
 NULL
 
 # import DBI quote_string method
-dbi_quote = methods::getMethod("dbQuoteString", c("DBIConnection", "character"), asNamespace("DBI"))
+dbi_quote <- methods::getMethod("dbQuoteString", c("DBIConnection", "character"), asNamespace("DBI"))
 
-detect_date <- function(x, try_format = c("%Y-%m-%d", "%Y/%m/%d")){
-  return(all_dates = all(try(as.Date(x, tryFormats = try_format), silent=T) == x) & all(nchar(x) == 10))
+detect_date <- function(x, try_format = c("%Y-%m-%d", "%Y/%m/%d")) {
+  return(all_dates = all(try(as.Date(x, tryFormats = try_format), silent = T) == x) & all(nchar(x) == 10))
 }
 
-detect_date_time <- function(x){
-  timestamp_fmt = c("%Y-%m-%d %H:%M:%OS", "%Y/%m/%d %H:%M:%OS", "%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M")
-  return(all(try(as.POSIXct(x, tryFormats = timestamp_fmt), silent=T) == x))
+detect_date_time <- function(x) {
+  timestamp_fmt <- c("%Y-%m-%d %H:%M:%OS", "%Y/%m/%d %H:%M:%OS", "%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M")
+  return(all(try(as.POSIXct(x, tryFormats = timestamp_fmt), silent = T) == x))
 }
 
 #' @rdname dbQuote
@@ -381,17 +401,18 @@ detect_date_time <- function(x){
 setMethod(
   "dbQuoteString", c("AthenaConnection", "character"),
   function(conn, x, ...) {
-    if(identical(dbplyr_env$major, 2L)){
+    if (identical(dbplyr_env$major, 2L)) {
       all_ts <- detect_date_time(x)
       all_dates <- detect_date(x)
-      if(all_dates & !is.na(all_dates)) {
-        return(paste0('date ', dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...)))
-      } else if (all_ts & !is.na(all_ts)){
-        return(paste0('timestamp ', dbi_quote(conn, strftime(x, "%Y-%m-%d %H:%M:%OS3"), ...)))
+      if (all_dates & !is.na(all_dates)) {
+        return(paste0("date ", dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...)))
+      } else if (all_ts & !is.na(all_ts)) {
+        return(paste0("timestamp ", dbi_quote(conn, strftime(x, "%Y-%m-%d %H:%M:%OS3"), ...)))
       }
     }
     return(dbi_quote(conn, x, ...))
-})
+  }
+)
 
 #' @rdname dbQuote
 #' @export
@@ -399,16 +420,18 @@ setMethod(
   "dbQuoteString", c("AthenaConnection", "POSIXct"),
   function(conn, x, ...) {
     x <- strftime(x, "%Y-%m-%d %H:%M:%OS3")
-    paste0('timestamp ', dbi_quote(conn, x, ...))
-})
+    paste0("timestamp ", dbi_quote(conn, x, ...))
+  }
+)
 
 #' @rdname dbQuote
 #' @export
 setMethod(
   "dbQuoteString", c("AthenaConnection", "Date"),
   function(conn, x, ...) {
-    paste0('date ', dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...))
-})
+    paste0("date ", dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...))
+  }
+)
 
 #' @rdname dbQuote
 #' @export
@@ -427,20 +450,20 @@ setMethod(
 #' @aliases dbListTables
 #' @return \code{dbListTables()} returns a character vector with all the tables from Athena.
 #' @seealso \code{\link[DBI]{dbListTables}}
-#' @examples 
+#' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#'              
+#'
 #' # Return list of tables in Athena
 #' dbListTables(con)
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -450,20 +473,27 @@ NULL
 #' @export
 setMethod(
   "dbListTables", "AthenaConnection",
-  function(conn, schema = NULL, ...){
+  function(conn, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     glue <- conn@ptr$glue
-    if(is.null(schema))
+    if (is.null(schema)) {
       schema <- get_databases(glue)
-    tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
-             error = function(cond) NULL)
+    }
+    tryCatch(
+      {
+        output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))
+      },
+      error = function(cond) NULL
+    )
     return(
       vapply(
         unlist(output, recursive = FALSE),
         function(y) y$Name,
-        FUN.VALUE = character(1))
+        FUN.VALUE = character(1)
+      )
     )
-})
+  }
+)
 
 #' List Athena Schema, Tables and Table Types
 #'
@@ -474,21 +504,21 @@ setMethod(
 #'               Note: The use of DATABASE and SCHEMA is interchangeable within Athena.
 #' @aliases dbGetTables
 #' @return \code{dbGetTables()} returns a data.frame.
-#' @examples 
+#' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
 #' library(noctua)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#'              
+#'
 #' # Return hierarchy of tables in Athena
 #' dbGetTables(con)
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -502,17 +532,23 @@ setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
 #' @export
 setMethod(
   "dbGetTables", "AthenaConnection",
-  function(conn, schema = NULL, ...){
+  function(conn, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     glue <- conn@ptr$glue
-    if(is.null(schema))
+    if (is.null(schema)) {
       schema <- get_databases(glue)
-    tryCatch({output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))},
-             error = function(cond) NULL)
+    }
+    tryCatch(
+      {
+        output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))
+      },
+      error = function(cond) NULL
+    )
     output <- rbindlist(unlist(output, recursive = FALSE), use.names = TRUE)
     setnames(output, new = c("Schema", "TableName", "TableType"))
     return(output)
-})
+  }
+)
 
 #' List Field names of Athena table
 #'
@@ -521,25 +557,26 @@ setMethod(
 #' @return \code{dbListFields()} returns a character vector with all the fields from an Athena table.
 #' @seealso \code{\link[DBI]{dbListFields}}
 #' @aliases dbListFields
-#' @examples 
+#' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Write data.frame to Athena table
 #' dbWriteTable(con, "mtcars", mtcars,
-#'              partition=c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
-#'              s3.location = "s3://mybucket/data/")
-#'              
+#'   partition = c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
+#'   s3.location = "s3://mybucket/data/"
+#' )
+#'
 #' # Return list of fields in table
 #' dbListFields(con, "mtcars")
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -549,22 +586,25 @@ NULL
 #' @rdname dbListFields
 #' @export
 setMethod(
-  "dbListFields", c("AthenaConnection", "character") ,
+  "dbListFields", c("AthenaConnection", "character"),
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
     retry_api_call(
       output <- conn@ptr$glue$get_table(
         DatabaseName = ll[["dbms.name"]],
-        Name = ll[["table"]])$Table)
-    
-    col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
-    partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
+        Name = ll[["table"]]
+      )$Table
+    )
+
+    col_names <- vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+    partitions <- vapply(output$PartitionKeys, function(y) y$Name, FUN.VALUE = character(1))
     c(col_names, partitions)
-})
+  }
+)
 
 #' Does Athena table exist?
-#' 
+#'
 #' Returns logical scalar if the table exists or not. \code{TRUE} if the table exists, \code{FALSE} otherwise.
 #' @name dbExistsTable
 #' @inheritParams DBI::dbExistsTable
@@ -572,23 +612,24 @@ setMethod(
 #' @seealso \code{\link[DBI]{dbExistsTable}}
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Write data.frame to Athena table
 #' dbWriteTable(con, "mtcars", mtcars,
-#'              partition=c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
-#'              s3.location = "s3://mybucket/data/")
-#'              
+#'   partition = c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
+#'   s3.location = "s3://mybucket/data/"
+#' )
+#'
 #' # Check if table exists from Athena
 #' dbExistsTable(con, "mtcars")
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -602,29 +643,33 @@ setMethod(
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
-    
+
     for (i in seq_len(athena_option_env$retry)) {
-      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]]), 
-                       error = function(e) e)
-      
+      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]]),
+        error = function(e) e
+      )
+
       # exponential step back if error and not expected error
-      if(inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)){
-        backoff_len <- runif(n=1, min=0, max=(2^i - 1))
-        
+      if (inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)) {
+        backoff_len <- runif(n = 1, min = 0, max = (2^i - 1))
+
         info_msg(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
-        
+
         Sys.sleep(backoff_len)
-      } else {break}
+      } else {
+        break
+      }
     }
-    
-    
+
+
     if (inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)) stop(resp)
-    
+
     !grepl(".*table.*not.*found.*", resp[1], ignore.case = T)
-})
+  }
+)
 
 #' Remove table from Athena
-#' 
+#'
 #' Removes Athena table but does not remove the data from Amazon S3 bucket.
 #' @name dbRemoveTable
 #' @return \code{dbRemoveTable()} returns \code{TRUE}, invisibly.
@@ -636,23 +681,24 @@ setMethod(
 #' @note If you are having difficulty removing AWS S3 files please check if the AWS S3 location following AWS best practises: \href{https://docs.aws.amazon.com/athena/latest/ug/tables-location-format.html}{Table Location in Amazon S3}
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Write data.frame to Athena table
 #' dbWriteTable(con, "mtcars", mtcars,
-#'              partition=c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
-#'              s3.location = "s3://mybucket/data/")
-#'              
+#'   partition = c("TIMESTAMP" = format(Sys.Date(), "%Y%m%d")),
+#'   s3.location = "s3://mybucket/data/"
+#' )
+#'
 #' # Remove Table from Athena
 #' dbRemoveTable(con, "mtcars")
-#' 
+#'
 #' # Disconnect conenction
 #' dbDisconnect(con)
 #' }
@@ -665,57 +711,74 @@ setMethod(
   "dbRemoveTable", c("AthenaConnection", "character"),
   function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    stopifnot(is.logical(delete_data),
-              is.logical(confirm))
+    stopifnot(
+      is.logical(delete_data),
+      is.logical(confirm)
+    )
     ll <- db_detect(conn, name)
-    
+
     TableType <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["TableType"]]
-    
-    if(delete_data && TableType == "EXTERNAL_TABLE"){
+
+    if (delete_data && TableType == "EXTERNAL_TABLE") {
       tryCatch(
         s3_path <- split_s3_uri(
-          conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["StorageDescriptor"]][["Location"]]))
+          conn@ptr$glue$get_table(
+            DatabaseName = ll[["dbms.name"]],
+            Name = ll[["table"]]
+          )[["Table"]][["StorageDescriptor"]][["Location"]]
+        )
+      )
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
-      if(!grepl("\\.|/$", s3_path$key))
+      if (!grepl("\\.|/$", s3_path$key)) {
         s3_path[["key"]] <- sprintf("%s/", s3_path[["key"]])
+      }
       all_keys <- list()
+      i <- 1
       token <- NULL
       # Get all s3 objects linked to table
-      while(is.null(token) || length(token) != 0) {
-        objects <- conn@ptr$S3$list_objects_v2(Bucket=s3_path[["bucket"]], Prefix=s3_path[["key"]], ContinuationToken = token)
+      while (is.null(token) || length(token) != 0) {
+        objects <- conn@ptr$S3$list_objects_v2(
+          Bucket = s3_path[["bucket"]], Prefix = s3_path[["key"]], ContinuationToken = token
+        )
         token <- objects[["NextContinuationToken"]]
-        all_keys <- c(all_keys, lapply(objects[["Contents"]], function(x) list(Key=x[["Key"]])))
+        all_keys[[i]] <- lapply(objects[["Contents"]], function(x) list(Key = x[["Key"]]))
+        i <- i + 1
       }
       info_msg(
         "The S3 objects in prefix will be deleted:\n",
         paste0("s3://", s3_path$bucket, "/", s3_path$key)
       )
-      if(!confirm) {
+      if (!confirm) {
         confirm <- readline(prompt = "Delete files (y/n)?: ")
-        if(trimws(tolower(confirm)) != "y") {
+        if (trimws(tolower(confirm)) != "y") {
           info_msg("Table deletion aborted.")
-          return(invisible(NULL))}
+          return(invisible(NULL))
+        }
       }
-      
+      all_keys <- unlist(all_keys, recursive = FALSE, use.names = FALSE)
       # Only remove if files are found
-      if(length(all_keys) > 0){
+      if (length(all_keys) > 0) {
         # Delete S3 files in batch size 1000
         key_parts <- split_vec(all_keys, 1000)
-        for(i in seq_along(key_parts))
+        for (i in seq_along(key_parts)) {
           conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
+        }
       } else {
-        warning(sprintf('Failed to remove AWS S3 files from: "s3://%s/%s". Please check if AWS S3 files exist.',
-                        s3_path$bucket, s3_path$key), call. = F)
+        warning(sprintf(
+          'Failed to remove AWS S3 files from: "s3://%s/%s". Please check if AWS S3 files exist.',
+          s3_path$bucket, s3_path$key
+        ), call. = F)
       }
     }
-    
+
     # use glue to remove table from glue catalog
     conn@ptr$glue$delete_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])
-    
-    if(!delete_data) info_msg("Only Athena table has been removed.")
+
+    if (!delete_data) info_msg("Only Athena table has been removed.")
     on_connection_updated(conn, ll[["table"]])
     invisible(TRUE)
-})
+  }
+)
 
 #' Send query, retrieve results and then clear result set
 #'
@@ -732,15 +795,15 @@ setMethod(
 #' @seealso \code{\link[DBI]{dbGetQuery}}
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#' 
+#'
 #' # Sending Queries to Athena
 #' dbGetQuery(con, "show databases")
 #'
@@ -755,17 +818,17 @@ NULL
 setMethod(
   "dbGetQuery", c("AthenaConnection", "character"),
   function(conn,
-           statement, 
+           statement,
            statistics = FALSE,
            unload = athena_unload(),
-           ...){
+           ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics), is.logical(unload))
-    
+
     # dbplyr v2 support: dbplyr class ident
-    if(!inherits(statement, "ident")) {
+    if (!inherits(statement, "ident")) {
       rs <- dbSendQuery(conn, statement = statement, unload = unload)
-      if(statistics) print(dbStatistics(rs))
+      if (statistics) print(dbStatistics(rs))
       out <- dbFetch(res = rs, n = -1, ...)
       dbClearResult(rs)
     } else {
@@ -773,8 +836,8 @@ setMethod(
       field_names <- athena_query_fields_ident(conn, statement)
       empty_shell <- rep(list(character()), length(field_names))
       names(empty_shell) <- field_names
-      
-      if(inherits(athena_option_env[["file_parser"]], "athena_data.table")){
+
+      if (inherits(athena_option_env[["file_parser"]], "athena_data.table")) {
         out <- as.data.table(empty_shell)
       } else {
         as_tibble <- pkg_method("as_tibble", "tibble")
@@ -782,35 +845,36 @@ setMethod(
       }
     }
     return(out)
-})
+  }
+)
 
 #' Get DBMS metadata
-#' 
+#'
 #' @inheritParams DBI::dbGetInfo
 #' @name dbGetInfo
 #' @return a named list
 #' @seealso \code{\link[DBI]{dbGetInfo}}
-#' @examples 
+#' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#'                  
+#'
 #' # Returns metadata from connnection object
 #' metadata <- dbGetInfo(con)
-#' 
+#'
 #' # Return metadata from Athena query object
 #' res <- dbSendQuery(con, "show databases")
 #' dbGetInfo(res)
-#' 
+#'
 #' # Clear result
 #' dbClearResult(res)
-#' 
+#'
 #' # disconnect from Athena
 #' dbDisconnect(con)
 #' }
@@ -828,10 +892,11 @@ setMethod(
     noctua <- as.character(packageVersion("noctua"))
     info <- c(info, paws = paws, noctua = noctua)
     return(info)
-})
+  }
+)
 
 #' Athena table partitions
-#' 
+#'
 #' This method returns all partitions from Athena table.
 #' @inheritParams DBI::dbExistsTable
 #' @param .format re-formats AWS Athena partitions format. So that each column represents a partition
@@ -841,24 +906,25 @@ setMethod(
 #' @name dbGetPartition
 #' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#'                  
-#' # write iris table to Athena                  
+#'
+#' # write iris table to Athena
 #' dbWriteTable(con, "iris",
-#'              iris,
-#'              partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
-#'              s3.location = "s3://path/to/store/athena/table/")
-#' 
+#'   iris,
+#'   partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
+#'   s3.location = "s3://path/to/store/athena/table/"
+#' )
+#'
 #' # return table partitions
 #' noctua::dbGetPartition(con, "iris")
-#' 
+#'
 #' # disconnect from Athena
 #' dbDisconnect(con)
 #' }
@@ -869,7 +935,7 @@ NULL
 #' @export
 setGeneric(
   "dbGetPartition",
-  def = function(conn, name, ..., .format = FALSE)  standardGeneric("dbGetPartition"),
+  def = function(conn, name, ..., .format = FALSE) standardGeneric("dbGetPartition"),
   valueClass = "data.frame"
 )
 
@@ -877,54 +943,57 @@ setGeneric(
 #' @export
 setMethod(
   "dbGetPartition", "AthenaConnection",
-  function(conn, name, ..., .format = FALSE)  {
+  function(conn, name, ..., .format = FALSE) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(.format))
     ll <- db_detect(conn, name)
-    dt = dbGetQuery(conn, paste0("SHOW PARTITIONS ", ll[["dbms.name"]],".",ll[["table"]]))
-    
-    if(.format){
+    dt <- dbGetQuery(conn, paste0("SHOW PARTITIONS ", ll[["dbms.name"]], ".", ll[["table"]]))
+
+    if (.format) {
       # ensure returning format is data.table
-      dt = as.data.table(dt)
-      dt = dt[, tstrsplit(dt[[1]], split =  "/")]
-      partitions = sapply(names(dt), function(x) strsplit(dt[[x]][1], split = "=")[[1]][1])
-      for (col in names(dt)) set(dt, j=col, value=tstrsplit(dt[[col]], split =  "=")[2])
+      dt <- as.data.table(dt)
+      dt <- dt[, tstrsplit(dt[[1]], split = "/")]
+      partitions <- sapply(names(dt), function(x) strsplit(dt[[x]][1], split = "=")[[1]][1])
+      for (col in names(dt)) set(dt, j = col, value = tstrsplit(dt[[col]], split = "=")[2])
       setnames(dt, old = names(dt), new = partitions)
-      
+
       # convert data.table to tibble if using vroom as backend
-      if(inherits(athena_option_env$file_parser, "athena_vroom")) {
+      if (inherits(athena_option_env$file_parser, "athena_vroom")) {
         as_tibble <- pkg_method("as_tibble", "tibble")
-        dt <- as_tibble(dt)}
+        dt <- as_tibble(dt)
+      }
     }
     return(dt)
-})
+  }
+)
 
 #' Show Athena table's DDL
-#' 
+#'
 #' @description Executes a statement to return the data description language (DDL) of the Athena table.
 #' @inheritParams DBI::dbExistsTable
 #' @name dbShow
 #' @return \code{dbShow()} returns \code{\link[DBI]{SQL}} characters of the Athena table DDL.
-#' @examples 
+#' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(noctua::athena())
-#'                  
-#' # write iris table to Athena                  
+#'
+#' # write iris table to Athena
 #' dbWriteTable(con, "iris",
-#'              iris,
-#'              partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
-#'              s3.location = "s3://path/to/store/athena/table/")
-#' 
+#'   iris,
+#'   partition = c("timestamp" = format(Sys.Date(), "%Y%m%d")),
+#'   s3.location = "s3://path/to/store/athena/table/"
+#' )
+#'
 #' # return table ddl
 #' noctua::dbShow(con, "iris")
-#' 
+#'
 #' # disconnect from Athena
 #' dbDisconnect(con)
 #' }
@@ -946,57 +1015,60 @@ setMethod(
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
-    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]],".",ll[["table"]]), unload = FALSE)[[1]], collapse = "\n"))
-})
+    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]], ".", ll[["table"]]), unload = FALSE)[[1]], collapse = "\n"))
+  }
+)
 
 #' Simple wrapper to convert Athena backend file types
-#' 
+#'
 #' @description Utilises AWS Athena to convert AWS S3 backend file types. It also also to create more efficient file types i.e. "parquet" and "orc" from SQL queries.
 #' @param conn An \code{\linkS4class{AthenaConnection}} object, produced by [DBI::dbConnect()]
-#' @param obj Athena table or \code{SQL} DML query to be converted. For \code{SQL}, the query need to be wrapped with \code{DBI::SQL()} and 
+#' @param obj Athena table or \code{SQL} DML query to be converted. For \code{SQL}, the query need to be wrapped with \code{DBI::SQL()} and
 #'            follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/select.html}{link}
 #' @param name Name of destination table
 #' @param partition Partition Athena table
 #' @param s3.location location to store output file, must be in s3 uri format for example ("s3://mybucket/data/").
-#' @param file.type File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
+#' @param file.type File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"].
 #'                  \code{"NULL"} will let Athena set the file type for you.
 #' @param compress Compress \code{name}, currently can only compress ["parquet", "orc"] (\href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS})
 #' @param data If \code{name} should be created with data or not.
 #' @param ... Extra parameters, currently not used
 #' @name dbConvertTable
 #' @return \code{dbConvertTable()} returns \code{TRUE} but invisible.
-#' @examples 
+#' @examples
 #' \dontrun{
-#' # Note: 
+#' # Note:
 #' # - Require AWS Account to run below example.
 #' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
-#' 
+#'
 #' library(DBI)
 #' library(noctua)
-#' 
-#' # Demo connection to Athena using profile name 
+#'
+#' # Demo connection to Athena using profile name
 #' con <- dbConnect(athena())
-#'                  
-#' # write iris table to Athena in defualt delimited format                 
+#'
+#' # write iris table to Athena in defualt delimited format
 #' dbWriteTable(con, "iris", iris)
-#' 
+#'
 #' # convert delimited table to parquet
-#' dbConvertTable(con, 
-#'               obj = "iris",
-#'               name = "iris_parquet",
-#'               file.type = "parquet")
-#' 
-#' # Create partitioned table from non-partitioned 
+#' dbConvertTable(con,
+#'   obj = "iris",
+#'   name = "iris_parquet",
+#'   file.type = "parquet"
+#' )
+#'
+#' # Create partitioned table from non-partitioned
 #' # iris table using SQL DML query
 #' dbConvertTable(con,
-#'                obj = SQL("select 
-#'                             iris.*, 
-#'                             date_format(current_date, '%Y%m%d') as time_stamp 
+#'   obj = SQL("select
+#'                             iris.*,
+#'                             date_format(current_date, '%Y%m%d') as time_stamp
 #'                           from iris"),
-#'                name = "iris_orc_partitioned",
-#'                file.type = "orc",
-#'                partition = "time_stamp")
-#' 
+#'   name = "iris_orc_partitioned",
+#'   file.type = "orc",
+#'   partition = "time_stamp"
+#' )
+#'
 #' # disconnect from Athena
 #' dbDisconnect(con)
 #' }
@@ -1014,32 +1086,41 @@ setGeneric(
 #' @export
 setMethod(
   "dbConvertTable", "AthenaConnection",
-  function(conn, 
+  function(conn,
            obj,
            name,
            partition = NULL,
            s3.location = NULL,
-           file.type = c("NULL","csv", "tsv", "parquet", "json", "orc"),
+           file.type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
            compress = TRUE,
            data = TRUE,
-           ...){
+           ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    stopifnot(is.character(obj),
-              is.character(name),
-              is.null(partition) || is.character(partition),
-              is.null(s3.location) || is.s3_uri(s3.location),
-              is.logical(compress),
-              is.logical(data))
-    file.type = match.arg(file.type)
-    
+    stopifnot(
+      is.character(obj),
+      is.character(name),
+      is.null(partition) || is.character(partition),
+      is.null(s3.location) || is.s3_uri(s3.location),
+      is.logical(compress),
+      is.logical(data)
+    )
+    file.type <- match.arg(file.type)
+
     with_data <- if (data) " " else " NO "
-    
-    ins <- if(inherits(obj, "SQL")) {obj} else {paste0("SELECT * FROM ",paste0('"',unlist(strsplit(obj,"\\.")),'"', collapse = '.'))}
-    
-    tt_sql <- paste0("CREATE TABLE ",paste0('"',unlist(strsplit(name,"\\.")),'"', collapse = '.'),
-                     " ", ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
-                     ins,"\nWITH", with_data, "DATA", ";")
+
+    ins <- if (inherits(obj, "SQL")) {
+      obj
+    } else {
+      paste0("SELECT * FROM ", paste0('"', unlist(strsplit(obj, "\\.")), '"', collapse = "."))
+    }
+
+    tt_sql <- paste0(
+      "CREATE TABLE ", paste0('"', unlist(strsplit(name, "\\.")), '"', collapse = "."),
+      " ", ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
+      ins, "\nWITH", with_data, "DATA", ";"
+    )
     res <- dbExecute(conn, tt_sql, unload = FALSE)
     dbClearResult(res)
     return(invisible(TRUE))
-})
+  }
+)
