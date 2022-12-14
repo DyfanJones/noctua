@@ -9,9 +9,9 @@
 \usage{
 sql_translation.AthenaConnection(con)
 
-sql_translate_env.AthenaConnection(con)
+\method{sql_translate_env}{AthenaConnection}(con)
 
-sql_escape_string.AthenaConnection(con, x)
+\method{sql_escape_string}{AthenaConnection}(con, x)
 }
 \arguments{
 \item{con}{An \code{\linkS4class{AthenaConnection}} object, produced by

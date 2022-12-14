@@ -22,20 +22,20 @@ Produces a data.frame that describes the output of a query.
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 # Get Column information from query
 res <- dbSendQuery(con, "select * from information_schema.tables")
 dbColumnInfo(res)
 dbClearResult(res)
- 
+
 # Disconnect from Athena
 dbDisconnect(con)
 }

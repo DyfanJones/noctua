@@ -23,14 +23,14 @@ Returns AWS Athena Statistics from execute queries \code{\link{dbSendQuery}}
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
 
 library(DBI)
 library(noctua)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 res <- dbSendQuery(con, "show databases")
@@ -38,6 +38,5 @@ dbStatistics(res)
 
 # Clean up
 dbClearResult(res)
-
 }
 }

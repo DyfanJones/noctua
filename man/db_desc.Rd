@@ -5,7 +5,7 @@
 \alias{db_desc.AthenaConnection}
 \title{S3 implementation of \code{db_desc} for Athena (api version 1).}
 \usage{
-db_desc.AthenaConnection(x)
+\method{db_desc}{AthenaConnection}(x)
 }
 \arguments{
 \item{x}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}

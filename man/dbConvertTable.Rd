@@ -23,7 +23,7 @@ dbConvertTable(conn, obj, name, ...)
 \arguments{
 \item{conn}{An \code{\linkS4class{AthenaConnection}} object, produced by [DBI::dbConnect()]}
 
-\item{obj}{Athena table or \code{SQL} DML query to be converted. For \code{SQL}, the query need to be wrapped with \code{DBI::SQL()} and 
+\item{obj}{Athena table or \code{SQL} DML query to be converted. For \code{SQL}, the query need to be wrapped with \code{DBI::SQL()} and
 follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/select.html}{link}}
 
 \item{name}{Name of destination table}
@@ -34,7 +34,7 @@ follow AWS Athena DML format \href{https://docs.aws.amazon.com/athena/latest/ug/
 
 \item{s3.location}{location to store output file, must be in s3 uri format for example ("s3://mybucket/data/").}
 
-\item{file.type}{File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"]. 
+\item{file.type}{File type for \code{name}, currently support ["NULL","csv", "tsv", "parquet", "json", "orc"].
 \code{"NULL"} will let Athena set the file type for you.}
 
 \item{compress}{Compress \code{name}, currently can only compress ["parquet", "orc"] (\href{https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html}{AWS Athena CTAS})}
@@ -49,35 +49,37 @@ Utilises AWS Athena to convert AWS S3 backend file types. It also also to create
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
 
 library(DBI)
 library(noctua)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(athena())
-                 
-# write iris table to Athena in defualt delimited format                 
+
+# write iris table to Athena in defualt delimited format
 dbWriteTable(con, "iris", iris)
 
 # convert delimited table to parquet
-dbConvertTable(con, 
-              obj = "iris",
-              name = "iris_parquet",
-              file.type = "parquet")
+dbConvertTable(con,
+  obj = "iris",
+  name = "iris_parquet",
+  file.type = "parquet"
+)
 
-# Create partitioned table from non-partitioned 
+# Create partitioned table from non-partitioned
 # iris table using SQL DML query
 dbConvertTable(con,
-               obj = SQL("select 
-                            iris.*, 
-                            date_format(current_date, '\%Y\%m\%d') as time_stamp 
+  obj = SQL("select
+                            iris.*,
+                            date_format(current_date, '\%Y\%m\%d') as time_stamp
                           from iris"),
-               name = "iris_orc_partitioned",
-               file.type = "orc",
-               partition = "time_stamp")
+  name = "iris_orc_partitioned",
+  file.type = "orc",
+  partition = "time_stamp"
+)
 
 # disconnect from Athena
 dbDisconnect(con)

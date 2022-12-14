@@ -29,19 +29,19 @@ default is set to \code{FALSE}.}
 Returns \code{AthenaResult} s4 class.
 }
 \description{
-The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to Athena but does not wait for query to execute. 
+The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to Athena but does not wait for query to execute.
              \code{\link{dbHasCompleted}} method will need to ran to check if query has been completed or not.
              The \code{dbExecute()} method submits a query to Athena and waits for the query to be executed.
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 # Sending Queries to Athena
