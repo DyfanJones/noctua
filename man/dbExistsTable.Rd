@@ -32,20 +32,21 @@ Returns logical scalar if the table exists or not. \code{TRUE} if the table exis
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 # Write data.frame to Athena table
 dbWriteTable(con, "mtcars", mtcars,
-             partition=c("TIMESTAMP" = format(Sys.Date(), "\%Y\%m\%d")),
-             s3.location = "s3://mybucket/data/")
-             
+  partition = c("TIMESTAMP" = format(Sys.Date(), "\%Y\%m\%d")),
+  s3.location = "s3://mybucket/data/"
+)
+
 # Check if table exists from Athena
 dbExistsTable(con, "mtcars")
 

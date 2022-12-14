@@ -40,20 +40,21 @@ If you are having difficulty removing AWS S3 files please check if the AWS S3 lo
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 # Write data.frame to Athena table
 dbWriteTable(con, "mtcars", mtcars,
-             partition=c("TIMESTAMP" = format(Sys.Date(), "\%Y\%m\%d")),
-             s3.location = "s3://mybucket/data/")
-             
+  partition = c("TIMESTAMP" = format(Sys.Date(), "\%Y\%m\%d")),
+  s3.location = "s3://mybucket/data/"
+)
+
 # Remove Table from Athena
 dbRemoveTable(con, "mtcars")
 

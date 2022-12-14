@@ -38,20 +38,21 @@ This method returns all partitions from Athena table.
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
-                 
-# write iris table to Athena                  
+
+# write iris table to Athena
 dbWriteTable(con, "iris",
-             iris,
-             partition = c("timestamp" = format(Sys.Date(), "\%Y\%m\%d")),
-             s3.location = "s3://path/to/store/athena/table/")
+  iris,
+  partition = c("timestamp" = format(Sys.Date(), "\%Y\%m\%d")),
+  s3.location = "s3://path/to/store/athena/table/"
+)
 
 # return table partitions
 noctua::dbGetPartition(con, "iris")

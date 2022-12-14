@@ -28,13 +28,13 @@ If a user does not have permission to remove AWS S3 resource from AWS Athena out
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 res <- dbSendQuery(con, "show databases")

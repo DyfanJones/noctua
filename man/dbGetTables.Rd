@@ -26,16 +26,16 @@ Method to get Athena schema, tables and table types return as a data.frame
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 library(noctua)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
-             
+
 # Return hierarchy of tables in Athena
 dbGetTables(con)
 

@@ -325,21 +325,36 @@ db_explain.AthenaConnection <- function(con, sql, ...){
 
 # NOTE: dbplyr v2 integration has to use this in dbGetQuery
 athena_query_fields_ident <- function(con, sql){
-  if (grepl("\\.", sql)) {
-    schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
+  if (str_count(sql, "\\.") < 2) {
+    if (grepl("\\.", sql)) {
+      schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
+    } else {
+      schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))
+    }
+    # If dbplyr schema, get the fields from Glue
+    tryCatch(
+      output <- con@ptr$glue$get_table(
+        DatabaseName = schema_parts[1],
+        Name = schema_parts[2])$Table
+    )
+    col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+    partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
+    
+    return(c(col_names, partitions))
   } else {
-    schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))
+    # If a subquery, query Athena for the fields
+    # return dplyr methods
+    sql_select <- pkg_method("sql_select", "dplyr")
+    sql_subquery <- pkg_method("sql_subquery", "dplyr")
+    dplyr_sql <- pkg_method("sql", "dplyr")
+    
+    sql <- sql_select(con, dplyr_sql("*"), sql_subquery(con, sql), where = dplyr_sql("0 = 1"))
+    qry <- dbSendQuery(con, sql)
+    on.exit(dbClearResult(qry))
+    
+    res <- dbFetch(qry, 0)
+    return(names(res))
   }
-  # If dbplyr schema, get the fields from Glue
-  tryCatch(
-    output <- con@ptr$glue$get_table(
-      DatabaseName = schema_parts[1],
-      Name = schema_parts[2])$Table
-  )
-  col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
-  partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
-  
-  return(c(col_names, partitions))
 }
 
 #' @rdname backend_dbplyr_v1
