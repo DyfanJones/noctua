@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -81,27 +81,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">db_compute.AthenaConnection</span><span class="op">(</span><span class="va">con</span>, <span class="va">table</span>, <span class="va">sql</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">db_compute.AthenaConnection</span><span class="op">(</span><span class="va">con</span>, <span class="va">table</span>, <span class="va">sql</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>con</dt>
 <dd><p>A <code><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></code> object, as returned by <code><a href="dbConnect-AthenaDriver-method.html">dbConnect()</a></code></p></dd>
+
+
 <dt>table</dt>
 <dd><p>Table name, if left default noctua will use the default from <code>dplyr</code>'s <code>compute</code> function.</p></dd>
+
+
 <dt>sql</dt>
 <dd><p>SQL code to be sent to the data</p></dd>
+
+
 <dt>...</dt>
 <dd><p>passes <code>noctua</code> table creation parameters: [<code>file_type</code>,<code>s3_location</code>,<code>partition</code>]</p><ul><li><p><code>file_type:</code> What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
                        <code>"NULL"</code> will let Athena set the file_type for you.</p></li>
 <li><p><code>s3_location:</code> s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")</p></li>
 <li><p><code>partition:</code> Partition Athena table, requires to be a partitioned variable from previous table.</p></li>
 </ul></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>db_compute</code> returns table name</p>
+    
+
+<p><code>db_compute</code> returns table name</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -110,37 +119,37 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Note: </span></span>
-<span class="r-in"><span class="co"># - Require AWS Account to run below example.</span></span>
-<span class="r-in"><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Demo connection to Athena using profile name </span></span>
-<span class="r-in"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Write data.frame to Athena table</span></span>
-<span class="r-in"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/copy_to.html" class="external-link">copy_to</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">mtcars</span>,</span>
-<span class="r-in">        s3_location <span class="op">=</span> <span class="st">"s3://mybucket/data/"</span><span class="op">)</span></span>
-<span class="r-in">             </span>
-<span class="r-in"><span class="co"># Write Athena table from tbl_sql</span></span>
-<span class="r-in"><span class="va">athena_mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars_filter</span> <span class="op">&lt;-</span> <span class="va">athena_mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">gear</span> <span class="op">&gt;=</span><span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create athena with unique table name</span></span>
-<span class="r-in"><span class="va">mtcars_filer</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create athena with specified name and s3 location</span></span>
-<span class="r-in"><span class="va">mtcars_filer</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span class="r-in">    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="st">"mtcars_filer"</span>,</span>
-<span class="r-in">            s3_location <span class="op">=</span> <span class="st">"s3://mybucket/mtcars_filer/"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Disconnect from Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Note: </span></span></span>
+<span class="r-in"><span><span class="co"># - Require AWS Account to run below example.</span></span></span>
+<span class="r-in"><span><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documentation</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Demo connection to Athena using profile name </span></span></span>
+<span class="r-in"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Write data.frame to Athena table</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/copy_to.html" class="external-link">copy_to</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">mtcars</span>,</span></span>
+<span class="r-in"><span>        s3_location <span class="op">=</span> <span class="st">"s3://mybucket/data/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>             </span></span>
+<span class="r-in"><span><span class="co"># Write Athena table from tbl_sql</span></span></span>
+<span class="r-in"><span><span class="va">athena_mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars_filter</span> <span class="op">&lt;-</span> <span class="va">athena_mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">gear</span> <span class="op">&gt;=</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create athena with unique table name</span></span></span>
+<span class="r-in"><span><span class="va">mtcars_filer</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create athena with specified name and s3 location</span></span></span>
+<span class="r-in"><span><span class="va">mtcars_filer</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="st">"mtcars_filer"</span>,</span></span>
+<span class="r-in"><span>            s3_location <span class="op">=</span> <span class="st">"s3://mybucket/mtcars_filer/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Disconnect from Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -155,7 +164,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

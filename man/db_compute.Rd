@@ -31,7 +31,7 @@ This is a backend function for dplyr's \code{compute} function. Users won't be r
 \dontrun{
 # Note: 
 # - Require AWS Account to run below example.
-# - Different connection methods can be used please see `noctua::dbConnect` documnentation
+# - Different connection methods can be used please see `noctua::dbConnect` documentation
 
 library(DBI)
 library(dplyr)

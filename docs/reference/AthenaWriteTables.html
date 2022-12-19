@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -81,70 +81,78 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for AthenaConnection,character,data.frame</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span>
-  <span class="va">conn</span>,
-  <span class="va">name</span>,
-  <span class="va">value</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  append <span class="op">=</span> <span class="cn">FALSE</span>,
-  row.names <span class="op">=</span> <span class="cn">NA</span>,
-  field.types <span class="op">=</span> <span class="cn">NULL</span>,
-  partition <span class="op">=</span> <span class="cn">NULL</span>,
-  s3.location <span class="op">=</span> <span class="cn">NULL</span>,
-  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tsv"</span>, <span class="st">"csv"</span>, <span class="st">"parquet"</span>, <span class="st">"json"</span><span class="op">)</span>,
-  compress <span class="op">=</span> <span class="cn">FALSE</span>,
-  max.batch <span class="op">=</span> <span class="cn">Inf</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S4 method for AthenaConnection,Id,data.frame</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span>
-  <span class="va">conn</span>,
-  <span class="va">name</span>,
-  <span class="va">value</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  append <span class="op">=</span> <span class="cn">FALSE</span>,
-  row.names <span class="op">=</span> <span class="cn">NA</span>,
-  field.types <span class="op">=</span> <span class="cn">NULL</span>,
-  partition <span class="op">=</span> <span class="cn">NULL</span>,
-  s3.location <span class="op">=</span> <span class="cn">NULL</span>,
-  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tsv"</span>, <span class="st">"csv"</span>, <span class="st">"parquet"</span>, <span class="st">"json"</span><span class="op">)</span>,
-  compress <span class="op">=</span> <span class="cn">FALSE</span>,
-  max.batch <span class="op">=</span> <span class="cn">Inf</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S4 method for AthenaConnection,SQL,data.frame</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span>
-  <span class="va">conn</span>,
-  <span class="va">name</span>,
-  <span class="va">value</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  append <span class="op">=</span> <span class="cn">FALSE</span>,
-  row.names <span class="op">=</span> <span class="cn">NA</span>,
-  field.types <span class="op">=</span> <span class="cn">NULL</span>,
-  partition <span class="op">=</span> <span class="cn">NULL</span>,
-  s3.location <span class="op">=</span> <span class="cn">NULL</span>,
-  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tsv"</span>, <span class="st">"csv"</span>, <span class="st">"parquet"</span>, <span class="st">"json"</span><span class="op">)</span>,
-  compress <span class="op">=</span> <span class="cn">FALSE</span>,
-  max.batch <span class="op">=</span> <span class="cn">Inf</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for AthenaConnection,character,data.frame</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span></span>
+<span>  <span class="va">conn</span>,</span>
+<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">value</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  append <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  field.types <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  partition <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  s3.location <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tsv"</span>, <span class="st">"csv"</span>, <span class="st">"parquet"</span>, <span class="st">"json"</span><span class="op">)</span>,</span>
+<span>  compress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max.batch <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for AthenaConnection,Id,data.frame</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span></span>
+<span>  <span class="va">conn</span>,</span>
+<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">value</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  append <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  field.types <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  partition <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  s3.location <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tsv"</span>, <span class="st">"csv"</span>, <span class="st">"parquet"</span>, <span class="st">"json"</span><span class="op">)</span>,</span>
+<span>  compress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max.batch <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for AthenaConnection,SQL,data.frame</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span></span>
+<span>  <span class="va">conn</span>,</span>
+<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">value</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  append <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  field.types <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  partition <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  s3.location <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tsv"</span>, <span class="st">"csv"</span>, <span class="st">"parquet"</span>, <span class="st">"json"</span><span class="op">)</span>,</span>
+<span>  compress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max.batch <span class="op">=</span> <span class="cn">Inf</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>conn</dt>
 <dd><p>An <code><a href="AthenaConnection.html">AthenaConnection</a></code> object, produced by [DBI::dbConnect()]</p></dd>
+
+
 <dt>name</dt>
 <dd><p>A character string specifying a table name. Names will be
 automatically quoted so you can use any sequence of characters, not
 just any valid bare table name.</p></dd>
+
+
 <dt>value</dt>
 <dd><p>A data.frame to write to the database.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>Allows overwriting the destination table. Cannot be <code>TRUE</code> if <code>append</code> is also <code>TRUE</code>.</p></dd>
+
+
 <dt>append</dt>
 <dd><p>Allow appending to the destination table. Cannot be <code>TRUE</code> if <code>overwrite</code> is also <code>TRUE</code>. Existing Athena DDL file type will be retained
               and used when uploading data to AWS Athena. If parameter <code>file.type</code> doesn't match AWS Athena DDL file type a warning message will be created 
@@ -153,6 +161,8 @@ just any valid bare table name.</p></dd>
 <li><p><strong>parquet:</strong> <a href="https://docs.aws.amazon.com/athena/latest/ug/parquet.html" class="external-link">Parquet SerDe</a></p></li>
 <li><p><strong>json:</strong> <a href="https://docs.aws.amazon.com/athena/latest/ug/json.html" class="external-link">JSON SerDe Libraries</a></p></li>
 </ul></dd>
+
+
 <dt>row.names</dt>
 <dd><p>Either <code>TRUE</code>, <code>FALSE</code>, <code>NA</code> or a string.</p>
 <p>If <code>TRUE</code>, always translate row names to a column called "row_names".
@@ -161,36 +171,53 @@ rownames only if they're a character vector.</p>
 <p>A string is equivalent to <code>TRUE</code>, but allows you to override the
 default name.</p>
 <p>For backward compatibility, <code>NULL</code> is equivalent to <code>FALSE</code>.</p></dd>
+
+
 <dt>field.types</dt>
 <dd><p>Additional field types used to override derived types.</p></dd>
+
+
 <dt>partition</dt>
 <dd><p>Partition Athena table (needs to be a named list or vector) for example: <code>c(var1 = "2019-20-13")</code></p></dd>
+
+
 <dt>s3.location</dt>
 <dd><p>s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
 By default, the s3.location is set to s3 staging directory from <code><a href="AthenaConnection.html">AthenaConnection</a></code> object. <strong>Note:</strong>
 When creating a table for the first time <code>s3.location</code> will be formatted from <code>"s3://mybucket/data/"</code> to the following 
 syntax <code>"s3://{mybucket/data}/{schema}/{table}/{parition}/"</code> this is to support tables with the same name but existing in different 
 schemas. If schema isn't specified in <code>name</code> parameter then the schema from <code>dbConnect</code> is used instead.</p></dd>
+
+
 <dt>file.type</dt>
 <dd><p>What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
 of <code>noctua (=&lt; 1.4.0)</code> file type "csv" was used as default. The reason for the change is that columns containing <code>Array/JSON</code> format cannot be written to 
 Athena due to the separating value ",". This would cause issues with AWS Athena. 
 <strong>Note:</strong> "parquet" format is supported by the <code>arrow</code> package and it will need to be installed to utilise the "parquet" format.
 "json" format is supported by <code>jsonlite</code> package and it will need to be installed to utilise the "json" format.</p></dd>
+
+
 <dt>compress</dt>
 <dd><p><code>FALSE | TRUE</code> To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
 "snappy" compression is used. Currently <code>noctua</code> doesn't support compression for "json" file type.</p></dd>
+
+
 <dt>max.batch</dt>
 <dd><p>Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
 is set to <code>TRUE</code> and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the 
 performance of AWS Athena when working with files compressed in "gzip" format. <code>max.batch</code> will not split the data.frame 
 when loading file in parquet format. For more information please go to <a href="https://github.com/DyfanJones/RAthena/issues/36" class="external-link">link</a></p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other arguments used by individual methods.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable()</a></code> returns <code>TRUE</code>, invisibly. If the table exists, and both append and overwrite
+    
+
+<p><code><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable()</a></code> returns <code>TRUE</code>, invisibly. If the table exists, and both append and overwrite
         arguments are unset, or append = TRUE and the data frame with the new data has different column names,
         an error is raised; the remote table remains unchanged.</p>
     </div>
@@ -201,48 +228,48 @@ when loading file in parquet format. For more information please go to <a href="
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Note: </span></span>
-<span class="r-in"><span class="co"># - Require AWS Account to run below example.</span></span>
-<span class="r-in"><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Demo connection to Athena using profile name </span></span>
-<span class="r-in"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># List existing tables in Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Write data.frame to Athena table</span></span>
-<span class="r-in"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span>, <span class="va">mtcars</span>,</span>
-<span class="r-in">             partition<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TIMESTAMP"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">             s3.location <span class="op">=</span> <span class="st">"s3://mybucket/data/"</span><span class="op">)</span></span>
-<span class="r-in">             </span>
-<span class="r-in"><span class="co"># Read entire table from Athena</span></span>
-<span class="r-in"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html" class="external-link">dbReadTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># List all tables in Athena after uploading new table to Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Checking if uploaded table exists in Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbExistsTable.html">dbExistsTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># using default s3.location</span></span>
-<span class="r-in"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read entire table from Athena</span></span>
-<span class="r-in"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html" class="external-link">dbReadTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># List all tables in Athena after uploading new table to Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Checking if uploaded table exists in Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbExistsTable.html">dbExistsTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Disconnect from Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Note: </span></span></span>
+<span class="r-in"><span><span class="co"># - Require AWS Account to run below example.</span></span></span>
+<span class="r-in"><span><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Demo connection to Athena using profile name </span></span></span>
+<span class="r-in"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># List existing tables in Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Write data.frame to Athena table</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span>, <span class="va">mtcars</span>,</span></span>
+<span class="r-in"><span>             partition<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TIMESTAMP"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             s3.location <span class="op">=</span> <span class="st">"s3://mybucket/data/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>             </span></span>
+<span class="r-in"><span><span class="co"># Read entire table from Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html" class="external-link">dbReadTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># List all tables in Athena after uploading new table to Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Checking if uploaded table exists in Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbExistsTable.html">dbExistsTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"mtcars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># using default s3.location</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Read entire table from Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbReadTable.html" class="external-link">dbReadTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># List all tables in Athena after uploading new table to Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbListTables.html">dbListTables</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Checking if uploaded table exists in Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbExistsTable.html">dbExistsTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Disconnect from Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -257,7 +284,7 @@ when loading file in parquet format. For more information please go to <a href="
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

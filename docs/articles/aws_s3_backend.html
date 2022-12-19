@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -140,12 +140,12 @@ with same name to be uploaded to different schemas.</p>
 name or schema if they have been provided in <code>s3.location</code>.
 For example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"myschema.table"</span>, <span class="va">table</span>, 
-             s3.location <span class="op">=</span> <span class="st">"s3://mybucket/myschema/table"</span>,
-             partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span> <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># AWS S3 location</span>
-<span class="st">"s3://mybucket/myschema/table/year=2020/table.tsv"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"myschema.table"</span>, <span class="va">table</span>, </span>
+<span>             s3.location <span class="op">=</span> <span class="st">"s3://mybucket/myschema/table"</span>,</span>
+<span>             partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span> <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># AWS S3 location</span></span>
+<span><span class="st">"s3://mybucket/myschema/table/year=2020/table.tsv"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="file-types">File Types<a class="anchor" aria-label="anchor" href="#file-types"></a>
@@ -191,7 +191,7 @@ Athena performance tips</a></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

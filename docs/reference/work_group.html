@@ -43,7 +43,7 @@ Updates the workgroup with the specified name (link).
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -130,52 +130,64 @@ Updates the workgroup with the specified name (link).
 </dl></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">create_work_group</span><span class="op">(</span>
-  <span class="va">conn</span>,
-  work_group <span class="op">=</span> <span class="cn">NULL</span>,
-  enforce_work_group_config <span class="op">=</span> <span class="cn">FALSE</span>,
-  publish_cloud_watch_metrics <span class="op">=</span> <span class="cn">FALSE</span>,
-  bytes_scanned_cut_off <span class="op">=</span> <span class="fl">10000000L</span>,
-  description <span class="op">=</span> <span class="cn">NULL</span>,
-  tags <span class="op">=</span> <span class="fu">tag_options</span><span class="op">(</span>key <span class="op">=</span> <span class="cn">NULL</span>, value <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">tag_options</span><span class="op">(</span>key <span class="op">=</span> <span class="cn">NULL</span>, value <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">delete_work_group</span><span class="op">(</span><span class="va">conn</span>, work_group <span class="op">=</span> <span class="cn">NULL</span>, recursive_delete_option <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">list_work_groups</span><span class="op">(</span><span class="va">conn</span><span class="op">)</span>
-
-<span class="fu">get_work_group</span><span class="op">(</span><span class="va">conn</span>, work_group <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">update_work_group</span><span class="op">(</span>
-  <span class="va">conn</span>,
-  work_group <span class="op">=</span> <span class="cn">NULL</span>,
-  remove_output_location <span class="op">=</span> <span class="cn">FALSE</span>,
-  enforce_work_group_config <span class="op">=</span> <span class="cn">FALSE</span>,
-  publish_cloud_watch_metrics <span class="op">=</span> <span class="cn">FALSE</span>,
-  bytes_scanned_cut_off <span class="op">=</span> <span class="fl">10000000L</span>,
-  description <span class="op">=</span> <span class="cn">NULL</span>,
-  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ENABLED"</span>, <span class="st">"DISABLED"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_work_group</span><span class="op">(</span></span>
+<span>  <span class="va">conn</span>,</span>
+<span>  work_group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  enforce_work_group_config <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  publish_cloud_watch_metrics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bytes_scanned_cut_off <span class="op">=</span> <span class="fl">10000000L</span>,</span>
+<span>  description <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tags <span class="op">=</span> <span class="fu">tag_options</span><span class="op">(</span>key <span class="op">=</span> <span class="cn">NULL</span>, value <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">tag_options</span><span class="op">(</span>key <span class="op">=</span> <span class="cn">NULL</span>, value <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">delete_work_group</span><span class="op">(</span><span class="va">conn</span>, work_group <span class="op">=</span> <span class="cn">NULL</span>, recursive_delete_option <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">list_work_groups</span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_work_group</span><span class="op">(</span><span class="va">conn</span>, work_group <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">update_work_group</span><span class="op">(</span></span>
+<span>  <span class="va">conn</span>,</span>
+<span>  work_group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  remove_output_location <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  enforce_work_group_config <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  publish_cloud_watch_metrics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bytes_scanned_cut_off <span class="op">=</span> <span class="fl">10000000L</span>,</span>
+<span>  description <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ENABLED"</span>, <span class="st">"DISABLED"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>conn</dt>
 <dd><p>A <code><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></code> object, as returned by <code><a href="dbConnect-AthenaDriver-method.html">dbConnect()</a></code></p></dd>
+
+
 <dt>work_group</dt>
 <dd><p>The Athena workgroup name.</p></dd>
+
+
 <dt>enforce_work_group_config</dt>
 <dd><p>If set to <code>TRUE</code>, the settings for the workgroup override client-side settings.
 If set to <code>FALSE</code>, client-side settings are used. For more information, see 
 <a href="https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html" class="external-link">Workgroup Settings Override Client-Side Settings</a>.</p></dd>
+
+
 <dt>publish_cloud_watch_metrics</dt>
 <dd><p>Indicates that the Amazon CloudWatch metrics are enabled for the workgroup.</p></dd>
+
+
 <dt>bytes_scanned_cut_off</dt>
 <dd><p>The upper data usage limit (cutoff) for the amount of bytes a single query in a workgroup is allowed to scan.</p></dd>
+
+
 <dt>description</dt>
 <dd><p>The workgroup description.</p></dd>
+
+
 <dt>tags</dt>
 <dd><p>A tag that you can add to a resource. A tag is a label that you assign to an AWS Athena resource (a workgroup).
 Each tag consists of a key and an optional value, both of which you define. Tags enable you to categorize workgroups in Athena, for example,
@@ -183,24 +195,37 @@ by purpose, owner, or environment. Use a consistent set of tag keys to make it e
 The maximum tag key length is 128 Unicode characters in UTF-8. The maximum tag value length is 256 Unicode characters in UTF-8. 
 You can use letters and numbers representable in UTF-8, and the following characters: <code>"+ - = . _ : / @"</code>. Tag keys and values are case-sensitive.
 Tag keys must be unique per resource. Please use the helper function <code>tag_options()</code> to create tags for work group, if no tags are required please put <code>NULL</code> for this parameter.</p></dd>
+
+
 <dt>key</dt>
 <dd><p>A tag key. The tag key length is from 1 to 128 Unicode characters in UTF-8. You can use letters and numbers representable in UTF-8, and the following characters: <code>"+ - = . _ : / @"</code>. 
 Tag keys are case-sensitive and must be unique per resource.</p></dd>
+
+
 <dt>value</dt>
 <dd><p>A tag value. The tag value length is from 0 to 256 Unicode characters in UTF-8. You can use letters and numbers representable in UTF-8, and the following characters: <code>"+ - = . _ : / @"</code>. 
 Tag values are case-sensitive.</p></dd>
+
+
 <dt>recursive_delete_option</dt>
 <dd><p>The option to delete the workgroup and its contents even if the workgroup contains any named queries</p></dd>
+
+
 <dt>remove_output_location</dt>
 <dd><p>If set to <code>TRUE</code>, indicates that the previously-specified query results location (also known as a client-side setting) for queries in this workgroup should be ignored and set to null.
 If set to <code>FALSE</code> the out put location in the workgroup's result configuration will be updated with the new value.
 For more information, see <a href="https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html" class="external-link">Workgroup Settings Override Client-Side Settings</a>.</p></dd>
+
+
 <dt>state</dt>
 <dd><p>The workgroup state that will be updated for the given workgroup.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <dl><dt>create_work_group</dt>
+    
+
+<dl><dt>create_work_group</dt>
 <dd><p>Returns <code>NULL</code> but invisible</p></dd>
 
 <dt>tag_options</dt>
@@ -223,46 +248,46 @@ For more information, see <a href="https://docs.aws.amazon.com/athena/latest/ug/
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Note: </span></span>
-<span class="r-in"><span class="co"># - Require AWS Account to run below example.</span></span>
-<span class="r-in"><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Demo connection to Athena using profile name </span></span>
-<span class="r-in"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># List current work group available</span></span>
-<span class="r-in"><span class="fu">list_work_groups</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Create a new work group</span></span>
-<span class="r-in"><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">create_work_group</span><span class="op">(</span><span class="va">con</span>,</span>
-<span class="r-in">                  <span class="st">"demo_work_group"</span>,</span>
-<span class="r-in">                   description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,</span>
-<span class="r-in">                   tags <span class="op">=</span> <span class="fu">tag_options</span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co"># List work groups to see new work group</span></span>
-<span class="r-in"><span class="fu">list_work_groups</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># get meta data from work group</span></span>
-<span class="r-in"><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">get_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Update work group</span></span>
-<span class="r-in"><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">update_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>,</span>
-<span class="r-in">                  description <span class="op">=</span> <span class="st">"This is a demo work group update"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># get updated meta data from work group</span></span>
-<span class="r-in"><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">get_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Delete work group</span></span>
-<span class="r-in"><span class="fu">delete_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Disconect from Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Note: </span></span></span>
+<span class="r-in"><span><span class="co"># - Require AWS Account to run below example.</span></span></span>
+<span class="r-in"><span><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Demo connection to Athena using profile name </span></span></span>
+<span class="r-in"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># List current work group available</span></span></span>
+<span class="r-in"><span><span class="fu">list_work_groups</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create a new work group</span></span></span>
+<span class="r-in"><span><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">create_work_group</span><span class="op">(</span><span class="va">con</span>,</span></span>
+<span class="r-in"><span>                  <span class="st">"demo_work_group"</span>,</span></span>
+<span class="r-in"><span>                   description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,</span></span>
+<span class="r-in"><span>                   tags <span class="op">=</span> <span class="fu">tag_options</span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># List work groups to see new work group</span></span></span>
+<span class="r-in"><span><span class="fu">list_work_groups</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># get meta data from work group</span></span></span>
+<span class="r-in"><span><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">get_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Update work group</span></span></span>
+<span class="r-in"><span><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">update_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>,</span></span>
+<span class="r-in"><span>                  description <span class="op">=</span> <span class="st">"This is a demo work group update"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># get updated meta data from work group</span></span></span>
+<span class="r-in"><span><span class="va">wg</span> <span class="op">&lt;-</span> <span class="fu">get_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span> </span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Delete work group</span></span></span>
+<span class="r-in"><span><span class="fu">delete_work_group</span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Disconect from Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -277,7 +302,7 @@ For more information, see <a href="https://docs.aws.amazon.com/athena/latest/ug/
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

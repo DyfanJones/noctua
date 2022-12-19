@@ -1,10 +1,9 @@
 ## Submission
-This release contains a couple of new features.
+This release contains a couple of bug fixes.
 
-## Feature:
-* Add `clear_s3_resource` parameter to `RAthena_options` to prevent `Amazon Web Service Athena` output `Amazon Web Service S3`
-* Support extra paws parameters for
-* Support `endpoint_override` parameter allow default endpoints for each service to be overridden
+## Bug Fix:
+* Prevent assuming role from `AWS_ROLE_ARN`. This caused confusing when connecting through web identity
+* Support `dbplyr::in_catalog` when working with `dplyr::tbl`
 
 ## Test environments
 * local OS X install, 4.2.0

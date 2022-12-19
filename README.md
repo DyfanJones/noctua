@@ -252,7 +252,7 @@ tbl(con, sql("SELECT * FROM iris"))
 
 dplyr provides lazy querying with allows to short hand `tbl(con,
 sql("SELECT * FROM iris"))` to `tbl(con, "iris")`. For more information
-please look at <https://db.rstudio.com/dplyr/>.
+please look at <https://solutions.posit.co/connections/db/r-packages/dplyr/>
 
 ``` r
 tbl(con, "iris")
