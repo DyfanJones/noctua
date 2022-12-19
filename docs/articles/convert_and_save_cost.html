@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -166,19 +166,19 @@ format</li>
 </h3>
 <p>Uploading Data in delimited format is the easiest method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
-
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># create a temporary database to upload data into</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"CREATE IF NOT EXISTS DATABASE temp"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/dbClearResult.html">dbClearResult</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>
-
-<span class="va">iris2</span> <span class="op">&lt;-</span> <span class="va">iris</span>
-<span class="va">iris2</span><span class="op">$</span><span class="va">time_stamp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"temp.iris_delim"</span>, <span class="va">iris2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create a temporary database to upload data into</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"CREATE IF NOT EXISTS DATABASE temp"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dbClearResult.html">dbClearResult</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">iris2</span> <span class="op">&lt;-</span> <span class="va">iris</span></span>
+<span><span class="va">iris2</span><span class="op">$</span><span class="va">time_stamp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"temp.iris_delim"</span>, <span class="va">iris2</span><span class="op">)</span></span></code></pre></div>
 <p>However delimited file format isn’t the most cost effective when it
 comes to using AWS Athena. To overcome this we can convert this by using
 AWS Athena.</p>
@@ -188,55 +188,55 @@ AWS Athena.</p>
 </h3>
 <p>Converting table to a non-partitioned Parquet or ORC format.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># convert to parquet</span>
-<span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,
-               obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,
-               name <span class="op">=</span> <span class="st">"iris_parquet"</span>,
-               file.type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span>
-               
-<span class="co"># convert to orc</span>
-<span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,
-               obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,
-               name <span class="op">=</span> <span class="st">"iris_orc"</span>,
-               file.type <span class="op">=</span> <span class="st">"orc"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># convert to parquet</span></span>
+<span><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,</span>
+<span>               obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,</span>
+<span>               name <span class="op">=</span> <span class="st">"iris_parquet"</span>,</span>
+<span>               file.type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span>
+<span>               </span>
+<span><span class="co"># convert to orc</span></span>
+<span><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,</span>
+<span>               obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,</span>
+<span>               name <span class="op">=</span> <span class="st">"iris_orc"</span>,</span>
+<span>               file.type <span class="op">=</span> <span class="st">"orc"</span><span class="op">)</span></span></code></pre></div>
 <p><strong>NOTE:</strong> By default <code>dbConvertTable</code>
 compresses Parquet/ ORC format using <code>snappy</code>
 compression.</p>
 <p><code>noctua</code> goes a step further by allowing tables to be
 converted with partitions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># convert to parquet with partition time_stamp</span>
-<span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,
-               obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,
-               name <span class="op">=</span> <span class="st">"iris_parquet_partition"</span>,
-               partition <span class="op">=</span> <span class="st">"time_stamp"</span>,
-               file.type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># convert to parquet with partition time_stamp</span></span>
+<span><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,</span>
+<span>               obj <span class="op">=</span> <span class="st">"temp.iris_delim"</span>,</span>
+<span>               name <span class="op">=</span> <span class="st">"iris_parquet_partition"</span>,</span>
+<span>               partition <span class="op">=</span> <span class="st">"time_stamp"</span>,</span>
+<span>               file.type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span></code></pre></div>
 <p><code>noctua</code> even allows SQL queries to be converted into
 desired file format:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,
-              obj <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/SQL.html" class="external-link">SQL</a></span><span class="op">(</span><span class="st">"select 
-                          Sepal_Length,
-                          Sepal_Width,
-                          date_format(current_date, '%Y%m%d') as time_stamp 
-                        from temp.iris_delim"</span><span class="op">)</span>,
-              name <span class="op">=</span> <span class="st">"iris_orc_partition"</span>,
-              partition <span class="op">=</span> <span class="st">"time_stamp"</span>,
-              file.type <span class="op">=</span> <span class="st">"orc"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dbConvertTable.html">dbConvertTable</a></span><span class="op">(</span><span class="va">con</span>,</span>
+<span>              obj <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/SQL.html" class="external-link">SQL</a></span><span class="op">(</span><span class="st">"select </span></span>
+<span><span class="st">                          Sepal_Length,</span></span>
+<span><span class="st">                          Sepal_Width,</span></span>
+<span><span class="st">                          date_format(current_date, '%Y%m%d') as time_stamp </span></span>
+<span><span class="st">                        from temp.iris_delim"</span><span class="op">)</span>,</span>
+<span>              name <span class="op">=</span> <span class="st">"iris_orc_partition"</span>,</span>
+<span>              partition <span class="op">=</span> <span class="st">"time_stamp"</span>,</span>
+<span>              file.type <span class="op">=</span> <span class="st">"orc"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="insert-into-table-for-etl-processes">Insert into table for ETL processes<a class="anchor" aria-label="anchor" href="#insert-into-table-for-etl-processes"></a>
 </h3>
 <p>As we have created partitioned data, we can easily insert into:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"insert into iris_orc_partition
-                  select 
-                    Sepal_Length,
-                    Sepal_Width, 
-                    date_format(date_add('date', 1, current_date) , '%Y%m%d') time_stamp 
-                  from temp.iris_delim"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/dbClearResult.html">dbClearResult</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"insert into iris_orc_partition</span></span>
+<span><span class="st">                  select </span></span>
+<span><span class="st">                    Sepal_Length,</span></span>
+<span><span class="st">                    Sepal_Width, </span></span>
+<span><span class="st">                    date_format(date_add('date', 1, current_date) , '%Y%m%d') time_stamp </span></span>
+<span><span class="st">                  from temp.iris_delim"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dbClearResult.html">dbClearResult</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <p>What this all means is that you can create ETL processes by uploading
 data in basic file format (delimited), and then converting / inserting
 into the prefer file format.</p>
@@ -249,17 +249,17 @@ into the prefer file format.</p>
 <code>dplyr</code> to allow converting to be done through
 <code>dplyr</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-
-<span class="va">iris_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu">dbplyr</span><span class="fu">::</span><span class="fu">in_schema</span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"iris_delim"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">r_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span>
-
-<span class="va">iris_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">petal_length</span>,
-         <span class="va">petal_width</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time_stamp <span class="op">=</span> <span class="va">r_date</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="st">"iris_dplyr_parquet"</span>, partition <span class="op">=</span> <span class="st">"time_stamp"</span>, file_type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">iris_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu">dbplyr</span><span class="fu">::</span><span class="fu"><a href="https://dbplyr.tidyverse.org/reference/in_schema.html" class="external-link">in_schema</a></span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"iris_delim"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">r_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">iris_tbl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">petal_length</span>,</span>
+<span>         <span class="va">petal_width</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>time_stamp <span class="op">=</span> <span class="va">r_date</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="st">"iris_dplyr_parquet"</span>, partition <span class="op">=</span> <span class="st">"time_stamp"</span>, file_type <span class="op">=</span> <span class="st">"parquet"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -293,7 +293,7 @@ of CTAS Queries</a></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

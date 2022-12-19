@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -135,30 +135,30 @@ improved. This is because the query is no longer sent to
 is taken from the R environment and the result is returned from
 <code>AWS S3</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
-
-<span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Start caching queries</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-
-<span class="co"># Upload Data to AWS Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span>, partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Partition"</span> <span class="op">=</span> <span class="st">"01"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># initial query to AWS Athena</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span>df1 <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Info: (Data scanned: 3.63 KB)</span>
-<span class="co">#   user  system elapsed </span>
-<span class="co">#  0.105   0.004   3.397 </span>
-
-<span class="co"># repeat query to AWS Athena</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span>df2 <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Info: (Data scanned: 3.63 KB)</span>
-<span class="co">#   user  system elapsed </span>
-<span class="co">#  0.072   0.000   0.348 </span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Start caching queries</span></span>
+<span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Upload Data to AWS Athena</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span>, partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Partition"</span> <span class="op">=</span> <span class="st">"01"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># initial query to AWS Athena</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span>df1 <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Info: (Data scanned: 3.63 KB)</span></span>
+<span><span class="co">#   user  system elapsed </span></span>
+<span><span class="co">#  0.105   0.004   3.397 </span></span>
+<span></span>
+<span><span class="co"># repeat query to AWS Athena</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span>df2 <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Info: (Data scanned: 3.63 KB)</span></span>
+<span><span class="co">#   user  system elapsed </span></span>
+<span><span class="co">#  0.072   0.000   0.348 </span></span></code></pre></div>
 <p>Here we can see a performance increase of x10 with repeat query
 execution.</p>
 </div>
@@ -170,21 +170,21 @@ The cache will still only retrieve the previous query ID. This means
 that the new updated data won’t be return when the caching is
 enabled:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Updating iris table</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span>, append <span class="op">=</span> <span class="cn">T</span>, partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Partition"</span> <span class="op">=</span> <span class="st">"02"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">dt5</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span>
-
-<span class="co"># Stop using cache data</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">dt6</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dt5</span><span class="op">)</span>
-<span class="co"># 150</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dt6</span><span class="op">)</span>
-<span class="co"># 300</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Updating iris table</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span>, append <span class="op">=</span> <span class="cn">T</span>, partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Partition"</span> <span class="op">=</span> <span class="st">"02"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dt5</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Stop using cache data</span></span>
+<span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dt6</span> <span class="op">=</span> <span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dt5</span><span class="op">)</span></span>
+<span><span class="co"># 150</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dt6</span><span class="op">)</span></span>
+<span><span class="co"># 300</span></span></code></pre></div>
 <p>Sadly the cached query didn’t pick up the new data from
 <code>iris</code>.</p>
 </div>
@@ -195,27 +195,27 @@ enabled:</p>
 query ids within each R session, even if you stop and start caching in
 <code>noctua_options</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Start caching</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res1</span> <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span>
-
-<span class="co"># Stop caching</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">res2</span> <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span>
-
-<span class="co"># Start caching</span>
-<span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="va">res3</span> <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span>
-
-<span class="co"># Compare Query ID's</span>
-<span class="va">res1</span><span class="op">@</span><span class="va">info</span><span class="op">$</span><span class="va">QueryExecutionId</span>
-<span class="co"># 9a9272f5-0632-4774-9aa9-d07f151dabc5</span>
-
-<span class="va">res2</span><span class="op">@</span><span class="va">info</span><span class="op">$</span><span class="va">QueryExecutionId</span>
-<span class="co"># be12fe0-3ec0-4595-b3e6-b3bf67efa266</span>
-
-<span class="va">res3</span><span class="op">@</span><span class="va">info</span><span class="op">$</span><span class="va">QueryExecutionId</span>
-<span class="co"># 9a9272f5-0632-4774-9aa9-d07f151dabc5</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Start caching</span></span>
+<span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">res1</span> <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Stop caching</span></span>
+<span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">res2</span> <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Start caching</span></span>
+<span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">res3</span> <span class="op">=</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbExecute.html" class="external-link">dbExecute</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Compare Query ID's</span></span>
+<span><span class="va">res1</span><span class="op">@</span><span class="va">info</span><span class="op">$</span><span class="va">QueryExecutionId</span></span>
+<span><span class="co"># 9a9272f5-0632-4774-9aa9-d07f151dabc5</span></span>
+<span></span>
+<span><span class="va">res2</span><span class="op">@</span><span class="va">info</span><span class="op">$</span><span class="va">QueryExecutionId</span></span>
+<span><span class="co"># be12fe0-3ec0-4595-b3e6-b3bf67efa266</span></span>
+<span></span>
+<span><span class="va">res3</span><span class="op">@</span><span class="va">info</span><span class="op">$</span><span class="va">QueryExecutionId</span></span>
+<span><span class="co"># 9a9272f5-0632-4774-9aa9-d07f151dabc5</span></span></code></pre></div>
 <p>We can see that <code>res1</code> and <code>res3</code> utilise the
 same QueryID, even tho caching was stopped and started.</p>
 </div>
@@ -226,7 +226,7 @@ same QueryID, even tho caching was stopped and started.</p>
 <code>clear_cache</code> within <code>noctua_options</code> to
 <code>TRUE</code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>clear_cache <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/noctua_options.html">noctua_options</a></span><span class="op">(</span>clear_cache <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -248,7 +248,7 @@ same QueryID, even tho caching was stopped and started.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

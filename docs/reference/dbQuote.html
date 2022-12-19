@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -81,17 +81,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for AthenaConnection,character</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S4 method for AthenaConnection,POSIXct</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S4 method for AthenaConnection,Date</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S4 method for AthenaConnection,SQL</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html" class="external-link">dbQuoteIdentifier</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for AthenaConnection,character</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for AthenaConnection,POSIXct</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for AthenaConnection,Date</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for AthenaConnection,SQL</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html" class="external-link">dbQuoteIdentifier</a></span><span class="op">(</span><span class="va">conn</span>, <span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -99,14 +99,23 @@
     <dl><dt>conn</dt>
 <dd><p>A <a href="https://dbi.r-dbi.org/reference/DBIConnection-class.html" class="external-link">DBIConnection</a> object, as returned by
 <code><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect()</a></code>.</p></dd>
+
+
 <dt>x</dt>
 <dd><p>A character vector to quote as string.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other arguments passed on to methods.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns a character object, for more information please check out: <code><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></code>, <code><a href="https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html" class="external-link">dbQuoteIdentifier</a></code></p>
+    
+
+<p>Returns a character object, for more information please check out: <code><a href="https://dbi.r-dbi.org/reference/dbQuoteString.html" class="external-link">dbQuoteString</a></code>, <code><a href="https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html" class="external-link">dbQuoteIdentifier</a></code></p>
+
+
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -125,7 +134,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

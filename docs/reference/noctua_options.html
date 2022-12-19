@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -83,19 +83,19 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">noctua_options</span><span class="op">(</span>
-  <span class="va">file_parser</span>,
-  <span class="va">bigint</span>,
-  <span class="va">binary</span>,
-  <span class="va">json</span>,
-  <span class="va">cache_size</span>,
-  <span class="va">clear_cache</span>,
-  <span class="va">retry</span>,
-  <span class="va">retry_quiet</span>,
-  <span class="va">unload</span>,
-  <span class="va">clear_s3_resource</span>,
-  <span class="va">verbose</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">noctua_options</span><span class="op">(</span></span>
+<span>  <span class="va">file_parser</span>,</span>
+<span>  <span class="va">bigint</span>,</span>
+<span>  <span class="va">binary</span>,</span>
+<span>  <span class="va">json</span>,</span>
+<span>  <span class="va">cache_size</span>,</span>
+<span>  <span class="va">clear_cache</span>,</span>
+<span>  <span class="va">retry</span>,</span>
+<span>  <span class="va">retry_quiet</span>,</span>
+<span>  <span class="va">unload</span>,</span>
+<span>  <span class="va">clear_s3_resource</span>,</span>
+<span>  <span class="va">verbose</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -103,47 +103,70 @@
     <dl><dt>file_parser</dt>
 <dd><p>Method to read and write tables to Athena, currently default to <code>"data.table"</code>. The file_parser also
 determines the data format returned for example <code>"data.table"</code> will return <code>data.table</code> and <code>"vroom"</code> will return <code>tibble</code>.</p></dd>
+
+
 <dt>bigint</dt>
 <dd><p>The R type that 64-bit integer types should be mapped to (default: <code>"integer64"</code>).
 Inbuilt <code>bigint</code> conversion types ["integer64", "integer", "numeric", "character"].</p></dd>
+
+
 <dt>binary</dt>
 <dd><p>The R type that [binary/varbinary] types should be mapped to (default <code>"raw"</code>).
 Inbuilt binary conversion types ["raw", "character"].</p></dd>
+
+
 <dt>json</dt>
 <dd><p>Attempt to converts AWS Athena data types [arrays, json] using <code>jsonlite:parse_json</code> (default: <code>"auto"</code>).
 Inbuilt json conversion types ["auto", "character"].
 Custom Json parsers can be provide by using a function with data frame parameter.</p></dd>
+
+
 <dt>cache_size</dt>
 <dd><p>Number of queries to be cached. Currently only support caching up to 100 distinct queries (default: <code>0</code>).</p></dd>
+
+
 <dt>clear_cache</dt>
 <dd><p>Clears all previous cached query metadata</p></dd>
+
+
 <dt>retry</dt>
 <dd><p>Maximum number of requests to attempt (default: <code>5</code>).</p></dd>
+
+
 <dt>retry_quiet</dt>
 <dd><p>This method is deprecated please use verbose instead.</p></dd>
+
+
 <dt>unload</dt>
 <dd><p>set AWS Athena unload functionality globally (default: <code>FALSE</code>)</p></dd>
+
+
 <dt>clear_s3_resource</dt>
 <dd><p>Clear down `AWS Athena` `AWS S3` resource (<code>s3_staging_dir</code> location).
 This is useful for users that don't have the `AWS IAM role` permissions delete
 from `s3_staging_dir` (default: <code>TRUE</code>)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>print package info messages (default: <code>TRUE</code>)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>noctua_options()</code> returns <code>NULL</code>, invisibly.</p>
+    
+
+<p><code>noctua_options()</code> returns <code>NULL</code>, invisibly.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># change file parser from default data.table to vroom</span></span>
-<span class="r-in"><span class="fu">noctua_options</span><span class="op">(</span><span class="st">"vroom"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># cache queries locally</span></span>
-<span class="r-in"><span class="fu">noctua_options</span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># change file parser from default data.table to vroom</span></span></span>
+<span class="r-in"><span><span class="fu">noctua_options</span><span class="op">(</span><span class="st">"vroom"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># cache queries locally</span></span></span>
+<span class="r-in"><span><span class="fu">noctua_options</span><span class="op">(</span>cache_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -158,7 +181,7 @@ from `s3_staging_dir` (default: <code>TRUE</code>)</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

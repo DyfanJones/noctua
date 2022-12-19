@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -81,10 +81,10 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">dbShow</span><span class="op">(</span><span class="va">conn</span>, <span class="va">name</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S4 method for AthenaConnection</span>
-<span class="fu">dbShow</span><span class="op">(</span><span class="va">conn</span>, <span class="va">name</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dbShow</span><span class="op">(</span><span class="va">conn</span>, <span class="va">name</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for AthenaConnection</span></span>
+<span><span class="fu">dbShow</span><span class="op">(</span><span class="va">conn</span>, <span class="va">name</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -92,6 +92,8 @@
     <dl><dt>conn</dt>
 <dd><p>A <a href="https://dbi.r-dbi.org/reference/DBIConnection-class.html" class="external-link">DBIConnection</a> object, as returned by
 <code><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect()</a></code>.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The table name, passed on to <code><a href="https://dbi.r-dbi.org/reference/dbQuoteIdentifier.html" class="external-link">dbQuoteIdentifier()</a></code>. Options are:</p><ul><li><p>a character string with the unquoted DBMS table name,
 e.g. <code>"table_name"</code>,</p></li>
@@ -100,38 +102,44 @@ e.g. <code>Id(schema = "my_schema", table = "table_name")</code></p></li>
 <li><p>a call to <code><a href="https://dbi.r-dbi.org/reference/SQL.html" class="external-link">SQL()</a></code> with the quoted and fully qualified table name
 given verbatim, e.g. <code>SQL('"my_schema"."table_name"')</code></p></li>
 </ul></dd>
+
+
 <dt>...</dt>
 <dd><p>Other parameters passed on to methods.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>dbShow()</code> returns <code><a href="https://dbi.r-dbi.org/reference/SQL.html" class="external-link">SQL</a></code> characters of the Athena table DDL.</p>
+    
+
+<p><code>dbShow()</code> returns <code><a href="https://dbi.r-dbi.org/reference/SQL.html" class="external-link">SQL</a></code> characters of the Athena table DDL.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Note: </span></span>
-<span class="r-in"><span class="co"># - Require AWS Account to run below example.</span></span>
-<span class="r-in"><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Demo connection to Athena using profile name </span></span>
-<span class="r-in"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">                 </span>
-<span class="r-in"><span class="co"># write iris table to Athena                  </span></span>
-<span class="r-in"><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>,</span>
-<span class="r-in">             <span class="va">iris</span>,</span>
-<span class="r-in">             partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"timestamp"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">             s3.location <span class="op">=</span> <span class="st">"s3://path/to/store/athena/table/"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># return table ddl</span></span>
-<span class="r-in"><span class="fu">noctua</span><span class="fu">::</span><span class="fu">dbShow</span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># disconnect from Athena</span></span>
-<span class="r-in"><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Note:</span></span></span>
+<span class="r-in"><span><span class="co"># - Require AWS Account to run below example.</span></span></span>
+<span class="r-in"><span><span class="co"># - Different connection methods can be used please see `noctua::dbConnect` documnentation</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Demo connection to Athena using profile name</span></span></span>
+<span class="r-in"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># write iris table to Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>,</span></span>
+<span class="r-in"><span>  <span class="va">iris</span>,</span></span>
+<span class="r-in"><span>  partition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"timestamp"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y%m%d"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  s3.location <span class="op">=</span> <span class="st">"s3://path/to/store/athena/table/"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># return table ddl</span></span></span>
+<span class="r-in"><span><span class="fu">noctua</span><span class="fu">::</span><span class="fu">dbShow</span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># disconnect from Athena</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dbDisconnect.html">dbDisconnect</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -146,7 +154,7 @@ given verbatim, e.g. <code>SQL('"my_schema"."table_name"')</code></p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

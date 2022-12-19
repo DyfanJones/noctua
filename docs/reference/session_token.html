@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -81,14 +81,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_session_token</span><span class="op">(</span>
-  profile_name <span class="op">=</span> <span class="cn">NULL</span>,
-  region_name <span class="op">=</span> <span class="cn">NULL</span>,
-  serial_number <span class="op">=</span> <span class="cn">NULL</span>,
-  token_code <span class="op">=</span> <span class="cn">NULL</span>,
-  duration_seconds <span class="op">=</span> <span class="fl">3600L</span>,
-  set_env <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_session_token</span><span class="op">(</span></span>
+<span>  profile_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  region_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  serial_number <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token_code <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  duration_seconds <span class="op">=</span> <span class="fl">3600L</span>,</span>
+<span>  set_env <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -97,47 +97,62 @@
 <dd><p>The name of a profile to use. If not given, then the default profile is used.
 To set profile name, the <a href="https://aws.amazon.com/cli/" class="external-link">AWS Command Line Interface</a> (AWS CLI) will need to be configured.
 To configure AWS CLI please refer to: <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html" class="external-link">Configuring the AWS CLI</a>.</p></dd>
+
+
 <dt>region_name</dt>
 <dd><p>Default region when creating new connections. Please refer to <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html" class="external-link">link</a> for 
 AWS region codes (region code example: Region = EU (Ireland)     <code> region_name = "eu-west-1"</code>)</p></dd>
+
+
 <dt>serial_number</dt>
 <dd><p>The identification number of the MFA device that is associated with the IAM user who is making the GetSessionToken call.
 Specify this value if the IAM user has a policy that requires MFA authentication. The value is either the serial number for a hardware device
 (such as `GAHT12345678`) or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).</p></dd>
+
+
 <dt>token_code</dt>
 <dd><p>The value provided by the MFA device, if MFA is required. If any policy requires the IAM user to submit an MFA code, 
 specify this value. If MFA authentication is required, the user must provide a code when requesting a set of temporary
 security credentials. A user who fails to provide the code receives an "access denied" response when requesting resources 
 that require MFA authentication.</p></dd>
+
+
 <dt>duration_seconds</dt>
 <dd><p>The duration, in seconds, that the credentials should remain valid. Acceptable duration for IAM user sessions range
 from 900 seconds (15 minutes) to 129,600 seconds (36 hours), with 3,600 seconds (1 hour) as the default.</p></dd>
+
+
 <dt>set_env</dt>
 <dd><p>If set to <code>TRUE</code> environmental variables <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> and <code>AWS_SESSION_TOKEN</code> will be set.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>get_session_token()</code> returns a list containing: <code>"AccessKeyId"</code>, <code>"SecretAccessKey"</code>, <code>"SessionToken"</code> and <code>"Expiration"</code></p>
+    
+
+<p><code>get_session_token()</code> returns a list containing: <code>"AccessKeyId"</code>, <code>"SecretAccessKey"</code>, <code>"SessionToken"</code> and <code>"Expiration"</code></p>
+
+
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Note: </span></span>
-<span class="r-in"><span class="co"># - Require AWS Account to run below example.</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Create Temporary Credentials duration 1 hour</span></span>
-<span class="r-in"><span class="fu">get_session_token</span><span class="op">(</span><span class="st">"YOUR_PROFILE_NAME"</span>,</span>
-<span class="r-in">                  serial_number<span class="op">=</span><span class="st">'arn:aws:iam::123456789012:mfa/user'</span>,</span>
-<span class="r-in">                  token_code <span class="op">=</span> <span class="st">"531602"</span>,</span>
-<span class="r-in">                  set_env <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Connect to Athena using temporary credentials</span></span>
-<span class="r-in"><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Note: </span></span></span>
+<span class="r-in"><span><span class="co"># - Require AWS Account to run below example.</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create Temporary Credentials duration 1 hour</span></span></span>
+<span class="r-in"><span><span class="fu">get_session_token</span><span class="op">(</span><span class="st">"YOUR_PROFILE_NAME"</span>,</span></span>
+<span class="r-in"><span>                  serial_number<span class="op">=</span><span class="st">'arn:aws:iam::123456789012:mfa/user'</span>,</span></span>
+<span class="r-in"><span>                  token_code <span class="op">=</span> <span class="st">"531602"</span>,</span></span>
+<span class="r-in"><span>                  set_env <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Connect to Athena using temporary credentials</span></span></span>
+<span class="r-in"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -152,7 +167,7 @@ from 900 seconds (15 minutes) to 129,600 seconds (36 hours), with 3,600 seconds 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

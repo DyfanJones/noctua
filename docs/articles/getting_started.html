@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0.9000</span>
       </span>
     </div>
 
@@ -143,11 +143,11 @@ give <code>dplyr</code> a seamless interface into
 <p>As <code>noctua</code> utilising the R AWS SDK <code>paws</code> the
 installation of <code>noctua</code> is pretty straight forward:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># cran version</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"noctua"</span><span class="op">)</span>
-
-<span class="co"># Dev version</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dyfanjones/noctua"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># cran version</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"noctua"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Dev version</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dyfanjones/noctua"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="docker-example">Docker Example:<a class="anchor" aria-label="anchor" href="#docker-example"></a>
 </h3>
@@ -178,106 +178,106 @@ improve performance when querying AWS Athena.</p>
 <h3 id="low---level-api">Low - Level API:<a class="anchor" aria-label="anchor" href="#low---level-api"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span>
-
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># list all current work groups in AWS Athena</span>
-<span class="fu"><a href="../reference/work_group.html">list_work_groups</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>
-
-<span class="co"># Create a new work group</span>
-<span class="fu"><a href="../reference/work_group.html">create_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,
-                  tags <span class="op">=</span> <span class="fu"><a href="../reference/work_group.html">tag_options</a></span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DyfanJones/noctua" class="external-link">noctua</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># list all current work groups in AWS Athena</span></span>
+<span><span class="fu"><a href="../reference/work_group.html">list_work_groups</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create a new work group</span></span>
+<span><span class="fu"><a href="../reference/work_group.html">create_work_group</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"demo_work_group"</span>, description <span class="op">=</span> <span class="st">"This is a demo work group"</span>,</span>
+<span>                  tags <span class="op">=</span> <span class="fu"><a href="../reference/work_group.html">tag_options</a></span><span class="op">(</span>key<span class="op">=</span> <span class="st">"demo_work_group"</span>, value <span class="op">=</span> <span class="st">"demo_01"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="dbi">DBI:<a class="anchor" aria-label="anchor" href="#dbi"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span>
-
-<span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Get metadata </span>
-<span class="fu"><a href="../reference/dbGetInfo.html">dbGetInfo</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span>
-
-<span class="co"># $profile_name</span>
-<span class="co"># [1] "default"</span>
-<span class="co"># </span>
-<span class="co"># $s3_staging</span>
-<span class="co"># [1] ######## NOTE: Please don't share your S3 bucket to the public</span>
-<span class="co"># </span>
-<span class="co"># $dbms.name</span>
-<span class="co"># [1] "default"</span>
-<span class="co"># </span>
-<span class="co"># $work_group</span>
-<span class="co"># [1] "primary"</span>
-<span class="co"># </span>
-<span class="co"># $poll_interval</span>
-<span class="co"># NULL</span>
-<span class="co"># </span>
-<span class="co"># $encryption_option</span>
-<span class="co"># NULL</span>
-<span class="co"># </span>
-<span class="co"># $kms_key</span>
-<span class="co"># NULL</span>
-<span class="co"># </span>
-<span class="co"># $expiration</span>
-<span class="co"># NULL</span>
-<span class="co"># </span>
-<span class="co"># $region_name</span>
-<span class="co"># [1] "eu-west-1"</span>
-<span class="co"># </span>
-<span class="co"># $paws</span>
-<span class="co"># [1] "0.1.6"</span>
-<span class="co"># </span>
-<span class="co"># $noctua</span>
-<span class="co"># [1] "1.5.1"</span>
-
-<span class="co"># create table to AWS Athena</span>
-<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris limit 10"</span><span class="op">)</span>
-<span class="co"># Info: (Data scanned: 860 Bytes)</span>
-<span class="co">#  sepal_length sepal_width petal_length petal_width species</span>
-<span class="co"># 1:           5.1         3.5          1.4         0.2  setosa</span>
-<span class="co"># 2:           4.9         3.0          1.4         0.2  setosa</span>
-<span class="co"># 3:           4.7         3.2          1.3         0.2  setosa</span>
-<span class="co"># 4:           4.6         3.1          1.5         0.2  setosa</span>
-<span class="co"># 5:           5.0         3.6          1.4         0.2  setosa</span>
-<span class="co"># 6:           5.4         3.9          1.7         0.4  setosa</span>
-<span class="co"># 7:           4.6         3.4          1.4         0.3  setosa</span>
-<span class="co"># 8:           5.0         3.4          1.5         0.2  setosa</span>
-<span class="co"># 9:           4.4         2.9          1.4         0.2  setosa</span>
-<span class="co"># 10:          4.9         3.1          1.5         0.1  setosa</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dbi.r-dbi.org" class="external-link">DBI</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dbConnect-AthenaDriver-method.html">dbConnect</a></span><span class="op">(</span><span class="fu">noctua</span><span class="fu">::</span><span class="fu"><a href="../reference/athena.html">athena</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get metadata </span></span>
+<span><span class="fu"><a href="../reference/dbGetInfo.html">dbGetInfo</a></span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># $profile_name</span></span>
+<span><span class="co"># [1] "default"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $s3_staging</span></span>
+<span><span class="co"># [1] ######## NOTE: Please don't share your S3 bucket to the public</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $dbms.name</span></span>
+<span><span class="co"># [1] "default"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $work_group</span></span>
+<span><span class="co"># [1] "primary"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $poll_interval</span></span>
+<span><span class="co"># NULL</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $encryption_option</span></span>
+<span><span class="co"># NULL</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $kms_key</span></span>
+<span><span class="co"># NULL</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $expiration</span></span>
+<span><span class="co"># NULL</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $region_name</span></span>
+<span><span class="co"># [1] "eu-west-1"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $paws</span></span>
+<span><span class="co"># [1] "0.1.6"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># $noctua</span></span>
+<span><span class="co"># [1] "1.5.1"</span></span>
+<span></span>
+<span><span class="co"># create table to AWS Athena</span></span>
+<span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbWriteTable.html" class="external-link">dbWriteTable</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"select * from iris limit 10"</span><span class="op">)</span></span>
+<span><span class="co"># Info: (Data scanned: 860 Bytes)</span></span>
+<span><span class="co">#  sepal_length sepal_width petal_length petal_width species</span></span>
+<span><span class="co"># 1:           5.1         3.5          1.4         0.2  setosa</span></span>
+<span><span class="co"># 2:           4.9         3.0          1.4         0.2  setosa</span></span>
+<span><span class="co"># 3:           4.7         3.2          1.3         0.2  setosa</span></span>
+<span><span class="co"># 4:           4.6         3.1          1.5         0.2  setosa</span></span>
+<span><span class="co"># 5:           5.0         3.6          1.4         0.2  setosa</span></span>
+<span><span class="co"># 6:           5.4         3.9          1.7         0.4  setosa</span></span>
+<span><span class="co"># 7:           4.6         3.4          1.4         0.3  setosa</span></span>
+<span><span class="co"># 8:           5.0         3.4          1.5         0.2  setosa</span></span>
+<span><span class="co"># 9:           4.4         2.9          1.4         0.2  setosa</span></span>
+<span><span class="co"># 10:          4.9         3.1          1.5         0.1  setosa</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="dplyr">dplyr:<a class="anchor" aria-label="anchor" href="#dplyr"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-
-<span class="va">athena_iris</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span>
-
-<span class="va">athena_iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">sepal_length</span>, <span class="va">sepal_width</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Info: (Data scanned: 860 Bytes)</span>
-<span class="co"># # A tibble: 10 x 3</span>
-<span class="co"># species  sepal_length sepal_width</span>
-<span class="co"># &lt;chr&gt;           &lt;dbl&gt;       &lt;dbl&gt;</span>
-<span class="co"># 1 setosa            5.1         3.5</span>
-<span class="co"># 2 setosa            4.9         3  </span>
-<span class="co"># 3 setosa            4.7         3.2</span>
-<span class="co"># 4 setosa            4.6         3.1</span>
-<span class="co"># 5 setosa            5           3.6</span>
-<span class="co"># 6 setosa            5.4         3.9</span>
-<span class="co"># 7 setosa            4.6         3.4</span>
-<span class="co"># 8 setosa            5           3.4</span>
-<span class="co"># 9 setosa            4.4         2.9</span>
-<span class="co"># 10 setosa           4.9         3.1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">athena_iris</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"iris"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">athena_iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">sepal_length</span>, <span class="va">sepal_width</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Info: (Data scanned: 860 Bytes)</span></span>
+<span><span class="co"># # A tibble: 10 x 3</span></span>
+<span><span class="co"># species  sepal_length sepal_width</span></span>
+<span><span class="co"># &lt;chr&gt;           &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span><span class="co"># 1 setosa            5.1         3.5</span></span>
+<span><span class="co"># 2 setosa            4.9         3  </span></span>
+<span><span class="co"># 3 setosa            4.7         3.2</span></span>
+<span><span class="co"># 4 setosa            4.6         3.1</span></span>
+<span><span class="co"># 5 setosa            5           3.6</span></span>
+<span><span class="co"># 6 setosa            5.4         3.9</span></span>
+<span><span class="co"># 7 setosa            4.6         3.4</span></span>
+<span><span class="co"># 8 setosa            5           3.4</span></span>
+<span><span class="co"># 9 setosa            4.4         2.9</span></span>
+<span><span class="co"># 10 setosa           4.9         3.1</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -310,7 +310,7 @@ Athena User Guide</a></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
