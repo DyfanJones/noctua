@@ -1,3 +1,8 @@
+# noctua 2.6.1
+## Bug Fix:
+* Prevent assuming role from `AWS_ROLE_ARN`. This caused confusing when connecting through web identity ([RAthena # 177](https://github.com/DyfanJones/RAthena/issues/177))
+* Support `dbplyr::in_catalog` when working with `dplyr::tbl` ([RAthena # 178](https://github.com/DyfanJones/RAthena/issues/178))
+
 # noctua 2.6.0
 ## Feature:
 * Add clear_s3_resource parameter to RAthena_options to prevent AWS Athena output AWS S3 resource being cleared up by `dbClearResult` ([RAthena # 168](https://github.com/DyfanJones/RAthena/issues/168)). Thanks to @juhoautio for the request.
