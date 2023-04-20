@@ -123,11 +123,9 @@
 
   # connect to s3 and create a bucket object
   # download athena output
-  retry_api_call(obj <- res@connection@ptr$S3$get_object(
-    Bucket = result_info[["bucket"]], Key = result_info[["key"]]
+  retry_api_call(res@connection@ptr$S3$download_file(
+    Bucket = result_info[["bucket"]], Key = result_info[["key"]], Filename = File
   ))
-
-  write_bin(obj$Body, File)
 
   if (grepl("\\.csv$", result_info[["key"]])) {
     output <- athena_read(
