@@ -20,6 +20,7 @@ class_cache <- new.env(parent = emptyenv())
 AthenaConnection <- function(aws_access_key_id = NULL,
                              aws_secret_access_key = NULL,
                              aws_session_token = NULL,
+                             catalog_name = NULL,
                              schema_name = NULL,
                              work_group = NULL,
                              poll_interval = NULL,
@@ -74,11 +75,16 @@ AthenaConnection <- function(aws_access_key_id = NULL,
   # return a subset of api function to reduce object size
   ptr_ll <- list(
     Athena = Athena[c(
-      ".internal", "start_query_execution", "get_query_execution", "stop_query_execution", "get_query_results",
-      "get_work_group", "list_work_groups", "update_work_group", "create_work_group", "delete_work_group"
+      ".internal", "start_query_execution", "get_query_execution",
+      "stop_query_execution", "get_query_results", "get_work_group",
+      "list_work_groups", "list_data_catalogs", "list_databases",
+      "list_table_metadata", "get_table_metadata", "update_work_group",
+      "create_work_group", "delete_work_group"
     )],
-    S3 = S3[c(".internal", "put_object", "get_object", "delete_object", "delete_objects", "list_objects_v2")],
-    glue = glue[c(".internal", "get_databases", "get_tables", "get_table", "delete_table")]
+    S3 = S3[c(
+      ".internal", "put_object", "get_object", "download_file",
+      "delete_object", "delete_objects", "list_objects_v2"
+    )]
   )
   s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
 
@@ -91,7 +97,8 @@ AthenaConnection <- function(aws_access_key_id = NULL,
   }
   info <- list(
     profile_name = prof_name, s3_staging = s3_staging_dir,
-    dbms.name = schema_name, work_group = work_group %||% "primary",
+    db.catalog = catalog_name, dbms.name = schema_name,
+    work_group = work_group %||% "primary",
     poll_interval = poll_interval, encryption_option = encryption_option,
     kms_key = kms_key, expiration = aws_expiration,
     timezone = character(),
@@ -473,15 +480,25 @@ NULL
 #' @export
 setMethod(
   "dbListTables", "AthenaConnection",
-  function(conn, schema = NULL, ...) {
+  function(conn, catalog = NULL, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    glue <- conn@ptr$glue
+    athena <- conn@ptr$Athena
+
+    if (is.null(catalog)) {
+      catalog <- list_catalogs(athena)
+    }
+
     if (is.null(schema)) {
-      schema <- get_databases(glue)
+      schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
     }
     tryCatch(
       {
-        output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))
+        output <- unlist(
+          lapply(names(schema), function(n) {
+            lapply(schema[[n]], function(s) list_tables(client, n, s))
+          }),
+          recursive = F
+        )
       },
       error = function(cond) NULL
     )
@@ -532,23 +549,68 @@ setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
 #' @export
 setMethod(
   "dbGetTables", "AthenaConnection",
-  function(conn, schema = NULL, ...) {
+  function(conn, catalog = NULL, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    glue <- conn@ptr$glue
-    if (is.null(schema)) {
-      schema <- get_databases(glue)
+    athena <- conn@ptr$Athena
+    if (is.null(catalog)) {
+      catalog <- list_catalogs(athena)
     }
-    tryCatch(
-      {
-        output <- lapply(schema, function(i) get_table_list(glue = glue, schema = i))
+
+    if (is.null(schema)) {
+      schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
+    } else {
+      names(schema) <- conn@info$db.catalog
+    }
+    output <- tryCatch({
+      lapply(names(schema), function(n) {
+        rbindlist(unlist(lapply(schema[[n]], function(s) list_tables(athena, n, s)), recursive = F))
+      })
       },
-      error = function(cond) NULL
-    )
-    output <- rbindlist(unlist(output, recursive = FALSE), use.names = TRUE)
-    setnames(output, new = c("Schema", "TableName", "TableType"))
+      error = function(cond) {
+        list(list(
+          Catalog = character(),
+          Schema =  character(),
+          TableName = character(),
+          TableType = character()
+      ))
+    })
+    output <- rbindlist(output, use.names = TRUE)
+    setnames(output, new = c("Catalog", "Schema", "TableName", "TableType"))
     return(output)
   }
 )
+
+setMethod(
+  "dbListTables", "AthenaConnection",
+  function(conn, catalog = NULL, schema = NULL, ...) {
+    con_error_msg(conn, msg = "Connection already closed.")
+    athena <- conn@ptr$Athena
+
+    if (is.null(catalog)) {
+      catalog <- list_catalogs(athena)
+    }
+
+    if (is.null(schema)) {
+      schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
+    }
+    tryCatch(
+      {
+        output <- unlist(lapply(names(schema), function(n) lapply(schema[[n]], function(s) list_tables(client, n, s))), recursive = F)
+      },
+      error = function(cond) NULL
+    )
+    return(
+      vapply(
+        unlist(output, recursive = FALSE),
+        function(y) y$Name,
+        FUN.VALUE = character(1)
+      )
+    )
+  }
+)
+
+
+
 
 #' List Field names of Athena table
 #'
@@ -591,13 +653,14 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
     retry_api_call(
-      output <- conn@ptr$glue$get_table(
+      output <- conn@ptr$Athena$get_table_metadata(
+        CatalogName = ll[["db.catalog"]],
         DatabaseName = ll[["dbms.name"]],
-        Name = ll[["table"]]
-      )$Table
+        TableName = ll[["table"]]
+      )$TableMetadata
     )
 
-    col_names <- vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+    col_names <- vapply(output$Columns, function(y) y$Name, FUN.VALUE = character(1))
     partitions <- vapply(output$PartitionKeys, function(y) y$Name, FUN.VALUE = character(1))
     c(col_names, partitions)
   }
@@ -645,7 +708,12 @@ setMethod(
     ll <- db_detect(conn, name)
 
     for (i in seq_len(athena_option_env$retry)) {
-      resp <- tryCatch(conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]]),
+      resp <- tryCatch(
+        conn@ptr$Athena$get_table_metadata(
+          CatalogName = ll[["db.catalog"]],
+          DatabaseName = ll[["dbms.name"]],
+          TableName = ll[["table"]]
+        ),
         error = function(e) e
       )
 
@@ -661,10 +729,15 @@ setMethod(
       }
     }
 
-
-    if (inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)) stop(resp)
-
-    !grepl(".*table.*not.*found.*", resp[1], ignore.case = T)
+    if (
+      inherits(resp, "error") &&
+        !grepl(".*EntityNotFoundException.*|.*cannot.*find.*catalog.*", resp, ignore.case = T)
+    ) {
+      stop(resp)
+    }
+    return(
+      !grepl(".*EntityNotFoundException.*|.*cannot.*find.*catalog.*", resp, ignore.case = T)
+    )
   }
 )
 
@@ -678,7 +751,8 @@ setMethod(
 #' @param confirm Allows for S3 files to be deleted without the prompt check. It is recommend to leave this set to \code{FALSE}
 #'                   to avoid deleting other S3 files when the table's definition points to the root of S3 bucket.
 #' @seealso \code{\link[DBI]{dbRemoveTable}}
-#' @note If you are having difficulty removing AWS S3 files please check if the AWS S3 location following AWS best practises: \href{https://docs.aws.amazon.com/athena/latest/ug/tables-location-format.html}{Table Location in Amazon S3}
+#' @note If you are having difficulty removing AWS S3 files please check if the
+#' AWS S3 location following AWS best practises: \href{https://docs.aws.amazon.com/athena/latest/ug/tables-location-format.html}{Table Location in Amazon S3}
 #' @examples
 #' \dontrun{
 #' # Note:
@@ -717,15 +791,20 @@ setMethod(
     )
     ll <- db_detect(conn, name)
 
-    TableType <- conn@ptr$glue$get_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])[["Table"]][["TableType"]]
+    TableType <- conn@ptr$Athena$get_table_metadata(
+      CatalogName = ll[["db.catalog"]],
+      DatabaseName = ll[["dbms.name"]],
+      TableName = ll[["table"]]
+    )[["TableMetadata"]][["TableType"]]
 
     if (delete_data && TableType == "EXTERNAL_TABLE") {
       tryCatch(
         s3_path <- split_s3_uri(
-          conn@ptr$glue$get_table(
+          conn@ptr$Athena$get_table_metadata(
+            CatalogName = ll[["db.catalog"]],
             DatabaseName = ll[["dbms.name"]],
-            Name = ll[["table"]]
-          )[["Table"]][["StorageDescriptor"]][["Location"]]
+            TableName = ll[["table"]]
+          )[["TableMetadata"]][["Parameters"]][["location"]]
         )
       )
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
@@ -770,9 +849,9 @@ setMethod(
         ), call. = F)
       }
     }
-
-    # use glue to remove table from glue catalog
-    conn@ptr$glue$delete_table(DatabaseName = ll[["dbms.name"]], Name = ll[["table"]])
+    
+    # Drop Athena table
+    dbExecute(conn, sprintf('DROP TABLE IF EXISTS `%s`', paste(ll, collapse = '`.`')))
 
     if (!delete_data) info_msg("Only Athena table has been removed.")
     on_connection_updated(conn, ll[["table"]])

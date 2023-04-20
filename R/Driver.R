@@ -73,6 +73,7 @@ setMethod(
 #' @param aws_access_key_id AWS access key ID
 #' @param aws_secret_access_key AWS secret access key
 #' @param aws_session_token AWS temporary session token
+#' @param catalog_name The catalog_name to which the connection belongs
 #' @param schema_name The schema_name to which the connection belongs
 #' @param work_group The name of the \href{https://aws.amazon.com/about-aws/whats-new/2019/02/athena_workgroups/}{work group} to run Athena queries , Currently defaulted to \code{NULL}.
 #' @param poll_interval Amount of time took when checking query execution status. Default set to a random interval between 0.5 - 1 seconds.
@@ -173,6 +174,7 @@ setMethod(
            aws_access_key_id = NULL,
            aws_secret_access_key = NULL,
            aws_session_token = NULL,
+           catalog_name = "AwsDataCatalog",
            schema_name = "default",
            work_group = NULL,
            poll_interval = NULL,
@@ -197,7 +199,7 @@ setMethod(
       is.null(aws_access_key_id) || is.character(aws_access_key_id),
       is.null(aws_secret_access_key) || is.character(aws_secret_access_key),
       is.null(aws_session_token) || is.character(aws_session_token),
-      is.character(schema_name),
+      is.character(catalog_name), is.character(schema_name),
       is.null(work_group) || is.character(work_group),
       is.null(poll_interval) || is.numeric(poll_interval),
       is.null(kms_key) || is.character(kms_key),
@@ -252,6 +254,7 @@ setMethod(
       aws_access_key_id = aws_access_key_id,
       aws_secret_access_key = aws_secret_access_key,
       aws_session_token = aws_session_token,
+      catalog_name = catalog_name,
       schema_name = schema_name,
       work_group = work_group,
       poll_interval = poll_interval,
