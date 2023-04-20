@@ -1,5 +1,4 @@
 .onLoad <- function(libname, pkgname) {
-  readr_check()
   dbplyr_version()
   if(identical(dbplyr_env$major, 1L)){
     register_s3_method("dplyr", "db_desc", "AthenaConnection")
@@ -42,11 +41,6 @@ register_s3_method <- function(pkg, generic, class, fun = NULL) {
       registerS3method(generic, class, fun, envir = asNamespace(pkg))
     }
   )
-}
-
-readr_check <- function() {
-  if (!nzchar(system.file(package = "readr")))
-    packageStartupMessage("Info: For extra speed please install `readr`.")
 }
 
 dbplyr_version <- function(){
