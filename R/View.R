@@ -15,11 +15,11 @@
 #   \item{icon}{An optional path to an icon representing the type}
 # }
 #
-# For instance, a connection in which the top-level object is a database that
+# For instance, a connection in which the top-level object is a schema that
 # contains tables and views, the function will return a list like the
 # following:
 #
-# \preformatted{list(database = list(contains = list(
+# \preformatted{list(schema = list(contains = list(
 #                    list(name = "table", contains = "data")
 #                    list(name = "view", contains = "data"))))
 #
@@ -32,23 +32,30 @@ AthenaListObjectTypes <- function(connection) {
   UseMethod("AthenaListObjectTypes")
 }
 
+#' @export
 AthenaListObjectTypes.default <- function(connection) {
-  # slurp all the objects in the database so we can determine the correct
+  # slurp all the objects in the schema so we can determine the correct
   # object hierarchy
   
-  # all databases contain tables, at a minimum
+  # all schema contain tables, at a minimum
   obj_types <- list(table = list(contains = "data"))
   
   # see if we have views too
-  table_types <- AthenaTableTypes(connection)
+  table_types <- AthenaTableTypes(connection, connection@info[["db.catalog"]])
   if (any(grepl("VIEW", table_types))) {
     obj_types <- c(obj_types, list(view = list(contains = "data")))
   }
+
+  # check for multiple schema or a named schema
+  schemas <- AthenaDatabase(connection, connection@info[["db.catalog"]])
+  if (length(schemas) > 0) {
+    obj_types <- list(schema = list(contains = obj_types))
+  }
   
-  # check for multiple database or a named database
-  databases <- AthenaDatabase(connection)
-  if (length(databases) > 1) {
-    obj_types <- list(database = list(contains = obj_types))
+  catalogs <- list_catalogs(connection@ptr$Athena)
+  # check for multiple catalogs
+  if (length(catalogs) > 0) {
+    obj_types <- list(catalog = list(contains = obj_types))
   }
   
   obj_types
@@ -61,8 +68,8 @@ AthenaListObjectTypes.default <- function(connection) {
 #
 # When used without parameters, this function returns all of the objects known
 # by the connection. Any parameters passed will filter the list to only objects
-# which have the given attributes; for instance, passing \code{database = "foo"}
-# will return only objects matching the database \code{foo}.
+# which have the given attributes; for instance, passing \code{schema = "foo"}
+# will return only objects matching the schema \code{foo}.
 #
 # @param connection A connection object, as returned by `dbConnect()`.
 # @param ... Attributes to filter by.
@@ -71,23 +78,37 @@ AthenaListObjectTypes.default <- function(connection) {
 
 AthenaListObjects <- function(connection, ...) {UseMethod("AthenaListObjects")}
 
-AthenaListObjects.default <- function(connection, database = NULL, name = NULL, ...) {
+AthenaListObjects.AthenaConnection <- function(connection, catalog = NULL, schema = NULL, name = NULL, ...) {
   
-  # if no database was supplied but this database has database, return a list of
-  # database
-  if (is.null(database)) {
-    database <- AthenaDatabase(connection)
-    if (length(database) > 1) {
+  # if no catalog was supplied but this database has catalogs, return a list of
+  # catalogs
+  if (is.null(catalog)) {
+    catalogs <- list_catalogs(connection@ptr$Athena)
+    if (length(catalogs) > 0) {
       return(
         data.frame(
-          name = database,
-          type = rep("database", times = length(database)),
+          name = catalogs,
+          type = rep("catalog", times = length(catalogs)),
           stringsAsFactors = FALSE
         ))
     }
   }
   
-  objs <- AthenaTableTypes(connection, database= database, name = name)
+  # if no schema was supplied but this catalog has schema, return a list of
+  # schema
+  if (is.null(schema)) {
+    schema <- AthenaDatabase(connection, catalog)
+    if (length(schema) > 0) {
+      return(
+        data.frame(
+          name = schema,
+          type = rep("schema", times = length(schema)),
+          stringsAsFactors = FALSE
+        ))
+    }
+  }
+  
+  objs <- AthenaTableTypes(connection, catalog = catalog, schema = schema, name = name)
   # just return a list of the objects and their types, possibly filtered by the
   # options above
   data.frame(
@@ -141,13 +162,22 @@ validateObjectName <- function(table, view) {
 
 AthenaListColumns <- function(connection, ...) UseMethod("AthenaListColumns")
 
-AthenaListColumns.default <- function(connection, table = NULL, view = NULL, database = NULL, ...) {
+AthenaListColumns.AthenaConnection <- function(connection,
+                                               table = NULL,
+                                               view = NULL,
+                                               catalog = NULL,
+                                               schema = NULL,
+                                               ...) {
   if (dbIsValid(connection)) {
-    glue <- connection@ptr$glue
+    athena <- connection@ptr$Athena
     
-    output <- glue$get_table(DatabaseName = database, Name = table %||% view)$Table
+    output <- athena$get_table_metadata(
+      CatalogName = catalog,
+      DatabaseName = schema,
+      TableName = table %||% view
+    )$TableMetadata
     
-    col_names <- sapply(output$StorageDescriptor$Columns, ColMeta)
+    col_names <- sapply(output$Columns, ColMeta)
     partition <- unlist(sapply(output$PartitionKeys, ColMeta))
 
     tbl_meta <- c(col_names, partition)
@@ -161,25 +191,29 @@ AthenaListColumns.default <- function(connection, table = NULL, view = NULL, dat
   }
 }
 
-AthenaTableTypes <- function(connection, database = NULL, name = NULL, ...) {
+AthenaTableTypes <- function(connection, catalog = NULL, schema = NULL, name = NULL, ...) {
   con_error_msg(connection, "Connection already closed.")
-  glue <- connection@ptr$glue
-  if(is.null(database)) database <- unlist(get_databases(glue))
+  athena <- connection@ptr$Athena
+  if(is.null(schema)) schema <- unlist(lapply(catalog, function(ct) list_schemas(athena, ct)))
   if(is.null(name)){
-    tryCatch({output <- lapply(database, function(i) get_table_list(glue = glue, schema = i))},
+    tryCatch({output <- lapply(schema, function(i) list_tables(athena, catalog, schema = i))},
              error = function(cond) NULL)
     tbl_meta <- sapply(unlist(output, recursive = F), function(x) TblMeta(x))}
   else{
-    output <- glue$get_table(DatabaseName = database, Name = name)$Table
+    output <- athena$get_table_metadata(
+      CatalogName = catalog,
+      DatabaseName = schema,
+      TableName = name
+    )$TableMetadata
     tbl_meta <- output$TableType
     names(tbl_meta) <- output$Name}
   return(tbl_meta)
 }
 
-AthenaDatabase <- function(connection, ...) {
+AthenaDatabase <- function(connection, catalog, ...) {
   con_error_msg(connection, "Connection already closed.")
-  glue <- connection@ptr$glue
-  return(unlist(get_databases(glue)))
+  athena <- connection@ptr$Athena
+  return(unlist(list_schemas(athena, catalog)))
 }
 
 # Preview the data in an object.
@@ -197,15 +231,14 @@ AthenaDatabase <- function(connection, ...) {
 
 AthenaPreviewObject <- function(connection, rowLimit, ...) UseMethod("AthenaPreviewObject")
 
-AthenaPreviewObject <- 
-  function(connection, rowLimit, table = NULL, 
-           view = NULL, database = NULL, ...) {
+AthenaPreviewObject.AthenaConnection <- function(connection, rowLimit, table = NULL, 
+                                                 view = NULL, catalog = NULL, schema = NULL, ...) {
     # extract object name from arguments
     name <- validateObjectName(table, view)
     
-    # prepend database if specified
-    if (!is.null(database)) {
-      name <- paste(dbQuoteIdentifier(connection, database),
+    # prepend schema if specified
+    if (!is.null(schema)) {
+      name <- paste(dbQuoteIdentifier(connection, schema),
                     dbQuoteIdentifier(connection, name), sep = ".")
     }
     
@@ -345,10 +378,11 @@ on_connection_opened <- function(connection) {
   
   # let observer know that connection has opened
   observer$connectionOpened(
+    type = "Athena",
+    
     # name displayed in connection pane
     displayName = computeDisplayName(connection),
     
-    type = "Athena",
     # host key
     host = computeHostName(connection),
     
@@ -394,9 +428,11 @@ on_connection_opened <- function(connection) {
 TblMeta <- function(x) {
   tbl_type <- x$TableType %||% ""
   names(tbl_type) <- x$Name
-  tbl_type}
+  tbl_type
+}
 
 ColMeta <- function(x){
   col_type <- x$Type %||% ""
   names(col_type) <- x$Name
-  col_type}
+  col_type
+}

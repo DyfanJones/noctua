@@ -326,18 +326,17 @@ db_explain.AthenaConnection <- function(con, sql, ...){
 # NOTE: dbplyr v2 integration has to use this in dbGetQuery
 athena_query_fields_ident <- function(con, sql){
   if (str_count(sql, "\\.") < 2) {
-    if (grepl("\\.", sql)) {
-      schema_parts <- gsub('"', "", strsplit(sql, "\\.")[[1]])
-    } else {
-      schema_parts <- c(con@info$dbms.name, gsub('"', "", sql))
-    }
+    ll <- db_detect(con, gsub('"', "", sql))
+    
     # If dbplyr schema, get the fields from Glue
     tryCatch(
-      output <- con@ptr$glue$get_table(
-        DatabaseName = schema_parts[1],
-        Name = schema_parts[2])$Table
+      output <- con@ptr$Athena$get_table_metadata(
+        CatalogName = ll[["db.catalog"]],
+        DatabaseName = ll[["dbms.name"]],
+        TableName = ll[["table"]]
+      )$TableMetadata
     )
-    col_names = vapply(output$StorageDescriptor$Columns, function(y) y$Name, FUN.VALUE = character(1))
+    col_names = vapply(output$Columns, function(y) y$Name, FUN.VALUE = character(1))
     partitions = vapply(output$PartitionKeys,function(y) y$Name, FUN.VALUE = character(1))
     
     return(c(col_names, partitions))

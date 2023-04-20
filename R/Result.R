@@ -33,7 +33,7 @@ AthenaResult <- function(conn,
       response[["QueryExecutionId"]] <- conn@ptr$Athena$start_query_execution(
         ClientRequestToken = uuid::UUIDgenerate(),
         QueryString = statement,
-        QueryExecutionContext = list(Database = conn@info$dbms.name),
+        QueryExecutionContext = list(Database = conn@info$dbms.name, Catalog = conn@info$db.catalog),
         ResultConfiguration = ResultConfiguration(conn),
         WorkGroup = conn@info$work_group
       )$QueryExecutionId
