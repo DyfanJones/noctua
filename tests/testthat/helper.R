@@ -101,7 +101,7 @@ athena_test_req2 <-
 athena_test_req3 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 athena_test_req4 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 
-show_ddl <- SQL(paste0('CREATE EXTERNAL TABLE `default.test_df`(\n  `w` timestamp, \n  `x` int, \n  `y` string, \n  `z` boolean)\nPARTITIONED BY ( \n  `timestamp` string)\nROW FORMAT DELIMITED \n  FIELDS TERMINATED BY \'\\t\' \n  LINES TERMINATED BY \'\\n\' \nSTORED AS INPUTFORMAT \n  \'org.apache.hadoop.mapred.TextInputFormat\' \nOUTPUTFORMAT \n  \'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat\'\nLOCATION\n  \'' ,Sys.getenv("noctua_s3_tbl"), 'test_df/default/\'\nTBLPROPERTIES (\n  \'skip.header.line.count\'=\'1\')'))
+show_ddl <- SQL(paste0('CREATE EXTERNAL TABLE `default.test_df`(\n  `w` timestamp, \n  `x` int, \n  `y` string, \n  `z` boolean)\nPARTITIONED BY ( \n  `timestamp` string)\nROW FORMAT DELIMITED \n  FIELDS TERMINATED BY \'\\t\' \n  LINES TERMINATED BY \'\\n\' \nSTORED AS INPUTFORMAT \n  \'org.apache.hadoop.mapred.TextInputFormat\' \nOUTPUTFORMAT \n  \'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat\'\nLOCATION\n  \'' ,Sys.getenv("noctua_s3_tbl"), 'test_df/default\'\nTBLPROPERTIES (\n  \'skip.header.line.count\'=\'1\')'))
 
 expected_stat_output = c(
   "EngineExecutionTimeInMillis",
