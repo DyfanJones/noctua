@@ -1,10 +1,3 @@
-
-test_that("test readr check", {
-  skip_if_no_env()
-  
-  expect_null(noctua:::readr_check())
-})
-
 test_that("test if dbplyr major and minor versions are collected correctly", {
   skip_if_no_env()
   skip_if_package_not_avialable("dbplyr")
