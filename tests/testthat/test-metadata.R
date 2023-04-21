@@ -13,6 +13,7 @@ df_col_info <- data.frame(
 con_info = c(
   "profile_name",
   "s3_staging",
+  "db.catalog",
   "dbms.name",
   "work_group",
   "poll_interval",
@@ -42,8 +43,8 @@ test_that("Returning meta data",{
   column_info1 = dbColumnInfo(res1)
   column_info2 = dbListFields(con, "test_df")
   con_info_exp = names(dbGetInfo(con))
-  list_tbl1 = any(grepl("test_df", dbListTables(con, "default")))
-  list_tbl2 = nrow(dbGetTables(con, "default")[TableName == "test_df"]) == 1
+  list_tbl1 = any(grepl("test_df", dbListTables(con, schema="default")))
+  list_tbl2 = nrow(dbGetTables(con, schema="default")[TableName == "test_df"]) == 1
   list_tbl3 = nrow(dbGetTables(con)[Schema == "default" & TableName == "test_df"]) == 1
   list_tbl4 = any(grepl("test_df", dbListTables(con)))
   partition1 = grepl("timestamp", dbGetPartition(con, "test_df")[[1]])
@@ -58,6 +59,7 @@ test_that("Returning meta data",{
   
   name1 <- db_detect(con, "table1")
   name2 <- db_detect(con, "mydatabase.table1")
+  name3 <- db_detect(con, "mycatalog.mydatabase.table1")
 
   expect_equal(dbGetStatement(res2), "select * from test_df")
   
@@ -88,8 +90,9 @@ test_that("Returning meta data",{
       "Statistics", "Status", "UnloadDir", "WorkGroup"))
   expect_true(is.list(res_stat))
   expect_error(con_error_msg(res1, "dummy message"), "dummy message")
-  expect_equal(name1, list("dbms.name" = "default", "table" = "table1"))
-  expect_equal(name2, list("dbms.name" = "mydatabase", "table" = "table1"))
+  expect_equal(name1, list("db.catalog" = "AwsDataCatalog", "dbms.name" = "default", "table" = "table1"))
+  expect_equal(name2, list("db.catalog" = "AwsDataCatalog", "dbms.name" = "mydatabase", "table" = "table1"))
+  expect_equal(name3, list("db.catalog" = "mycatalog", "dbms.name" = "mydatabase", "table" = "table1"))
 })
 
 test_that("test connection when timezone is NULL", {
@@ -115,13 +118,11 @@ test_that("test endpoints", {
     
     endpoint_override = list(
       athena = "https://athena-fips.us-east-2.amazonaws.com/",
-      s3 = "https://s3-fips.us-east-2.amazonaws.com/",
-      glue = "https://glue-fips.us-east-2.amazonaws.com/"
+      s3 = "https://s3-fips.us-east-2.amazonaws.com/"
     )
   )
   
   expect_equal(as.character(con1@ptr$Athena$.internal$config$endpoint), "https://athena.eu-west-2.amazonaws.com/")
   expect_equal(as.character(con2@ptr$Athena$.internal$config$endpoint), "https://athena-fips.us-east-2.amazonaws.com/")
   expect_equal(as.character(con2@ptr$S3$.internal$config$endpoint), "https://s3-fips.us-east-2.amazonaws.com/")
-  expect_equal(as.character(con2@ptr$glue$.internal$config$endpoint), "https://glue-fips.us-east-2.amazonaws.com/")
 })
