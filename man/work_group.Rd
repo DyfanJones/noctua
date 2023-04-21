@@ -45,7 +45,7 @@ update_work_group(
 \item{work_group}{The Athena workgroup name.}
 
 \item{enforce_work_group_config}{If set to \code{TRUE}, the settings for the workgroup override client-side settings.
-If set to \code{FALSE}, client-side settings are used. For more information, see 
+If set to \code{FALSE}, client-side settings are used. For more information, see
 \href{https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html}{Workgroup Settings Override Client-Side Settings}.}
 
 \item{publish_cloud_watch_metrics}{Indicates that the Amazon CloudWatch metrics are enabled for the workgroup.}
@@ -57,14 +57,14 @@ If set to \code{FALSE}, client-side settings are used. For more information, see
 \item{tags}{A tag that you can add to a resource. A tag is a label that you assign to an AWS Athena resource (a workgroup).
 Each tag consists of a key and an optional value, both of which you define. Tags enable you to categorize workgroups in Athena, for example,
 by purpose, owner, or environment. Use a consistent set of tag keys to make it easier to search and filter workgroups in your account.
-The maximum tag key length is 128 Unicode characters in UTF-8. The maximum tag value length is 256 Unicode characters in UTF-8. 
+The maximum tag key length is 128 Unicode characters in UTF-8. The maximum tag value length is 256 Unicode characters in UTF-8.
 You can use letters and numbers representable in UTF-8, and the following characters: \code{"+ - = . _ : / @"}. Tag keys and values are case-sensitive.
 Tag keys must be unique per resource. Please use the helper function \code{tag_options()} to create tags for work group, if no tags are required please put \code{NULL} for this parameter.}
 
-\item{key}{A tag key. The tag key length is from 1 to 128 Unicode characters in UTF-8. You can use letters and numbers representable in UTF-8, and the following characters: \code{"+ - = . _ : / @"}. 
+\item{key}{A tag key. The tag key length is from 1 to 128 Unicode characters in UTF-8. You can use letters and numbers representable in UTF-8, and the following characters: \code{"+ - = . _ : / @"}.
 Tag keys are case-sensitive and must be unique per resource.}
 
-\item{value}{A tag value. The tag value length is from 0 to 256 Unicode characters in UTF-8. You can use letters and numbers representable in UTF-8, and the following characters: \code{"+ - = . _ : / @"}. 
+\item{value}{A tag value. The tag value length is from 0 to 256 Unicode characters in UTF-8. You can use letters and numbers representable in UTF-8, and the following characters: \code{"+ - = . _ : / @"}.
 Tag values are case-sensitive.}
 
 \item{recursive_delete_option}{The option to delete the workgroup and its contents even if the workgroup contains any named queries}
@@ -88,28 +88,28 @@ For more information, see \href{https://docs.aws.amazon.com/athena/latest/ug/wor
 \description{
 Lower level API access, allows user to create and delete Athena Work Groups.
 \describe{
-\item{create_work_group}{Creates a workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/create_work_group.html}{link}). 
+\item{create_work_group}{Creates a workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/create_work_group.html}{link}).
                          The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from \code{\link{dbConnect}}}
 \item{tag_options}{Helper function to create tag options for function \code{create_work_group()}}
-\item{delete_work_group}{Deletes the workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/delete_work_group.html}{link}). 
+\item{delete_work_group}{Deletes the workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/delete_work_group.html}{link}).
                          The primary workgroup cannot be deleted.}
 \item{list_work_groups}{Lists available workgroups for the account (\href{https://paws-r.github.io/docs/athena/list_work_groups.html}{link}).}
 \item{get_work_group}{Returns information about the workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/get_work_group.html}{link}).}
-\item{update_work_group}{Updates the workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/update_work_group.html}{link}). 
+\item{update_work_group}{Updates the workgroup with the specified name (\href{https://paws-r.github.io/docs/athena/update_work_group.html}{link}).
                          The workgroup's name cannot be changed. The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from \code{\link{dbConnect}}}
 }
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(noctua)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 # List current work group available
@@ -117,10 +117,11 @@ list_work_groups(con)
 
 # Create a new work group
 wg <- create_work_group(con,
-                  "demo_work_group",
-                   description = "This is a demo work group",
-                   tags = tag_options(key= "demo_work_group", value = "demo_01"))
- 
+  "demo_work_group",
+  description = "This is a demo work group",
+  tags = tag_options(key = "demo_work_group", value = "demo_01")
+)
+
 # List work groups to see new work group
 list_work_groups(con)
 
@@ -129,11 +130,12 @@ wg <- get_work_group(con, "demo_work_group")
 
 # Update work group
 wg <- update_work_group(con, "demo_work_group",
-                  description = "This is a demo work group update")
+  description = "This is a demo work group update"
+)
 
 
 # get updated meta data from work group
-wg <- get_work_group(con, "demo_work_group") 
+wg <- get_work_group(con, "demo_work_group")
 
 # Delete work group
 delete_work_group(con, "demo_work_group")

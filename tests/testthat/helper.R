@@ -16,7 +16,7 @@ skip_if_package_not_avialable <- function(pkg) {
 # expected athena ddl's
 tbl_ddl <- 
   list(tbl1 = 
-         DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+         DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
@@ -26,7 +26,7 @@ ROW FORMAT DELIMITED
                   "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl2 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
@@ -37,7 +37,7 @@ ROW FORMAT DELIMITED
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\",
 \t\t'compressionType'='gzip');")),
 tbl3 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
@@ -47,7 +47,7 @@ ROW FORMAT DELIMITED
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl4 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
@@ -58,14 +58,14 @@ LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\",
 \t\t'compressionType'='gzip');")), 
 tbl5 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
 STORED AS PARQUET
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n;")),
 tbl6 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
@@ -74,14 +74,14 @@ STORED AS PARQUET
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
 tblproperties (\"parquet.compress\"=\"SNAPPY\");")),
 tbl7 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )
 ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
 LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n")),
 tbl8 = 
-  DBI::SQL(paste0("CREATE EXTERNAL TABLE `default`.`test_df` (
+  DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
   `y` STRING
 )

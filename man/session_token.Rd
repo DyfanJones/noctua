@@ -19,16 +19,16 @@ get_session_token(
 To set profile name, the \href{https://aws.amazon.com/cli/}{AWS Command Line Interface} (AWS CLI) will need to be configured.
 To configure AWS CLI please refer to: \href{https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html}{Configuring the AWS CLI}.}
 
-\item{region_name}{Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for 
+\item{region_name}{Default region when creating new connections. Please refer to \href{https://docs.aws.amazon.com/general/latest/gr/rande.html}{link} for
 AWS region codes (region code example: Region = EU (Ireland)     \code{ region_name = "eu-west-1"})}
 
 \item{serial_number}{The identification number of the MFA device that is associated with the IAM user who is making the GetSessionToken call.
 Specify this value if the IAM user has a policy that requires MFA authentication. The value is either the serial number for a hardware device
 (such as `GAHT12345678`) or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).}
 
-\item{token_code}{The value provided by the MFA device, if MFA is required. If any policy requires the IAM user to submit an MFA code, 
+\item{token_code}{The value provided by the MFA device, if MFA is required. If any policy requires the IAM user to submit an MFA code,
 specify this value. If MFA authentication is required, the user must provide a code when requesting a set of temporary
-security credentials. A user who fails to provide the code receives an "access denied" response when requesting resources 
+security credentials. A user who fails to provide the code receives an "access denied" response when requesting resources
 that require MFA authentication.}
 
 \item{duration_seconds}{The duration, in seconds, that the credentials should remain valid. Acceptable duration for IAM user sessions range
@@ -44,7 +44,7 @@ Returns a set of temporary credentials for an AWS account or IAM user (\href{htt
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 
 library(noctua)
@@ -52,9 +52,10 @@ library(DBI)
 
 # Create Temporary Credentials duration 1 hour
 get_session_token("YOUR_PROFILE_NAME",
-                  serial_number='arn:aws:iam::123456789012:mfa/user',
-                  token_code = "531602",
-                  set_env = TRUE)
+  serial_number = "arn:aws:iam::123456789012:mfa/user",
+  token_code = "531602",
+  set_env = TRUE
+)
 
 # Connect to Athena using temporary credentials
 con <- dbConnect(athena())

@@ -1,3 +1,11 @@
+# noctua 2.6.1.9000
+## Feature:
+* Add catalog support (#194)
+
+## Internals:
+* Remove AWS calls to AWS Glue
+* Remove reader soft dependency
+
 # noctua 2.6.1
 ## Bug Fix:
 * Prevent assuming role from `AWS_ROLE_ARN`. This caused confusing when connecting through web identity ([RAthena # 177](https://github.com/DyfanJones/RAthena/issues/177))

@@ -14,10 +14,16 @@ test_that("Check if Athena list object types is formatted correctly",{
   
   expect_equal(
     output, 
-    list(database = list(
-      contains = list(
-        table = list(contains = "data"),
-        view = list(contains = "data"))
+    list(
+      catalog = list(
+        contains = list(
+          schema = list(
+            contains = list(
+              table = list(contains = "data"),
+              view = list(contains = "data")
+            )
+          )
+        )
       )
     )
   )
@@ -28,8 +34,8 @@ test_that("Check if Athena list object is formatted correctly",{
 
   con <- dbConnect(athena())
   
-  output1 <- noctua:::AthenaListObjects.default(con)
-  output2 <- noctua:::AthenaListObjects.default(con, database = "default")
+  output1 <- noctua:::AthenaListObjects.AthenaConnection(con)
+  output2 <- noctua:::AthenaListObjects.AthenaConnection(con, schema = "default")
   
   expect_true(inherits(output1, "data.frame"))
   expect_equal(names(output1), c("name", "type"))
@@ -60,14 +66,14 @@ test_that("Check if Athena list column formatting",{
 
   con <- dbConnect(athena())
   
-  output1 <- noctua:::AthenaListColumns.default(con, table = "iris", database = "default")
+  output1 <- noctua:::AthenaListColumns.AthenaConnection(con, table = "iris", catalog = "AwsDataCatalog", schema = "default")
   
   dbDisconnect(con)
   
   expect_true(inherits(output1, "data.frame"))
   expect_equal(names(output1), c("name", "type"))
   
-  expect_null(noctua:::AthenaListColumns.default(con, table = "iris", database = "default"))
+  expect_null(noctua:::AthenaListColumns.AthenaConnection(con, table = "iris", catalog = "AwsDataCatalog", schema = "default"))
 })
 
 test_that("Check if Athena list column formatting",{
@@ -76,8 +82,8 @@ test_that("Check if Athena list column formatting",{
   con <- dbConnect(athena())
   
   output1 <- noctua:::AthenaTableTypes(con)
-  output2 <- noctua:::AthenaTableTypes(con, database = "default")
-  output3 <- noctua:::AthenaTableTypes(con, database = "default", name="iris")
+  output2 <- noctua:::AthenaTableTypes(con, schema = "default")
+  output3 <- noctua:::AthenaTableTypes(con, schema = "default", name="iris")
   
   expect_true(inherits(output1, "character"))
   expect_true(inherits(output2, "character"))
@@ -89,7 +95,7 @@ test_that("Check if AthenaDatabase formatting is correct",{
   
   con <- dbConnect(athena())
   
-  output1 <- noctua:::AthenaDatabase(con)
+  output1 <- noctua:::AthenaDatabase(con, "AwsDataCatalog")
 
   expect_true(inherits(output1, "character"))
 })
@@ -99,8 +105,8 @@ test_that("Check if AthenaDatabase formatting is correct",{
   
   con <- dbConnect(athena())
   
-  output1 <- noctua:::AthenaPreviewObject(con, 10, table = "iris")
-  output2 <- noctua:::AthenaPreviewObject(con, 10, table = "iris", database = "default")
+  output1 <- noctua:::AthenaPreviewObject.AthenaConnection(con, 10, table = "iris")
+  output2 <- noctua:::AthenaPreviewObject.AthenaConnection(con, 10, table = "iris", schema = "default")
   
   expect_true(inherits(output1, "data.frame"))
   expect_true(inherits(output2, "data.frame"))
@@ -111,8 +117,8 @@ test_that("Check if AthenaPreviewObject formatting is correct",{
   
   con <- dbConnect(athena())
   
-  output1 <- noctua:::AthenaPreviewObject(con, 10, table = "iris")
-  output2 <- noctua:::AthenaPreviewObject(con, 10, table = "iris", database = "default")
+  output1 <- noctua:::AthenaPreviewObject.AthenaConnection(con, 10, table = "iris")
+  output2 <- noctua:::AthenaPreviewObject.AthenaConnection(con, 10, table = "iris", schema = "default")
   
   expect_true(inherits(output1, "data.frame"))
   expect_true(inherits(output2, "data.frame"))
