@@ -7,13 +7,15 @@
 \usage{
 dbGetTables(conn, ...)
 
-\S4method{dbGetTables}{AthenaConnection}(conn, schema = NULL, ...)
+\S4method{dbGetTables}{AthenaConnection}(conn, catalog = NULL, schema = NULL, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by
 \code{\link[DBI:dbConnect]{dbConnect()}}.}
 
 \item{...}{Other parameters passed on to methods.}
+
+\item{catalog}{Athena catalog, default set to NULL to return all tables from all Athena catalogs}
 
 \item{schema}{Athena schema, default set to NULL to return all tables from all Athena schemas.
 Note: The use of DATABASE and SCHEMA is interchangeable within Athena.}

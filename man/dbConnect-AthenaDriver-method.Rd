@@ -10,6 +10,7 @@
   aws_access_key_id = NULL,
   aws_secret_access_key = NULL,
   aws_session_token = NULL,
+  catalog_name = "AwsDataCatalog",
   schema_name = "default",
   work_group = NULL,
   poll_interval = NULL,
@@ -41,6 +42,8 @@ object (in order to clone an existing connection).}
 \item{aws_secret_access_key}{AWS secret access key}
 
 \item{aws_session_token}{AWS temporary session token}
+
+\item{catalog_name}{The catalog_name to which the connection belongs}
 
 \item{schema_name}{The schema_name to which the connection belongs}
 

@@ -43,16 +43,16 @@ A data frame: field types are generated using
 
 \item{partition}{Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}}
 
-\item{s3.location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/"). 
+\item{s3.location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/").
 By default s3.location is set s3 staging directory from \code{\linkS4class{AthenaConnection}} object.}
 
 \item{file.type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
-of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to 
-Athena due to the separating value ",". This would cause issues with AWS Athena. 
+of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
+Athena due to the separating value ",". This would cause issues with AWS Athena.
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet" 
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.}
 
 \item{...}{Other arguments used by individual methods.}
@@ -65,28 +65,30 @@ Creates an interface to compose \code{CREATE EXTERNAL TABLE}.
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documnentation
 
 library(DBI)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
-                 
+
 # Create DDL for iris data.frame
 sqlCreateTable(con, "iris", iris, s3.location = "s3://path/to/athena/table")
 
 # Create DDL for iris data.frame with partition
-sqlCreateTable(con, "iris", iris, 
-               partition = "timestamp",
-               s3.location = "s3://path/to/athena/table")
-               
+sqlCreateTable(con, "iris", iris,
+  partition = "timestamp",
+  s3.location = "s3://path/to/athena/table"
+)
+
 # Create DDL for iris data.frame with partition and file.type parquet
-sqlCreateTable(con, "iris", iris, 
-               partition = "timestamp",
-               s3.location = "s3://path/to/athena/table",
-               file.type = "parquet")
+sqlCreateTable(con, "iris", iris,
+  partition = "timestamp",
+  s3.location = "s3://path/to/athena/table",
+  file.type = "parquet"
+)
 
 # Disconnect from Athena
 dbDisconnect(con)
