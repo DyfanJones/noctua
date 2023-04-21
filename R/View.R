@@ -194,12 +194,31 @@ AthenaListColumns.AthenaConnection <- function(connection,
 AthenaTableTypes <- function(connection, catalog = NULL, schema = NULL, name = NULL, ...) {
   con_error_msg(connection, "Connection already closed.")
   athena <- connection@ptr$Athena
-  if(is.null(schema)) schema <- unlist(lapply(catalog, function(ct) list_schemas(athena, ct)))
-  if(is.null(name)){
-    tryCatch({output <- lapply(schema, function(i) list_tables(athena, catalog, schema = i))},
-             error = function(cond) NULL)
-    tbl_meta <- sapply(unlist(output, recursive = F), function(x) TblMeta(x))}
-  else{
+  
+  if (is.null(catalog)) {
+    catalog <- list_catalogs(athena)
+  }
+  
+  if (is.null(schema)) {
+    schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
+  } else {
+    names(schema) <- if(length(catalog) == 1) catalog else connection@info$db.catalog
+  }
+  
+  if (is.null(name)) {
+    output <- tryCatch(
+      {
+        unlist(
+          lapply(names(schema), function(n) {
+            lapply(schema[[n]], function(s) list_tables(athena, n, s))
+          }),
+          recursive = F
+        )
+      },
+      error = function(cond) list(list())
+    )
+    tbl_meta <- sapply(unlist(output, recursive = F), function(x) TblMeta(x))
+  } else {
     output <- athena$get_table_metadata(
       CatalogName = catalog,
       DatabaseName = schema,
