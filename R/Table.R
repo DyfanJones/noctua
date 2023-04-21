@@ -508,7 +508,7 @@ setMethod(
     s3_location <- Filter(Negate(is.null), s3_location)
     s3_location <- sprintf("'s3://%s/'", paste(s3_location, collapse = "/"))
 
-    table <- paste0(quote_identifier(con, c(ll[["dbms.name"]], ll[["table"]])), collapse = ".")
+    table <- paste0(quote_identifier(con, c(ll[["db.catalog"]], ll[["dbms.name"]], ll[["table"]])), collapse = ".")
 
     SQL(paste0(
       "CREATE EXTERNAL TABLE ", table, " (\n",
@@ -651,7 +651,7 @@ repair_table <- function(con, name, partition = NULL, s3.location = NULL, append
   ll <- db_detect(con, name)
 
   # format table name for special characters
-  table <- paste0(quote_identifier(con, c(ll[["dbms.name"]], ll[["table"]])), collapse = ".")
+  table <- paste0(quote_identifier(con, c(ll[["db.catalog"]], ll[["dbms.name"]], ll[["table"]])), collapse = ".")
 
   if (is.null(partition)) {
     query <- SQL(paste0("MSCK REPAIR TABLE ", table))
