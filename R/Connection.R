@@ -452,6 +452,7 @@ setMethod(
 #' Returns the unquoted names of Athena tables accessible through this connection.
 #' @name dbListTables
 #' @inheritParams DBI::dbListTables
+#' @param catalog Athena catalog, default set to NULL to return all tables from all Athena catalogs
 #' @param schema Athena schema, default set to NULL to return all tables from all Athena schemas.
 #'               Note: The use of DATABASE and SCHEMA is interchangeable within Athena.
 #' @aliases dbListTables
@@ -490,17 +491,19 @@ setMethod(
 
     if (is.null(schema)) {
       schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
+    } else {
+      names(schema) <- if(length(catalog) == 1) catalog else conn@info$db.catalog
     }
-    tryCatch(
+    output <- tryCatch(
       {
-        output <- unlist(
+        unlist(
           lapply(names(schema), function(n) {
-            lapply(schema[[n]], function(s) list_tables(client, n, s))
+            lapply(schema[[n]], function(s) list_tables(athena, n, s))
           }),
           recursive = F
         )
       },
-      error = function(cond) NULL
+      error = function(cond) list(list())
     )
     return(
       vapply(
@@ -517,6 +520,7 @@ setMethod(
 #' Method to get Athena schema, tables and table types return as a data.frame
 #' @name dbGetTables
 #' @inheritParams DBI::dbListTables
+#' @param catalog Athena catalog, default set to NULL to return all tables from all Athena catalogs
 #' @param schema Athena schema, default set to NULL to return all tables from all Athena schemas.
 #'               Note: The use of DATABASE and SCHEMA is interchangeable within Athena.
 #' @aliases dbGetTables
@@ -559,7 +563,7 @@ setMethod(
     if (is.null(schema)) {
       schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
     } else {
-      names(schema) <- conn@info$db.catalog
+      names(schema) <- if(length(catalog) == 1) catalog else conn@info$db.catalog
     }
     output <- tryCatch({
       lapply(names(schema), function(n) {
@@ -579,38 +583,6 @@ setMethod(
     return(output)
   }
 )
-
-setMethod(
-  "dbListTables", "AthenaConnection",
-  function(conn, catalog = NULL, schema = NULL, ...) {
-    con_error_msg(conn, msg = "Connection already closed.")
-    athena <- conn@ptr$Athena
-
-    if (is.null(catalog)) {
-      catalog <- list_catalogs(athena)
-    }
-
-    if (is.null(schema)) {
-      schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
-    }
-    tryCatch(
-      {
-        output <- unlist(lapply(names(schema), function(n) lapply(schema[[n]], function(s) list_tables(client, n, s))), recursive = F)
-      },
-      error = function(cond) NULL
-    )
-    return(
-      vapply(
-        unlist(output, recursive = FALSE),
-        function(y) y$Name,
-        FUN.VALUE = character(1)
-      )
-    )
-  }
-)
-
-
-
 
 #' List Field names of Athena table
 #'
@@ -1094,7 +1066,7 @@ setMethod(
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
-    SQL(paste0(dbGetQuery(conn, paste0("SHOW CREATE TABLE ", ll[["dbms.name"]], ".", ll[["table"]]), unload = FALSE)[[1]], collapse = "\n"))
+    SQL(paste0(dbGetQuery(conn, sprintf("SHOW CREATE TABLE `%s`", paste0(ll, collapse = "`.`")), unload = FALSE)[[1]], collapse = "\n"))
   }
 )
 
