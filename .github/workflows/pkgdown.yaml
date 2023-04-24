@@ -38,6 +38,11 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b regen_noctua_website
+          
+      - name: Regenerate Website
+        run: |
+          pkgdown::build_site()
+        shell: Rscript {0}
         
       - name: Create Commit Message
         run: |
