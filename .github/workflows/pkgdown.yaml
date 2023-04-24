@@ -28,16 +28,16 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
           
-      - name: Install Website Dependencies
-        run: |
-          install.packages(c('pkgdown', 'roxygen2'))
-        shell: Rscript {0}
-
       - name: Create Branch
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b regen_noctua_website
+          
+      - name: Install Website Dependencies
+        run: |
+          install.packages(c('pkgdown', 'roxygen2'))
+        shell: Rscript {0}
           
       - name: Regenerate Website
         run: |
