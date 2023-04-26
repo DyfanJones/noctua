@@ -445,13 +445,13 @@ on_connection_opened <- function(connection) {
 # nocov end 
 
 TblMeta <- function(x) {
-  tbl_type <- x$TableType %||% ""
+  tbl_type <- if(length(x$TableType)) x$TableType else ""
   names(tbl_type) <- x$Name
   tbl_type
 }
 
 ColMeta <- function(x){
-  col_type <- x$Type %||% ""
+  col_type <- if(length(x$Type)) x$Type else ""
   names(col_type) <- x$Name
   col_type
 }
