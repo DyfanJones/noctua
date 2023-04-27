@@ -78,8 +78,8 @@ AthenaConnection <- function(aws_access_key_id = NULL,
       ".internal", "start_query_execution", "get_query_execution",
       "stop_query_execution", "get_query_results", "get_work_group",
       "list_work_groups", "list_data_catalogs", "list_databases",
-      "list_table_metadata", "get_table_metadata", "update_work_group",
-      "create_work_group", "delete_work_group"
+      "get_table_metadata", "update_work_group", "create_work_group",
+      "delete_work_group"
     )],
     S3 = S3[c(
       ".internal", "put_object", "get_object", "download_file",
@@ -485,32 +485,29 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     athena <- conn@ptr$Athena
 
-    if (is.null(catalog)) {
-      catalog <- list_catalogs(athena)
-    }
-
-    if (is.null(schema)) {
-      schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
-    } else {
-      names(schema) <- if(length(catalog) == 1) catalog else conn@info$db.catalog
-    }
-    output <- tryCatch(
-      {
-        unlist(
-          lapply(names(schema), function(n) {
-            lapply(schema[[n]], function(s) list_tables(athena, n, s))
-          }),
-          recursive = F
-        )
-      },
-      error = function(cond) list(list())
-    )
-    return(
-      vapply(
-        unlist(output, recursive = FALSE),
-        function(y) y$Name,
-        FUN.VALUE = character(1)
+    cat_filter <- ""
+    db_filter <- ""
+    if (!is.null(catalog)) {
+      cat_filter <- sprintf(
+        "and lower(table_catalog) in ('%s')",
+        paste(tolower(catalog), collapse = "', '")
       )
+    }
+    if (!is.null(schema)) {
+      db_filter <- sprintf(
+        "and lower(table_schema) in ('%s')",
+        paste(tolower(schema), collapse = "', '")
+      )
+    }
+    
+    query <- "select
+      table_name
+    from information_schema.tables
+    where table_schema != 'information_schema' %s %s
+    order by table_catalog, table_schema
+    "
+    output <- suppressMessages(
+      dbGetQuery(conn, sprintf(query, cat_filter, db_filter))[["table_name"]]
     )
   }
 )
@@ -555,31 +552,34 @@ setMethod(
   "dbGetTables", "AthenaConnection",
   function(conn, catalog = NULL, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    athena <- conn@ptr$Athena
-    if (is.null(catalog)) {
-      catalog <- list_catalogs(athena)
+    
+    cat_filter <- ""
+    db_filter <- ""
+    if (!is.null(catalog)) {
+      cat_filter <- sprintf(
+        "and lower(table_catalog) in ('%s')",
+        paste(tolower(catalog), collapse = "', '")
+      )
     }
-
-    if (is.null(schema)) {
-      schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
-    } else {
-      names(schema) <- if(length(catalog) == 1) catalog else conn@info$db.catalog
+    if (!is.null(schema)) {
+      db_filter <- sprintf(
+        "and lower(table_schema) in ('%s')",
+        paste(tolower(schema), collapse = "', '")
+      )
     }
-    output <- tryCatch({
-      lapply(names(schema), function(n) {
-        rbindlist(unlist(lapply(schema[[n]], function(s) list_tables(athena, n, s)), recursive = F))
-      })
-      },
-      error = function(cond) {
-        list(list(
-          Catalog = character(),
-          Schema =  character(),
-          TableName = character(),
-          TableType = character()
-      ))
-    })
-    output <- rbindlist(output, use.names = TRUE)
-    setnames(output, new = c("Catalog", "Schema", "TableName", "TableType"))
+    
+    query <- "select
+      table_catalog as Catalog,
+      table_schema as Schema,
+      table_name as TableName,
+      table_type as TableType
+    from information_schema.tables
+    where table_schema != 'information_schema' %s %s
+    order by table_catalog, table_schema
+    "
+    output <- suppressMessages(
+      dbGetQuery(conn, sprintf(query, cat_filter, db_filter))
+    )
     return(output)
   }
 )
@@ -998,7 +998,12 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(.format))
     ll <- db_detect(conn, name)
-    dt <- dbGetQuery(conn, paste0("SHOW PARTITIONS ", ll[["dbms.name"]], ".", ll[["table"]]))
+    dt <- dbGetQuery(
+      conn,
+      sprintf(
+        "SHOW PARTITIONS %s", paste(ll, collapse = ".")
+      )
+    )
 
     if (.format) {
       # ensure returning format is data.table
@@ -1162,16 +1167,16 @@ setMethod(
     ins <- if (inherits(obj, "SQL")) {
       obj
     } else {
-      paste0("SELECT * FROM ", paste0('"', unlist(strsplit(obj, "\\.")), '"', collapse = "."))
+      sprintf('SELECT * FROM "%s"', paste(db_detect(conn, obj), collapse='"."'))
     }
 
     tt_sql <- paste0(
-      "CREATE TABLE ", paste0('"', unlist(strsplit(name, "\\.")), '"', collapse = "."),
-      " ", ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
+      'CREATE TABLE "', paste(db_detect(conn, name), collapse='"."'),
+      '" ', ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
       ins, "\nWITH", with_data, "DATA", ";"
     )
     res <- dbExecute(conn, tt_sql, unload = FALSE)
-    dbClearResult(res)
+    on.exit(dbClearResult(res))
     return(invisible(TRUE))
   }
 )

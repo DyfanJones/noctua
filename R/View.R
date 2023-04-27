@@ -41,7 +41,7 @@ AthenaListObjectTypes.default <- function(connection) {
   obj_types <- list(table = list(contains = "data"))
   
   # see if we have views too
-  table_types <- AthenaTableTypes(connection, connection@info[["db.catalog"]])
+  table_types <- AthenaTableTypes(connection)
   if (any(grepl("VIEW", table_types))) {
     obj_types <- c(obj_types, list(view = list(contains = "data")))
   }
@@ -113,7 +113,7 @@ AthenaListObjects.AthenaConnection <- function(connection, catalog = NULL, schem
   # options above
   data.frame(
     name = names(objs),
-    type = gsub(".*_", "", unname(tolower(objs))),
+    type = gsub(".* ", "", unname(tolower(objs))),
     stringsAsFactors = FALSE
   )
 }
@@ -200,24 +200,32 @@ AthenaTableTypes <- function(connection, catalog = NULL, schema = NULL, name = N
   }
   
   if (is.null(schema)) {
-    schema <- sapply(catalog, function(ct) list_schemas(athena, ct), simplify = FALSE)
-  } else {
-    names(schema) <- if(length(catalog) == 1) catalog else connection@info$db.catalog
+    schema <- unlist(lapply(catalog, function(ct) list_schemas(athena, ct)))
   }
   
   if (is.null(name)) {
-    output <- tryCatch(
-      {
-        unlist(
-          lapply(names(schema), function(n) {
-            lapply(schema[[n]], function(s) list_tables(athena, n, s))
-          }),
-          recursive = F
-        )
-      },
-      error = function(cond) list(list())
+    cat_filter <- ""
+    db_filter <- ""
+    cat_filter <- sprintf(
+      "and lower(table_catalog) in ('%s')",
+      paste(tolower(catalog), collapse = "', '")
     )
-    tbl_meta <- sapply(unlist(output, recursive = F), function(x) TblMeta(x))
+    db_filter <- sprintf(
+      "and lower(table_schema) in ('%s')",
+      paste(tolower(schema), collapse = "', '")
+    )
+    query <- "select
+      table_name as TableName,
+      table_type as TableType
+    from information_schema.tables
+    where table_schema != 'information_schema' %s %s
+    order by table_catalog, table_schema
+    "
+    output <- suppressMessages(
+      dbGetQuery(connection, sprintf(query, cat_filter, db_filter))
+    )
+    tbl_meta <- output[["TableType"]]
+    names(tbl_meta) <- output[["TableName"]]
   } else {
     output <- athena$get_table_metadata(
       CatalogName = catalog,
@@ -225,7 +233,8 @@ AthenaTableTypes <- function(connection, catalog = NULL, schema = NULL, name = N
       TableName = name
     )$TableMetadata
     tbl_meta <- output$TableType
-    names(tbl_meta) <- output$Name}
+    names(tbl_meta) <- output$Name
+  }
   return(tbl_meta)
 }
 
