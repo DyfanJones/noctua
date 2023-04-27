@@ -483,8 +483,6 @@ setMethod(
   "dbListTables", "AthenaConnection",
   function(conn, catalog = NULL, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    athena <- conn@ptr$Athena
-
     cat_filter <- ""
     db_filter <- ""
     if (!is.null(catalog)) {
