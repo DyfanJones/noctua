@@ -25,10 +25,7 @@
     ))
 
     # process returned list
-    output <- lapply(
-      result[["ResultSet"]][["Rows"]],
-      function(x) (sapply(x$Data, function(x) if (length(x) == 0) NA else x))
-    )
+    output <- do.call(rbind, result[["ResultSet"]][["Rows"]])
     suppressWarnings(staging_dt <- rbindlist(output, use.names = FALSE))
 
     # remove colnames from first row
@@ -59,8 +56,8 @@
   res@info[["NextToken"]] <- result[["NextToken"]]
 
   # replace names with actual names
-  Names <- sapply(result_class, function(x) x[["Name"]])
-  colnames(dt) <- Names
+  Names <- do.call(rbind, result_class)[,"Name"]
+  colnames(dt) <- as.character(Names)
 
   # convert data.table to tibble if using vroom as backend
   if (inherits(athena_option_env[["file_parser"]], "athena_vroom")) {
