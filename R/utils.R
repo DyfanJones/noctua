@@ -378,11 +378,11 @@ list_catalogs <- function(client) {
   i <- 1
   while (!identical(token, character(0))) {
     response <- client$list_data_catalogs(NextToken = token)
-    data_list[[i]] <- vapply(response[["DataCatalogsSummary"]], function(x) x[["CatalogName"]], FUN.VALUE = character(1))
+    data_list[[i]] <- response[["DataCatalogsSummary"]]
     token <- response[["NextToken"]]
     i <- i + 1
   }
-  return(unlist(data_list, recursive = FALSE, use.names = FALSE))
+  return(as.character(do.call(rbind, unlist(data_list, recursive = F))[, "CatalogName"]))
 }
 
 # list database
@@ -392,37 +392,11 @@ list_schemas <- function(client, catalog) {
   i <- 1
   while (!identical(token, character(0))) {
     response <- client$list_databases(CatalogName = catalog, NextToken = token)
-    data_list[[i]] <- vapply(response[["DatabaseList"]], function(x) x[["Name"]], FUN.VALUE = character(1))
+    data_list[[i]] <- response[["DatabaseList"]]
     token <- response[["NextToken"]]
     i <- i + 1
   }
-  return(unlist(data_list, recursive = FALSE, use.names = FALSE))
-}
-
-# get list of tables from glue catalog
-list_tables <- function(client, catalog, schema) {
-  token <- NULL
-  table_list <- list()
-  i <- 1
-  while (!identical(token, character(0))) {
-    retry_api_call(response <- client$list_table_metadata(
-      CatalogName = catalog, DatabaseName = schema, NextToken = token
-    ))
-    table_list[[i]] <- lapply(
-      response[["TableMetadataList"]],
-      function(x) {
-        list(
-          CatalogName = catalog,
-          DatabaseName = schema,
-          Name = x[["Name"]],
-          TableType = x[["TableType"]]
-        )
-      }
-    )
-    token <- response[["NextToken"]]
-    i <- i + 1
-  }
-  return(unlist(table_list, recursive = FALSE, use.names = FALSE))
+  return(as.character(do.call(rbind, unlist(data_list, recursive = F))[, "Name"]))
 }
 
 # wrapper to return connection error when disconnected
