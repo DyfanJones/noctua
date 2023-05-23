@@ -2,6 +2,9 @@
 ## Feature:
 * Add catalog support (#194)
 
+## Bug Fix:
+* Can now write/append an empty data frame (#200, @mgirlich).
+
 ## Internals:
 * Remove AWS calls to AWS Glue
 * Remove reader soft dependency
