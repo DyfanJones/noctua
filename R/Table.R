@@ -279,7 +279,9 @@ Athena_write_table <-
     }
 
     # Repair table
-    repair_table(conn, db_name, partition, s3.location, append)
+    if (nrow(value) > 0) {
+      repair_table(conn, db_name, partition, s3.location, append)
+    }
 
     on.exit({
       lapply(FileLocation, unlink)
@@ -311,7 +313,7 @@ upload_data <- function(conn,
   FileName <- paste(uuid::UUIDgenerate(n = length(x)), FileType, sep = ".")
   s3_key <- paste(s3_key, FileName, sep = "/")
 
-  for (i in 1:length(x)) {
+  for (i in seq_along(x)) {
     obj <- readBin(x[i], "raw", n = file.size(x[i]))
     retry_api_call(conn@ptr$S3$put_object(Body = obj, Bucket = Bucket, Key = s3_key[i]))
   }

@@ -81,3 +81,24 @@ test_that("Test unload athena query data.table",{
   expect_s3_class(df, "data.table")
   expect_equal(df$n, 1)
 })
+
+test_that("Write can handle an empty data frame", {
+  skip_if_no_env()
+  
+  noctua_options()
+  # Test connection is using AWS CLI to set profile_name 
+  con <- dbConnect(athena(),
+                   s3_staging_dir = Sys.getenv("noctua_s3_query"))
+  df <- data.frame(x = integer())
+  
+  if (dbExistsTable(con, "test_df")) {
+    dbRemoveTable(con, "test_df")
+  }
+  
+  # can create a new table
+  dbWriteTable(con, "test_df", df)
+  expect_equal(as.data.frame(dbReadTable(con, "test_df")), df)
+  
+  dbWriteTable(con, "test_df", df, append = TRUE)
+  expect_equal(as.data.frame(dbReadTable(con, "test_df")), df)
+})

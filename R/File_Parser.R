@@ -196,6 +196,9 @@ write_batch <- function(value, split_vec, fun, max.batch, max_row, path, file.ty
 }
 
 dt_split <- function(value, max.batch, file.type, compress){
+  if (nrow(value) == 0) {
+    return(list(SplitVec = NULL, MaxBatch = NULL, MaxRow = NULL))
+  }
   
   if((file.type %in% c("parquet", "json") & is.infinite(max.batch)) || 
      (file.type %in% c("csv", "tsv") & !compress & is.infinite(max.batch))) 

@@ -17,9 +17,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_ATHENA_S3_STAGING_DIR: ${{ secrets.AWS_ATHENA_S3_STAGING_DIR }}
-      noctua_arn: ${{ secrets.noctua_arn }}
-      noctua_s3_query: ${{ secrets.noctua_s3_query }}
-      noctua_s3_tbl: ${{ secrets.noctua_s3_tbl }}
+      noctua_arn: ${{ secrets.NOCTUA_ARN }}
+      noctua_s3_query: ${{ secrets.NOCTUA_S3_QUERY }}
+      noctua_s3_tbl: ${{ secrets.NOCTUA_S3_TBL }}
       ARROW_WITH_SNAPPY: ON
       R_KEEP_PKG_SOURCE: yes
       _R_CHECK_LENGTH_1_CONDITION_: abort,verbose
