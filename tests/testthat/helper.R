@@ -1,9 +1,10 @@
 # helper function to skip test if noctua unit test environment variables not set
 skip_if_no_env <- function(){
-  have_arn <- Sys.getenv("NOCTUA_ARN") != "" 
-  have_query <- is.s3_uri(Sys.getenv("NOCTUA_S3_QUERY"))
-  have_tbl <- is.s3_uri(Sys.getenv("NOCTUA_S3_TBL"))
-  if(!have_arn || !have_query|| !have_tbl) skip("Environment variables are not set for testing")
+  have_arn <- Sys.getenv("noctua_arn") != "" 
+  have_query <- is.s3_uri(Sys.getenv("noctua_s3_query"))
+  have_tbl <- is.s3_uri(Sys.getenv("noctua_s3_tbl"))
+  if (all(have_arn, have_query, have_tbl))
+    skip("Environment variables are not set for testing")
 }
 
 # helper function to skip tests if we don't have the suggested package
