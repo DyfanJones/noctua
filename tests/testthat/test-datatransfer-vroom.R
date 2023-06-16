@@ -27,15 +27,19 @@ test_that("Testing data transfer between R and athena vroom", {
   df2 <- data.frame(var1 = sample(letters, 10, replace = T),
                     var2 = bit64::as.integer64(1:10),
                     stringsAsFactors = F)
-  
   DATE <- Sys.Date()
-  dbWriteTable(con, "test_df", df, overwrite = T, partition = c("timesTamp" = format(DATE, "%Y%m%d")), s3.location = s3.location1)
+  dbWriteTable(con, "test_df", df,
+               overwrite = T,
+               partition = c("timesTamp" = format(DATE, "%Y%m%d")),
+               s3.location = s3.location1
+  )
   dbWriteTable(con, "test_df2", df, 
                overwrite = T,
                partition = c("year" = format(DATE, "%Y"),
                              "month" = format(DATE, "%m"),
                              "DAY" = format(DATE, "%d")),
-               s3.location = s3.location2)
+               s3.location = s3.location2
+  )
   dbWriteTable(con, "df_bigint", df2, overwrite = T, s3.location = s3.location2)
   dbWriteTable(con, "mtcars2", mtcars, overwrite = T, compress = T) # mtcars used to test data.frame with row.names
   

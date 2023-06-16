@@ -235,7 +235,7 @@ test_that("Raise error for unexpected json parser.", {
 })
 
 
-test_that("Cehck if column is correctly parsed.", {
+test_that("Check if column is correctly parsed.", {
   skip_if_not_installed("jsonify")
   skip_if_no_env()
   
