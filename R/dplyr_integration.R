@@ -150,13 +150,15 @@ athena_query_save <- function(con, sql, name ,
 #' # Disconnect from Athena
 #' dbDisconnect(con)
 #' }
+#' @export
 db_copy_to.AthenaConnection <- function(con, table, values,
                                         overwrite = FALSE, append = FALSE,
                                         types = NULL, partition = NULL,
                                         s3_location = NULL, 
                                         file_type = c("csv", "tsv", "parquet"), 
                                         compress = FALSE,
-                                        max_batch = Inf, ...){
+                                        max_batch = Inf,
+                                        ...){
   
   types <- types %||% dbDataType(con, values)
   names(types) <- names(values)
