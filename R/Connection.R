@@ -676,38 +676,33 @@ setMethod(
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
-
-    for (i in seq_len(athena_option_env$retry)) {
-      resp <- tryCatch(
+    for (i in seq_len(athena_option_env$retry + 1)) {
+      resp <- tryCatch({
         conn@ptr$Athena$get_table_metadata(
           CatalogName = ll[["db.catalog"]],
           DatabaseName = ll[["dbms.name"]],
           TableName = ll[["table"]]
-        ),
-        error = function(e) e
-      )
-
-      # exponential step back if error and not expected error
-      if (inherits(resp, "error") && !grepl(".*table.*not.*found.*", resp, ignore.case = T)) {
-        backoff_len <- runif(n = 1, min = 0, max = (2^i - 1))
-
-        info_msg(resp, "Request failed. Retrying in ", round(backoff_len, 1), " seconds...")
-
-        Sys.sleep(backoff_len)
-      } else {
-        break
-      }
+        )
+      }, error = function(err) {
+        err_msg = err$message
+        if(i == (athena_option_env$retry + 1)) {
+          stop(err_msg, call. = F)
+        } 
+        if (!grepl("EntityNotFoundException|Cannot.*find.*catalog", err_msg)) {
+          backoff <- 2**i * 0.5
+          info_msg(err_msg)
+          info_msg(
+            paste("Request failed. Retrying in", backoff, "seconds...")
+          )
+          Sys.sleep(backoff)
+          return(err)
+        }
+        return(FALSE)
+      })
+      if (inherits(resp, "error")) next
+      break
     }
-
-    if (
-      inherits(resp, "error") &&
-        !grepl(".*EntityNotFoundException.*|.*cannot.*find.*catalog.*", resp, ignore.case = T)
-    ) {
-      stop(resp)
-    }
-    return(
-      !grepl(".*EntityNotFoundException.*|.*cannot.*find.*catalog.*", resp, ignore.case = T)
-    )
+    return(is.list(resp))
   }
 )
 
