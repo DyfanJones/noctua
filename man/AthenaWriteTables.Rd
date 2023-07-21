@@ -5,7 +5,6 @@
 \alias{dbWriteTable,AthenaConnection,character,data.frame-method}
 \alias{dbWriteTable,AthenaConnection,Id,data.frame-method}
 \alias{dbWriteTable,AthenaConnection,SQL,data.frame-method}
-\alias{dbWriteTable,AthenaConnection,dbplyr_table_ident,data.frame-method}
 \title{Convenience functions for reading/writing DBMS tables}
 \usage{
 \S4method{dbWriteTable}{AthenaConnection,character,data.frame}(
@@ -41,22 +40,6 @@
 )
 
 \S4method{dbWriteTable}{AthenaConnection,SQL,data.frame}(
-  conn,
-  name,
-  value,
-  overwrite = FALSE,
-  append = FALSE,
-  row.names = NA,
-  field.types = NULL,
-  partition = NULL,
-  s3.location = NULL,
-  file.type = c("tsv", "csv", "parquet", "json"),
-  compress = FALSE,
-  max.batch = Inf,
-  ...
-)
-
-\S4method{dbWriteTable}{AthenaConnection,dbplyr_table_ident,data.frame}(
   conn,
   name,
   value,

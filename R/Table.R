@@ -373,23 +373,6 @@ setMethod(
   }
 )
 
-#' @rdname AthenaWriteTables
-#' @export
-setMethod(
-  "dbWriteTable", c("AthenaConnection", "dbplyr_table_ident", "data.frame"),
-  function(conn, name, value, overwrite = FALSE, append = FALSE,
-           row.names = NA, field.types = NULL,
-           partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
-           compress = FALSE, max.batch = Inf, ...) {
-    con_error_msg(conn, msg = "Connection already closed.")
-    Athena_write_table(
-      conn, name, value, overwrite, append,
-      row.names, field.types,
-      partition, s3.location, file.type, compress, max.batch
-    )
-  }
-)
-
 #' Converts data frame into suitable format to be uploaded to Athena
 #'
 #' This method converts data.frame columns into the correct format so that it can be uploaded Athena.
