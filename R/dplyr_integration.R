@@ -64,6 +64,7 @@ db_compute.AthenaConnection <- function(con,
       call. = FALSE
     )
   }
+  print(class(table))
   table <- athena_query_save(con, sql, table, ...)
   ll <- db_detect(con, table)
   in_schema(ll[["dbms.name"]], ll[["table"]])
