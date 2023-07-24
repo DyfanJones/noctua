@@ -160,7 +160,7 @@ db_copy_to.AthenaConnection <- function(con, table, values,
                                         compress = FALSE,
                                         max_batch = Inf,
                                         ...){
-  
+  args <- list(...)
   types <- types %||% dbDataType(con, values)
   names(types) <- names(values)
   
