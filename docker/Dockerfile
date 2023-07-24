@@ -1,17 +1,18 @@
-# This example uses rstudio r-base docker images: https://github.com/rstudio/r-docker
-FROM rstudio/r-base:4.0.2-centos7
+FROM rocker/r-base
 
-# Set up centos
-RUN sudo yum install -y https://repo.ius.io/ius-release-el7.rpm \
-   && sudo yum update -y \
-   && sudo yum install -y libcurl-devel libxml2-devel openssl-devel
-   
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
+    curl \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev
+
 # get aws cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
-    && sudo ./aws/install
+    && ./aws/install
 
 # Install noctua
-RUN R -e "install.packages(c('paws', 'readr', 'noctua'), repos='https://cran.rstudio.com/')"
+RUN Rscript -e "install.packages(c('paws', 'noctua'), repos = c(pawsr = 'https://paws-r-builds.s3.amazonaws.com/packages/latest/', CRAN = 'https://cloud.r-project.org'))"
 
 CMD ["R"]

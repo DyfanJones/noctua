@@ -92,7 +92,7 @@ test_that("Write can handle an empty data frame", {
   df <- data.frame(x = integer())
   
   if (dbExistsTable(con, "test_df")) {
-    dbRemoveTable(con, "test_df")
+    dbRemoveTable(con, "test_df", confirm = T)
   }
   
   # can create a new table

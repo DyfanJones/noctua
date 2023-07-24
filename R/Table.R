@@ -373,7 +373,6 @@ setMethod(
   }
 )
 
-
 #' Converts data frame into suitable format to be uploaded to Athena
 #'
 #' This method converts data.frame columns into the correct format so that it can be uploaded Athena.

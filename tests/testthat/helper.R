@@ -3,7 +3,7 @@ skip_if_no_env <- function(){
   have_arn <- Sys.getenv("noctua_arn") != "" 
   have_query <- is.s3_uri(Sys.getenv("noctua_s3_query"))
   have_tbl <- is.s3_uri(Sys.getenv("noctua_s3_tbl"))
-  if (all(have_arn, have_query, have_tbl))
+  if (!all(have_arn, have_query, have_tbl))
     skip("Environment variables are not set for testing")
 }
 
@@ -24,7 +24,7 @@ tbl_ddl <-
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ','
 	LINES TERMINATED BY ", gsub("_","","'\\_n'"),
-                  "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
+                  "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl2 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
@@ -34,7 +34,7 @@ tbl2 =
 ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ','
 	LINES TERMINATED BY ", gsub("_","","'\\_n'"),
-           "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
+           "\nLOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\",
 \t\t'compressionType'='gzip');")),
 tbl3 = 
@@ -45,7 +45,7 @@ tbl3 =
 ROW FORMAT DELIMITED
 \tFIELDS TERMINATED BY '	'
 \tLINES TERMINATED BY ", gsub("_","","'\\_n'"),"
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\");")),
 tbl4 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
@@ -55,7 +55,7 @@ tbl4 =
 ROW FORMAT DELIMITED
 \tFIELDS TERMINATED BY '	'
 \tLINES TERMINATED BY ", gsub("_","","'\\_n'"),"
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'
 TBLPROPERTIES (\"skip.header.line.count\"=\"1\",
 \t\t'compressionType'='gzip');")), 
 tbl5 = 
@@ -64,7 +64,7 @@ tbl5 =
   `y` STRING
 )
 STORED AS PARQUET
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n;")),
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'\n;")),
 tbl6 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
@@ -72,7 +72,7 @@ tbl6 =
 )
 PARTITIONED BY (`timestamp` STRING)
 STORED AS PARQUET
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'
 tblproperties (\"parquet.compress\"=\"SNAPPY\");")),
 tbl7 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
@@ -80,7 +80,7 @@ tbl7 =
   `y` STRING
 )
 ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n")),
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'\n")),
 tbl8 = 
   DBI::SQL(paste0("CREATE EXTERNAL TABLE `AwsDataCatalog`.`default`.`test_df` (
   `x` INT,
@@ -88,7 +88,7 @@ tbl8 =
 )
 PARTITIONED BY (`timestamp` STRING)
 ROW FORMAT  serde 'org.apache.hive.hcatalog.data.JsonSerDe'
-LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/'\n")))
+LOCATION '",Sys.getenv("noctua_s3_tbl"),"test_df/default/test_df/'\n")))
 
 
 # static Athena Query Request Tests
@@ -102,7 +102,7 @@ athena_test_req2 <-
 athena_test_req3 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 athena_test_req4 <- list(OutputLocation = Sys.getenv("noctua_s3_query"))
 
-show_ddl <- SQL(paste0('CREATE EXTERNAL TABLE `default.test_df`(\n  `w` timestamp, \n  `x` int, \n  `y` string, \n  `z` boolean)\nPARTITIONED BY ( \n  `timestamp` string)\nROW FORMAT DELIMITED \n  FIELDS TERMINATED BY \'\\t\' \n  LINES TERMINATED BY \'\\n\' \nSTORED AS INPUTFORMAT \n  \'org.apache.hadoop.mapred.TextInputFormat\' \nOUTPUTFORMAT \n  \'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat\'\nLOCATION\n  \'' ,Sys.getenv("noctua_s3_tbl"), 'test_df/default\'\nTBLPROPERTIES (\n  \'skip.header.line.count\'=\'1\')'))
+show_ddl <- DBI::SQL(paste0('CREATE EXTERNAL TABLE `default.test_df`(\n  `w` timestamp, \n  `x` int, \n  `y` string, \n  `z` boolean)\nPARTITIONED BY ( \n  `timestamp` string)\nROW FORMAT DELIMITED \n  FIELDS TERMINATED BY \'\\t\' \n  LINES TERMINATED BY \'\\n\' \nSTORED AS INPUTFORMAT \n  \'org.apache.hadoop.mapred.TextInputFormat\' \nOUTPUTFORMAT \n  \'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat\'\nLOCATION\n  \'' ,Sys.getenv("noctua_s3_tbl"), 'test_df/default/test_df\'\nTBLPROPERTIES (\n  \'skip.header.line.count\'=\'1\')'))
 
 expected_stat_output = c(
   "EngineExecutionTimeInMillis",
