@@ -25,6 +25,7 @@
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 #' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
 #'                 "snappy" compression is used.
+#' @param with An optional WITH clause for the CREATE TABLE statement.
 #' \itemize{
 #'          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"].
 #'                        \code{"NULL"} will let Athena set the file_type for you.}
