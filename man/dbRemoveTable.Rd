@@ -4,9 +4,12 @@
 \name{dbRemoveTable}
 \alias{dbRemoveTable}
 \alias{dbRemoveTable,AthenaConnection,character-method}
+\alias{dbRemoveTable,AthenaConnection,Id-method}
 \title{Remove table from Athena}
 \usage{
 \S4method{dbRemoveTable}{AthenaConnection,character}(conn, name, delete_data = TRUE, confirm = FALSE, ...)
+
+\S4method{dbRemoveTable}{AthenaConnection,Id}(conn, name, delete_data = TRUE, confirm = FALSE, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by

@@ -3,9 +3,27 @@
 \name{db_compute}
 \alias{db_compute}
 \alias{db_compute.AthenaConnection}
+\alias{sql_query_save.AthenaConnection}
 \title{S3 implementation of \code{db_compute} for Athena}
 \usage{
-db_compute.AthenaConnection(con, table, sql, ...)
+db_compute.AthenaConnection(
+  con,
+  table,
+  sql,
+  ...,
+  overwrite = FALSE,
+  temporary = FALSE,
+  unique_indexes = list(),
+  indexes = list(),
+  analyze = TRUE,
+  in_transaction = FALSE,
+  partition = NULL,
+  s3_location = NULL,
+  file_type = c("csv", "tsv", "parquet"),
+  compress = FALSE
+)
+
+sql_query_save.AthenaConnection(con, sql, name, temporary = TRUE, with, ...)
 }
 \arguments{
 \item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
@@ -14,9 +32,33 @@ db_compute.AthenaConnection(con, table, sql, ...)
 
 \item{sql}{SQL code to be sent to the data}
 
-\item{...}{passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
+\item{...}{passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]}
+
+\item{overwrite}{Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.}
+
+\item{temporary}{if TRUE, will create a temporary table that is local to this connection and will be automatically deleted when the connection expires}
+
+\item{unique_indexes}{a list of character vectors. Each element of the list will create a new unique index over the specified column(s). Duplicate rows will result in failure.}
+
+\item{indexes}{a list of character vectors. Each element of the list will create a new index.}
+
+\item{analyze}{if TRUE (the default), will automatically ANALYZE the new table so that the query optimiser has useful information.}
+
+\item{in_transaction}{Should the table creation be wrapped in a transaction? This typically makes things faster, but you may want to suppress if the database doesn't support transactions, or you're wrapping in a transaction higher up (and your database doesn't support nested transactions.)}
+
+\item{partition}{Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}}
+
+\item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
+
+\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
+Athena due to the separating value ",". This would cause issues with AWS Athena.
+\strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
+
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
+                "snappy" compression is used.
 \itemize{
-         \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"]. 
+         \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"].
                        \code{"NULL"} will let Athena set the file_type for you.}
          \item{\code{s3_location:} s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
          \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}}
@@ -29,32 +71,34 @@ This is a backend function for dplyr's \code{compute} function. Users won't be r
 }
 \examples{
 \dontrun{
-# Note: 
+# Note:
 # - Require AWS Account to run below example.
 # - Different connection methods can be used please see `noctua::dbConnect` documentation
 
 library(DBI)
 library(dplyr)
 
-# Demo connection to Athena using profile name 
+# Demo connection to Athena using profile name
 con <- dbConnect(noctua::athena())
 
 # Write data.frame to Athena table
 copy_to(con, mtcars,
-        s3_location = "s3://mybucket/data/")
-             
+  s3_location = "s3://mybucket/data/"
+)
+
 # Write Athena table from tbl_sql
 athena_mtcars <- tbl(con, "mtcars")
-mtcars_filter <- athena_mtcars \%>\% filter(gear >=4)
+mtcars_filter <- athena_mtcars \%>\% filter(gear >= 4)
 
 # create athena with unique table name
-mtcars_filer \%>\% 
+mtcars_filer \%>\%
   compute()
 
 # create athena with specified name and s3 location
-mtcars_filer \%>\% 
-    compute("mtcars_filer",
-            s3_location = "s3://mybucket/mtcars_filer/")
+mtcars_filer \%>\%
+  compute("mtcars_filer",
+    s3_location = "s3://mybucket/mtcars_filer/"
+  )
 
 # Disconnect from Athena
 dbDisconnect(con)

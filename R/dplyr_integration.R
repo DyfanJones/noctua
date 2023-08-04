@@ -11,6 +11,20 @@
 #' @param table Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
 #' @param sql SQL code to be sent to the data
 #' @param ... passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
+#' @param overwrite Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.
+#' @param temporary if TRUE, will create a temporary table that is local to this connection and will be automatically deleted when the connection expires
+#' @param unique_indexes a list of character vectors. Each element of the list will create a new unique index over the specified column(s). Duplicate rows will result in failure.
+#' @param indexes a list of character vectors. Each element of the list will create a new index.
+#' @param analyze if TRUE (the default), will automatically ANALYZE the new table so that the query optimiser has useful information.
+#' @param in_transaction Should the table creation be wrapped in a transaction? This typically makes things faster, but you may want to suppress if the database doesn't support transactions, or you're wrapping in a transaction higher up (and your database doesn't support nested transactions.)
+#' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
+#' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
+#' @param file_type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+#'                  of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
+#'                  Athena due to the separating value ",". This would cause issues with AWS Athena.
+#'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
+#'                 "snappy" compression is used.
 #' \itemize{
 #'          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"].
 #'                        \code{"NULL"} will let Athena set the file_type for you.}
@@ -150,6 +164,11 @@ sql_query_save.AthenaConnection <- function(
 #'                  is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the
 #'                  performance of AWS Athena when working with files compressed in "gzip" format. \code{max.batch} will not split the data.frame
 #'                  when loading file in parquet format. For more information please go to \href{https://github.com/DyfanJones/RAthena/issues/36}{link}
+#' @param temporary if TRUE, will create a temporary table that is local to this connection and will be automatically deleted when the connection expires
+#' @param unique_indexes a list of character vectors. Each element of the list will create a new unique index over the specified column(s). Duplicate rows will result in failure.
+#' @param indexes a list of character vectors. Each element of the list will create a new index.
+#' @param analyze if TRUE (the default), will automatically ANALYZE the new table so that the query optimiser has useful information.
+#' @param in_transaction Should the table creation be wrapped in a transaction? This typically makes things faster, but you may want to suppress if the database doesn't support transactions, or you're wrapping in a transaction higher up (and your database doesn't support nested transactions.)
 #' @param ... other parameters currently not supported in noctua
 #' @name db_copy_to
 #' @seealso \code{\link{AthenaWriteTables}}

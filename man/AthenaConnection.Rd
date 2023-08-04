@@ -5,13 +5,27 @@
 \alias{AthenaConnection}
 \alias{AthenaConnection-class}
 \alias{show,AthenaConnection-method}
+\alias{dbBegin,AthenaConnection-method}
+\alias{dbCommit,AthenaConnection-method}
+\alias{dbRollback,AthenaConnection-method}
 \alias{AthenaResult-class}
 \title{Athena Connection Methods}
 \usage{
 \S4method{show}{AthenaConnection}(object)
+
+\S4method{dbBegin}{AthenaConnection}(conn, ...)
+
+\S4method{dbCommit}{AthenaConnection}(conn, ...)
+
+\S4method{dbRollback}{AthenaConnection}(conn, ...)
 }
 \arguments{
 \item{object}{Any R object}
+
+\item{conn}{A \linkS4class{DBIConnection} object, as returned by
+\code{\link[DBI:dbConnect]{dbConnect()}}.}
+
+\item{...}{Other parameters passed on to methods.}
 }
 \description{
 Implementations of pure virtual functions defined in the `DBI` package

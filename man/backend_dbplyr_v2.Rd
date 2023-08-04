@@ -38,7 +38,7 @@ sql_escape_datetime.AthenaConnection(con, x)
 }
 }
 \description{
-These functions are used to build the different types of SQL queries. 
+These functions are used to build the different types of SQL queries.
 The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
 utilise AWS Glue to speed up sql query execution.
 }
