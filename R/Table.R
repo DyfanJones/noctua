@@ -348,6 +348,7 @@ setMethod(
            partition = NULL, s3.location = NULL, file.type = c("tsv", "csv", "parquet", "json"),
            compress = FALSE, max.batch = Inf, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
+    name <- db_quote_identifier(name)
     Athena_write_table(
       conn, name, value, overwrite, append,
       row.names, field.types,

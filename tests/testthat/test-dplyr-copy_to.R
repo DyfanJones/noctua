@@ -14,11 +14,11 @@ test_that("Check noctua s3 dplyr copy_to method",{
   con <- dbConnect(athena())
   
   # creates Athena table and returns tbl_sql
-  athena_mtcars <- copy_to(con, mtcars, s3_location = Sys.getenv("noctua_s3_tbl"), compress = T, overwrite = T)
+  athena_mtcars <- copy_to(con, mtcars, s3_location = Sys.getenv("noctua_s3_tbl"), compress = T, overwrite = T, temporary = F)
   mtcars_filter <- athena_mtcars %>% filter(gear >=4)
   tbl_result <- is.tbl(mtcars_filter)
   # create another Athena table
-  copy_to(con, mtcars_filter)
+  copy_to(con, mtcars_filter, temporary = F)
   
   result1 <- dbExistsTable(con, "mtcars")
   result2 <- dbExistsTable(con, "mtcars_filter")

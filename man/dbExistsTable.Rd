@@ -4,9 +4,12 @@
 \name{dbExistsTable}
 \alias{dbExistsTable}
 \alias{dbExistsTable,AthenaConnection,character-method}
+\alias{dbExistsTable,AthenaConnection,Id-method}
 \title{Does Athena table exist?}
 \usage{
 \S4method{dbExistsTable}{AthenaConnection,character}(conn, name, ...)
+
+\S4method{dbExistsTable}{AthenaConnection,Id}(conn, name, ...)
 }
 \arguments{
 \item{conn}{A \linkS4class{DBIConnection} object, as returned by

@@ -17,6 +17,8 @@
   }
   register_s3_method("dbplyr", "db_compute", "AthenaConnection")
   register_s3_method("dbplyr", "db_copy_to", "AthenaConnection")
+  register_s3_method("dbplyr", "sql_table_analyze", "AthenaConnection")
+  register_s3_method("dbplyr", "sql_query_save", "AthenaConnection")
 }
 
 register_s3_method <- function(pkg, generic, class, fun = NULL) {
@@ -45,9 +47,9 @@ register_s3_method <- function(pkg, generic, class, fun = NULL) {
 
 dbplyr_version <- function(){
   if (nzchar(system.file(package = "dbplyr"))){
-    dbplyr_v = packageVersion("dbplyr")
-    dbplyr_env$major <- dbplyr_v$major
-    dbplyr_env$minor <- dbplyr_v$minor
+    dbplyr_env$version <- packageVersion("dbplyr")
+    dbplyr_env$major <- dbplyr_env$version$major
+    dbplyr_env$minor <- dbplyr_env$version$minor
   } else {
     # default to minimum supported dbplyr version
     dbplyr_env$major = 1L

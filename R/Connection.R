@@ -706,6 +706,14 @@ setMethod(
   }
 )
 
+#' @rdname dbExistsTable
+#' @export
+setMethod(
+  "dbExistsTable", c("AthenaConnection", "Id"),
+  function(conn, name, ...) {
+    dbExistsTable(conn, dbQuoteIdentifier(conn, name), ...)
+})
+
 #' Remove table from Athena
 #'
 #' Removes Athena table but does not remove the data from Amazon S3 bucket.
@@ -756,22 +764,14 @@ setMethod(
     )
     ll <- db_detect(conn, name)
 
-    TableType <- conn@ptr$Athena$get_table_metadata(
+    TableMeta <- conn@ptr$Athena$get_table_metadata(
       CatalogName = ll[["db.catalog"]],
       DatabaseName = ll[["dbms.name"]],
       TableName = ll[["table"]]
-    )[["TableMetadata"]][["TableType"]]
-
-    if (delete_data && TableType == "EXTERNAL_TABLE") {
-      tryCatch(
-        s3_path <- split_s3_uri(
-          conn@ptr$Athena$get_table_metadata(
-            CatalogName = ll[["db.catalog"]],
-            DatabaseName = ll[["dbms.name"]],
-            TableName = ll[["table"]]
-          )[["TableMetadata"]][["Parameters"]][["location"]]
-        )
-      )
+    )[["TableMetadata"]]
+    
+    if (delete_data && TableMeta$TableType == "EXTERNAL_TABLE") {
+      s3_path <- split_s3_uri(TableMeta$Parameters$location)
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
       if (!grepl("\\.|/$", s3_path$key)) {
         s3_path[["key"]] <- sprintf("%s/", s3_path[["key"]])
@@ -823,6 +823,14 @@ setMethod(
     invisible(TRUE)
   }
 )
+
+#' @rdname dbRemoveTable
+#' @export
+setMethod(
+  "dbRemoveTable", c("AthenaConnection", "Id"),
+  function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
+    dbRemoveTable(conn, dbQuoteIdentifier(conn, name), ...)
+})
 
 #' Send query, retrieve results and then clear result set
 #'
@@ -1173,3 +1181,39 @@ setMethod(
     return(invisible(TRUE))
   }
 )
+
+# Unable to get Athena equivalents, for the time being will pass these methods.
+
+#' @rdname AthenaConnection
+#' @inheritParams DBI::dbBegin
+#' @export
+setMethod(
+  "dbBegin", "AthenaConnection",
+  function(conn, ...) {
+    con_error_msg(conn, msg = "Connection already closed.")
+    invisible(TRUE)
+})
+
+# https://github.com/laughingman7743/PyAthena/blob/f4b21a0b0f501f5c3504698e25081f491a541d4e/pyathena/connection.py#L281C1-L282
+
+#' @rdname AthenaConnection
+#' @inheritParams DBI::dbCommit
+#' @export
+setMethod(
+  "dbCommit", "AthenaConnection",
+  function(conn, ...) {
+    con_error_msg(conn, msg = "Connection already closed.")
+    invisible(TRUE)
+  })
+
+
+# https://github.com/laughingman7743/PyAthena/blob/f4b21a0b0f501f5c3504698e25081f491a541d4e/pyathena/connection.py#L284-L285
+#' @rdname AthenaConnection
+#' @inheritParams DBI::dbRollback
+#' @export
+setMethod(
+  "dbRollback", "AthenaConnection",
+  function(conn, ...) {
+    con_error_msg(conn, msg = "Connection already closed.")
+    invisible(TRUE)
+})
