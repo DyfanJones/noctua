@@ -28,7 +28,7 @@ test_that("Testing data transfer between R and athena vroom", {
                     var2 = bit64::as.integer64(1:10),
                     stringsAsFactors = F)
   if (dbExistsTable(con, "test_df")) 
-    dbRemoveTable(con, "test_df", confirm = T)
+    suppressWarnings(dbRemoveTable(con, "test_df", confirm = T))
   
   DATE <- Sys.Date()
   dbWriteTable(con, "test_df", df,
