@@ -20,8 +20,10 @@ test_that("Check noctua s3 dplyr compute method",{
     dbRemoveTable(con, "compute_tbl2", confirm = TRUE)
   
   athena_tbl <- tbl(con, sql("SELECT * FROM INFORMATION_SCHEMA.TABLES"))
-  athena_tbl %>% compute("compute_tbl1", s3_location = paste0(Sys.getenv("noctua_s3_tbl"),"compute_tbl/"))
-  athena_tbl %>% compute("compute_tbl2")
+  s3_uri = file.path(Sys.getenv("noctua_s3_tbl"),"compute_tbl/", fsep = "/")
+  
+  athena_tbl %>% compute("compute_tbl1", s3_location = s3_uri, temporary = F)
+  athena_tbl %>% compute("compute_tbl2", temporary = F)
   
   noctua_options(unload = T)
   expect_error(athena_tbl %>% compute("compute_tbl2"))
@@ -37,3 +39,24 @@ test_that("Check noctua s3 dplyr compute method",{
   expect_equal(result1, TRUE)
   expect_equal(result2, TRUE)
 })
+
+
+# Error (test-dplyr-compute.R:23:3): Check noctua s3 dplyr compute method
+# <rlib_error_dots_unused/rlib_error_dots/rlang_error/error/condition>
+#   Error in `db_compute(x$src$con, name, sql, temporary = temporary, unique_indexes = unique_indexes, 
+#                        indexes = indexes, analyze = analyze, ...)`: Arguments in `...` must be used.
+# ✖ Problematic argument:
+#   • s3_location = paste0(Sys.getenv("noctua_s3_tbl"), "compute_tbl/")
+# ℹ Did you misspell an argument name?
+#   Backtrace:
+#   ▆
+# 1. ├─athena_tbl %>% ... at test-dplyr-compute.R:23:2
+# 2. ├─dplyr::compute(...)
+# 3. └─dbplyr:::compute.tbl_sql(...)
+# 4.   └─dbplyr::db_compute(...)
+# 5.     └─rlang (local) `<fn>`()
+# 6.       └─rlang:::check_dots(env, error, action, call)
+# 7.         └─rlang:::action_dots(...)
+# 8.           ├─base (local) try_dots(...)
+# 9.           └─rlang (local) action(...)
+
