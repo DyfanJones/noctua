@@ -58,6 +58,8 @@ Athena due to the separating value ",". This would cause issues with AWS Athena.
 \item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
 "snappy" compression is used.}
 
+\item{name}{Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.}
+
 \item{with}{An optional WITH clause for the CREATE TABLE statement.
 \itemize{
          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"].

@@ -9,6 +9,7 @@
 #' @description This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
 #' @param con A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
 #' @param table Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
+#' @param name Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
 #' @param sql SQL code to be sent to the data
 #' @param ... passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
 #' @param overwrite Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.
