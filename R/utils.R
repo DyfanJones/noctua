@@ -461,3 +461,23 @@ set_endpoints <- function(endpoint_override) {
 str_count <- function(str, pattern) {
   return(lengths(regmatches(str, gregexpr(pattern, str))))
 }
+
+db_quote_identifier <- function (x, ...) {
+  if (is(x, "SQL")) 
+    return(x)
+  if (is(x, "Id")) {
+    return(SQL(paste0(x@name, collapse = ".")))
+  }
+  if (!is.character(x)) 
+    stop("x must be character or SQL", call. = FALSE)
+  if (any(is.na(x))) {
+    stop("Cannot pass NA to dbQuoteIdentifier()", call. = FALSE)
+  }
+  x <- gsub("\"", "\"\"", enc2utf8(x))
+  if (length(x) == 0L) {
+    SQL(character(), names = names(x))
+  }
+  else {
+    SQL(paste("\"", x, "\"", sep = ""), names = names(x))
+  }
+}
