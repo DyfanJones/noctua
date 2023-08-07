@@ -1,5 +1,5 @@
 ## Submission
-This release contains a couple of bug fixes and feature.
+This release contains a couple of bug fixes and features.
 
 ## Test environments
 * local OS X install, 4.2.0
