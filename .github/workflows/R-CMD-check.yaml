@@ -29,17 +29,22 @@ jobs:
       _R_CHECK_LENGTH_1_LOGIC2_: abort,verbose
     steps:
       - uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: R -q -e 'remotes::install_deps(".", dependencies=TRUE)'
-
-      - name: Install extra dependencies
+      
+      - name: Install Dependencies
         run: |
+          install.packages('paws', repos = c(pawsr = 'https://paws-r-builds.s3.amazonaws.com/packages/latest/', CRAN = 'https://cloud.r-project.org'))
+          remotes::install_deps(".", dependencies=TRUE)
           remotes::install_github("tidyverse/dbplyr")
           install.packages(c("rcmdcheck", "covr"))
-        shell: Rscript {0}
-        
-        
+        shell: Rscript{0}
+
+      # - uses: r-lib/actions/setup-r-dependencies@v2
+      #   with:
+      #     extra-packages: |
+      #       github::tidyverse/dbplyr
+      #       any::rcmdcheck
+      #       any::covr
+            
       - uses: r-lib/actions/check-r-package@v2
 
       - name: Show testthat output
