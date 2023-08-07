@@ -1,6 +1,7 @@
 # noctua 2.6.1.9000
 ## Feature:
 * Add catalog support (#194)
+* fix `dbExistsTable` to catch update AWS error message.
 * add support to `dbplyr 2.3.3.9000+`
 
 ## Bug Fix:
