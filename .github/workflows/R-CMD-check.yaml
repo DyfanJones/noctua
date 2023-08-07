@@ -10,7 +10,10 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
+  
     runs-on: ubuntu-latest
+    container:
+      image: rocker/r2u:latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -26,10 +29,6 @@ jobs:
       _R_CHECK_LENGTH_1_LOGIC2_: abort,verbose
     steps:
       - uses: actions/checkout@v3
-
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
