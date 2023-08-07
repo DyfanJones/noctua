@@ -30,16 +30,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install pak
-        run: R -q -e 'install.packages("pak", lib = Sys.getenv("R_LIB_FOR_PAK"))'
+      - name: Install dependencies
+        run: R -q -e 'remotes::install_deps(".", dependencies=TRUE)'
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: |
-            github::tidyverse/dbplyr
-            any::rcmdcheck
-            any::covr
-            
+      - name: Install extra dependencies
+        run: |
+          remotes::install_github("tidyverse/dbplyr")
+          install.packages(c("rcmdcheck", "covr"))
+        shell: Rscript {0}
+        
+        
       - uses: r-lib/actions/check-r-package@v2
 
       - name: Show testthat output
