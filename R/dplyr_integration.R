@@ -115,9 +115,7 @@ db_compute.AthenaConnection <- function(con, table, sql, ...,
   }
 }
 
-athena_query_save <- function(con, sql, name, with,
-                              ...) {
-  stopifnot(is.null(s3_location) || is.s3_uri(s3_location))
+athena_query_save <- function(con, sql, name, with, ...) {
   name <- paste0('"', strsplit(name, "\\.")[[1]], '"', collapse = ".")
   sql <- SQL(paste("CREATE TABLE", name, with, "AS", sql, ";"))
   res <- dbExecute(con, sql, unload = FALSE)

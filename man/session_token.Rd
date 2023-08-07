@@ -40,7 +40,7 @@ from 900 seconds (15 minutes) to 129,600 seconds (36 hours), with 3,600 seconds 
 \code{get_session_token()} returns a list containing: \code{"AccessKeyId"}, \code{"SecretAccessKey"}, \code{"SessionToken"} and \code{"Expiration"}
 }
 \description{
-Returns a set of temporary credentials for an AWS account or IAM user (\href{https://paws-r.github.io/docs/sts/get_session_token.html}{link}).
+Returns a set of temporary credentials for an AWS account or IAM user (\href{https://www.paws-r-sdk.com/docs/sts_get_session_token/}{link}).
 }
 \examples{
 \dontrun{
