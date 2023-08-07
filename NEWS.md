@@ -1,6 +1,7 @@
 # noctua 2.6.1.9000
 ## Feature:
 * Add catalog support (#194)
+* add support to `dbplyr 2.3.3.9000+`
 
 ## Bug Fix:
 * Can now write/append an empty data frame (#200, @mgirlich).

@@ -34,7 +34,7 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
 \code{assume_role()} returns a list containing: \code{"AccessKeyId"}, \code{"SecretAccessKey"}, \code{"SessionToken"} and \code{"Expiration"}
 }
 \description{
-Returns a set of temporary security credentials that you can use to access AWS resources that you might not normally have access to (\href{https://paws-r.github.io/docs/sts/assume_role.html}{link}).
+Returns a set of temporary security credentials that you can use to access AWS resources that you might not normally have access to (\href{https://www.paws-r-sdk.com/docs/sts_assume_role/}{link}).
 These temporary credentials consist of an access key ID, a secret access key, and a security token. Typically, you use AssumeRole within
 your account or for cross-account access.
 }

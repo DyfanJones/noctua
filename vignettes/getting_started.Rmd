@@ -28,7 +28,7 @@ remotes::install_github("dyfanjones/noctua")
 
 ## Docker Example:
 
-To help with users wishing to run `noctua` in a [docker](https://hub.docker.com/), a simple docker file has been created [here](https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile). To set up the docker please refer to [link](https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-temporary-credentials-docker/). For demo purposes we will use the [example docker](https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile) and run it locally:
+To help with users wishing to run `noctua` in a [docker](https://hub.docker.com/), a simple docker file has been created [here](https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile). To set up the docker please refer to [link](https://repost.aws/knowledge-center/codebuild-temporary-credentials-docker). For demo purposes we will use the [example docker](https://github.com/DyfanJones/noctua/blob/master/docker/Dockerfile) and run it locally:
 
 ```console
 # build docker image
