@@ -1,9 +1,5 @@
 ## Submission
-This release contains a couple of bug fixes.
-
-## Bug Fix:
-* Prevent assuming role from `AWS_ROLE_ARN`. This caused confusing when connecting through web identity
-* Support `dbplyr::in_catalog` when working with `dplyr::tbl`
+This release contains a couple of bug fixes and feature.
 
 ## Test environments
 * local OS X install, 4.2.0
