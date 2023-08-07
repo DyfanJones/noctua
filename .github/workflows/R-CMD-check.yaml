@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install pak
-        run: R -q -e 'install.packages("pak")'
+        run: R -q -e 'install.packages("pak", lib = Sys.getenv("R_LIB_FOR_PAK"))'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
