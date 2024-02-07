@@ -35,7 +35,7 @@ Depends: R (>= 3.2.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-URL: https://github.com/DyfanJones/noctua
+URL: https://dyfanjones.github.io/noctua/, https://github.com/DyfanJones/noctua
 BugReports: https://github.com/DyfanJones/noctua/issues
 Collate: 
     'utils.R'
