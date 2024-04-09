@@ -4,7 +4,7 @@ split_s3_uri <- function(uri) {
   path <- gsub("^s3://", "", uri)
   list(
     bucket = gsub("/.*$", "", path),
-    key = gsub("^[a-z0-9][a-z0-9\\.-]+[a-z0-9]/", "", path)
+    key = gsub("^[a-z0-9][a-z0-9\\.-]+[a-z0-9](/|$)", "", path)
   )
 }
 
