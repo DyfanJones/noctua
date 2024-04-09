@@ -70,7 +70,7 @@
 
 .fetch_unload <- function(res) {
   result_info <- split_s3_uri(res@connection@info[["s3_staging"]])
-  result_info[["key"]] <- file.path(gsub("/$", "", result_info[["key"]]), res@info[["UnloadDir"]])
+  result_info[["key"]] <- gsub("^/", "", file.path(gsub("/$", "", result_info[["key"]]), res@info[["UnloadDir"]]))
 
   all_keys <- list()
   token <- NULL
