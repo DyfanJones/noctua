@@ -188,33 +188,33 @@ files being produced by AWS Athena.</li>
 </h2>
 <p>Set up <code>AWS Athena</code> table (example taken from <a href="https://aws-data-wrangler.readthedocs.io/en/stable/tutorials/006%20-%20Amazon%20Athena.html" class="external-link">AWS
 Data Wrangler: Amazon Athena Tutorial</a>):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> awswrangler <span class="im">as</span> wr</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> getpass</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>bucket <span class="op">=</span> getpass.getpass()</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="ss">f"s3://</span><span class="sc">{</span>bucket<span class="sc">}</span><span class="ss">/data/"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"awswrangler_test"</span> <span class="kw">not</span> <span class="kw">in</span> wr.catalog.databases().values:</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    wr.catalog.create_database(<span class="st">"awswrangler_test"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"dt"</span>, <span class="st">"element"</span>, <span class="st">"value"</span>, <span class="st">"m_flag"</span>, <span class="st">"q_flag"</span>, <span class="st">"s_flag"</span>, <span class="st">"obs_time"</span>]</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> wr.s3.read_csv(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">"s3://noaa-ghcn-pds/csv/189"</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    names<span class="op">=</span>cols,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    parse_dates<span class="op">=</span>[<span class="st">"dt"</span>, <span class="st">"obs_time"</span>])  <span class="co"># Read 10 files from the 1890 decade (~1GB)</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>wr.s3.to_parquet(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    df<span class="op">=</span>df,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span>path,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    dataset<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span><span class="st">"overwrite"</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    database<span class="op">=</span><span class="st">"awswrangler_test"</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    table<span class="op">=</span><span class="st">"noaa"</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>wr.catalog.table(database<span class="op">=</span><span class="st">"awswrangler_test"</span>, table<span class="op">=</span><span class="st">"noaa"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Python</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="im">import</span> awswrangler <span class="im">as</span> wr</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="im">import</span> getpass</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>bucket <span class="op">=</span> getpass.getpass()</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>path <span class="op">=</span> <span class="ss">f"s3://</span><span class="sc">{</span>bucket<span class="sc">}</span><span class="ss">/data/"</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="cf">if</span> <span class="st">"awswrangler_test"</span> <span class="kw">not</span> <span class="kw">in</span> wr.catalog.databases().values:</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    wr.catalog.create_database(<span class="st">"awswrangler_test"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"id"</span>, <span class="st">"dt"</span>, <span class="st">"element"</span>, <span class="st">"value"</span>, <span class="st">"m_flag"</span>, <span class="st">"q_flag"</span>, <span class="st">"s_flag"</span>, <span class="st">"obs_time"</span>]</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>df <span class="op">=</span> wr.s3.read_csv(</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>    path<span class="op">=</span><span class="st">"s3://noaa-ghcn-pds/csv/189"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>    names<span class="op">=</span>cols,</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>    parse_dates<span class="op">=</span>[<span class="st">"dt"</span>, <span class="st">"obs_time"</span>])  <span class="co"># Read 10 files from the 1890 decade (~1GB)</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>wr.s3.to_parquet(</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>    df<span class="op">=</span>df,</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>    path<span class="op">=</span>path,</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>    dataset<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    mode<span class="op">=</span><span class="st">"overwrite"</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    database<span class="op">=</span><span class="st">"awswrangler_test"</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>    table<span class="op">=</span><span class="st">"noaa"</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>wr.catalog.table(database<span class="op">=</span><span class="st">"awswrangler_test"</span>, table<span class="op">=</span><span class="st">"noaa"</span>)</span></code></pre></div>
 <p>Benchmark <code>unload</code> method using <code>noctua</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># R</span></span>
