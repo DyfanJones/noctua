@@ -1,4 +1,8 @@
-# noctua 2.6.1.9000
+# noctua 2.6.3
+## Bug Fix:
+* Unload option returns null results when s3_staging_dir is a bucket only (#214) thanks to @dfsnow for implementing solution
+
+# noctua 2.6.2
 ## Feature:
 * Add catalog support (#194)
 * fix `dbExistsTable` to catch update AWS error message.

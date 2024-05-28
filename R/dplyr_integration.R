@@ -126,17 +126,20 @@ athena_query_save <- function(con, sql, name, with, ...) {
 #' @rdname db_compute
 #' @export
 sql_query_save.AthenaConnection <- function(
-    con, sql, name, temporary = TRUE, with, ...) {
-  as_from <- pkg_method("as_from", "dbplyr")
-  as_table_ident <- pkg_method("as_table_ident", "dbplyr")
-  glue_sql2 <- pkg_method("glue_sql2", "dbplyr")
+    con, sql, name, temporary = TRUE, with = NULL, ...) {
+  if (isTRUE(temporary)) {
+    stop("AWS Athena doesn't support temporary tables.")
+  }
+  name <- DBI::dbQuoteIdentifier(con, name)
   
-  sql <- as_from(sql)
-  name <- as_table_ident(name)
-  
-  sql <- glue_sql2(con, "CREATE ", if (temporary) sql("TEMPORARY "),
-    "TABLE \n", "{.tbl {name}}\n{with}AS\n", "{.from sql}")
-  return(sql)
+  return(
+    DBI::SQL(paste0(
+      "CREATE TABLE ", name, "\n",
+      if (!is.null(with)) paste0(with, "\n"),
+      "AS\n",
+      sql
+    ))
+  )
 }
 
 #' S3 implementation of \code{db_copy_to} for Athena
