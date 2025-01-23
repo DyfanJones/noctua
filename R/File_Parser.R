@@ -16,7 +16,9 @@ athena_read.athena_data.table <- function(method, File, athena_types, con, ...){
   Type2 <- Type <- AthenaToRDataType(method, data_type)
   # Type2 is to handle issue with data.table fread 
   Type2[Type2 %in% "POSIXct"] <- "character"
-  
+
+  sep <- if (length(Type) == 1L) "\n" else ","
+
   fill <- any(c("array", "row", "map", "json") %in% data_type)
   
   # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
@@ -26,7 +28,7 @@ athena_read.athena_data.table <- function(method, File, athena_types, con, ...){
       File,
       col.names = names(Type2),
       colClasses = unname(Type2),
-      sep = ",",
+      sep = sep,
       showProgress = F,
       na.strings="",
       fill = fill)
@@ -38,7 +40,7 @@ athena_read.athena_data.table <- function(method, File, athena_types, con, ...){
       col.names = names(Type),
       colClasses = unname(Type),
       tz = con@info$timezone,
-      sep = ",",
+      sep = sep,
       showProgress = F,
       na.strings="",
       fill = fill)
