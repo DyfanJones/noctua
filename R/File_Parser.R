@@ -1,14 +1,7 @@
 format_athena_types <- function(athena_types) {
-  data_type <- tolower(vapply(
-    athena_types,
-    function(x) x$Type,
-    FUN.VALUE = character(1)
-  ))
-  names(data_type) <- vapply(
-    athena_types,
-    function(x) x$Name,
-    FUN.VALUE = character(1)
-  )
+  result <- do.call(rbind, athena_types)[, c("Name", "Type")]
+  data_type <- tolower(result[, 2])
+  names(data_type) <- result[, 1]
   return(data_type)
 }
 
@@ -31,7 +24,6 @@ athena_read.athena_data.table <- function(
   Type2 <- Type <- AthenaToRDataType(method, data_type)
   # Type2 is to handle issue with data.table fread
   Type2[Type2 %in% "POSIXct"] <- "character"
-  sep <- if (length(Type) == 1L) "\n" else ","
   fill <- any(c("array", "row", "map", "json") %in% data_type)
 
   # currently parameter data.table is left as default. If users require data.frame to be returned then parameter will be updated
@@ -41,7 +33,7 @@ athena_read.athena_data.table <- function(
       File,
       col.names = names(Type2),
       colClasses = unname(Type2),
-      sep = sep,
+      sep = ",",
       showProgress = F,
       na.strings = "",
       fill = fill
@@ -60,7 +52,7 @@ athena_read.athena_data.table <- function(
       col.names = names(Type),
       colClasses = unname(Type),
       tz = con@info$timezone,
-      sep = sep,
+      sep = ",",
       showProgress = F,
       na.strings = "",
       fill = fill
