@@ -1,5 +1,5 @@
 format_athena_types <- function(athena_types) {
-  result <- do.call(rbind, athena_types)[, c("Name", "Type")]
+  result <- do.call(rbind, athena_types)[, c("Name", "Type"), drop = FALSE]
   data_type <- tolower(result[, 2])
   names(data_type) <- result[, 1]
   return(data_type)
