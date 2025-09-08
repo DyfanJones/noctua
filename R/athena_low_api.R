@@ -39,6 +39,11 @@
 #'           If set to \code{FALSE} the out put location in the workgroup's result configuration will be updated with the new value.
 #'           For more information, see \href{https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html}{Workgroup Settings Override Client-Side Settings}.
 #' @param state The workgroup state that will be updated for the given workgroup.
+#' @param engine_version The engine version requested when a workgroup is updated.
+#' \describe{
+#'  \item{SelectedEngineVersion}{The engine version requested by the user.}
+#'  \item{EffectiveEngineVersion}{The engine version on which the query runs.}
+#' }
 #'
 #' @return
 #' \describe{
@@ -188,7 +193,8 @@ update_work_group <- function(
   publish_cloud_watch_metrics = FALSE,
   bytes_scanned_cut_off = 10000000L,
   description = NULL,
-  state = c("ENABLED", "DISABLED")
+  state = c("ENABLED", "DISABLED"),
+  engine_version = list()
 ) {
   con_error_msg(conn, "Connection already closed.")
   stopifnot(
@@ -206,7 +212,8 @@ update_work_group <- function(
     RemoveOutputLocation = remove_output_location,
     EnforceWorkGroupConfiguration = enforce_work_group_config,
     PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
-    BytesScannedCutoffPerQuery = bytes_scanned_cut_off
+    BytesScannedCutoffPerQuery = bytes_scanned_cut_off,
+    EngineVersion = engine_version
   ))
 
   tryCatch(conn@ptr$Athena$update_work_group(

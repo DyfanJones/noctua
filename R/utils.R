@@ -164,7 +164,8 @@ work_group_config_update <-
     RemoveOutputLocation = FALSE,
     EnforceWorkGroupConfiguration = FALSE,
     PublishCloudWatchMetricsEnabled = FALSE,
-    BytesScannedCutoffPerQuery = 10000000L
+    BytesScannedCutoffPerQuery = 10000000L,
+    EngineVersion = list()
   ) {
     ConfigurationUpdates <- list()
     ResultConfigurationUpdates <- list(
@@ -194,6 +195,14 @@ work_group_config_update <-
       "BytesScannedCutoffPerQuery"
     ] <- BytesScannedCutoffPerQuery
 
+    if (
+      any(
+        names(EngineVersion) %in%
+          c("SelectedEngineVersion", "EffectiveEngineVersion")
+      )
+    ) {
+      ConfigurationUpdates["EngineVersion"] <- EngineVersion
+    }
     ConfigurationUpdates
   }
 

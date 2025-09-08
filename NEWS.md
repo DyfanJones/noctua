@@ -1,6 +1,11 @@
 # noctua 2.6.3
 ## Bug Fix:
 * Unload option returns null results when s3_staging_dir is a bucket only (#214) thanks to @dfsnow for implementing solution
+* Add support for describe (#218) thanks to @tyner for raising issue
+* Add support for `EXPLAIN (TYPE validate)` (#225) thanks to @tyner for raising issue
+* Fix link for document dbSendQuery (#223) thanks to @tyner for raising issue
+* Return athena option environment from `noctua_options` (#226) thanks to @tyner for raising issue
+* Support `SelectedEngineVersion` in `update_work_group` (#224) thanks to @tyner for raising issue
 
 # noctua 2.6.2
 ## Feature:
