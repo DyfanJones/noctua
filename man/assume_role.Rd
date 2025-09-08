@@ -58,5 +58,5 @@ con <- dbConnect(noctua::athena())
 }
 }
 \seealso{
-\code{\link{dbConnect}}
+[dbConnect()]
 }

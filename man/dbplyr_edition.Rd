@@ -8,7 +8,7 @@
 dbplyr_edition.AthenaConnection(con)
 }
 \arguments{
-\item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
+\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
 }
 \value{
 Integer for which version of `dbplyr` is going to be used.

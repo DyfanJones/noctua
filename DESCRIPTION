@@ -19,8 +19,8 @@ Imports:
 Suggests: 
     arrow,
     bit64,
-    dplyr (>= 0.8.0),
-    dbplyr (>= 1.4.3),
+    dplyr (>= 1.0.0),
+    dbplyr (>= 2.3.3),
     testthat,
     tibble,
     vroom (>= 1.2.0),

@@ -26,7 +26,7 @@ db_copy_to.AthenaConnection(
 )
 }
 \arguments{
-\item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
+\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
 
 \item{table}{A character string specifying a table name. Names will be
 automatically quoted so you can use any sequence of characters, not
@@ -114,5 +114,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\code{\link{AthenaWriteTables}}
+\link[=AthenaWriteTables]{AthenaWriteTables}
 }

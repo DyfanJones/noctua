@@ -19,7 +19,7 @@ dbStatistics(res, ...)
 \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
 }
 \description{
-Returns AWS Athena Statistics from execute queries \code{\link{dbSendQuery}}
+Returns AWS Athena Statistics from execute queries \link[=Query]{dbSendQuery()}
 }
 \examples{
 \dontrun{

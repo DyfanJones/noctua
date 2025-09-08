@@ -4,14 +4,11 @@
 \alias{sql_translate_env}
 \alias{sql_translation.AthenaConnection}
 \alias{sql_translate_env.AthenaConnection}
-\alias{sql_escape_string.AthenaConnection}
 \title{AWS Athena backend dbplyr version 1 and 2}
 \usage{
 sql_translation.AthenaConnection(con)
 
 sql_translate_env.AthenaConnection(con)
-
-sql_escape_string.AthenaConnection(con, x)
 }
 \arguments{
 \item{con}{An \code{\linkS4class{AthenaConnection}} object, produced by
@@ -24,6 +21,6 @@ escaped with double quotes.}
 }
 \description{
 Create s3 implementation of \code{sql_translate_env} for AWS Athena sql translate environment based off
-\href{https://docs.aws.amazon.com/athena/latest/ug/data-types.html}{Athena Data Types} and 
+\href{https://docs.aws.amazon.com/athena/latest/ug/data-types.html}{Athena Data Types} and
 \href{https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html}{DML Queries, Functions, and Operators}
 }

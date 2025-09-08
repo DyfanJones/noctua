@@ -28,12 +28,15 @@ sql_query_save.AthenaConnection(
   sql,
   name,
   temporary = TRUE,
-  with = NULL,
-  ...
+  ...,
+  partition = NULL,
+  s3_location = NULL,
+  file_type = NULL,
+  compress = FALSE
 )
 }
 \arguments{
-\item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
+\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
 
 \item{table}{Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.}
 
@@ -116,5 +119,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\code{\link{AthenaWriteTables}} \code{\link{backend_dbplyr_v2}} \code{\link{backend_dbplyr_v1}}
+\link[=AthenaWriteTables]{AthenaWriteTables}
 }

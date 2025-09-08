@@ -11,7 +11,7 @@ db_explain.AthenaConnection(con, sql, ...)
 db_query_fields.AthenaConnection(con, sql, ...)
 }
 \arguments{
-\item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
+\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
 
 \item{sql}{SQL code to be sent to AWS Athena}
 
@@ -28,3 +28,4 @@ These functions are used to build the different types of SQL queries.
 The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
 utilise AWS Glue to speed up sql query execution.
 }
+\keyword{internal}

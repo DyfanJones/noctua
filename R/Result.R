@@ -3,10 +3,12 @@
 #' @include fetch_utils.R
 NULL
 
-AthenaResult <- function(conn,
-                         statement = NULL,
-                         s3_staging_dir = NULL,
-                         unload = FALSE) {
+AthenaResult <- function(
+  conn,
+  statement = NULL,
+  s3_staging_dir = NULL,
+  unload = FALSE
+) {
   stopifnot(is.character(statement))
 
   response <- new.env(parent = emptyenv())
@@ -24,7 +26,8 @@ AthenaResult <- function(conn,
     s3_file <- s3_file %||% uuid::UUIDgenerate()
     statement <- sprintf(
       "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
-      statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
+      statement,
+      file.path(gsub("/$", "", s3_staging_dir), s3_file)
     )
   }
 
@@ -33,7 +36,10 @@ AthenaResult <- function(conn,
       response[["QueryExecutionId"]] <- conn@ptr$Athena$start_query_execution(
         ClientRequestToken = uuid::UUIDgenerate(),
         QueryString = statement,
-        QueryExecutionContext = list(Database = conn@info$dbms.name, Catalog = conn@info$db.catalog),
+        QueryExecutionContext = list(
+          Database = conn@info$dbms.name,
+          Catalog = conn@info$db.catalog
+        ),
         ResultConfiguration = ResultConfiguration(conn),
         WorkGroup = conn@info$work_group
       )$QueryExecutionId
@@ -63,7 +69,7 @@ setClass(
 #'
 #' @note If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
 #'       For example \code{AccessDenied (HTTP 403). Access Denied}.
-#'       It is better use query caching or optionally prevent clear AWS S3 resource using \code{\link{noctua_options}}
+#'       It is better use query caching or optionally prevent clear AWS S3 resource using \link[=noctua_options]{noctua_options}
 #'       so that the warning doesn't repeatedly show.
 #' @name dbClearResult
 #' @inheritParams DBI::dbClearResult
@@ -92,7 +98,8 @@ NULL
 #' @rdname dbClearResult
 #' @export
 setMethod(
-  "dbClearResult", "AthenaResult",
+  "dbClearResult",
+  "AthenaResult",
   function(res, ...) {
     if (!dbIsValid(res)) {
       warning("Result already cleared", call. = FALSE)
@@ -104,29 +111,39 @@ setMethod(
 
       # checks status of query
       if (is.null(res@info[["Status"]])) {
-        retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
-          QueryExecutionId = res@info[["QueryExecutionId"]]
-        ))
+        retry_api_call(
+          query_execution <- res@connection@ptr$Athena$get_query_execution(
+            QueryExecutionId = res@info[["QueryExecutionId"]]
+          )
+        )
         res@info[["OutputLocation"]] <-
-          query_execution[["QueryExecution"]][["ResultConfiguration"]][["OutputLocation"]]
+          query_execution[["QueryExecution"]][["ResultConfiguration"]][[
+            "OutputLocation"
+          ]]
         res@info[["StatementType"]] <-
           query_execution[["QueryExecution"]][["StatementType"]]
       }
 
       # Don't clear S3 resource for caching or skipping
-      if (athena_option_env$cache_size == 0 & athena_option_env$clear_s3_resource) {
+      if (
+        athena_option_env$cache_size == 0 & athena_option_env$clear_s3_resource
+      ) {
         result_info <- split_s3_uri(res@info[["OutputLocation"]])
 
         # Output error as warning if S3 resource can't be dropped
         tryCatch(
           res@connection@ptr$S3$delete_object(
-            Bucket = result_info$bucket, Key = paste0(result_info$key, ".metadata")
+            Bucket = result_info$bucket,
+            Key = paste0(result_info$key, ".metadata")
           ),
           error = function(e) warning(e, call. = F)
         )
 
         # remove manifest csv created with CTAS statements
-        if (res@info[["StatementType"]] == "DDL" || !is.null(res@info[["UnloadDir"]])) {
+        if (
+          res@info[["StatementType"]] == "DDL" ||
+            !is.null(res@info[["UnloadDir"]])
+        ) {
           tryCatch(
             {
               res@connection@ptr$S3$delete_object(
@@ -149,15 +166,24 @@ setMethod(
         } else {
           # Check S3 Prefix for AWS Athena results
           result_info <- split_s3_uri(res@connection@info[["s3_staging"]])
-          result_info$key <- file.path(gsub("/$", "", result_info$key), res@info$UnloadDir)
+          result_info$key <- file.path(
+            gsub("/$", "", result_info$key),
+            res@info$UnloadDir
+          )
           all_keys <- list()
           token <- NULL
           i <- 1
           # Get all s3 objects linked to table
           while (is.null(token) || length(token) != 0) {
-            objects <- res@connection@ptr$S3$list_objects_v2(Bucket = result_info$bucket, Prefix = result_info$key, ContinuationToken = token)
+            objects <- res@connection@ptr$S3$list_objects_v2(
+              Bucket = result_info$bucket,
+              Prefix = result_info$key,
+              ContinuationToken = token
+            )
             token <- objects$NextContinuationToken
-            all_keys[[i]] <- lapply(objects$Contents, function(x) list(Key = x$Key))
+            all_keys[[i]] <- lapply(objects$Contents, function(x) {
+              list(Key = x$Key)
+            })
             i <- i + 1
           }
           all_keys <- unlist(all_keys, recursive = FALSE, use.names = FALSE)
@@ -218,7 +244,8 @@ NULL
 #' @rdname dbFetch
 #' @export
 setMethod(
-  "dbFetch", "AthenaResult",
+  "dbFetch",
+  "AthenaResult",
   function(res, n = -1, ...) {
     con_error_msg(res, msg = "Result already cleared.")
 
@@ -238,10 +265,12 @@ setMethod(
     }
 
     # return metadata of athena data types
-    retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(
-      QueryExecutionId = res@info[["QueryExecutionId"]],
-      MaxResults = as.integer(1)
-    )[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]])
+    retry_api_call(
+      result_class <- res@connection@ptr$Athena$get_query_results(
+        QueryExecutionId = res@info[["QueryExecutionId"]],
+        MaxResults = as.integer(1)
+      )[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]]
+    )
 
     if (n >= 0 && n != Inf) {
       return(.fetch_n(res, result_class, n))
@@ -249,7 +278,9 @@ setMethod(
 
     # Added data scan information when returning data from athena
     info_msg(
-      "(Data scanned: ", data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]), ")"
+      "(Data scanned: ",
+      data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]),
+      ")"
     )
 
     if (!is.null(res@info[["UnloadDir"]])) {
@@ -293,7 +324,8 @@ NULL
 #' @rdname dbHasCompleted
 #' @export
 setMethod(
-  "dbHasCompleted", "AthenaResult",
+  "dbHasCompleted",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
     output <- TRUE
@@ -303,11 +335,16 @@ setMethod(
     }
 
     # get status of query
-    retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
-      QueryExecutionId = res@info[["QueryExecutionId"]]
-    ))
+    retry_api_call(
+      query_execution <- res@connection@ptr$Athena$get_query_execution(
+        QueryExecutionId = res@info[["QueryExecutionId"]]
+      )
+    )
 
-    if (query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("RUNNING", "QUEUED")) {
+    if (
+      query_execution[["QueryExecution"]][["Status"]][["State"]] %in%
+        c("RUNNING", "QUEUED")
+    ) {
       output <- FALSE
     }
 
@@ -318,7 +355,8 @@ setMethod(
 #' @rdname dbIsValid
 #' @export
 setMethod(
-  "dbIsValid", "AthenaResult",
+  "dbIsValid",
+  "AthenaResult",
   function(dbObj, ...) {
     resource_active(dbObj)
   }
@@ -328,7 +366,8 @@ setMethod(
 #' @inheritParams DBI::dbGetInfo
 #' @export
 setMethod(
-  "dbGetInfo", "AthenaResult",
+  "dbGetInfo",
+  "AthenaResult",
   function(dbObj, ...) {
     con_error_msg(dbObj, msg = "Result already cleared.")
     info <- as.list(dbObj@info)
@@ -369,7 +408,8 @@ NULL
 #' @rdname dbColumnInfo
 #' @export
 setMethod(
-  "dbColumnInfo", "AthenaResult",
+  "dbColumnInfo",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
 
@@ -383,29 +423,34 @@ setMethod(
       stop(res@info[["StateChangeReason"]], call. = FALSE)
     }
 
-    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(
-      QueryExecutionId = res@info[["QueryExecutionId"]],
-      MaxResults = as.integer(1)
-    ))
+    retry_api_call(
+      result <- res@connection@ptr$Athena$get_query_results(
+        QueryExecutionId = res@info[["QueryExecutionId"]],
+        MaxResults = as.integer(1)
+      )
+    )
 
-    Name <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
+    Name <- vapply(
+      result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
       function(x) x$Name,
       FUN.VALUE = character(1)
     )
-    Type <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
+    Type <- vapply(
+      result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
       function(x) x$Type,
       FUN.VALUE = character(1)
     )
     data.frame(
       field_name = Name,
-      type = Type, stringsAsFactors = F
+      type = Type,
+      stringsAsFactors = F
     )
   }
 )
 
 #' Show AWS Athena Statistics
 #'
-#' @description Returns AWS Athena Statistics from execute queries \code{\link{dbSendQuery}}
+#' @description Returns AWS Athena Statistics from execute queries \link[=Query]{dbSendQuery()}
 #' @inheritParams DBI::dbColumnInfo
 #' @name dbStatistics
 #' @return \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
@@ -432,14 +477,15 @@ NULL
 
 #' @rdname dbStatistics
 #' @export
-setGeneric("dbStatistics",
-  def = function(res, ...) standardGeneric("dbStatistics")
-)
+setGeneric("dbStatistics", def = function(res, ...) {
+  standardGeneric("dbStatistics")
+})
 
 #' @rdname dbStatistics
 #' @export
 setMethod(
-  "dbStatistics", "AthenaResult",
+  "dbStatistics",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
 
@@ -486,7 +532,8 @@ NULL
 #' @rdname dbGetStatement
 #' @export
 setMethod(
-  "dbGetStatement", "AthenaResult",
+  "dbGetStatement",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
     return(res@info[["Query"]])

@@ -30,7 +30,7 @@ Send query, retrieve results and then clear result set
 \note{
 If the user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
       For example \code{AccessDenied (HTTP 403). Access Denied}.
-      It is better use query caching or optionally prevent clear AWS S3 resource using \code{\link{noctua_options}}
+      It is better use query caching or optionally prevent clear AWS S3 resource using \link[=noctua_options]{noctua_options()}
       so that the warning doesn't repeatedly show.
 }
 \examples{

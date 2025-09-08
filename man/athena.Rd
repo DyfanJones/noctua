@@ -13,5 +13,5 @@ athena()
 Driver for an Athena paws connection.
 }
 \seealso{
-\code{\link{dbConnect}}
+\link[=dbConnect]{dbConnect()}
 }

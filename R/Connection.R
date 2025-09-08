@@ -17,32 +17,43 @@ NULL
 
 class_cache <- new.env(parent = emptyenv())
 
-AthenaConnection <- function(aws_access_key_id = NULL,
-                             aws_secret_access_key = NULL,
-                             aws_session_token = NULL,
-                             catalog_name = NULL,
-                             schema_name = NULL,
-                             work_group = NULL,
-                             poll_interval = NULL,
-                             encryption_option = NULL,
-                             kms_key = NULL,
-                             s3_staging_dir = NULL,
-                             region_name = NULL,
-                             profile_name = NULL,
-                             aws_expiration = NULL,
-                             keyboard_interrupt = NULL,
-                             endpoint_override = NULL,
-                             ...) {
+AthenaConnection <- function(
+  aws_access_key_id = NULL,
+  aws_secret_access_key = NULL,
+  aws_session_token = NULL,
+  catalog_name = NULL,
+  schema_name = NULL,
+  work_group = NULL,
+  poll_interval = NULL,
+  encryption_option = NULL,
+  kms_key = NULL,
+  s3_staging_dir = NULL,
+  region_name = NULL,
+  profile_name = NULL,
+  aws_expiration = NULL,
+  keyboard_interrupt = NULL,
+  endpoint_override = NULL,
+  ...
+) {
   kwargs <- list(...)
   # get lower level paws methods
   get_region <- pkg_method("get_region", "paws.common")
   get_profile_name <- pkg_method("get_profile_name", "paws.common")
 
   # get region name
-  RegionName <- (region_name %||% get_region(profile_name)) %||% get_aws_env("AWS_DEFAULT_REGION")
+  RegionName <- (region_name %||% get_region(profile_name)) %||%
+    get_aws_env("AWS_DEFAULT_REGION")
 
   # get profile_name
-  prof_name <- if (!(is.null(aws_access_key_id) || is.null(aws_secret_access_key) || is.null(aws_session_token))) NULL else get_profile_name(profile_name)
+  prof_name <- if (
+    !(is.null(aws_access_key_id) ||
+      is.null(aws_secret_access_key) ||
+      is.null(aws_session_token))
+  ) {
+    NULL
+  } else {
+    get_profile_name(profile_name)
+  }
 
   # format credentials to pass to paws sdk
   Config <- cred_set(
@@ -62,28 +73,49 @@ AthenaConnection <- function(aws_access_key_id = NULL,
   endpoints <- set_endpoints(endpoint_override)
 
   tryCatch({
-    Athena <- paws::athena(config = modifyList(Config, c(kwargs, list(endpoint = endpoints$athena))))
-    S3 <- paws::s3(config = modifyList(Config, c(kwargs, list(endpoint = endpoints$s3))))
-    glue <- paws::glue(config = modifyList(Config, c(kwargs, list(endpoint = endpoints$glue))))
+    Athena <- paws::athena(
+      config = modifyList(Config, c(kwargs, list(endpoint = endpoints$athena)))
+    )
+    S3 <- paws::s3(
+      config = modifyList(Config, c(kwargs, list(endpoint = endpoints$s3)))
+    )
+    glue <- paws::glue(
+      config = modifyList(Config, c(kwargs, list(endpoint = endpoints$glue)))
+    )
   })
 
   if (is.null(s3_staging_dir) && !is.null(work_group)) {
     tryCatch(
-      s3_staging_dir <- Athena$get_work_group(WorkGroup = work_group)$WorkGroup$Configuration$ResultConfiguration$OutputLocation
+      s3_staging_dir <- Athena$get_work_group(
+        WorkGroup = work_group
+      )$WorkGroup$Configuration$ResultConfiguration$OutputLocation
     )
   }
   # return a subset of api function to reduce object size
   ptr_ll <- list(
     Athena = Athena[c(
-      ".internal", "start_query_execution", "get_query_execution",
-      "stop_query_execution", "get_query_results", "get_work_group",
-      "list_work_groups", "list_data_catalogs", "list_databases",
-      "get_table_metadata", "update_work_group", "create_work_group",
+      ".internal",
+      "start_query_execution",
+      "get_query_execution",
+      "stop_query_execution",
+      "get_query_results",
+      "get_work_group",
+      "list_work_groups",
+      "list_data_catalogs",
+      "list_databases",
+      "get_table_metadata",
+      "update_work_group",
+      "create_work_group",
       "delete_work_group"
     )],
     S3 = S3[c(
-      ".internal", "put_object", "get_object", "download_file",
-      "delete_object", "delete_objects", "list_objects_v2"
+      ".internal",
+      "put_object",
+      "get_object",
+      "download_file",
+      "delete_object",
+      "delete_objects",
+      "list_objects_v2"
     )]
   )
   s3_staging_dir <- s3_staging_dir %||% get_aws_env("AWS_ATHENA_S3_STAGING_DIR")
@@ -96,11 +128,15 @@ AthenaConnection <- function(aws_access_key_id = NULL,
     )
   }
   info <- list(
-    profile_name = prof_name, s3_staging = s3_staging_dir,
-    db.catalog = catalog_name, dbms.name = schema_name,
+    profile_name = prof_name,
+    s3_staging = s3_staging_dir,
+    db.catalog = catalog_name,
+    dbms.name = schema_name,
     work_group = work_group %||% "primary",
-    poll_interval = poll_interval, encryption_option = encryption_option,
-    kms_key = kms_key, expiration = aws_expiration,
+    poll_interval = poll_interval,
+    encryption_option = encryption_option,
+    kms_key = kms_key,
+    expiration = aws_expiration,
     timezone = character(),
     keyboard_interrupt = keyboard_interrupt,
     region_name = RegionName,
@@ -129,7 +165,8 @@ setClass(
 #' @rdname AthenaConnection
 #' @export
 setMethod(
-  "show", "AthenaConnection",
+  "show",
+  "AthenaConnection",
   function(object) {
     cat("<AthenaConnection>\n")
     if (!dbIsValid(object)) {
@@ -165,7 +202,8 @@ NULL
 #' @rdname dbDisconnect
 #' @export
 setMethod(
-  "dbDisconnect", "AthenaConnection",
+  "dbDisconnect",
+  "AthenaConnection",
   function(conn, ...) {
     if (!dbIsValid(conn)) {
       warning("Connection already closed.", call. = FALSE)
@@ -216,7 +254,8 @@ NULL
 #' @rdname dbIsValid
 #' @export
 setMethod(
-  "dbIsValid", "AthenaConnection",
+  "dbIsValid",
+  "AthenaConnection",
   function(dbObj, ...) {
     resource_active(dbObj)
   }
@@ -225,7 +264,7 @@ setMethod(
 #' Execute a query on Athena
 #'
 #' @description The \code{dbSendQuery()} and \code{dbSendStatement()} method submits a query to Athena but does not wait for query to execute.
-#'              \code{\link{dbHasCompleted}} method will need to ran to check if query has been completed or not.
+#'              \link[=dbHasCompleted]{dbHasCompleted()} method will need to ran to check if query has been completed or not.
 #'              The \code{dbExecute()} method submits a query to Athena and waits for the query to be executed.
 #' @name Query
 #' @inheritParams DBI::dbSendQuery
@@ -258,11 +297,9 @@ NULL
 #' @rdname Query
 #' @export
 setMethod(
-  "dbSendQuery", c("AthenaConnection", "character"),
-  function(conn,
-           statement,
-           unload = athena_unload(),
-           ...) {
+  "dbSendQuery",
+  c("AthenaConnection", "character"),
+  function(conn, statement, unload = athena_unload(), ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
     res <- AthenaResult(
@@ -278,11 +315,9 @@ setMethod(
 #' @rdname Query
 #' @export
 setMethod(
-  "dbSendStatement", c("AthenaConnection", "character"),
-  function(conn,
-           statement,
-           unload = athena_unload(),
-           ...) {
+  "dbSendStatement",
+  c("AthenaConnection", "character"),
+  function(conn, statement, unload = athena_unload(), ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
     res <- AthenaResult(
@@ -298,11 +333,9 @@ setMethod(
 #' @rdname Query
 #' @export
 setMethod(
-  "dbExecute", c("AthenaConnection", "character"),
-  function(conn,
-           statement,
-           unload = athena_unload(),
-           ...) {
+  "dbExecute",
+  c("AthenaConnection", "character"),
+  function(conn, statement, unload = athena_unload(), ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(unload))
     res <- AthenaResult(
@@ -376,9 +409,13 @@ setMethod("dbDataType", "AthenaConnection", function(dbObj, obj, ...) {
 
 #' @rdname dbDataType
 #' @export
-setMethod("dbDataType", c("AthenaConnection", "data.frame"), function(dbObj, obj, ...) {
-  vapply(obj, AthenaDataType, FUN.VALUE = character(1), USE.NAMES = TRUE)
-})
+setMethod(
+  "dbDataType",
+  c("AthenaConnection", "data.frame"),
+  function(dbObj, obj, ...) {
+    vapply(obj, AthenaDataType, FUN.VALUE = character(1), USE.NAMES = TRUE)
+  }
+)
 
 
 #' Quote Identifiers
@@ -392,21 +429,34 @@ setMethod("dbDataType", c("AthenaConnection", "data.frame"), function(dbObj, obj
 NULL
 
 # import DBI quote_string method
-dbi_quote <- methods::getMethod("dbQuoteString", c("DBIConnection", "character"), asNamespace("DBI"))
+dbi_quote <- methods::getMethod(
+  "dbQuoteString",
+  c("DBIConnection", "character"),
+  asNamespace("DBI")
+)
 
 detect_date <- function(x, try_format = c("%Y-%m-%d", "%Y/%m/%d")) {
-  return(all_dates = all(try(as.Date(x, tryFormats = try_format), silent = T) == x) & all(nchar(x) == 10))
+  return(
+    all_dates = all(try(as.Date(x, tryFormats = try_format), silent = T) == x) &
+      all(nchar(x) == 10)
+  )
 }
 
 detect_date_time <- function(x) {
-  timestamp_fmt <- c("%Y-%m-%d %H:%M:%OS", "%Y/%m/%d %H:%M:%OS", "%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M")
+  timestamp_fmt <- c(
+    "%Y-%m-%d %H:%M:%OS",
+    "%Y/%m/%d %H:%M:%OS",
+    "%Y-%m-%d %H:%M",
+    "%Y/%m/%d %H:%M"
+  )
   return(all(try(as.POSIXct(x, tryFormats = timestamp_fmt), silent = T) == x))
 }
 
 #' @rdname dbQuote
 #' @export
 setMethod(
-  "dbQuoteString", c("AthenaConnection", "character"),
+  "dbQuoteString",
+  c("AthenaConnection", "character"),
   function(conn, x, ...) {
     if (identical(dbplyr_env$major, 2L)) {
       all_ts <- detect_date_time(x)
@@ -414,7 +464,10 @@ setMethod(
       if (all_dates & !is.na(all_dates)) {
         return(paste0("date ", dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...)))
       } else if (all_ts & !is.na(all_ts)) {
-        return(paste0("timestamp ", dbi_quote(conn, strftime(x, "%Y-%m-%d %H:%M:%OS3"), ...)))
+        return(paste0(
+          "timestamp ",
+          dbi_quote(conn, strftime(x, "%Y-%m-%d %H:%M:%OS3"), ...)
+        ))
       }
     }
     return(dbi_quote(conn, x, ...))
@@ -424,7 +477,8 @@ setMethod(
 #' @rdname dbQuote
 #' @export
 setMethod(
-  "dbQuoteString", c("AthenaConnection", "POSIXct"),
+  "dbQuoteString",
+  c("AthenaConnection", "POSIXct"),
   function(conn, x, ...) {
     x <- strftime(x, "%Y-%m-%d %H:%M:%OS3")
     paste0("timestamp ", dbi_quote(conn, x, ...))
@@ -434,7 +488,8 @@ setMethod(
 #' @rdname dbQuote
 #' @export
 setMethod(
-  "dbQuoteString", c("AthenaConnection", "Date"),
+  "dbQuoteString",
+  c("AthenaConnection", "Date"),
   function(conn, x, ...) {
     paste0("date ", dbi_quote(conn, strftime(x, "%Y-%m-%d"), ...))
   }
@@ -443,7 +498,8 @@ setMethod(
 #' @rdname dbQuote
 #' @export
 setMethod(
-  "dbQuoteIdentifier", c("AthenaConnection", "SQL"),
+  "dbQuoteIdentifier",
+  c("AthenaConnection", "SQL"),
   getMethod("dbQuoteIdentifier", c("DBIConnection", "SQL"), asNamespace("DBI"))
 )
 
@@ -480,7 +536,8 @@ NULL
 #' @rdname dbListTables
 #' @export
 setMethod(
-  "dbListTables", "AthenaConnection",
+  "dbListTables",
+  "AthenaConnection",
   function(conn, catalog = NULL, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     cat_filter <- ""
@@ -497,7 +554,7 @@ setMethod(
         paste(tolower(schema), collapse = "', '")
       )
     }
-    
+
     query <- "select
       table_name
     from information_schema.tables
@@ -547,10 +604,11 @@ setGeneric("dbGetTables", function(conn, ...) standardGeneric("dbGetTables"))
 #' @rdname dbGetTables
 #' @export
 setMethod(
-  "dbGetTables", "AthenaConnection",
+  "dbGetTables",
+  "AthenaConnection",
   function(conn, catalog = NULL, schema = NULL, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
-    
+
     cat_filter <- ""
     db_filter <- ""
     if (!is.null(catalog)) {
@@ -565,7 +623,7 @@ setMethod(
         paste(tolower(schema), collapse = "', '")
       )
     }
-    
+
     query <- "select
       table_catalog as Catalog,
       table_schema as Schema,
@@ -618,7 +676,8 @@ NULL
 #' @rdname dbListFields
 #' @export
 setMethod(
-  "dbListFields", c("AthenaConnection", "character"),
+  "dbListFields",
+  c("AthenaConnection", "character"),
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
@@ -630,8 +689,16 @@ setMethod(
       )$TableMetadata
     )
 
-    col_names <- vapply(output$Columns, function(y) y$Name, FUN.VALUE = character(1))
-    partitions <- vapply(output$PartitionKeys, function(y) y$Name, FUN.VALUE = character(1))
+    col_names <- vapply(
+      output$Columns,
+      function(y) y$Name,
+      FUN.VALUE = character(1)
+    )
+    partitions <- vapply(
+      output$PartitionKeys,
+      function(y) y$Name,
+      FUN.VALUE = character(1)
+    )
     c(col_names, partitions)
   }
 )
@@ -672,34 +739,42 @@ NULL
 #' @rdname dbExistsTable
 #' @export
 setMethod(
-  "dbExistsTable", c("AthenaConnection", "character"),
+  "dbExistsTable",
+  c("AthenaConnection", "character"),
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
     for (i in seq_len(athena_option_env$retry + 1)) {
-      resp <- tryCatch({
-        conn@ptr$Athena$get_table_metadata(
-          CatalogName = ll[["db.catalog"]],
-          DatabaseName = ll[["dbms.name"]],
-          TableName = ll[["table"]]
-        )
-      }, error = function(err) {
-        err_msg = err$message
-        if(i == (athena_option_env$retry + 1)) {
-          stop(err_msg, call. = F)
-        } 
-        if (!grepl("EntityNotFoundException|Cannot.*find.*catalog", err_msg)) {
-          backoff <- 2**i * 0.5
-          info_msg(err_msg)
-          info_msg(
-            paste("Request failed. Retrying in", backoff, "seconds...")
+      resp <- tryCatch(
+        {
+          conn@ptr$Athena$get_table_metadata(
+            CatalogName = ll[["db.catalog"]],
+            DatabaseName = ll[["dbms.name"]],
+            TableName = ll[["table"]]
           )
-          Sys.sleep(backoff)
-          return(err)
+        },
+        error = function(err) {
+          err_msg = err$message
+          if (i == (athena_option_env$retry + 1)) {
+            stop(err_msg, call. = F)
+          }
+          if (
+            !grepl("EntityNotFoundException|Cannot.*find.*catalog", err_msg)
+          ) {
+            backoff <- 2**i * 0.5
+            info_msg(err_msg)
+            info_msg(
+              paste("Request failed. Retrying in", backoff, "seconds...")
+            )
+            Sys.sleep(backoff)
+            return(err)
+          }
+          return(FALSE)
         }
-        return(FALSE)
-      })
-      if (inherits(resp, "error")) next
+      )
+      if (inherits(resp, "error")) {
+        next
+      }
       break
     }
     return(is.list(resp))
@@ -709,10 +784,12 @@ setMethod(
 #' @rdname dbExistsTable
 #' @export
 setMethod(
-  "dbExistsTable", c("AthenaConnection", "Id"),
+  "dbExistsTable",
+  c("AthenaConnection", "Id"),
   function(conn, name, ...) {
     dbExistsTable(conn, dbQuoteIdentifier(conn, name), ...)
-})
+  }
+)
 
 #' Remove table from Athena
 #'
@@ -755,7 +832,8 @@ NULL
 #' @rdname dbRemoveTable
 #' @export
 setMethod(
-  "dbRemoveTable", c("AthenaConnection", "character"),
+  "dbRemoveTable",
+  c("AthenaConnection", "character"),
   function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(
@@ -769,7 +847,7 @@ setMethod(
       DatabaseName = ll[["dbms.name"]],
       TableName = ll[["table"]]
     )[["TableMetadata"]]
-    
+
     if (delete_data && TableMeta$TableType == "EXTERNAL_TABLE") {
       s3_path <- split_s3_uri(TableMeta$Parameters$location)
       # Detect if key ends with "/" or if it has ".": https://github.com/DyfanJones/noctua/issues/125
@@ -782,10 +860,14 @@ setMethod(
       # Get all s3 objects linked to table
       while (is.null(token) || length(token) != 0) {
         objects <- conn@ptr$S3$list_objects_v2(
-          Bucket = s3_path[["bucket"]], Prefix = s3_path[["key"]], ContinuationToken = token
+          Bucket = s3_path[["bucket"]],
+          Prefix = s3_path[["key"]],
+          ContinuationToken = token
         )
         token <- objects[["NextContinuationToken"]]
-        all_keys[[i]] <- lapply(objects[["Contents"]], function(x) list(Key = x[["Key"]]))
+        all_keys[[i]] <- lapply(objects[["Contents"]], function(x) {
+          list(Key = x[["Key"]])
+        })
         i <- i + 1
       }
       info_msg(
@@ -805,20 +887,32 @@ setMethod(
         # Delete S3 files in batch size 1000
         key_parts <- split_vec(all_keys, 1000)
         for (i in seq_along(key_parts)) {
-          conn@ptr$S3$delete_objects(Bucket = s3_path$bucket, Delete = list(Objects = key_parts[[i]]))
+          conn@ptr$S3$delete_objects(
+            Bucket = s3_path$bucket,
+            Delete = list(Objects = key_parts[[i]])
+          )
         }
       } else {
-        warning(sprintf(
-          'Failed to remove AWS S3 files from: "s3://%s/%s". Please check if AWS S3 files exist.',
-          s3_path$bucket, s3_path$key
-        ), call. = F)
+        warning(
+          sprintf(
+            'Failed to remove AWS S3 files from: "s3://%s/%s". Please check if AWS S3 files exist.',
+            s3_path$bucket,
+            s3_path$key
+          ),
+          call. = F
+        )
       }
     }
-    
-    # Drop Athena table
-    dbExecute(conn, sprintf('DROP TABLE IF EXISTS `%s`', paste(ll, collapse = '`.`')))
 
-    if (!delete_data) info_msg("Only Athena table has been removed.")
+    # Drop Athena table
+    dbExecute(
+      conn,
+      sprintf('DROP TABLE IF EXISTS `%s`', paste(ll, collapse = '`.`'))
+    )
+
+    if (!delete_data) {
+      info_msg("Only Athena table has been removed.")
+    }
     on_connection_updated(conn, ll[["table"]])
     invisible(TRUE)
   }
@@ -827,16 +921,18 @@ setMethod(
 #' @rdname dbRemoveTable
 #' @export
 setMethod(
-  "dbRemoveTable", c("AthenaConnection", "Id"),
+  "dbRemoveTable",
+  c("AthenaConnection", "Id"),
   function(conn, name, delete_data = TRUE, confirm = FALSE, ...) {
     dbRemoveTable(conn, dbQuoteIdentifier(conn, name), ...)
-})
+  }
+)
 
 #' Send query, retrieve results and then clear result set
 #'
 #' @note If the user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
 #'       For example \code{AccessDenied (HTTP 403). Access Denied}.
-#'       It is better use query caching or optionally prevent clear AWS S3 resource using \code{\link{noctua_options}}
+#'       It is better use query caching or optionally prevent clear AWS S3 resource using \link[=noctua_options]{noctua_options()}
 #'       so that the warning doesn't repeatedly show.
 #' @name dbGetQuery
 #' @inheritParams DBI::dbGetQuery
@@ -868,19 +964,18 @@ NULL
 #' @rdname dbGetQuery
 #' @export
 setMethod(
-  "dbGetQuery", c("AthenaConnection", "character"),
-  function(conn,
-           statement,
-           statistics = FALSE,
-           unload = athena_unload(),
-           ...) {
+  "dbGetQuery",
+  c("AthenaConnection", "character"),
+  function(conn, statement, statistics = FALSE, unload = athena_unload(), ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics), is.logical(unload))
 
     # dbplyr v2 support: dbplyr class ident
     if (!inherits(statement, "ident")) {
       rs <- dbSendQuery(conn, statement = statement, unload = unload)
-      if (statistics) print(dbStatistics(rs))
+      if (statistics) {
+        print(dbStatistics(rs))
+      }
       out <- dbFetch(res = rs, n = -1, ...)
       dbClearResult(rs)
     } else {
@@ -936,7 +1031,8 @@ NULL
 #' @rdname dbGetInfo
 #' @export
 setMethod(
-  "dbGetInfo", "AthenaConnection",
+  "dbGetInfo",
+  "AthenaConnection",
   function(dbObj, ...) {
     con_error_msg(dbObj, msg = "Connection already closed.")
     info <- as.list(dbObj@info)
@@ -987,14 +1083,17 @@ NULL
 #' @export
 setGeneric(
   "dbGetPartition",
-  def = function(conn, name, ..., .format = FALSE) standardGeneric("dbGetPartition"),
+  def = function(conn, name, ..., .format = FALSE) {
+    standardGeneric("dbGetPartition")
+  },
   valueClass = "data.frame"
 )
 
 #' @rdname dbGetPartition
 #' @export
 setMethod(
-  "dbGetPartition", "AthenaConnection",
+  "dbGetPartition",
+  "AthenaConnection",
   function(conn, name, ..., .format = FALSE) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(.format))
@@ -1002,7 +1101,8 @@ setMethod(
     dt <- dbGetQuery(
       conn,
       sprintf(
-        "SHOW PARTITIONS %s", paste(ll, collapse = ".")
+        "SHOW PARTITIONS %s",
+        paste(ll, collapse = ".")
       )
     )
 
@@ -1010,8 +1110,12 @@ setMethod(
       # ensure returning format is data.table
       dt <- as.data.table(dt)
       dt <- dt[, tstrsplit(dt[[1]], split = "/")]
-      partitions <- sapply(names(dt), function(x) strsplit(dt[[x]][1], split = "=")[[1]][1])
-      for (col in names(dt)) set(dt, j = col, value = tstrsplit(dt[[col]], split = "=")[2])
+      partitions <- sapply(names(dt), function(x) {
+        strsplit(dt[[x]][1], split = "=")[[1]][1]
+      })
+      for (col in names(dt)) {
+        set(dt, j = col, value = tstrsplit(dt[[col]], split = "=")[2])
+      }
       setnames(dt, old = names(dt), new = partitions)
 
       # convert data.table to tibble if using vroom as backend
@@ -1068,11 +1172,19 @@ setGeneric(
 #' @rdname dbShow
 #' @export
 setMethod(
-  "dbShow", "AthenaConnection",
+  "dbShow",
+  "AthenaConnection",
   function(conn, name, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     ll <- db_detect(conn, name)
-    SQL(paste0(dbGetQuery(conn, sprintf("SHOW CREATE TABLE `%s`", paste0(ll, collapse = "`.`")), unload = FALSE)[[1]], collapse = "\n"))
+    SQL(paste0(
+      dbGetQuery(
+        conn,
+        sprintf("SHOW CREATE TABLE `%s`", paste0(ll, collapse = "`.`")),
+        unload = FALSE
+      )[[1]],
+      collapse = "\n"
+    ))
   }
 )
 
@@ -1142,16 +1254,19 @@ setGeneric(
 #' @rdname dbConvertTable
 #' @export
 setMethod(
-  "dbConvertTable", "AthenaConnection",
-  function(conn,
-           obj,
-           name,
-           partition = NULL,
-           s3.location = NULL,
-           file.type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
-           compress = TRUE,
-           data = TRUE,
-           ...) {
+  "dbConvertTable",
+  "AthenaConnection",
+  function(
+    conn,
+    obj,
+    name,
+    partition = NULL,
+    s3.location = NULL,
+    file.type = c("NULL", "csv", "tsv", "parquet", "json", "orc"),
+    compress = TRUE,
+    data = TRUE,
+    ...
+  ) {
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(
       is.character(obj),
@@ -1168,13 +1283,23 @@ setMethod(
     ins <- if (inherits(obj, "SQL")) {
       obj
     } else {
-      sprintf('SELECT * FROM "%s"', paste(db_detect(conn, obj), collapse='"."'))
+      sprintf(
+        'SELECT * FROM "%s"',
+        paste(db_detect(conn, obj), collapse = '"."')
+      )
     }
 
     tt_sql <- paste0(
-      'CREATE TABLE "', paste(db_detect(conn, name), collapse='"."'),
-      '" ', ctas_sql_with(partition, s3.location, file.type, compress), "AS ",
-      ins, "\nWITH", with_data, "DATA", ";"
+      'CREATE TABLE "',
+      paste(db_detect(conn, name), collapse = '"."'),
+      '" ',
+      ctas_sql_with(partition, s3.location, file.type, compress),
+      "AS ",
+      ins,
+      "\nWITH",
+      with_data,
+      "DATA",
+      ";"
     )
     res <- dbExecute(conn, tt_sql, unload = FALSE)
     on.exit(dbClearResult(res))
@@ -1188,11 +1313,13 @@ setMethod(
 #' @inheritParams DBI::dbBegin
 #' @export
 setMethod(
-  "dbBegin", "AthenaConnection",
+  "dbBegin",
+  "AthenaConnection",
   function(conn, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     invisible(TRUE)
-})
+  }
+)
 
 # https://github.com/laughingman7743/PyAthena/blob/f4b21a0b0f501f5c3504698e25081f491a541d4e/pyathena/connection.py#L281C1-L282
 
@@ -1200,11 +1327,13 @@ setMethod(
 #' @inheritParams DBI::dbCommit
 #' @export
 setMethod(
-  "dbCommit", "AthenaConnection",
+  "dbCommit",
+  "AthenaConnection",
   function(conn, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     invisible(TRUE)
-  })
+  }
+)
 
 
 # https://github.com/laughingman7743/PyAthena/blob/f4b21a0b0f501f5c3504698e25081f491a541d4e/pyathena/connection.py#L284-L285
@@ -1212,8 +1341,10 @@ setMethod(
 #' @inheritParams DBI::dbRollback
 #' @export
 setMethod(
-  "dbRollback", "AthenaConnection",
+  "dbRollback",
+  "AthenaConnection",
   function(conn, ...) {
     con_error_msg(conn, msg = "Connection already closed.")
     invisible(TRUE)
-})
+  }
+)
