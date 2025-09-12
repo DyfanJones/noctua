@@ -26,7 +26,7 @@ db_copy_to.AthenaConnection(
 )
 }
 \arguments{
-\item{con}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
+\item{con}{A \link{dbConnect} object, as returned by \code{dbConnect()}}
 
 \item{table}{A character string specifying a table name. Names will be
 automatically quoted so you can use any sequence of characters, not
@@ -40,12 +40,12 @@ just any valid bare table name.}
 
 \item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 
-\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+\item{file_type}{What file type to store data.frame on s3, noctua currently supports \code{c("tsv", "csv", "parquet")}. Default delimited file type is "tsv", in previous versions
 of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
 Athena due to the separating value ",". This would cause issues with AWS Athena.
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is \code{c("csv", "tsv")} then "gzip" compression is used, for file type "parquet"
 "snappy" compression is used.}
 
 \item{max_batch}{Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
@@ -114,5 +114,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\code{\link{AthenaWriteTables}}
+\link{AthenaWriteTables}
 }

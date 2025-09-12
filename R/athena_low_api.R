@@ -5,7 +5,7 @@
 #' \describe{
 #' \item{create_work_group}{Creates a workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_create_work_group/}{link}).
 #'                          The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
-#'                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from \code{\link{dbConnect}}}
+#'                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from [dbConnect]}
 #' \item{tag_options}{Helper function to create tag options for function \code{create_work_group()}}
 #' \item{delete_work_group}{Deletes the workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_delete_work_group/}{link}).
 #'                          The primary workgroup cannot be deleted.}
@@ -13,10 +13,10 @@
 #' \item{get_work_group}{Returns information about the workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_get_work_group/}{link}).}
 #' \item{update_work_group}{Updates the workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_update_work_group/}{link}).
 #'                          The workgroup's name cannot be changed. The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
-#'                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from \code{\link{dbConnect}}}
+#'                          The s3_staging_dir, encryption_option and kms_key parameters are gotten from [dbConnect]}
 #' }
 #'
-#' @param conn A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}
+#' @param conn A [dbConnect] object, as returned by \code{dbConnect()}
 #' @param work_group The Athena workgroup name.
 #' @param enforce_work_group_config If set to \code{TRUE}, the settings for the workgroup override client-side settings.
 #'           If set to \code{FALSE}, client-side settings are used. For more information, see
@@ -39,6 +39,11 @@
 #'           If set to \code{FALSE} the out put location in the workgroup's result configuration will be updated with the new value.
 #'           For more information, see \href{https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html}{Workgroup Settings Override Client-Side Settings}.
 #' @param state The workgroup state that will be updated for the given workgroup.
+#' @param engine_version The engine version requested when a workgroup is updated.
+#' \describe{
+#'  \item{SelectedEngineVersion}{The engine version requested by the user.}
+#'  \item{EffectiveEngineVersion}{The engine version on which the query runs.}
+#' }
 #'
 #' @return
 #' \describe{
@@ -98,13 +103,15 @@ NULL
 
 #' @rdname work_group
 #' @export
-create_work_group <- function(conn,
-                              work_group = NULL,
-                              enforce_work_group_config = FALSE,
-                              publish_cloud_watch_metrics = FALSE,
-                              bytes_scanned_cut_off = 10000000L,
-                              description = NULL,
-                              tags = tag_options(key = NULL, value = NULL)) {
+create_work_group <- function(
+  conn,
+  work_group = NULL,
+  enforce_work_group_config = FALSE,
+  publish_cloud_watch_metrics = FALSE,
+  bytes_scanned_cut_off = 10000000L,
+  description = NULL,
+  tags = tag_options(key = NULL, value = NULL)
+) {
   con_error_msg(conn, "Connection already closed.")
   stopifnot(
     is.character(work_group),
@@ -114,7 +121,8 @@ create_work_group <- function(conn,
     is.character(description)
   )
 
-  Configuration <- list(work_group_config(conn,
+  Configuration <- list(work_group_config(
+    conn,
     EnforceWorkGroupConfiguration = enforce_work_group_config,
     PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
     BytesScannedCutoffPerQuery = bytes_scanned_cut_off
@@ -131,8 +139,7 @@ create_work_group <- function(conn,
 
 #' @rdname work_group
 #' @export
-tag_options <- function(key = NULL,
-                        value = NULL) {
+tag_options <- function(key = NULL, value = NULL) {
   stopifnot(
     is.character(key),
     is.character(value)
@@ -142,13 +149,20 @@ tag_options <- function(key = NULL,
 
 #' @rdname work_group
 #' @export
-delete_work_group <- function(conn, work_group = NULL, recursive_delete_option = FALSE) {
+delete_work_group <- function(
+  conn,
+  work_group = NULL,
+  recursive_delete_option = FALSE
+) {
   con_error_msg(conn, "Connection already closed.")
   stopifnot(
     is.character(work_group),
     is.logical(recursive_delete_option)
   )
-  tryCatch(conn@ptr$Athena$delete_work_group(WorkGroup = work_group, RecursiveDeleteOption = recursive_delete_option))
+  tryCatch(conn@ptr$Athena$delete_work_group(
+    WorkGroup = work_group,
+    RecursiveDeleteOption = recursive_delete_option
+  ))
   invisible(NULL)
 }
 
@@ -171,14 +185,17 @@ get_work_group <- function(conn, work_group = NULL) {
 
 #' @rdname work_group
 #' @export
-update_work_group <- function(conn,
-                              work_group = NULL,
-                              remove_output_location = FALSE,
-                              enforce_work_group_config = FALSE,
-                              publish_cloud_watch_metrics = FALSE,
-                              bytes_scanned_cut_off = 10000000L,
-                              description = NULL,
-                              state = c("ENABLED", "DISABLED")) {
+update_work_group <- function(
+  conn,
+  work_group = NULL,
+  remove_output_location = FALSE,
+  enforce_work_group_config = FALSE,
+  publish_cloud_watch_metrics = FALSE,
+  bytes_scanned_cut_off = 10000000L,
+  description = NULL,
+  state = c("ENABLED", "DISABLED"),
+  engine_version = list()
+) {
   con_error_msg(conn, "Connection already closed.")
   stopifnot(
     is.character(work_group),
@@ -190,11 +207,13 @@ update_work_group <- function(conn,
   )
 
   state <- match.arg(state)
-  ConfigurationUpdates <- list(work_group_config_update(conn,
+  ConfigurationUpdates <- list(work_group_config_update(
+    conn,
     RemoveOutputLocation = remove_output_location,
     EnforceWorkGroupConfiguration = enforce_work_group_config,
     PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
-    BytesScannedCutoffPerQuery = bytes_scanned_cut_off
+    BytesScannedCutoffPerQuery = bytes_scanned_cut_off,
+    EngineVersion = engine_version
   ))
 
   tryCatch(conn@ptr$Athena$update_work_group(
@@ -248,12 +267,14 @@ update_work_group <- function(conn,
 #' }
 #' @name session_token
 #' @export
-get_session_token <- function(profile_name = NULL,
-                              region_name = NULL,
-                              serial_number = NULL,
-                              token_code = NULL,
-                              duration_seconds = 3600L,
-                              set_env = FALSE) {
+get_session_token <- function(
+  profile_name = NULL,
+  region_name = NULL,
+  serial_number = NULL,
+  token_code = NULL,
+  duration_seconds = 3600L,
+  set_env = FALSE
+) {
   stopifnot(
     is.null(profile_name) || is.character(profile_name),
     is.character(serial_number),
@@ -303,7 +324,7 @@ get_session_token <- function(profile_name = NULL,
 #'                         This setting can have a value from 1 hour to 12 hours. By default duration is set to 3600 seconds (1 hour).
 #' @param set_env If set to \code{TRUE} environmental variables \code{AWS_ACCESS_KEY_ID}, \code{AWS_SECRET_ACCESS_KEY} and \code{AWS_SESSION_TOKEN} will be set.
 #' @return \code{assume_role()} returns a list containing: \code{"AccessKeyId"}, \code{"SecretAccessKey"}, \code{"SessionToken"} and \code{"Expiration"}
-#' @seealso \code{\link{dbConnect}}
+#' @seealso [dbConnect()]
 #' @examples
 #' \dontrun{
 #' # Note:
@@ -323,12 +344,14 @@ get_session_token <- function(profile_name = NULL,
 #' con <- dbConnect(noctua::athena())
 #' }
 #' @export
-assume_role <- function(profile_name = NULL,
-                        region_name = NULL,
-                        role_arn = NULL,
-                        role_session_name = sprintf("noctua-session-%s", as.integer(Sys.time())),
-                        duration_seconds = 3600L,
-                        set_env = FALSE) {
+assume_role <- function(
+  profile_name = NULL,
+  region_name = NULL,
+  role_arn = NULL,
+  role_session_name = sprintf("noctua-session-%s", as.integer(Sys.time())),
+  duration_seconds = 3600L,
+  set_env = FALSE
+) {
   stopifnot(
     is.null(profile_name) || is.character(profile_name),
     is.null(region_name) || is.character(region_name),

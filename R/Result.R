@@ -3,10 +3,21 @@
 #' @include fetch_utils.R
 NULL
 
-AthenaResult <- function(conn,
-                         statement = NULL,
-                         s3_staging_dir = NULL,
-                         unload = FALSE) {
+
+#' Athena Result Methods
+#'
+#' Implementations of pure virtual functions defined in the `DBI` package
+#' for AthenaResult objects.
+#' @name AthenaResult
+#' @docType methods
+NULL
+
+AthenaResult <- function(
+  conn,
+  statement = NULL,
+  s3_staging_dir = NULL,
+  unload = FALSE
+) {
   stopifnot(is.character(statement))
 
   response <- new.env(parent = emptyenv())
@@ -24,7 +35,8 @@ AthenaResult <- function(conn,
     s3_file <- s3_file %||% uuid::UUIDgenerate()
     statement <- sprintf(
       "UNLOAD (\n%s)\nTO '%s'\nWITH (format = 'PARQUET',compression = 'SNAPPY')",
-      statement, file.path(gsub("/$", "", s3_staging_dir), s3_file)
+      statement,
+      file.path(gsub("/$", "", s3_staging_dir), s3_file)
     )
   }
 
@@ -33,7 +45,10 @@ AthenaResult <- function(conn,
       response[["QueryExecutionId"]] <- conn@ptr$Athena$start_query_execution(
         ClientRequestToken = uuid::UUIDgenerate(),
         QueryString = statement,
-        QueryExecutionContext = list(Database = conn@info$dbms.name, Catalog = conn@info$db.catalog),
+        QueryExecutionContext = list(
+          Database = conn@info$dbms.name,
+          Catalog = conn@info$db.catalog
+        ),
         ResultConfiguration = ResultConfiguration(conn),
         WorkGroup = conn@info$work_group
       )$QueryExecutionId
@@ -45,7 +60,7 @@ AthenaResult <- function(conn,
   new("AthenaResult", connection = conn, info = response)
 }
 
-#' @rdname AthenaConnection
+#' @rdname AthenaResult
 #' @export
 setClass(
   "AthenaResult",
@@ -56,43 +71,16 @@ setClass(
   )
 )
 
-#' Clear Results
-#'
-#' Frees all resources (local and Athena) associated with result set. It does this by removing query output in AWS S3 Bucket,
-#' stopping query execution if still running and removed the connection resource locally.
-#'
+#' @rdname AthenaResult
+#' @inheritParams DBI::dbClearResult
+#' @param res An object inheriting from [DBI::DBIResult][DBI::DBIResult-class].
 #' @note If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
 #'       For example \code{AccessDenied (HTTP 403). Access Denied}.
-#'       It is better use query caching or optionally prevent clear AWS S3 resource using \code{\link{noctua_options}}
-#'       so that the warning doesn't repeatedly show.
-#' @name dbClearResult
-#' @inheritParams DBI::dbClearResult
-#' @return \code{dbClearResult()} returns \code{TRUE}, invisibly.
-#' @seealso \code{\link[DBI]{dbIsValid}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' res <- dbSendQuery(con, "show databases")
-#' dbClearResult(res)
-#'
-#' # Check if connection if valid after closing connection
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbClearResult
+#'       It is better use query caching or optionally prevent clear AWS S3 resource using [noctua_options]
 #' @export
 setMethod(
-  "dbClearResult", "AthenaResult",
+  "dbClearResult",
+  "AthenaResult",
   function(res, ...) {
     if (!dbIsValid(res)) {
       warning("Result already cleared", call. = FALSE)
@@ -104,29 +92,39 @@ setMethod(
 
       # checks status of query
       if (is.null(res@info[["Status"]])) {
-        retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
-          QueryExecutionId = res@info[["QueryExecutionId"]]
-        ))
+        retry_api_call(
+          query_execution <- res@connection@ptr$Athena$get_query_execution(
+            QueryExecutionId = res@info[["QueryExecutionId"]]
+          )
+        )
         res@info[["OutputLocation"]] <-
-          query_execution[["QueryExecution"]][["ResultConfiguration"]][["OutputLocation"]]
+          query_execution[["QueryExecution"]][["ResultConfiguration"]][[
+            "OutputLocation"
+          ]]
         res@info[["StatementType"]] <-
           query_execution[["QueryExecution"]][["StatementType"]]
       }
 
       # Don't clear S3 resource for caching or skipping
-      if (athena_option_env$cache_size == 0 & athena_option_env$clear_s3_resource) {
+      if (
+        athena_option_env$cache_size == 0 & athena_option_env$clear_s3_resource
+      ) {
         result_info <- split_s3_uri(res@info[["OutputLocation"]])
 
         # Output error as warning if S3 resource can't be dropped
         tryCatch(
           res@connection@ptr$S3$delete_object(
-            Bucket = result_info$bucket, Key = paste0(result_info$key, ".metadata")
+            Bucket = result_info$bucket,
+            Key = paste0(result_info$key, ".metadata")
           ),
           error = function(e) warning(e, call. = F)
         )
 
         # remove manifest csv created with CTAS statements
-        if (res@info[["StatementType"]] == "DDL" || !is.null(res@info[["UnloadDir"]])) {
+        if (
+          res@info[["StatementType"]] == "DDL" ||
+            !is.null(res@info[["UnloadDir"]])
+        ) {
           tryCatch(
             {
               res@connection@ptr$S3$delete_object(
@@ -149,15 +147,24 @@ setMethod(
         } else {
           # Check S3 Prefix for AWS Athena results
           result_info <- split_s3_uri(res@connection@info[["s3_staging"]])
-          result_info$key <- file.path(gsub("/$", "", result_info$key), res@info$UnloadDir)
+          result_info$key <- file.path(
+            gsub("/$", "", result_info$key),
+            res@info$UnloadDir
+          )
           all_keys <- list()
           token <- NULL
           i <- 1
           # Get all s3 objects linked to table
           while (is.null(token) || length(token) != 0) {
-            objects <- res@connection@ptr$S3$list_objects_v2(Bucket = result_info$bucket, Prefix = result_info$key, ContinuationToken = token)
+            objects <- res@connection@ptr$S3$list_objects_v2(
+              Bucket = result_info$bucket,
+              Prefix = result_info$key,
+              ContinuationToken = token
+            )
             token <- objects$NextContinuationToken
-            all_keys[[i]] <- lapply(objects$Contents, function(x) list(Key = x$Key))
+            all_keys[[i]] <- lapply(objects$Contents, function(x) {
+              list(Key = x$Key)
+            })
             i <- i + 1
           }
           all_keys <- unlist(all_keys, recursive = FALSE, use.names = FALSE)
@@ -185,40 +192,12 @@ setMethod(
   }
 )
 
-#' Fetch records from previously executed query
-#'
-#' Currently returns the top n elements (rows) from result set or returns entire table from Athena.
-#' @name dbFetch
-#' @param n maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
-#'          Some implementations may recognize other special values. If entire dataframe is required use \code{n = -1} or \code{n = Inf}.
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbFetch
-#' @return \code{dbFetch()} returns a data frame.
-#' @seealso \code{\link[DBI]{dbFetch}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' res <- dbSendQuery(con, "show databases")
-#' dbFetch(res)
-#' dbClearResult(res)
-#'
-#' # Disconnect from Athena
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbFetch
 #' @export
 setMethod(
-  "dbFetch", "AthenaResult",
+  "dbFetch",
+  "AthenaResult",
   function(res, n = -1, ...) {
     con_error_msg(res, msg = "Result already cleared.")
 
@@ -238,10 +217,12 @@ setMethod(
     }
 
     # return metadata of athena data types
-    retry_api_call(result_class <- res@connection@ptr$Athena$get_query_results(
-      QueryExecutionId = res@info[["QueryExecutionId"]],
-      MaxResults = as.integer(1)
-    )[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]])
+    retry_api_call(
+      result_class <- res@connection@ptr$Athena$get_query_results(
+        QueryExecutionId = res@info[["QueryExecutionId"]],
+        MaxResults = as.integer(1)
+      )[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]]
+    )
 
     if (n >= 0 && n != Inf) {
       return(.fetch_n(res, result_class, n))
@@ -249,7 +230,9 @@ setMethod(
 
     # Added data scan information when returning data from athena
     info_msg(
-      "(Data scanned: ", data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]), ")"
+      "(Data scanned: ",
+      data_scanned(res@info[["Statistics"]][["DataScannedInBytes"]]),
+      ")"
     )
 
     if (!is.null(res@info[["UnloadDir"]])) {
@@ -260,40 +243,12 @@ setMethod(
   }
 )
 
-#' Completion status
-#'
-#' This method returns if the query has completed.
-#' @name dbHasCompleted
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbHasCompleted
-#' @return \code{dbHasCompleted()} returns a logical scalar. \code{TRUE} if the query has completed, \code{FALSE} otherwise.
-#' @seealso \code{\link[DBI]{dbHasCompleted}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' # Check if query has completed
-#' res <- dbSendQuery(con, "show databases")
-#' dbHasCompleted(res)
-#'
-#' dbClearResult(res)
-#'
-#' # Disconnect from Athena
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbHasCompleted
 #' @export
 setMethod(
-  "dbHasCompleted", "AthenaResult",
+  "dbHasCompleted",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
     output <- TRUE
@@ -303,11 +258,16 @@ setMethod(
     }
 
     # get status of query
-    retry_api_call(query_execution <- res@connection@ptr$Athena$get_query_execution(
-      QueryExecutionId = res@info[["QueryExecutionId"]]
-    ))
+    retry_api_call(
+      query_execution <- res@connection@ptr$Athena$get_query_execution(
+        QueryExecutionId = res@info[["QueryExecutionId"]]
+      )
+    )
 
-    if (query_execution[["QueryExecution"]][["Status"]][["State"]] %in% c("RUNNING", "QUEUED")) {
+    if (
+      query_execution[["QueryExecution"]][["Status"]][["State"]] %in%
+        c("RUNNING", "QUEUED")
+    ) {
       output <- FALSE
     }
 
@@ -315,20 +275,25 @@ setMethod(
   }
 )
 
-#' @rdname dbIsValid
+#' @rdname AthenaResult
+#' @inheritParams DBI::dbIsValid
+#' @param dbObj An object inheriting from [DBI::DBIResult][DBI::DBIResult-class],
+#' [DBI::DBIConnection][DBI::DBIConnection-class], or [DBI::DBIDriver][DBI::DBIDriver-class].
 #' @export
 setMethod(
-  "dbIsValid", "AthenaResult",
+  "dbIsValid",
+  "AthenaResult",
   function(dbObj, ...) {
     resource_active(dbObj)
   }
 )
 
-#' @rdname dbGetInfo
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbGetInfo
 #' @export
 setMethod(
-  "dbGetInfo", "AthenaResult",
+  "dbGetInfo",
+  "AthenaResult",
   function(dbObj, ...) {
     con_error_msg(dbObj, msg = "Result already cleared.")
     info <- as.list(dbObj@info)
@@ -336,40 +301,12 @@ setMethod(
   }
 )
 
-#' Information about result types
-#'
-#' Produces a data.frame that describes the output of a query.
-#' @name dbColumnInfo
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbColumnInfo
-#' @return \code{dbColumnInfo()} returns a data.frame with as many rows as there are output fields in the result.
-#'         The data.frame has two columns (field_name, type).
-#' @seealso \code{\link[DBI]{dbHasCompleted}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' # Get Column information from query
-#' res <- dbSendQuery(con, "select * from information_schema.tables")
-#' dbColumnInfo(res)
-#' dbClearResult(res)
-#'
-#' # Disconnect from Athena
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbColumnInfo
 #' @export
 setMethod(
-  "dbColumnInfo", "AthenaResult",
+  "dbColumnInfo",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
 
@@ -383,63 +320,46 @@ setMethod(
       stop(res@info[["StateChangeReason"]], call. = FALSE)
     }
 
-    retry_api_call(result <- res@connection@ptr$Athena$get_query_results(
-      QueryExecutionId = res@info[["QueryExecutionId"]],
-      MaxResults = as.integer(1)
-    ))
+    retry_api_call(
+      result <- res@connection@ptr$Athena$get_query_results(
+        QueryExecutionId = res@info[["QueryExecutionId"]],
+        MaxResults = as.integer(1)
+      )
+    )
 
-    Name <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
+    Name <- vapply(
+      result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
       function(x) x$Name,
       FUN.VALUE = character(1)
     )
-    Type <- vapply(result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
+    Type <- vapply(
+      result[["ResultSet"]][["ResultSetMetadata"]][["ColumnInfo"]],
       function(x) x$Type,
       FUN.VALUE = character(1)
     )
     data.frame(
       field_name = Name,
-      type = Type, stringsAsFactors = F
+      type = Type,
+      stringsAsFactors = F
     )
   }
 )
 
-#' Show AWS Athena Statistics
-#'
-#' @description Returns AWS Athena Statistics from execute queries \code{\link{dbSendQuery}}
+#' @rdname AthenaResult
+#' @description Returns AWS Athena Statistics from execute queries [dbSendQuery]
 #' @inheritParams DBI::dbColumnInfo
-#' @name dbStatistics
-#' @return \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
-#'
-#' library(DBI)
-#' library(noctua)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' res <- dbSendQuery(con, "show databases")
-#' dbStatistics(res)
-#'
-#' # Clean up
-#' dbClearResult(res)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbStatistics
+#' @return `dbStatistics()` returns list containing Athena Statistics return from `paws`.
 #' @export
-setGeneric("dbStatistics",
-  def = function(res, ...) standardGeneric("dbStatistics")
-)
+setGeneric("dbStatistics", def = function(res, ...) {
+  standardGeneric("dbStatistics")
+})
 
-#' @rdname dbStatistics
+#' @rdname AthenaResult
+#' @inheritParams DBI::dbColumnInfo
 #' @export
 setMethod(
-  "dbStatistics", "AthenaResult",
+  "dbStatistics",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
 
@@ -458,35 +378,12 @@ setMethod(
 )
 
 
-#' Get the statement associated with a result set
-#'
-#' Returns the statement that was passed to [dbSendQuery()]
-#' or [dbSendStatement()].
-#' @name dbGetStatement
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbGetStatement
-#' @return \code{dbGetStatement()} returns a character.
-#' @seealso \code{\link[DBI]{dbGetStatement}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' rs <- dbSendQuery(con, "SHOW TABLES in default")
-#' dbGetStatement(rs)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbGetStatement
 #' @export
 setMethod(
-  "dbGetStatement", "AthenaResult",
+  "dbGetStatement",
+  "AthenaResult",
   function(res, ...) {
     con_error_msg(res, msg = "Result already cleared.")
     return(res@info[["Query"]])

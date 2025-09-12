@@ -14,8 +14,8 @@ NULL
 #' Driver for an Athena paws connection.
 #'
 #' @import methods DBI
-#' @return \code{athena()} returns a s4 class. This class is used active Athena method for \code{\link[DBI]{dbConnect}}
-#' @seealso \code{\link{dbConnect}}
+#' @return \code{athena()} returns a s4 class. This class is used active Athena method for [DBI::dbConnect]
+#' @seealso [dbConnect]
 #' @export
 athena <- function() {
   new("AthenaDriver")
@@ -29,22 +29,27 @@ setClass("AthenaDriver", contains = "DBIDriver")
 #' @inheritParams methods::show
 #' @export
 setMethod(
-  "show", "AthenaDriver",
+  "show",
+  "AthenaDriver",
   function(object) {
     cat("<AthenaDriver>\n")
   }
 )
 
-#' @rdname dbDataType
+#' @rdname AthenaDriver
+#' @inheritParams DBI::dbDataType
+#' @param dbObj A object inheriting from [DBI::DBIDriver][DBI::DBIDriver-class] or [DBI::DBIConnection][DBI::DBIConnection-class].
 #' @export
 setMethod("dbDataType", "AthenaDriver", function(dbObj, obj, ...) {
   AthenaDataType(obj)
 })
 
-#' @rdname dbDataType
+#' @rdname AthenaDriver
+#' @inheritParams DBI::dbDataType
 #' @export
 setMethod(
-  "dbDataType", c("AthenaDriver", "list"),
+  "dbDataType",
+  c("AthenaDriver", "list"),
   function(dbObj, obj, ...) {
     AthenaDataType(obj)
   }
@@ -70,6 +75,7 @@ setMethod(
 #' \strong{NOTE:} If you have set any environmental variables in \code{.Renviron} please restart your R in order for the changes to take affect.
 #'
 #' @inheritParams DBI::dbConnect
+#' @param drv A object inheriting from [DBI::DBIDriver][DBI::DBIDriver-class].
 #' @param aws_access_key_id AWS access key ID
 #' @param aws_secret_access_key AWS secret access key
 #' @param aws_session_token AWS temporary session token
@@ -78,7 +84,7 @@ setMethod(
 #' @param work_group The name of the \href{https://aws.amazon.com/about-aws/whats-new/2019/02/athena_workgroups/}{work group} to run Athena queries , Currently defaulted to \code{NULL}.
 #' @param poll_interval Amount of time took when checking query execution status. Default set to a random interval between 0.5 - 1 seconds.
 #' @param encryption_option Athena encryption at rest \href{https://docs.aws.amazon.com/athena/latest/ug/encryption.html}{link}.
-#'                          Supported Amazon S3 Encryption Options ["NULL", "SSE_S3", "SSE_KMS", "CSE_KMS"]. Connection will default to NULL,
+#'                          Supported Amazon S3 Encryption Options \code{c("NULL", "SSE_S3", "SSE_KMS", "CSE_KMS")}. Connection will default to NULL,
 #'                          usually changing this option is not required.
 #' @param kms_key \href{https://docs.aws.amazon.com/kms/latest/developerguide/overview.html}{AWS Key Management Service},
 #'                please refer to \href{https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html}{link} for more information around the concept.
@@ -95,12 +101,12 @@ setMethod(
 #' @param bigint The R type that 64-bit integer types should be mapped to,
 #'   default is [bit64::integer64], which allows the full range of 64 bit
 #'   integers.
-#' @param binary The R type that [binary/varbinary] types should be mapped to,
-#'   default is [raw]. If the mapping fails R will resort to [character] type.
-#'   To ignore data type conversion set to ["character"].
-#' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
+#' @param binary The R type that `binary/varbinary` types should be mapped to,
+#'   default is [raw]. If the mapping fails R will resort to `character` type.
+#'   To ignore data type conversion set to `"character"`.
+#' @param json Attempt to converts AWS Athena data types arrays, json using \code{jsonlite:parse_json}. If the mapping fails R will resort to `character` type.
 #'   Custom Json parsers can be provide by using a function with data frame parameter.
-#'   To ignore data type conversion set to ["character"].
+#'   To ignore data type conversion set to `"character"`.
 #' @param timezone Sets the timezone for the connection. The default is `UTC`.
 #'   If `NULL` then no timezone is set, which defaults to the server's time zone.
 #'   `AWS Athena` accepted time zones: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html}.
@@ -112,34 +118,29 @@ setMethod(
 #'  communicating with a service. You can specify a complete URL (including the "http/https" scheme)
 #'  to override this behaviour. If this value is provided, then \code{disable_ssl} is ignored.
 #'  If \code{endpoint_override} is a character then AWS Athena endpoint is overridden. To override
-#'  AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names ['athena', 's3', glue']
+#'  AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names `c('athena', 's3', glue')`
 #'  for example \code{list(glue = "https://glue.eu-west-1.amazonaws.com")}
 #' @param ... other parameters for \code{paws} session.
-#' \itemize{
-#'     \item{\strong{disable_ssl}} {(boolean) Whether or not to use SSL. By default, SSL is used.
-#'         Note that not all services support non-ssl connections.
-#'     }
-#'     \item{\strong{timeout}} {(numeric) The time in seconds till a timeout exception is
-#'         thrown when attempting to make a connection. The default is 60 seconds.
-#'     }
-#'     \item{\strong{disable_param_validation}} {(bool) Whether parameter validation should occur
+#' \describe{
+#'     \item{\strong{disable_ssl}}{(boolean) Whether or not to use SSL. By default, SSL is used.
+#'         Note that not all services support non-ssl connections.}
+#'     \item{\strong{timeout}}{(numeric) The time in seconds till a timeout exception is
+#'         thrown when attempting to make a connection. The default is 60 seconds.}
+#'     \item{\strong{disable_param_validation}}{(bool) Whether parameter validation should occur
 #'         when serializing requests. The default is \code{FALSE} You can disable parameter
-#'         validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.
-#'     }
-#'     \item{\strong{s3_force_path_style}} {Addressing style is always by path. Endpoints will be
-#'         addressed as such: s3.amazonaws.com/mybucket
-#'     }
-#'     \item{\strong{s3_use_accelerate}} {Refers to whether to use the S3 Accelerate endpoint.
+#'         validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.}
+#'     \item{\strong{s3_force_path_style}}{Addressing style is always by path. Endpoints will be
+#'         addressed as such: s3.amazonaws.com/mybucket}
+#'     \item{\strong{s3_use_accelerate}}{Refers to whether to use the S3 Accelerate endpoint.
 #'         The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
-#'         If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.
-#'     }
-#'     \item{\strong{use_dual_stack}} {Setting to \code{TRUE} enables dual stack endpoint resolution.}
+#'         If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.}
+#'     \item{\strong{use_dual_stack}}{Setting to \code{TRUE} enables dual stack endpoint resolution.}
 #' }
 #' @aliases dbConnect
-#' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
+#' @return \code{dbConnect()} returns [DBI::DBIConnection][DBI::DBIConnection-class]. This object is used to communicate with AWS Athena.
 #' @examples
-#' \dontrun{
 #' # Connect to Athena using your aws access keys
+#' \dontrun{
 #' library(DBI)
 #' con <- dbConnect(noctua::athena(),
 #'   aws_access_key_id = "YOUR_ACCESS_KEY_ID", #
@@ -166,40 +167,44 @@ setMethod(
 #'
 #' dbDisconnect(con)
 #' }
-#' @seealso \code{\link[DBI]{dbConnect}}
+#' @seealso [dbConnect]
 #' @export
 setMethod(
-  "dbConnect", "AthenaDriver",
-  function(drv,
-           aws_access_key_id = NULL,
-           aws_secret_access_key = NULL,
-           aws_session_token = NULL,
-           catalog_name = "AwsDataCatalog",
-           schema_name = "default",
-           work_group = NULL,
-           poll_interval = NULL,
-           encryption_option = c("NULL", "SSE_S3", "SSE_KMS", "CSE_KMS"),
-           kms_key = NULL,
-           profile_name = NULL,
-           role_arn = NULL,
-           role_session_name = sprintf("noctua-session-%s", as.integer(Sys.time())),
-           duration_seconds = 3600L,
-           s3_staging_dir = NULL,
-           region_name = NULL,
-           bigint = c("integer64", "integer", "numeric", "character"),
-           binary = c("raw", "character"),
-           json = c("auto", "character"),
-           timezone = "UTC",
-           keyboard_interrupt = TRUE,
-           rstudio_conn_tab = TRUE,
-           endpoint_override = NULL,
-           ...) {
+  "dbConnect",
+  "AthenaDriver",
+  function(
+    drv,
+    aws_access_key_id = NULL,
+    aws_secret_access_key = NULL,
+    aws_session_token = NULL,
+    catalog_name = "AwsDataCatalog",
+    schema_name = "default",
+    work_group = NULL,
+    poll_interval = NULL,
+    encryption_option = c("NULL", "SSE_S3", "SSE_KMS", "CSE_KMS"),
+    kms_key = NULL,
+    profile_name = NULL,
+    role_arn = NULL,
+    role_session_name = sprintf("noctua-session-%s", as.integer(Sys.time())),
+    duration_seconds = 3600L,
+    s3_staging_dir = NULL,
+    region_name = NULL,
+    bigint = c("integer64", "integer", "numeric", "character"),
+    binary = c("raw", "character"),
+    json = c("auto", "character"),
+    timezone = "UTC",
+    keyboard_interrupt = TRUE,
+    rstudio_conn_tab = TRUE,
+    endpoint_override = NULL,
+    ...
+  ) {
     # assert checks on parameters
     stopifnot(
       is.null(aws_access_key_id) || is.character(aws_access_key_id),
       is.null(aws_secret_access_key) || is.character(aws_secret_access_key),
       is.null(aws_session_token) || is.character(aws_session_token),
-      is.character(catalog_name), is.character(schema_name),
+      is.character(catalog_name),
+      is.character(schema_name),
       is.null(work_group) || is.character(work_group),
       is.null(poll_interval) || is.numeric(poll_interval),
       is.null(kms_key) || is.character(kms_key),
@@ -217,10 +222,15 @@ setMethod(
 
     athena_option_env$bigint <- big_int(match.arg(bigint))
     athena_option_env$binary <- match.arg(binary)
-    athena_option_env$json <- if (is.character(json)) jsonlite_check(json[[1]]) else json
+    athena_option_env$json <- if (is.character(json)) {
+      jsonlite_check(json[[1]])
+    } else {
+      json
+    }
     athena_option_env$rstudio_conn_tab <- rstudio_conn_tab
 
-    encryption_option <- switch(encryption_option[1],
+    encryption_option <- switch(
+      encryption_option[1],
       "NULL" = NULL,
       match.arg(encryption_option)
     )
@@ -228,8 +238,15 @@ setMethod(
     # if aws session token then return duration
     aws_session_token <- aws_session_token %||% get_aws_env("AWS_SESSION_TOKEN")
     aws_expiration <- NULL
-    if (!is.null(aws_session_token)) aws_expiration <- get_aws_env("AWS_EXPIRATION")
-    if (!is.null(aws_expiration)) aws_expiration <- as.POSIXct(as.numeric(aws_expiration), origin = "1970-01-01")
+    if (!is.null(aws_session_token)) {
+      aws_expiration <- get_aws_env("AWS_EXPIRATION")
+    }
+    if (!is.null(aws_expiration)) {
+      aws_expiration <- as.POSIXct(
+        as.numeric(aws_expiration),
+        origin = "1970-01-01"
+      )
+    }
 
     if (!is.null(role_arn)) {
       creds <- assume_role(
@@ -247,7 +264,8 @@ setMethod(
     }
 
     aws_access_key_id <- aws_access_key_id %||% get_aws_env("AWS_ACCESS_KEY_ID")
-    aws_secret_access_key <- aws_secret_access_key %||% get_aws_env("AWS_SECRET_ACCESS_KEY")
+    aws_secret_access_key <- aws_secret_access_key %||%
+      get_aws_env("AWS_SECRET_ACCESS_KEY")
     work_group <- work_group %||% get_aws_env("AWS_ATHENA_WORK_GROUP")
 
     con <- AthenaConnection(
@@ -271,7 +289,9 @@ setMethod(
     if (is.null(timezone)) {
       # set empty timezone initially
       con@info$timezone <- ""
-      timezone <- dbGetQuery(con, "select current_timezone()", unload = FALSE)[[1]]
+      timezone <- dbGetQuery(con, "select current_timezone()", unload = FALSE)[[
+        1
+      ]]
     }
     # check if timezone is valid
     timezone <- check_timezone(timezone)

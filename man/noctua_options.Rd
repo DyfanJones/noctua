@@ -23,13 +23,13 @@ noctua_options(
 determines the data format returned for example \code{"data.table"} will return \code{data.table} and \code{"vroom"} will return \code{tibble}.}
 
 \item{bigint}{The R type that 64-bit integer types should be mapped to (default: \code{"integer64"}).
-Inbuilt \code{bigint} conversion types ["integer64", "integer", "numeric", "character"].}
+Inbuilt \code{bigint} conversion types \code{c("integer64", "integer", "numeric", "character")}.}
 
-\item{binary}{The R type that [binary/varbinary] types should be mapped to (default \code{"raw"}).
-Inbuilt binary conversion types ["raw", "character"].}
+\item{binary}{The R type that \code{binary/varbinary} types should be mapped to (default \code{"raw"}).
+Inbuilt binary conversion types \code{c("raw", "character")}.}
 
-\item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json} (default: \code{"auto"}).
-Inbuilt json conversion types ["auto", "character"].
+\item{json}{Attempt to converts AWS Athena data types \code{c(arrays, json)} using \code{jsonlite:parse_json} (default: \code{"auto"}).
+Inbuilt json conversion types \code{c("auto", "character")}.
 Custom Json parsers can be provide by using a function with data frame parameter.}
 
 \item{cache_size}{Number of queries to be cached. Currently only support caching up to 100 distinct queries (default: \code{0}).}
@@ -42,18 +42,18 @@ Custom Json parsers can be provide by using a function with data frame parameter
 
 \item{unload}{set AWS Athena unload functionality globally (default: \code{FALSE})}
 
-\item{clear_s3_resource}{Clear down `AWS Athena` `AWS S3` resource (\code{s3_staging_dir} location).
-This is useful for users that don't have the `AWS IAM role` permissions delete
-from `s3_staging_dir` (default: \code{TRUE})}
+\item{clear_s3_resource}{Clear down \verb{AWS Athena} \verb{AWS S3} resource (\code{s3_staging_dir} location).
+This is useful for users that don't have the \verb{AWS IAM role} permissions delete
+from \code{s3_staging_dir} (default: \code{TRUE})}
 
 \item{verbose}{print package info messages (default: \code{TRUE})}
 }
 \value{
-\code{noctua_options()} returns \code{NULL}, invisibly.
+\code{noctua_options()} returns the \code{list} of athena option environment invisibly.
 }
 \description{
 \code{noctua_options()} provides a method to change the backend. This includes changing the file parser,
- whether \code{noctua} should cache query ids locally and number of retries on a failed api call.
+whether \code{noctua} should cache query ids locally and number of retries on a failed api call.
 }
 \examples{
 library(noctua)

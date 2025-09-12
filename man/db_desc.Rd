@@ -8,7 +8,7 @@
 db_desc.AthenaConnection(x)
 }
 \arguments{
-\item{x}{A \code{\link{dbConnect}} object, as returned by \code{dbConnect()}}
+\item{x}{A \link{dbConnect} object, as returned by \code{dbConnect()}}
 }
 \value{
 Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
