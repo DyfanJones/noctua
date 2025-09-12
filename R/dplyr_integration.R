@@ -7,11 +7,11 @@
 #' @title S3 implementation of \code{db_compute} for Athena
 #'
 #' @description This is a backend function for dplyr's \code{compute} function. Users won't be required to access and run this function.
-#' @param con A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @param table Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
 #' @param name Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.
 #' @param sql SQL code to be sent to the data
-#' @param ... passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]
+#' @param ... passes \code{noctua} table creation parameters: \code{file_type},\code{s3_location},\code{partition}.
 #' @param overwrite Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.
 #' @param temporary if TRUE, will create a temporary table that is local to this connection and will be automatically deleted when the connection expires
 #' @param unique_indexes a list of character vectors. Each element of the list will create a new unique index over the specified column(s). Duplicate rows will result in failure.
@@ -20,22 +20,21 @@
 #' @param in_transaction Should the table creation be wrapped in a transaction? This typically makes things faster, but you may want to suppress if the database doesn't support transactions, or you're wrapping in a transaction higher up (and your database doesn't support nested transactions.)
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
 #' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
-#' @param file_type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+#' @param file_type What file type to store data.frame on s3, noctua currently supports \code{c("tsv", "csv", "parquet")}. Default delimited file type is "tsv", in previous versions
 #'                  of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
 #'                  Athena due to the separating value ",". This would cause issues with AWS Athena.
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is \code{c("csv", "tsv")} then "gzip" compression is used, for file type "parquet"
 #'                 "snappy" compression is used.
-#' @param with An optional WITH clause for the CREATE TABLE statement.
 #' \itemize{
-#'          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"].
+#'          \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports \code{c("NULL","csv", "parquet", "json")}.
 #'                        \code{"NULL"} will let Athena set the file_type for you.}
 #'          \item{\code{s3_location:} s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 #'          \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}
 #' @name db_compute
 #' @return
 #' \code{db_compute} returns table name
-#' @seealso \link[=AthenaWriteTables]{AthenaWriteTables}
+#' @seealso [AthenaWriteTables]
 #' @examples
 #' \dontrun{
 #' # Note:
@@ -102,6 +101,7 @@ db_compute.AthenaConnection <- function(
       call. = FALSE
     )
   }
+  db_save_query <- pkg_method("db_save_query", "dplyr")
   table <- db_save_query(
     con,
     sql,
@@ -180,7 +180,7 @@ sql_query_save.AthenaConnection <- function(
 #' S3 implementation of \code{db_copy_to} for Athena
 #'
 #' This is an Athena method for dbplyr function \code{db_copy_to} to create an Athena table from a \code{data.frame}.
-#' @param con A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @param table A character string specifying a table name. Names will be
 #'   automatically quoted so you can use any sequence of characters, not
 #'   just any valid bare table name.
@@ -192,11 +192,11 @@ sql_query_save.AthenaConnection <- function(
 #' @param types Additional field types used to override derived types.
 #' @param s3_location s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")
 #' @param partition Partition Athena table (needs to be a named list or vector) for example: \code{c(var1 = "2019-20-13")}
-#' @param file_type What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+#' @param file_type What file type to store data.frame on s3, noctua currently supports \code{c("tsv", "csv", "parquet")}. Default delimited file type is "tsv", in previous versions
 #'                  of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
 #'                  Athena due to the separating value ",". This would cause issues with AWS Athena.
 #'                  \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
-#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
+#' @param compress \code{FALSE | TRUE} To determine if to compress file.type. If file type is \code{c("csv", "tsv")} then "gzip" compression is used, for file type "parquet"
 #'                 "snappy" compression is used.
 #' @param max_batch Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
 #'                  is set to \code{TRUE} and file.type is "csv" or "tsv" max.batch will split data.frame into 20 batches. This is to help the
@@ -209,7 +209,7 @@ sql_query_save.AthenaConnection <- function(
 #' @param in_transaction Should the table creation be wrapped in a transaction? This typically makes things faster, but you may want to suppress if the database doesn't support transactions, or you're wrapping in a transaction higher up (and your database doesn't support nested transactions.)
 #' @param ... other parameters currently not supported in noctua
 #' @name db_copy_to
-#' @seealso \link[=AthenaWriteTables]{AthenaWriteTables}
+#' @seealso [AthenaWriteTables]
 #' @return
 #' db_copy_to returns table name
 #' @examples
@@ -305,7 +305,7 @@ sql_table_analyze.AthenaConnection <- function(con, table, ...) {
 
 #' Declare which version of dbplyr API is being called.
 #'
-#' @param con A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @name dbplyr_edition
 #' @return
 #' Integer for which version of `dbplyr` is going to be used.
@@ -315,7 +315,7 @@ dbplyr_edition.AthenaConnection <- function(con) 2L
 #' S3 implementation of \code{db_connection_describe} for Athena (api version 2).
 #'
 #' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
-#' @param con A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @name db_connection_describe
 #' @return
 #' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
@@ -348,7 +348,7 @@ db_connection_describe.AthenaConnection <- function(con) {
 #' These functions are used to build the different types of SQL queries.
 #' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
 #' utilise AWS Glue to speed up sql query execution.
-#' @param con A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
 #' @param x R object to be transformed into athena equivalent
 #' @param format returning format for explain queries, default set to `"text"`. Other formats can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}
@@ -432,7 +432,7 @@ sql_escape_datetime.AthenaConnection <- function(con, x) {
 #' S3 implementation of \code{db_desc} for Athena (api version 1).
 #'
 #' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
-#' @param x A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param x A [dbConnect] object, as returned by \code{dbConnect()}
 #' @name db_desc
 #' @return
 #' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
@@ -447,7 +447,7 @@ db_desc.AthenaConnection <- function(x) {
 #' These functions are used to build the different types of SQL queries.
 #' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
 #' utilise AWS Glue to speed up sql query execution.
-#' @param con A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}
+#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
 #' @param ... other parameters, currently not implemented
 #' @name backend_dbplyr_v1

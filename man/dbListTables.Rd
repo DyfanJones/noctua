@@ -8,8 +8,8 @@
 \S4method{dbListTables}{AthenaConnection}(conn, catalog = NULL, schema = NULL, ...)
 }
 \arguments{
-\item{conn}{A \linkS4class{DBIConnection} object, as returned by
-\code{\link[DBI:dbConnect]{dbConnect()}}.}
+\item{conn}{A \link[DBI:DBIConnection-class]{DBI::DBIConnection} object,
+as returned by \link[DBI:dbConnect]{dbConnect()}.}
 
 \item{catalog}{Athena catalog, default set to NULL to return all tables from all Athena catalogs}
 

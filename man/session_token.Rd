@@ -24,7 +24,7 @@ AWS region codes (region code example: Region = EU (Ireland)     \code{ region_n
 
 \item{serial_number}{The identification number of the MFA device that is associated with the IAM user who is making the GetSessionToken call.
 Specify this value if the IAM user has a policy that requires MFA authentication. The value is either the serial number for a hardware device
-(such as `GAHT12345678`) or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).}
+(such as \code{GAHT12345678}) or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).}
 
 \item{token_code}{The value provided by the MFA device, if MFA is required. If any policy requires the IAM user to submit an MFA code,
 specify this value. If MFA authentication is required, the user must provide a code when requesting a set of temporary

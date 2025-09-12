@@ -3,6 +3,15 @@
 #' @include fetch_utils.R
 NULL
 
+
+#' Athena Result Methods
+#'
+#' Implementations of pure virtual functions defined in the `DBI` package
+#' for AthenaResult objects.
+#' @name AthenaResult
+#' @docType methods
+NULL
+
 AthenaResult <- function(
   conn,
   statement = NULL,
@@ -51,7 +60,7 @@ AthenaResult <- function(
   new("AthenaResult", connection = conn, info = response)
 }
 
-#' @rdname AthenaConnection
+#' @rdname AthenaResult
 #' @export
 setClass(
   "AthenaResult",
@@ -62,40 +71,12 @@ setClass(
   )
 )
 
-#' Clear Results
-#'
-#' Frees all resources (local and Athena) associated with result set. It does this by removing query output in AWS S3 Bucket,
-#' stopping query execution if still running and removed the connection resource locally.
-#'
+#' @rdname AthenaResult
+#' @inheritParams DBI::dbClearResult
+#' @param res An object inheriting from [DBI::DBIResult][DBI::DBIResult-class].
 #' @note If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.
 #'       For example \code{AccessDenied (HTTP 403). Access Denied}.
-#'       It is better use query caching or optionally prevent clear AWS S3 resource using \link[=noctua_options]{noctua_options}
-#'       so that the warning doesn't repeatedly show.
-#' @name dbClearResult
-#' @inheritParams DBI::dbClearResult
-#' @return \code{dbClearResult()} returns \code{TRUE}, invisibly.
-#' @seealso \code{\link[DBI]{dbIsValid}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' res <- dbSendQuery(con, "show databases")
-#' dbClearResult(res)
-#'
-#' # Check if connection if valid after closing connection
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbClearResult
+#'       It is better use query caching or optionally prevent clear AWS S3 resource using [noctua_options]
 #' @export
 setMethod(
   "dbClearResult",
@@ -211,37 +192,8 @@ setMethod(
   }
 )
 
-#' Fetch records from previously executed query
-#'
-#' Currently returns the top n elements (rows) from result set or returns entire table from Athena.
-#' @name dbFetch
-#' @param n maximum number of records to retrieve per fetch. Use \code{n = -1} or \code{n = Inf} to retrieve all pending records.
-#'          Some implementations may recognize other special values. If entire dataframe is required use \code{n = -1} or \code{n = Inf}.
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbFetch
-#' @return \code{dbFetch()} returns a data frame.
-#' @seealso \code{\link[DBI]{dbFetch}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' res <- dbSendQuery(con, "show databases")
-#' dbFetch(res)
-#' dbClearResult(res)
-#'
-#' # Disconnect from Athena
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbFetch
 #' @export
 setMethod(
   "dbFetch",
@@ -291,37 +243,8 @@ setMethod(
   }
 )
 
-#' Completion status
-#'
-#' This method returns if the query has completed.
-#' @name dbHasCompleted
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbHasCompleted
-#' @return \code{dbHasCompleted()} returns a logical scalar. \code{TRUE} if the query has completed, \code{FALSE} otherwise.
-#' @seealso \code{\link[DBI]{dbHasCompleted}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' # Check if query has completed
-#' res <- dbSendQuery(con, "show databases")
-#' dbHasCompleted(res)
-#'
-#' dbClearResult(res)
-#'
-#' # Disconnect from Athena
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbHasCompleted
 #' @export
 setMethod(
   "dbHasCompleted",
@@ -352,7 +275,10 @@ setMethod(
   }
 )
 
-#' @rdname dbIsValid
+#' @rdname AthenaResult
+#' @inheritParams DBI::dbIsValid
+#' @param dbObj An object inheriting from [DBI::DBIResult][DBI::DBIResult-class],
+#' [DBI::DBIConnection][DBI::DBIConnection-class], or [DBI::DBIDriver][DBI::DBIDriver-class].
 #' @export
 setMethod(
   "dbIsValid",
@@ -362,7 +288,7 @@ setMethod(
   }
 )
 
-#' @rdname dbGetInfo
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbGetInfo
 #' @export
 setMethod(
@@ -375,37 +301,8 @@ setMethod(
   }
 )
 
-#' Information about result types
-#'
-#' Produces a data.frame that describes the output of a query.
-#' @name dbColumnInfo
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbColumnInfo
-#' @return \code{dbColumnInfo()} returns a data.frame with as many rows as there are output fields in the result.
-#'         The data.frame has two columns (field_name, type).
-#' @seealso \code{\link[DBI]{dbHasCompleted}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' # Get Column information from query
-#' res <- dbSendQuery(con, "select * from information_schema.tables")
-#' dbColumnInfo(res)
-#' dbClearResult(res)
-#'
-#' # Disconnect from Athena
-#' dbDisconnect(con)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbColumnInfo
 #' @export
 setMethod(
   "dbColumnInfo",
@@ -448,40 +345,17 @@ setMethod(
   }
 )
 
-#' Show AWS Athena Statistics
-#'
-#' @description Returns AWS Athena Statistics from execute queries \link[=Query]{dbSendQuery()}
+#' @rdname AthenaResult
+#' @description Returns AWS Athena Statistics from execute queries [dbSendQuery]
 #' @inheritParams DBI::dbColumnInfo
-#' @name dbStatistics
-#' @return \code{dbStatistics()} returns list containing Athena Statistics return from \code{paws}.
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `RAthena::dbConnect` documnentation
-#'
-#' library(DBI)
-#' library(noctua)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' res <- dbSendQuery(con, "show databases")
-#' dbStatistics(res)
-#'
-#' # Clean up
-#' dbClearResult(res)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbStatistics
+#' @return `dbStatistics()` returns list containing Athena Statistics return from `paws`.
 #' @export
 setGeneric("dbStatistics", def = function(res, ...) {
   standardGeneric("dbStatistics")
 })
 
-#' @rdname dbStatistics
+#' @rdname AthenaResult
+#' @inheritParams DBI::dbColumnInfo
 #' @export
 setMethod(
   "dbStatistics",
@@ -504,32 +378,8 @@ setMethod(
 )
 
 
-#' Get the statement associated with a result set
-#'
-#' Returns the statement that was passed to [dbSendQuery()]
-#' or [dbSendStatement()].
-#' @name dbGetStatement
+#' @rdname AthenaResult
 #' @inheritParams DBI::dbGetStatement
-#' @return \code{dbGetStatement()} returns a character.
-#' @seealso \code{\link[DBI]{dbGetStatement}}
-#' @examples
-#' \dontrun{
-#' # Note:
-#' # - Require AWS Account to run below example.
-#' # - Different connection methods can be used please see `noctua::dbConnect` documnentation
-#'
-#' library(DBI)
-#'
-#' # Demo connection to Athena using profile name
-#' con <- dbConnect(noctua::athena())
-#'
-#' rs <- dbSendQuery(con, "SHOW TABLES in default")
-#' dbGetStatement(rs)
-#' }
-#' @docType methods
-NULL
-
-#' @rdname dbGetStatement
 #' @export
 setMethod(
   "dbGetStatement",

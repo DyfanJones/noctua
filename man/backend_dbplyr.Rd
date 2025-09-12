@@ -17,13 +17,13 @@ sql_escape_date.AthenaConnection(con, x)
 sql_escape_datetime.AthenaConnection(con, x)
 }
 \arguments{
-\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
+\item{con}{A \link{dbConnect} object, as returned by \code{dbConnect()}}
 
 \item{sql}{SQL code to be sent to AWS Athena}
 
-\item{format}{returning format for explain queries, default set to `"text"`. Other formats can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}}
+\item{format}{returning format for explain queries, default set to \code{"text"}. Other formats can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}}
 
-\item{type}{return plan for explain queries, default set to `NULL`. Other type can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}}
+\item{type}{return plan for explain queries, default set to \code{NULL}. Other type can be found: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}}
 
 \item{...}{other parameters, currently not implemented}
 

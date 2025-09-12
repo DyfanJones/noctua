@@ -36,13 +36,13 @@ sql_query_save.AthenaConnection(
 )
 }
 \arguments{
-\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
+\item{con}{A \link{dbConnect} object, as returned by \code{dbConnect()}}
 
 \item{table}{Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.}
 
 \item{sql}{SQL code to be sent to the data}
 
-\item{...}{passes \code{noctua} table creation parameters: [\code{file_type},\code{s3_location},\code{partition}]}
+\item{...}{passes \code{noctua} table creation parameters: \code{file_type},\code{s3_location},\code{partition}.}
 
 \item{overwrite}{Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.}
 
@@ -60,22 +60,20 @@ sql_query_save.AthenaConnection(
 
 \item{s3_location}{s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
 
-\item{file_type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet"]. Default delimited file type is "tsv", in previous versions
+\item{file_type}{What file type to store data.frame on s3, noctua currently supports \code{c("tsv", "csv", "parquet")}. Default delimited file type is "tsv", in previous versions
 of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
 Athena due to the separating value ",". This would cause issues with AWS Athena.
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
-"snappy" compression is used.}
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is \code{c("csv", "tsv")} then "gzip" compression is used, for file type "parquet"
+"snappy" compression is used.
+\itemize{
+\item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports \code{c("NULL","csv", "parquet", "json")}.
+\code{"NULL"} will let Athena set the file_type for you.}
+\item{\code{s3_location:} s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
+\item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}}
 
 \item{name}{Table name, if left default noctua will use the default from \code{dplyr}'s \code{compute} function.}
-
-\item{with}{An optional WITH clause for the CREATE TABLE statement.
-\itemize{
-         \item{\code{file_type:} What file type to store data.frame on s3, noctua currently supports ["NULL","csv", "parquet", "json"].
-                       \code{"NULL"} will let Athena set the file_type for you.}
-         \item{\code{s3_location:} s3 bucket to store Athena table, must be set as a s3 uri for example ("s3://mybucket/data/")}
-         \item{\code{partition:} Partition Athena table, requires to be a partitioned variable from previous table.}}}
 }
 \value{
 \code{db_compute} returns table name
@@ -119,5 +117,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\link[=AthenaWriteTables]{AthenaWriteTables}
+\link{AthenaWriteTables}
 }

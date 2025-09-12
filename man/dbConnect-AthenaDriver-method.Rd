@@ -33,9 +33,7 @@
 )
 }
 \arguments{
-\item{drv}{an object that inherits from \linkS4class{DBIDriver},
-or an existing \linkS4class{DBIConnection}
-object (in order to clone an existing connection).}
+\item{drv}{A object inheriting from \link[DBI:DBIDriver-class]{DBI::DBIDriver}.}
 
 \item{aws_access_key_id}{AWS access key ID}
 
@@ -52,7 +50,7 @@ object (in order to clone an existing connection).}
 \item{poll_interval}{Amount of time took when checking query execution status. Default set to a random interval between 0.5 - 1 seconds.}
 
 \item{encryption_option}{Athena encryption at rest \href{https://docs.aws.amazon.com/athena/latest/ug/encryption.html}{link}.
-Supported Amazon S3 Encryption Options ["NULL", "SSE_S3", "SSE_KMS", "CSE_KMS"]. Connection will default to NULL,
+Supported Amazon S3 Encryption Options \code{c("NULL", "SSE_S3", "SSE_KMS", "CSE_KMS")}. Connection will default to NULL,
 usually changing this option is not required.}
 
 \item{kms_key}{\href{https://docs.aws.amazon.com/kms/latest/developerguide/overview.html}{AWS Key Management Service},
@@ -64,7 +62,7 @@ To configure AWS CLI please refer to: \href{https://docs.aws.amazon.com/cli/late
 
 \item{role_arn}{The Amazon Resource Name (ARN) of the role to assume (such as \code{arn:aws:sts::123456789012:assumed-role/role_name/role_session_name})}
 
-\item{role_session_name}{An identifier for the assumed role session. By default `noctua` creates a session name \code{sprintf("noctua-session-\%s", as.integer(Sys.time()))}}
+\item{role_session_name}{An identifier for the assumed role session. By default \code{noctua} creates a session name \code{sprintf("noctua-session-\%s", as.integer(Sys.time()))}}
 
 \item{duration_seconds}{The duration, in seconds, of the role session. The value can range from 900 seconds (15 minutes) up to the maximum session duration setting for the role.
 This setting can have a value from 1 hour to 12 hours. By default duration is set to 3600 seconds (1 hour).}
@@ -75,53 +73,53 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
 AWS region codes (region code example: Region = EU (Ireland)     \code{ region_name = "eu-west-1"})}
 
 \item{bigint}{The R type that 64-bit integer types should be mapped to,
-default is [bit64::integer64], which allows the full range of 64 bit
+default is \link[bit64:bit64-package]{bit64::integer64}, which allows the full range of 64 bit
 integers.}
 
-\item{binary}{The R type that [binary/varbinary] types should be mapped to,
-default is [raw]. If the mapping fails R will resort to [character] type.
-To ignore data type conversion set to ["character"].}
+\item{binary}{The R type that \code{binary/varbinary} types should be mapped to,
+default is \link{raw}. If the mapping fails R will resort to \code{character} type.
+To ignore data type conversion set to \code{"character"}.}
 
-\item{json}{Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
+\item{json}{Attempt to converts AWS Athena data types arrays, json using \code{jsonlite:parse_json}. If the mapping fails R will resort to \code{character} type.
 Custom Json parsers can be provide by using a function with data frame parameter.
-To ignore data type conversion set to ["character"].}
+To ignore data type conversion set to \code{"character"}.}
 
-\item{timezone}{Sets the timezone for the connection. The default is `UTC`.
-If `NULL` then no timezone is set, which defaults to the server's time zone.
-`AWS Athena` accepted time zones: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html}.}
+\item{timezone}{Sets the timezone for the connection. The default is \code{UTC}.
+If \code{NULL} then no timezone is set, which defaults to the server's time zone.
+\verb{AWS Athena} accepted time zones: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html}.}
 
 \item{keyboard_interrupt}{Stops AWS Athena process when R gets a keyboard interrupt, currently defaults to \code{TRUE}}
 
 \item{rstudio_conn_tab}{Optional to get AWS Athena Schema from AWS Glue Catalogue and display it in RStudio's Connections Tab.
-Default set to \code{TRUE}. For large `AWS Glue Catalogue` it is recommended to set `rstudio_conn_tab=FALSE` to ensure a fast connection.}
+Default set to \code{TRUE}. For large \verb{AWS Glue Catalogue} it is recommended to set \code{rstudio_conn_tab=FALSE} to ensure a fast connection.}
 
 \item{endpoint_override}{(character/list) The complete URL to use for the constructed client.
 Normally, paws will automatically construct the appropriate URL to use when
 communicating with a service. You can specify a complete URL (including the "http/https" scheme)
 to override this behaviour. If this value is provided, then \code{disable_ssl} is ignored.
 If \code{endpoint_override} is a character then AWS Athena endpoint is overridden. To override
-AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names ['athena', 's3', glue']
+AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names \verb{c('athena', 's3', glue')}
 for example \code{list(glue = "https://glue.eu-west-1.amazonaws.com")}}
 
 \item{...}{other parameters for \code{paws} session.
 \describe{
-    \item{\strong{disable_ssl}}{(boolean) Whether or not to use SSL. By default, SSL is used.
-        Note that not all services support non-ssl connections.}
-    \item{\strong{timeout}}{(numeric) The time in seconds till a timeout exception is
-        thrown when attempting to make a connection. The default is 60 seconds.}
-    \item{\strong{disable_param_validation}}{(bool) Whether parameter validation should occur
-        when serializing requests. The default is \code{FALSE} You can disable parameter
-        validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.}
-    \item{\strong{s3_force_path_style}}{Addressing style is always by path. Endpoints will be
-        addressed as such: s3.amazonaws.com/mybucket}
-    \item{\strong{s3_use_accelerate}}{Refers to whether to use the S3 Accelerate endpoint.
-        The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
-        If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.}
-    \item{\strong{use_dual_stack}}{Setting to \code{TRUE} enables dual stack endpoint resolution.}
+\item{\strong{disable_ssl}}{(boolean) Whether or not to use SSL. By default, SSL is used.
+Note that not all services support non-ssl connections.}
+\item{\strong{timeout}}{(numeric) The time in seconds till a timeout exception is
+thrown when attempting to make a connection. The default is 60 seconds.}
+\item{\strong{disable_param_validation}}{(bool) Whether parameter validation should occur
+when serializing requests. The default is \code{FALSE} You can disable parameter
+validation for performance reasons. Otherwise, it's recommended to leave parameter validation enabled.}
+\item{\strong{s3_force_path_style}}{Addressing style is always by path. Endpoints will be
+addressed as such: s3.amazonaws.com/mybucket}
+\item{\strong{s3_use_accelerate}}{Refers to whether to use the S3 Accelerate endpoint.
+The value must be a boolean. If True, the client will use the S3 Accelerate endpoint.
+If the S3 Accelerate endpoint is being used then the addressing style will always be virtual.}
+\item{\strong{use_dual_stack}}{Setting to \code{TRUE} enables dual stack endpoint resolution.}
 }}
 }
 \value{
-\code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
+\code{dbConnect()} returns \link[DBI:DBIConnection-class]{DBI::DBIConnection}. This object is used to communicate with AWS Athena.
 }
 \description{
 It is never advised to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is advised to use
@@ -171,5 +169,5 @@ dbDisconnect(con)
 }
 }
 \seealso{
-\link[=dbConnect]{dbConnect()}
+\link{dbConnect}
 }

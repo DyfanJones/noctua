@@ -11,7 +11,7 @@ db_explain.AthenaConnection(con, sql, ...)
 db_query_fields.AthenaConnection(con, sql, ...)
 }
 \arguments{
-\item{con}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
+\item{con}{A \link{dbConnect} object, as returned by \code{dbConnect()}}
 
 \item{sql}{SQL code to be sent to AWS Athena}
 

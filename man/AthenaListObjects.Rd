@@ -7,13 +7,13 @@
 AthenaListObjects(connection, ...)
 }
 \arguments{
-\item{connection}{A connection object, as returned by `dbConnect()`.}
+\item{connection}{A connection object, as returned by \code{dbConnect()}.}
 
 \item{...}{Attributes to filter by.}
 }
 \value{
 A data frame with \code{name} and \code{type} columns, listing the
-  objects.
+objects.
 }
 \description{
 Lists all of the objects in the connection, or all the objects which have

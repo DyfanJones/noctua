@@ -7,11 +7,11 @@
 athena()
 }
 \value{
-\code{athena()} returns a s4 class. This class is used active Athena method for \code{\link[DBI]{dbConnect}}
+\code{athena()} returns a s4 class. This class is used active Athena method for \link[DBI:dbConnect]{DBI::dbConnect}
 }
 \description{
 Driver for an Athena paws connection.
 }
 \seealso{
-\link[=dbConnect]{dbConnect()}
+\link{dbConnect}
 }

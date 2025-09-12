@@ -7,7 +7,7 @@
 AthenaPreviewObject(connection, rowLimit, ...)
 }
 \arguments{
-\item{connection}{A connection object, as returned by `dbConnect()`.}
+\item{connection}{A connection object, as returned by \code{dbConnect()}.}
 
 \item{rowLimit}{The maximum number of rows to display.}
 

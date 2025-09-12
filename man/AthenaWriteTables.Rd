@@ -56,7 +56,7 @@
 )
 }
 \arguments{
-\item{conn}{An \code{\linkS4class{AthenaConnection}} object, produced by [DBI::dbConnect()]}
+\item{conn}{An \code{\linkS4class{AthenaConnection}} object, produced by \code{\link[DBI:dbConnect]{DBI::dbConnect()}}}
 
 \item{name}{A character string specifying a table name. Names will be
 automatically quoted so you can use any sequence of characters, not
@@ -67,9 +67,9 @@ just any valid bare table name.}
 \item{overwrite}{Allows overwriting the destination table. Cannot be \code{TRUE} if \code{append} is also \code{TRUE}.}
 
 \item{append}{Allow appending to the destination table. Cannot be \code{TRUE} if \code{overwrite} is also \code{TRUE}. Existing Athena DDL file type will be retained
-              and used when uploading data to AWS Athena. If parameter \code{file.type} doesn't match AWS Athena DDL file type a warning message will be created
-              notifying user and \code{noctua} will use the file type for the Athena DDL. When appending to an Athena DDL that has been created outside of \code{noctua}.
-              \code{noctua} can support the following SerDes and Data Formats.
+and used when uploading data to AWS Athena. If parameter \code{file.type} doesn't match AWS Athena DDL file type a warning message will be created
+notifying user and \code{noctua} will use the file type for the Athena DDL. When appending to an Athena DDL that has been created outside of \code{noctua}.
+\code{noctua} can support the following SerDes and Data Formats.
 \itemize{
 \item{\strong{csv/tsv:} \href{https://docs.aws.amazon.com/athena/latest/ug/lazy-simple-serde.html}{LazySimpleSerDe}}
 \item{\strong{parquet:} \href{https://docs.aws.amazon.com/athena/latest/ug/parquet.html}{Parquet SerDe}}
@@ -97,13 +97,13 @@ When creating a table for the first time \code{s3.location} will be formatted fr
 syntax \code{"s3://{mybucket/data}/{schema}/{table}/{parition}/"} this is to support tables with the same name but existing in different
 schemas. If schema isn't specified in \code{name} parameter then the schema from \code{dbConnect} is used instead.}
 
-\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["tsv", "csv", "parquet", "json"]. Default delimited file type is "tsv", in previous versions
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports \code{c("tsv", "csv", "parquet", "json")}. Default delimited file type is "tsv", in previous versions
 of \code{noctua (=< 1.4.0)} file type "csv" was used as default. The reason for the change is that columns containing \code{Array/JSON} format cannot be written to
 Athena due to the separating value ",". This would cause issues with AWS Athena.
 \strong{Note:} "parquet" format is supported by the \code{arrow} package and it will need to be installed to utilise the "parquet" format.
 "json" format is supported by \code{jsonlite} package and it will need to be installed to utilise the "json" format.}
 
-\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is ["csv", "tsv"] then "gzip" compression is used, for file type "parquet"
+\item{compress}{\code{FALSE | TRUE} To determine if to compress file.type. If file type is \code{c("csv", "tsv")} then "gzip" compression is used, for file type "parquet"
 "snappy" compression is used. Currently \code{noctua} doesn't support compression for "json" file type.}
 
 \item{max.batch}{Split the data frame by max number of rows i.e. 100,000 so that multiple files can be uploaded into AWS S3. By default when compression
@@ -115,8 +115,8 @@ when loading file in parquet format. For more information please go to \href{htt
 }
 \value{
 \code{dbWriteTable()} returns \code{TRUE}, invisibly. If the table exists, and both append and overwrite
-        arguments are unset, or append = TRUE and the data frame with the new data has different column names,
-        an error is raised; the remote table remains unchanged.
+arguments are unset, or append = TRUE and the data frame with the new data has different column names,
+an error is raised; the remote table remains unchanged.
 }
 \description{
 Convenience functions for reading/writing DBMS tables

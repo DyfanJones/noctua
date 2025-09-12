@@ -14,8 +14,8 @@ NULL
 #' Driver for an Athena paws connection.
 #'
 #' @import methods DBI
-#' @return \code{athena()} returns a s4 class. This class is used active Athena method for \code{\link[DBI]{dbConnect}}
-#' @seealso \link[=dbConnect]{dbConnect()}
+#' @return \code{athena()} returns a s4 class. This class is used active Athena method for [DBI::dbConnect]
+#' @seealso [dbConnect]
 #' @export
 athena <- function() {
   new("AthenaDriver")
@@ -36,13 +36,16 @@ setMethod(
   }
 )
 
-#' @rdname dbDataType
+#' @rdname AthenaDriver
+#' @inheritParams DBI::dbDataType
+#' @param dbObj A object inheriting from [DBI::DBIDriver][DBI::DBIDriver-class] or [DBI::DBIConnection][DBI::DBIConnection-class].
 #' @export
 setMethod("dbDataType", "AthenaDriver", function(dbObj, obj, ...) {
   AthenaDataType(obj)
 })
 
-#' @rdname dbDataType
+#' @rdname AthenaDriver
+#' @inheritParams DBI::dbDataType
 #' @export
 setMethod(
   "dbDataType",
@@ -72,6 +75,7 @@ setMethod(
 #' \strong{NOTE:} If you have set any environmental variables in \code{.Renviron} please restart your R in order for the changes to take affect.
 #'
 #' @inheritParams DBI::dbConnect
+#' @param drv A object inheriting from [DBI::DBIDriver][DBI::DBIDriver-class].
 #' @param aws_access_key_id AWS access key ID
 #' @param aws_secret_access_key AWS secret access key
 #' @param aws_session_token AWS temporary session token
@@ -80,7 +84,7 @@ setMethod(
 #' @param work_group The name of the \href{https://aws.amazon.com/about-aws/whats-new/2019/02/athena_workgroups/}{work group} to run Athena queries , Currently defaulted to \code{NULL}.
 #' @param poll_interval Amount of time took when checking query execution status. Default set to a random interval between 0.5 - 1 seconds.
 #' @param encryption_option Athena encryption at rest \href{https://docs.aws.amazon.com/athena/latest/ug/encryption.html}{link}.
-#'                          Supported Amazon S3 Encryption Options ["NULL", "SSE_S3", "SSE_KMS", "CSE_KMS"]. Connection will default to NULL,
+#'                          Supported Amazon S3 Encryption Options \code{c("NULL", "SSE_S3", "SSE_KMS", "CSE_KMS")}. Connection will default to NULL,
 #'                          usually changing this option is not required.
 #' @param kms_key \href{https://docs.aws.amazon.com/kms/latest/developerguide/overview.html}{AWS Key Management Service},
 #'                please refer to \href{https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html}{link} for more information around the concept.
@@ -97,12 +101,12 @@ setMethod(
 #' @param bigint The R type that 64-bit integer types should be mapped to,
 #'   default is [bit64::integer64], which allows the full range of 64 bit
 #'   integers.
-#' @param binary The R type that [binary/varbinary] types should be mapped to,
-#'   default is [raw]. If the mapping fails R will resort to [character] type.
-#'   To ignore data type conversion set to ["character"].
-#' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json}. If the mapping fails R will resort to [character] type.
+#' @param binary The R type that `binary/varbinary` types should be mapped to,
+#'   default is [raw]. If the mapping fails R will resort to `character` type.
+#'   To ignore data type conversion set to `"character"`.
+#' @param json Attempt to converts AWS Athena data types arrays, json using \code{jsonlite:parse_json}. If the mapping fails R will resort to `character` type.
 #'   Custom Json parsers can be provide by using a function with data frame parameter.
-#'   To ignore data type conversion set to ["character"].
+#'   To ignore data type conversion set to `"character"`.
 #' @param timezone Sets the timezone for the connection. The default is `UTC`.
 #'   If `NULL` then no timezone is set, which defaults to the server's time zone.
 #'   `AWS Athena` accepted time zones: \url{https://docs.aws.amazon.com/athena/latest/ug/athena-supported-time-zones.html}.
@@ -114,7 +118,7 @@ setMethod(
 #'  communicating with a service. You can specify a complete URL (including the "http/https" scheme)
 #'  to override this behaviour. If this value is provided, then \code{disable_ssl} is ignored.
 #'  If \code{endpoint_override} is a character then AWS Athena endpoint is overridden. To override
-#'  AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names ['athena', 's3', glue']
+#'  AWS S3 or AWS Glue endpoints a named list needs to be provided. The list can only have the following names `c('athena', 's3', glue')`
 #'  for example \code{list(glue = "https://glue.eu-west-1.amazonaws.com")}
 #' @param ... other parameters for \code{paws} session.
 #' \describe{
@@ -133,7 +137,7 @@ setMethod(
 #'     \item{\strong{use_dual_stack}}{Setting to \code{TRUE} enables dual stack endpoint resolution.}
 #' }
 #' @aliases dbConnect
-#' @return \code{dbConnect()} returns a s4 class. This object is used to communicate with AWS Athena.
+#' @return \code{dbConnect()} returns [DBI::DBIConnection][DBI::DBIConnection-class]. This object is used to communicate with AWS Athena.
 #' @examples
 #' # Connect to Athena using your aws access keys
 #' \dontrun{
@@ -163,7 +167,7 @@ setMethod(
 #'
 #' dbDisconnect(con)
 #' }
-#' @seealso \link[=dbConnect]{dbConnect()}
+#' @seealso [dbConnect]
 #' @export
 setMethod(
   "dbConnect",

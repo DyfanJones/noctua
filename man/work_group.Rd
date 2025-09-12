@@ -36,11 +36,12 @@ update_work_group(
   publish_cloud_watch_metrics = FALSE,
   bytes_scanned_cut_off = 10000000L,
   description = NULL,
-  state = c("ENABLED", "DISABLED")
+  state = c("ENABLED", "DISABLED"),
+  engine_version = list()
 )
 }
 \arguments{
-\item{conn}{A \link[=dbConnect]{dbConnect()} object, as returned by \code{dbConnect()}}
+\item{conn}{A \link{dbConnect} object, as returned by \code{dbConnect()}}
 
 \item{work_group}{The Athena workgroup name.}
 
@@ -74,6 +75,12 @@ If set to \code{FALSE} the out put location in the workgroup's result configurat
 For more information, see \href{https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings-override.html}{Workgroup Settings Override Client-Side Settings}.}
 
 \item{state}{The workgroup state that will be updated for the given workgroup.}
+
+\item{engine_version}{The engine version requested when a workgroup is updated.
+\describe{
+\item{SelectedEngineVersion}{The engine version requested by the user.}
+\item{EffectiveEngineVersion}{The engine version on which the query runs.}
+}}
 }
 \value{
 \describe{
@@ -89,16 +96,16 @@ For more information, see \href{https://docs.aws.amazon.com/athena/latest/ug/wor
 Lower level API access, allows user to create and delete Athena Work Groups.
 \describe{
 \item{create_work_group}{Creates a workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_create_work_group/}{link}).
-                         The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
-                         The s3_staging_dir, encryption_option and kms_key parameters are gotten from \link[=dbConnect]{dbConnect()}}
+The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
+The s3_staging_dir, encryption_option and kms_key parameters are gotten from \link{dbConnect}}
 \item{tag_options}{Helper function to create tag options for function \code{create_work_group()}}
 \item{delete_work_group}{Deletes the workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_delete_work_group/}{link}).
-                         The primary workgroup cannot be deleted.}
+The primary workgroup cannot be deleted.}
 \item{list_work_groups}{Lists available workgroups for the account (\href{https://www.paws-r-sdk.com/docs/athena_list_work_groups/}{link}).}
 \item{get_work_group}{Returns information about the workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_get_work_group/}{link}).}
 \item{update_work_group}{Updates the workgroup with the specified name (\href{https://www.paws-r-sdk.com/docs/athena_update_work_group/}{link}).
-                         The workgroup's name cannot be changed. The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
-                         The s3_staging_dir, encryption_option and kms_key parameters are gotten from \link[=dbConnect]{dbConnect()}}
+The workgroup's name cannot be changed. The work group utilises parameters from the \code{dbConnect} object, to determine the encryption and output location of the work group.
+The s3_staging_dir, encryption_option and kms_key parameters are gotten from \link{dbConnect}}
 }
 }
 \examples{

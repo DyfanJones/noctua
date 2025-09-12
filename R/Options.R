@@ -71,11 +71,11 @@ bit64_check <- function(value) {
 #' @param file_parser Method to read and write tables to Athena, currently default to \code{"data.table"}. The file_parser also
 #'                    determines the data format returned for example \code{"data.table"} will return \code{data.table} and \code{"vroom"} will return \code{tibble}.
 #' @param bigint The R type that 64-bit integer types should be mapped to (default: \code{"integer64"}).
-#'    Inbuilt \code{bigint} conversion types ["integer64", "integer", "numeric", "character"].
-#' @param binary The R type that [binary/varbinary] types should be mapped to (default \code{"raw"}).
-#'    Inbuilt binary conversion types ["raw", "character"].
-#' @param json Attempt to converts AWS Athena data types [arrays, json] using \code{jsonlite:parse_json} (default: \code{"auto"}).
-#'    Inbuilt json conversion types ["auto", "character"].
+#'    Inbuilt \code{bigint} conversion types `c("integer64", "integer", "numeric", "character")`.
+#' @param binary The R type that `binary/varbinary` types should be mapped to (default \code{"raw"}).
+#'    Inbuilt binary conversion types `c("raw", "character")`.
+#' @param json Attempt to converts AWS Athena data types `c(arrays, json)` using \code{jsonlite:parse_json} (default: \code{"auto"}).
+#'    Inbuilt json conversion types `c("auto", "character")`.
 #'    Custom Json parsers can be provide by using a function with data frame parameter.
 #' @param cache_size Number of queries to be cached. Currently only support caching up to 100 distinct queries (default: \code{0}).
 #' @param clear_cache Clears all previous cached query metadata

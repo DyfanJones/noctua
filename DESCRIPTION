@@ -34,7 +34,7 @@ VignetteBuilder:
 Depends: R (>= 3.2.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: https://dyfanjones.github.io/noctua/, https://github.com/DyfanJones/noctua
 BugReports: https://github.com/DyfanJones/noctua/issues
 Collate: 
@@ -55,3 +55,4 @@ Collate:
     'sql_translate_utils.R'
     'sql_translate_env.R'
     'zzz.R'
+Roxygen: list(markdown = TRUE)

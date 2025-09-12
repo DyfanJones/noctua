@@ -29,14 +29,14 @@ default name.
 
 For backward compatibility, \code{NULL} is equivalent to \code{FALSE}.}
 
-\item{file.type}{What file type to store data.frame on s3, noctua currently supports ["csv", "tsv", "parquet", "json"].
+\item{file.type}{What file type to store data.frame on s3, noctua currently supports \code{c("csv", "tsv", "parquet", "json")}.
 \strong{Note:} This parameter is used for format any special characters that clash with file type separator.}
 
 \item{...}{Other arguments used by individual methods.}
 }
 \value{
 \code{sqlData} returns a dataframe formatted for Athena. Currently converts \code{list} variable types into \code{character}
-        split by \code{'|'}, similar to how \code{data.table} writes out to files.
+split by \code{'|'}, similar to how \code{data.table} writes out to files.
 }
 \description{
 This method converts data.frame columns into the correct format so that it can be uploaded Athena.
