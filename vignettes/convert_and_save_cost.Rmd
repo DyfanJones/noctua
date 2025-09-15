@@ -131,5 +131,5 @@ iris_tbl %>%
 # Reading Material
 
 * [CTAS insert into ETL](https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into-etl.html)
-* [Considerations and Limitations for CTAS Queries](https://docs.aws.amazon.com/athena/latest/ug/considerations-ctas.html)
+* [Considerations and Limitations for CTAS Queries](https://docs.aws.amazon.com/athena/latest/ug/ctas-considerations-limitations.html)
 * [Examples of CTAS Queries](https://docs.aws.amazon.com/athena/latest/ug/ctas-examples.html)

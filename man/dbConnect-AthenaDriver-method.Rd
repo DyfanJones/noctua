@@ -124,7 +124,7 @@ If the S3 Accelerate endpoint is being used then the addressing style will alway
 \description{
 It is never advised to hard-code credentials when making a connection to Athena (even though the option is there). Instead it is advised to use
 \code{profile_name} (set up by \href{https://aws.amazon.com/cli/}{AWS Command Line Interface}),
-\href{https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html}{Amazon Resource Name roles} or environmental variables. Here is a list
+\href{https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html}{Amazon Resource Name roles} or environmental variables. Here is a list
 of supported environment variables:
 \itemize{
 \item{\strong{AWS_ACCESS_KEY_ID:} is equivalent to the \code{dbConnect} parameter - \code{aws_access_key_id}}
