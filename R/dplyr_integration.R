@@ -101,8 +101,8 @@ db_compute.AthenaConnection <- function(
       call. = FALSE
     )
   }
-  db_save_query <- pkg_method("db_save_query", "dplyr")
-  table <- db_save_query(
+  sql_query_save <- pkg_method("sql_query_save", "dbplyr")
+  table <- sql_query_save(
     con,
     sql,
     table,
@@ -399,14 +399,14 @@ sql_query_fields.AthenaConnection <- function(con, sql, ...) {
     return(sql)
   } else {
     # None ident class uses dbplyr:::sql_query_fields.DBIConnection method
-    dbplyr_query_select <- pkg_method("dbplyr_query_select", "dbplyr")
-    sql_subquery <- pkg_method("sql_subquery", "dplyr")
+    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
+    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
     dplyr_sql <- pkg_method("sql", "dplyr")
 
-    return(dbplyr_query_select(
+    return(sql_query_select(
       con,
       dplyr_sql("*"),
-      sql_subquery(con, sql),
+      sql_query_wrap(con, sql),
       where = dplyr_sql("0 = 1")
     ))
   }
@@ -494,14 +494,14 @@ athena_query_fields_ident <- function(con, sql) {
   } else {
     # If a subquery, query Athena for the fields
     # return dplyr methods
-    sql_select <- pkg_method("sql_select", "dplyr")
-    sql_subquery <- pkg_method("sql_subquery", "dplyr")
+    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
+    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
     dplyr_sql <- pkg_method("sql", "dplyr")
 
-    sql <- sql_select(
+    sql <- sql_query_select(
       con,
       dplyr_sql("*"),
-      sql_subquery(con, sql),
+      sql_query_wrap(con, sql),
       where = dplyr_sql("0 = 1")
     )
     qry <- dbSendQuery(con, sql)
@@ -520,14 +520,14 @@ db_query_fields.AthenaConnection <- function(con, sql, ...) {
   } else {
     # If a subquery, query Athena for the fields
     # return dplyr methods
-    sql_select <- pkg_method("sql_select", "dplyr")
-    sql_subquery <- pkg_method("sql_subquery", "dplyr")
+    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
+    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
     dplyr_sql <- pkg_method("sql", "dplyr")
 
-    sql <- sql_select(
+    sql <- sql_query_select(
       con,
       dplyr_sql("*"),
-      sql_subquery(con, sql),
+      sql_query_wrap(con, sql),
       where = dplyr_sql("0 = 1")
     )
     qry <- dbSendQuery(con, sql)
