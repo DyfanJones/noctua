@@ -72,13 +72,13 @@ AthenaConnection <- function(
   endpoints <- set_endpoints(endpoint_override)
 
   tryCatch({
-    Athena <- paws::athena(
+    Athena <- paws.analytics::athena(
       config = modifyList(Config, c(kwargs, list(endpoint = endpoints$athena)))
     )
-    S3 <- paws::s3(
+    S3 <- paws.storage::s3(
       config = modifyList(Config, c(kwargs, list(endpoint = endpoints$s3)))
     )
-    glue <- paws::glue(
+    glue <- paws.analytics::glue(
       config = modifyList(Config, c(kwargs, list(endpoint = endpoints$glue)))
     )
   })
@@ -543,7 +543,7 @@ setMethod(
           )
         },
         error = function(err) {
-          err_msg = err$message
+          err_msg <- err$message
           if (i == (athena_option_env$retry + 1)) {
             stop(err_msg, call. = F)
           }
@@ -733,7 +733,7 @@ setMethod(
   function(dbObj, ...) {
     con_error_msg(dbObj, msg = "Connection already closed.")
     info <- as.list(dbObj@info)
-    paws <- as.character(packageVersion("paws"))
+    paws <- as.character(packageVersion("paws.storage"))
     noctua <- as.character(packageVersion("noctua"))
     info <- c(info, paws = paws, noctua = noctua)
     return(info)

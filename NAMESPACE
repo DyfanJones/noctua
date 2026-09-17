@@ -75,8 +75,13 @@ exportMethods(sqlData)
 import(DBI)
 import(data.table)
 import(methods)
-import(paws)
+import(paws.analytics)
+import(paws.common)
+import(paws.security.identity)
+import(paws.storage)
 importFrom(stats,runif)
-importFrom(utils,head)
-importFrom(utils,modifyList)
-importFrom(utils,packageVersion)
+importFrom(utils,
+  head,
+  modifyList,
+  packageVersion
+)

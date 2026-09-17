@@ -292,7 +292,7 @@ get_session_token <- function(
 
   config <- cred_set(NULL, NULL, NULL, profile_name, region_name)
 
-  STS <- paws::sts(config)
+  STS <- paws.security.identity::sts(config)
 
   tryCatch({
     response <- STS$get_session_token(
@@ -369,7 +369,7 @@ assume_role <- function(
 
   config <- cred_set(NULL, NULL, NULL, profile_name, region_name)
 
-  STS <- paws::sts(config)
+  STS <- paws.security.identity::sts(config)
 
   tryCatch({
     response <- STS$assume_role(

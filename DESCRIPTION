@@ -1,7 +1,7 @@
 Package: noctua
 Type: Package
 Title: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)
-Version: 2.6.3
+Version: 2.6.4
 Authors@R: person("Dyfan", "Jones", email="dyfan.r.jones@gmail.com", 
                   role= c("aut", "cre"))
 Description: Designed to be compatible with the 'R' package 'DBI' (Database Interface)
@@ -12,7 +12,10 @@ Imports:
     data.table (>= 1.12.4),
     DBI (>= 0.7),
     methods,
-    paws (>= 0.2.0),
+    paws.common (>= 0.8.0),
+    paws.analytics (>= 0.8.0),
+    paws.security.identity (>= 0.8.0),
+    paws.storage (>= 0.8.0),
     stats,
     utils,
     uuid (>= 0.1-4)
@@ -34,7 +37,6 @@ VignetteBuilder:
 Depends: R (>= 3.2.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 URL: https://dyfanjones.github.io/noctua/, https://github.com/DyfanJones/noctua
 BugReports: https://github.com/DyfanJones/noctua/issues
 Collate: 
@@ -56,3 +58,4 @@ Collate:
     'sql_translate_env.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
