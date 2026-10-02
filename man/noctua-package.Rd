@@ -36,4 +36,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Dyfan Jones \email{dyfan.r.jones@gmail.com}
 
+Authors:
+\itemize{
+  \item Dyfan Jones \email{dyfan.r.jones@gmail.com}
+}
+
 }

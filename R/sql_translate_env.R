@@ -2,17 +2,17 @@
 #' @include sql_translate_utils.R
 NULL
 
-#' AWS Athena backend dbplyr version 1 and 2
+#' AWS Athena backend dbplyr SQL translation
 #'
-#' Create s3 implementation of \code{sql_translate_env} for AWS Athena sql translate environment based off
+#' Create s3 implementation of \code{sql_translation} for AWS Athena sql translate environment based off
 #' \href{https://docs.aws.amazon.com/athena/latest/ug/data-types.html}{Athena Data Types} and
 #' \href{https://docs.aws.amazon.com/athena/latest/ug/functions-operators-reference-section.html}{DML Queries, Functions, and Operators}
 #' @param con An \code{\linkS4class{AthenaConnection}} object, produced by
 #'   [DBI::dbConnect()]
-#' @name sql_translate_env
+#' @name sql_translation
 NULL
 
-#' @rdname sql_translate_env
+#' @rdname sql_translation
 #' @export
 sql_translation.AthenaConnection <- function(con) {
   # base methods
@@ -292,7 +292,3 @@ sql_translation.AthenaConnection <- function(con) {
     )
   )
 }
-
-#' @rdname sql_translate_env
-#' @export
-sql_translate_env.AthenaConnection <- sql_translation.AthenaConnection

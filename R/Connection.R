@@ -72,13 +72,13 @@ AthenaConnection <- function(
   endpoints <- set_endpoints(endpoint_override)
 
   tryCatch({
-    Athena <- paws::athena(
+    Athena <- paws.analytics::athena(
       config = modifyList(Config, c(kwargs, list(endpoint = endpoints$athena)))
     )
-    S3 <- paws::s3(
+    S3 <- paws.storage::s3(
       config = modifyList(Config, c(kwargs, list(endpoint = endpoints$s3)))
     )
-    glue <- paws::glue(
+    glue <- paws.analytics::glue(
       config = modifyList(Config, c(kwargs, list(endpoint = endpoints$glue)))
     )
   })
@@ -328,7 +328,7 @@ setMethod(
   "dbQuoteString",
   c("AthenaConnection", "character"),
   function(conn, x, ...) {
-    if (identical(dbplyr_env$major, 2L)) {
+    if (isTRUE(dbplyr_env$available)) {
       all_ts <- detect_date_time(x)
       all_dates <- detect_date(x)
       if (all_dates & !is.na(all_dates)) {
@@ -543,7 +543,7 @@ setMethod(
           )
         },
         error = function(err) {
-          err_msg = err$message
+          err_msg <- err$message
           if (i == (athena_option_env$retry + 1)) {
             stop(err_msg, call. = F)
           }
@@ -685,6 +685,52 @@ setMethod(
 )
 
 
+# dbGetQuery's fast path for a bare dbplyr::ident() table reference: look up
+# columns via the Athena API instead of running a live `0=1` query.
+athena_query_fields_ident <- function(con, sql) {
+  if (str_count(sql, "\\.") < 2) {
+    ll <- db_detect(con, gsub('"', "", sql))
+
+    tryCatch(
+      output <- con@ptr$Athena$get_table_metadata(
+        CatalogName = ll[["db.catalog"]],
+        DatabaseName = ll[["dbms.name"]],
+        TableName = ll[["table"]]
+      )$TableMetadata
+    )
+    col_names <- vapply(
+      output$Columns,
+      function(y) y$Name,
+      FUN.VALUE = character(1)
+    )
+    partitions <- vapply(
+      output$PartitionKeys,
+      function(y) y$Name,
+      FUN.VALUE = character(1)
+    )
+
+    return(c(col_names, partitions))
+  } else {
+    # If a subquery, query Athena for the fields
+    # return dplyr methods
+    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
+    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
+    dplyr_sql <- pkg_method("sql", "dplyr")
+
+    sql <- sql_query_select(
+      con,
+      dplyr_sql("*"),
+      sql_query_wrap(con, sql),
+      where = dplyr_sql("0 = 1")
+    )
+    qry <- dbSendQuery(con, sql)
+    on.exit(dbClearResult(qry))
+
+    res <- dbFetch(qry, 0)
+    return(names(res))
+  }
+}
+
 #' @rdname AthenaConnection
 #' @inheritParams DBI::dbGetQuery
 #' @inheritParams DBI::dbFetch
@@ -699,7 +745,9 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics), is.logical(unload))
 
-    # dbplyr v2 support: dbplyr class ident
+    # dbplyr::ident() passed directly (not through tbl()/sql_query_fields(),
+    # which already resolve it to real SQL before it reaches here): look up
+    # columns via the Athena API instead of sending it as a statement.
     if (!inherits(statement, "ident")) {
       rs <- dbSendQuery(conn, statement = statement, unload = unload)
       if (statistics) {
@@ -708,7 +756,6 @@ setMethod(
       out <- dbFetch(res = rs, n = -1, ...)
       dbClearResult(rs)
     } else {
-      # Create an empty table using AWS GLUE to retrieve column names
       field_names <- athena_query_fields_ident(conn, statement)
       empty_shell <- rep(list(character()), length(field_names))
       names(empty_shell) <- field_names
@@ -733,7 +780,7 @@ setMethod(
   function(dbObj, ...) {
     con_error_msg(dbObj, msg = "Connection already closed.")
     info <- as.list(dbObj@info)
-    paws <- as.character(packageVersion("paws"))
+    paws <- as.character(packageVersion("paws.storage"))
     noctua <- as.character(packageVersion("noctua"))
     info <- c(info, paws = paws, noctua = noctua)
     return(info)

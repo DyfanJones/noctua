@@ -3,7 +3,7 @@
 \name{db_connection_describe}
 \alias{db_connection_describe}
 \alias{db_connection_describe.AthenaConnection}
-\title{S3 implementation of \code{db_connection_describe} for Athena (api version 2).}
+\title{S3 implementation of \code{db_connection_describe} for Athena.}
 \usage{
 db_connection_describe.AthenaConnection(con)
 }
