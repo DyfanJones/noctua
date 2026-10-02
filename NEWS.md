@@ -4,8 +4,9 @@
 * Dropped dbplyr 1st-edition backend support (`db_desc`, `db_explain`, `db_query_fields`). These were never part of noctua's public API.
 
 ## Internals:
-* Removed the dead `ident`-class fast path from `sql_query_fields` (dbplyr's own `tbl()` machinery no longer passes an `ident` object there, so this half was dead), and the legacy `sql_translate_env` alias. The `ident` fast path in `dbGetQuery` itself is unchanged, since `dbGetQuery(con, dbplyr::ident(x))` is still a supported direct call.
+* Removed dead dbplyr backend code: the `ident`-class fast path in `sql_query_fields`, and the legacy `sql_translate_env` alias.
 * Simplified internal dbplyr version tracking to a single availability flag.
+* Fixed `compute()` erroring under newer dbplyr by no longer passing the unused `overwrite` argument to `sql_query_save()`.
 
 # noctua 2.6.3
 ## Bug Fix:

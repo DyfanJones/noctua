@@ -107,7 +107,6 @@ db_compute.AthenaConnection <- function(
     sql,
     table,
     temporary = temporary,
-    overwrite = overwrite,
     partition = partition,
     s3_location = s3_location,
     file_type = file_type,
