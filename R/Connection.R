@@ -685,6 +685,52 @@ setMethod(
 )
 
 
+# dbGetQuery's fast path for a bare dbplyr::ident() table reference: look up
+# columns via the Athena API instead of running a live `0=1` query.
+athena_query_fields_ident <- function(con, sql) {
+  if (str_count(sql, "\\.") < 2) {
+    ll <- db_detect(con, gsub('"', "", sql))
+
+    tryCatch(
+      output <- con@ptr$Athena$get_table_metadata(
+        CatalogName = ll[["db.catalog"]],
+        DatabaseName = ll[["dbms.name"]],
+        TableName = ll[["table"]]
+      )$TableMetadata
+    )
+    col_names <- vapply(
+      output$Columns,
+      function(y) y$Name,
+      FUN.VALUE = character(1)
+    )
+    partitions <- vapply(
+      output$PartitionKeys,
+      function(y) y$Name,
+      FUN.VALUE = character(1)
+    )
+
+    return(c(col_names, partitions))
+  } else {
+    # If a subquery, query Athena for the fields
+    # return dplyr methods
+    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
+    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
+    dplyr_sql <- pkg_method("sql", "dplyr")
+
+    sql <- sql_query_select(
+      con,
+      dplyr_sql("*"),
+      sql_query_wrap(con, sql),
+      where = dplyr_sql("0 = 1")
+    )
+    qry <- dbSendQuery(con, sql)
+    on.exit(dbClearResult(qry))
+
+    res <- dbFetch(qry, 0)
+    return(names(res))
+  }
+}
+
 #' @rdname AthenaConnection
 #' @inheritParams DBI::dbGetQuery
 #' @inheritParams DBI::dbFetch
@@ -699,12 +745,28 @@ setMethod(
     con_error_msg(conn, msg = "Connection already closed.")
     stopifnot(is.logical(statistics), is.logical(unload))
 
-    rs <- dbSendQuery(conn, statement = statement, unload = unload)
-    if (statistics) {
-      print(dbStatistics(rs))
+    # dbplyr::ident() passed directly (not through tbl()/sql_query_fields(),
+    # which already resolve it to real SQL before it reaches here): look up
+    # columns via the Athena API instead of sending it as a statement.
+    if (!inherits(statement, "ident")) {
+      rs <- dbSendQuery(conn, statement = statement, unload = unload)
+      if (statistics) {
+        print(dbStatistics(rs))
+      }
+      out <- dbFetch(res = rs, n = -1, ...)
+      dbClearResult(rs)
+    } else {
+      field_names <- athena_query_fields_ident(conn, statement)
+      empty_shell <- rep(list(character()), length(field_names))
+      names(empty_shell) <- field_names
+
+      if (inherits(athena_option_env[["file_parser"]], "athena_data.table")) {
+        out <- as.data.table(empty_shell)
+      } else {
+        as_tibble <- pkg_method("as_tibble", "tibble")
+        out <- as_tibble(empty_shell)
+      }
     }
-    out <- dbFetch(res = rs, n = -1, ...)
-    dbClearResult(rs)
     return(out)
   }
 )

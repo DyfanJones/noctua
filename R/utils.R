@@ -561,6 +561,10 @@ set_endpoints <- function(endpoint_override) {
   }
 }
 
+str_count <- function(str, pattern) {
+  return(lengths(regmatches(str, gregexpr(pattern, str))))
+}
+
 db_quote_identifier <- function(x, ...) {
   if (is(x, "SQL")) {
     return(x)
