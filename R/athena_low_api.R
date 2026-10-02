@@ -109,7 +109,7 @@ create_work_group <- function(
   enforce_work_group_config = FALSE,
   publish_cloud_watch_metrics = FALSE,
   bytes_scanned_cut_off = 10000000L,
-  description = NULL,
+  description = "",
   tags = tag_options(key = NULL, value = NULL)
 ) {
   con_error_msg(conn, "Connection already closed.")

@@ -1,3 +1,12 @@
+# noctua 2.7.0
+## Breaking Changes:
+* Raised minimum supported versions to `dbplyr (>= 2.5.0)` and `dplyr (>= 1.1.0)`.
+* Dropped dbplyr 1st-edition backend support (`db_desc`, `db_explain`, `db_query_fields`). These were never part of noctua's public API.
+
+## Internals:
+* Removed dead dbplyr backend code left over from the 1st-edition days: the `ident`-class fast path in `sql_query_fields`/`dbGetQuery`, and the legacy `sql_translate_env` alias.
+* Simplified internal dbplyr version tracking to a single availability flag.
+
 # noctua 2.6.3
 ## Bug Fix:
 * Unload option returns null results when s3_staging_dir is a bucket only (#214) thanks to @dfsnow for implementing solution

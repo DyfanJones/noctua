@@ -88,7 +88,7 @@ test_that("Check RAthena s3 dplyr sql_translate_env method",{
   t25 <- translate_sql(as(1,"character"), con = con)
   t26 <- translate_sql(iris[["sepal_length"]], con = con)
   t27 <- translate_sql(iris[[1]], con = con)
-  t28 <- grepl("^Athena.*\\[.*/.*\\]", dplyr::db_desc(con))
+  t28 <- grepl("^Athena.*\\[.*/.*\\]", noctua:::db_connection_describe.AthenaConnection(con))
   t29 <- dbDataType(con, dt)
   noctua_options()
   t30 <- noctua:::AthenaToRDataType.athena_data.table(method, data_types)
@@ -335,36 +335,23 @@ test_that("dbplyr v2 db_connection_describe", {
   expect_true(grepl("Athena [0-9.]+ \\[.*@.*/.*\\]", actual))
 })
 
-#####################################################################
-# dbplyr v1
-#####################################################################
-
-test_that("dbplyr v1 db_explain", {
+test_that("sql_query_fields dispatches for plain and schema-qualified idents", {
   skip_if_no_env()
   skip_if_package_not_avialable("dbplyr")
   library(dbplyr)
-  
-  # Test connection is using AWS CLI to set profile_name 
-  con <- dbConnect(athena())
-  
-  noctua::noctua_options()
-  actual = noctua:::db_explain.AthenaConnection(con, "select * from iris")
-  
-  expect_true(inherits(actual, "character"))
-})
 
-test_that("dbplyr v1 db_query_fields", {
-  skip_if_no_env()
-  skip_if_package_not_avialable("dbplyr")
-  library(dbplyr)
-  
-  # Test connection is using AWS CLI to set profile_name 
+  # Test connection is using AWS CLI to set profile_name
   con <- dbConnect(athena())
-  
-  actual1 = noctua:::db_query_fields.AthenaConnection(con, dbplyr::ident("iris"))
-  actual2 = noctua:::db_query_fields.AthenaConnection(con, dbplyr::sql("select * from iris"))
-  
+
+  actual1 = dbplyr::sql_query_fields(con, dbplyr::ident("iris"))
+  actual2 = dbplyr::sql_query_fields(con, dbplyr::sql("select * from iris"))
+
+  qry1 <- dbSendQuery(con, actual1)
+  on.exit(dbClearResult(qry1), add = TRUE)
+  qry2 <- dbSendQuery(con, actual2)
+  on.exit(dbClearResult(qry2), add = TRUE)
+
   expect = c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
-  expect_equal(actual1, expect)
-  expect_equal(actual2, expect)
+  expect_equal(names(dbFetch(qry1, 0)), expect)
+  expect_equal(names(dbFetch(qry2, 0)), expect)
 })

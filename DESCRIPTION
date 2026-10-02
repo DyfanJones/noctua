@@ -1,7 +1,7 @@
 Package: noctua
 Type: Package
 Title: Connect to 'AWS Athena' using R 'AWS SDK' 'paws' ('DBI' Interface)
-Version: 2.6.4
+Version: 2.7.0
 Authors@R: person("Dyfan", "Jones", email="dyfan.r.jones@gmail.com", 
                   role= c("aut", "cre"))
 Description: Designed to be compatible with the 'R' package 'DBI' (Database Interface)
@@ -22,8 +22,8 @@ Imports:
 Suggests: 
     arrow,
     bit64,
-    dplyr (>= 1.0.0),
-    dbplyr (>= 2.3.3),
+    dplyr (>= 1.1.0),
+    dbplyr (>= 2.5.0),
     testthat,
     tibble,
     vroom (>= 1.2.0),
