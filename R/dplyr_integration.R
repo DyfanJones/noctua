@@ -101,8 +101,10 @@ db_compute.AthenaConnection <- function(
       call. = FALSE
     )
   }
-  sql_query_save <- pkg_method("sql_query_save", "dbplyr")
-  table <- sql_query_save(
+  if (overwrite && DBI::dbExistsTable(con, table_path_to_name(table, con))) {
+    DBI::dbRemoveTable(con, table_path_to_name(table, con), confirm = TRUE)
+  }
+  query <- sql_query_save.AthenaConnection(
     con,
     sql,
     table,
@@ -113,6 +115,16 @@ db_compute.AthenaConnection <- function(
     compress = compress,
     ...
   )
+  # sql_query_save only builds the CTAS statement, it needs to be executed
+  DBI::dbExecute(con, query)
+  table
+}
+
+table_path_to_name <- function(table, con) {
+  if (inherits(table, "dbplyr_table_path")) {
+    table_path_name <- pkg_method("table_path_name", "dbplyr")
+    return(table_path_name(table, con))
+  }
   table
 }
 
