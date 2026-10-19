@@ -121,12 +121,12 @@ create_work_group <- function(
     is.character(description)
   )
 
-  Configuration <- list(work_group_config(
+  Configuration <- work_group_config(
     conn,
     EnforceWorkGroupConfiguration = enforce_work_group_config,
     PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
     BytesScannedCutoffPerQuery = bytes_scanned_cut_off
-  ))
+  )
 
   tryCatch(conn@ptr$Athena$create_work_group(
     Name = work_group,
@@ -140,11 +140,14 @@ create_work_group <- function(
 #' @rdname work_group
 #' @export
 tag_options <- function(key = NULL, value = NULL) {
+  if (is.null(key) && is.null(value)) {
+    return(invisible(list()))
+  }
   stopifnot(
     is.character(key),
     is.character(value)
   )
-  invisible(list(list(list(Key = key, Value = value))))
+  invisible(list(list(Key = key, Value = value)))
 }
 
 #' @rdname work_group
@@ -207,14 +210,14 @@ update_work_group <- function(
   )
 
   state <- match.arg(state)
-  ConfigurationUpdates <- list(work_group_config_update(
+  ConfigurationUpdates <- work_group_config_update(
     conn,
     RemoveOutputLocation = remove_output_location,
     EnforceWorkGroupConfiguration = enforce_work_group_config,
     PublishCloudWatchMetricsEnabled = publish_cloud_watch_metrics,
     BytesScannedCutoffPerQuery = bytes_scanned_cut_off,
     EngineVersion = engine_version
-  ))
+  )
 
   tryCatch(conn@ptr$Athena$update_work_group(
     WorkGroup = work_group,

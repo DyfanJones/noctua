@@ -369,6 +369,7 @@ db_connection_describe.AthenaConnection <- function(con) {
 #' \describe{
 #' \item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
 #' \item{sql_query_fields}{Returns sql query column names}
+#' \item{sql_escape_string}{Returns sql escaping from strings, auto-detecting date and timestamp literals}
 #' \item{sql_escape_date}{Returns sql escaping from dates}
 #' \item{sql_escape_datetime}{Returns sql escaping from date times}
 #' }
@@ -427,4 +428,14 @@ sql_escape_date.AthenaConnection <- function(con, x) {
 sql_escape_datetime.AthenaConnection <- function(con, x) {
   str <- dbQuoteString(con, x)
   return(gsub("^date ", "timestamp ", str))
+}
+
+#' @rdname backend_dbplyr
+#' @export
+sql_escape_string.AthenaConnection <- function(con, x) {
+  dplyr_sql <- pkg_method("sql", "dbplyr")
+  if (inherits(x, "SQL")) {
+    return(dplyr_sql(unclass(x)))
+  }
+  dplyr_sql(dbQuoteString(con, x))
 }

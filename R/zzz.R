@@ -5,6 +5,7 @@
   register_s3_method("dbplyr", "sql_query_explain", "AthenaConnection")
   register_s3_method("dbplyr", "sql_query_fields", "AthenaConnection")
   register_s3_method("dbplyr", "sql_translation", "AthenaConnection")
+  register_s3_method("dbplyr", "sql_escape_string", "AthenaConnection")
   register_s3_method("dbplyr", "sql_escape_date", "AthenaConnection")
   register_s3_method("dbplyr", "sql_escape_datetime", "AthenaConnection")
   register_s3_method("dbplyr", "db_compute", "AthenaConnection")

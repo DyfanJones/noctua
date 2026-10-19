@@ -5,35 +5,43 @@ context("Athena Request")
 # Sys.getenv("noctua_s3_query"): "s3://path/to/query/bucket/"
 # Sys.getenv("noctua_s3_tbl"): "s3://path/to/bucket/"
 
-test_that("Check if Athena Request created correctly",{
+test_that("Check if Athena Request created correctly", {
   skip_if_no_env()
-  # Test connection is using AWS CLI to set profile_name 
-  con1 <- dbConnect(athena(),
-                    profile_name = "rathena",
-                    encryption_option = "SSE_S3",
-                    kms_key = "test_key",
-                    work_group = "test_group",
-                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
-  
-  con2 <- dbConnect(athena(),
-                    profile_name = "rathena",
-                    encryption_option = "SSE_S3",
-                    work_group = "test_group",
-                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
-  
-  con3 <- dbConnect(athena(),
-                    profile_name = "rathena",
-                    work_group = "test_group",
-                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
-  
-  con4 <- dbConnect(athena(),
-                    profile_name = "rathena",
-                    s3_staging_dir = Sys.getenv("noctua_s3_query"))
-  
-  R1 <- noctua:::ResultConfiguration(con1)
-  R2 <- noctua:::ResultConfiguration(con2)
-  R3 <- noctua:::ResultConfiguration(con3)
-  R4 <- noctua:::ResultConfiguration(con4)
+  # Test connection is using AWS CLI to set profile_name
+  con1 <- dbConnect(
+    athena(),
+    profile_name = "rathena",
+    encryption_option = "SSE_S3",
+    kms_key = "test_key",
+    work_group = "test_group",
+    s3_staging_dir = Sys.getenv("noctua_s3_query")
+  )
+
+  con2 <- dbConnect(
+    athena(),
+    profile_name = "rathena",
+    encryption_option = "SSE_S3",
+    work_group = "test_group",
+    s3_staging_dir = Sys.getenv("noctua_s3_query")
+  )
+
+  con3 <- dbConnect(
+    athena(),
+    profile_name = "rathena",
+    work_group = "test_group",
+    s3_staging_dir = Sys.getenv("noctua_s3_query")
+  )
+
+  con4 <- dbConnect(
+    athena(),
+    profile_name = "rathena",
+    s3_staging_dir = Sys.getenv("noctua_s3_query")
+  )
+
+  R1 <- ResultConfiguration(con1)
+  R2 <- ResultConfiguration(con2)
+  R3 <- ResultConfiguration(con3)
+  R4 <- ResultConfiguration(con4)
 
   expect_equal(R1, athena_test_req1)
   expect_equal(R2, athena_test_req2)
