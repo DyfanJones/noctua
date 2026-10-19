@@ -53,7 +53,7 @@ special values.}
 Implementations of pure virtual functions defined in the \code{DBI} package
 for AthenaResult objects.
 
-Returns AWS Athena Statistics from execute queries \link[DBI:dbSendQuery]{DBI::dbSendQuery}
+Returns AWS Athena Statistics from execute queries \link[DBI:dbSendQuery]{dbSendQuery}
 }
 \note{
 If a user does not have permission to remove AWS S3 resource from AWS Athena output location, then an AWS warning will be returned.

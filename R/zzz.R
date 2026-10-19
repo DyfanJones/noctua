@@ -5,6 +5,7 @@
   register_s3_method("dbplyr", "sql_query_explain", "AthenaConnection")
   register_s3_method("dbplyr", "sql_query_fields", "AthenaConnection")
   register_s3_method("dbplyr", "sql_translation", "AthenaConnection")
+  register_s3_method("dbplyr", "sql_escape_string", "AthenaConnection")
   register_s3_method("dbplyr", "sql_escape_date", "AthenaConnection")
   register_s3_method("dbplyr", "sql_escape_datetime", "AthenaConnection")
   register_s3_method("dbplyr", "db_compute", "AthenaConnection")
@@ -38,15 +39,7 @@ register_s3_method <- function(pkg, generic, class, fun = NULL) {
 }
 
 dbplyr_version <- function() {
-  if (nzchar(system.file(package = "dbplyr"))) {
-    dbplyr_env$version <- packageVersion("dbplyr")
-    dbplyr_env$major <- dbplyr_env$version$major
-    dbplyr_env$minor <- dbplyr_env$version$minor
-  } else {
-    # default to minimum supported dbplyr version
-    dbplyr_env$major = 1L
-    dbplyr_env$minor = 4L
-  }
+  dbplyr_env$available <- requireNamespace("dbplyr", quietly = TRUE)
 }
 
 dbplyr_env <- new.env(parent = emptyenv())
