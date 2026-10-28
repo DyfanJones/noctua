@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">noctua</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.0</span>
       </span>
     </div>
 
@@ -75,6 +75,25 @@
       <small>Source: <a href="https://github.com/DyfanJones/noctua/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="2.7.0" id="noctua-270">noctua 2.7.0<a class="anchor" aria-label="anchor" href="#noctua-270"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-2-7-0">Breaking Changes:<a class="anchor" aria-label="anchor" href="#breaking-changes-2-7-0"></a></h3>
+<ul><li>Raised minimum supported versions to <code>dbplyr (&gt;= 2.5.0)</code> and <code>dplyr (&gt;= 1.1.0)</code>.</li>
+<li>Dropped dbplyr 1st-edition backend support (<code>db_desc</code>, <code>db_explain</code>, <code>db_query_fields</code>). These were never part of noctua’s public API.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fix-2-7-0">Bug Fix:<a class="anchor" aria-label="anchor" href="#bug-fix-2-7-0"></a></h3>
+<ul><li>Fixed <code><a href="../reference/work_group.html">create_work_group()</a></code> and <code><a href="../reference/work_group.html">update_work_group()</a></code> failing in newer <code>paws.common</code> due to over-nested <code>Configuration</code>/<code>Tags</code> payloads; <code><a href="../reference/work_group.html">tag_options()</a></code> now returns the correct shape.</li>
+<li>Added <code>sql_escape_string</code> method so strings are again auto-detected as <code>date</code>/<code>timestamp</code> literals under newer dbplyr.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internals-2-7-0">Internals:<a class="anchor" aria-label="anchor" href="#internals-2-7-0"></a></h3>
+<ul><li>Removed dead dbplyr backend code: the <code>ident</code>-class fast path in <code>sql_query_fields</code>, and the legacy <code>sql_translate_env</code> alias.</li>
+<li>Simplified internal dbplyr version tracking to a single availability flag.</li>
+<li>Fixed <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> erroring under newer dbplyr by no longer passing the unused <code>overwrite</code> argument to <code>sql_query_save()</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.6.3" id="noctua-263">noctua 2.6.3<small>2025-09-15</small><a class="anchor" aria-label="anchor" href="#noctua-263"></a></h2>
 <div class="section level3">

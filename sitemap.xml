@@ -21,14 +21,12 @@
 <url><loc>/reference/assume_role.html</loc></url>
 <url><loc>/reference/athena.html</loc></url>
 <url><loc>/reference/backend_dbplyr.html</loc></url>
-<url><loc>/reference/backend_dbplyr_v1.html</loc></url>
 <url><loc>/reference/dbConnect-AthenaDriver-method.html</loc></url>
 <url><loc>/reference/dbConvertTable.html</loc></url>
 <url><loc>/reference/dbListTables.html</loc></url>
 <url><loc>/reference/db_compute.html</loc></url>
 <url><loc>/reference/db_connection_describe.html</loc></url>
 <url><loc>/reference/db_copy_to.html</loc></url>
-<url><loc>/reference/db_desc.html</loc></url>
 <url><loc>/reference/dbplyr_edition.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/noctua-package.html</loc></url>
@@ -36,7 +34,7 @@
 <url><loc>/reference/session_token.html</loc></url>
 <url><loc>/reference/sqlCreateTable.html</loc></url>
 <url><loc>/reference/sqlData.html</loc></url>
-<url><loc>/reference/sql_translate_env.html</loc></url>
+<url><loc>/reference/sql_translation.html</loc></url>
 <url><loc>/reference/work_group.html</loc></url>
 </urlset>
 
