@@ -73,7 +73,7 @@ This setting can have a value from 1 hour to 12 hours. By default duration is se
 AWS region codes (region code example: Region = EU (Ireland)     \code{ region_name = "eu-west-1"})}
 
 \item{bigint}{The R type that 64-bit integer types should be mapped to,
-default is \link[bit64:bit64-package]{bit64::integer64}, which allows the full range of 64 bit
+default is \link[bit64:integer64]{bit64::integer64}, which allows the full range of 64 bit
 integers.}
 
 \item{binary}{The R type that \code{binary/varbinary} types should be mapped to,

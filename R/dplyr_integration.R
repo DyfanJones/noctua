@@ -101,19 +101,30 @@ db_compute.AthenaConnection <- function(
       call. = FALSE
     )
   }
-  sql_query_save <- pkg_method("sql_query_save", "dbplyr")
-  table <- sql_query_save(
+  if (overwrite && DBI::dbExistsTable(con, table_path_to_name(table, con))) {
+    DBI::dbRemoveTable(con, table_path_to_name(table, con), confirm = TRUE)
+  }
+  query <- sql_query_save.AthenaConnection(
     con,
     sql,
     table,
     temporary = temporary,
-    overwrite = overwrite,
     partition = partition,
     s3_location = s3_location,
     file_type = file_type,
     compress = compress,
     ...
   )
+  # sql_query_save only builds the CTAS statement, it needs to be executed
+  DBI::dbExecute(con, query)
+  table
+}
+
+table_path_to_name <- function(table, con) {
+  if (inherits(table, "dbplyr_table_path")) {
+    table_path_name <- pkg_method("table_path_name", "dbplyr")
+    return(table_path_name(table, con))
+  }
   table
 }
 
@@ -300,7 +311,7 @@ sql_table_analyze.AthenaConnection <- function(con, table, ...) {
 }
 
 ######################################################################
-# dplyr v2 api support
+# dplyr backend generics
 ######################################################################
 
 #' Declare which version of dbplyr API is being called.
@@ -312,7 +323,7 @@ sql_table_analyze.AthenaConnection <- function(con, table, ...) {
 #' @export
 dbplyr_edition.AthenaConnection <- function(con) 2L
 
-#' S3 implementation of \code{db_connection_describe} for Athena (api version 2).
+#' S3 implementation of \code{db_connection_describe} for Athena.
 #'
 #' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
 #' @param con A [dbConnect] object, as returned by \code{dbConnect()}
@@ -346,8 +357,7 @@ db_connection_describe.AthenaConnection <- function(con) {
 #' Athena S3 implementation of dbplyr backend functions
 #'
 #' These functions are used to build the different types of SQL queries.
-#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
-#' utilise AWS Glue to speed up sql query execution.
+#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods.
 #' @param con A [dbConnect] object, as returned by \code{dbConnect()}
 #' @param sql SQL code to be sent to AWS Athena
 #' @param x R object to be transformed into athena equivalent
@@ -359,6 +369,7 @@ db_connection_describe.AthenaConnection <- function(con) {
 #' \describe{
 #' \item{sql_query_explain}{Returns sql query for \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
 #' \item{sql_query_fields}{Returns sql query column names}
+#' \item{sql_escape_string}{Returns sql escaping from strings, auto-detecting date and timestamp literals}
 #' \item{sql_escape_date}{Returns sql escaping from dates}
 #' \item{sql_escape_datetime}{Returns sql escaping from date times}
 #' }
@@ -394,22 +405,16 @@ sql_query_explain.AthenaConnection <- athena_explain
 
 #' @rdname backend_dbplyr
 sql_query_fields.AthenaConnection <- function(con, sql, ...) {
-  # pass ident class to dbGetQuery to continue same functionality as dbplyr v1 api.
-  if (inherits(sql, "ident")) {
-    return(sql)
-  } else {
-    # None ident class uses dbplyr:::sql_query_fields.DBIConnection method
-    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
-    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
-    dplyr_sql <- pkg_method("sql", "dplyr")
+  sql_query_select <- pkg_method("sql_query_select", "dbplyr")
+  sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
+  dplyr_sql <- pkg_method("sql", "dplyr")
 
-    return(sql_query_select(
-      con,
-      dplyr_sql("*"),
-      sql_query_wrap(con, sql),
-      where = dplyr_sql("0 = 1")
-    ))
-  }
+  sql_query_select(
+    con,
+    dplyr_sql("*"),
+    sql_query_wrap(con, sql),
+    where = dplyr_sql("0 = 1")
+  )
 }
 
 #' @rdname backend_dbplyr
@@ -425,115 +430,12 @@ sql_escape_datetime.AthenaConnection <- function(con, x) {
   return(gsub("^date ", "timestamp ", str))
 }
 
-######################################################################
-# dplyr v1 api support
-######################################################################
-
-#' S3 implementation of \code{db_desc} for Athena (api version 1).
-#'
-#' This is a backend function for dplyr to retrieve meta data about Athena queries. Users won't be required to access and run this function.
-#' @param x A [dbConnect] object, as returned by \code{dbConnect()}
-#' @name db_desc
-#' @return
-#' Character variable containing Meta Data about query sent to Athena. The Meta Data is returned in the following format:
-#'
-#' \code{"Athena <paws version> [<profile_name>@region/database]"}
-db_desc.AthenaConnection <- function(x) {
-  return(athena_conn_desc(x))
-}
-
-#' Athena S3 implementation of dbplyr backend functions (api version 1).
-#'
-#' These functions are used to build the different types of SQL queries.
-#' The AWS Athena implementation give extra parameters to allow access the to standard DBI Athena methods. They also
-#' utilise AWS Glue to speed up sql query execution.
-#' @param con A [dbConnect] object, as returned by \code{dbConnect()}
-#' @param sql SQL code to be sent to AWS Athena
-#' @param ... other parameters, currently not implemented
-#' @name backend_dbplyr_v1
-#' @keywords internal
-#' @return
-#' \describe{
-#' \item{db_explain}{Returns \href{https://docs.aws.amazon.com/athena/latest/ug/athena-explain-statement.html}{AWS Athena explain statement}}
-#' \item{db_query_fields}{Returns sql query column names}
-#' }
-
-#' @rdname backend_dbplyr_v1
-db_explain.AthenaConnection <- function(con, sql, ...) {
-  sql <- athena_explain(con, sql, ...)
-  expl <- dbGetQuery(con, sql, unload = FALSE)
-  out <- utils::capture.output(print(expl))
-  paste(out, collapse = "\n")
-}
-
-# NOTE: dbplyr v2 integration has to use this in dbGetQuery
-athena_query_fields_ident <- function(con, sql) {
-  if (str_count(sql, "\\.") < 2) {
-    ll <- db_detect(con, gsub('"', "", sql))
-
-    # If dbplyr schema, get the fields from Glue
-    tryCatch(
-      output <- con@ptr$Athena$get_table_metadata(
-        CatalogName = ll[["db.catalog"]],
-        DatabaseName = ll[["dbms.name"]],
-        TableName = ll[["table"]]
-      )$TableMetadata
-    )
-    col_names <- vapply(
-      output$Columns,
-      function(y) y$Name,
-      FUN.VALUE = character(1)
-    )
-    partitions <- vapply(
-      output$PartitionKeys,
-      function(y) y$Name,
-      FUN.VALUE = character(1)
-    )
-
-    return(c(col_names, partitions))
-  } else {
-    # If a subquery, query Athena for the fields
-    # return dplyr methods
-    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
-    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
-    dplyr_sql <- pkg_method("sql", "dplyr")
-
-    sql <- sql_query_select(
-      con,
-      dplyr_sql("*"),
-      sql_query_wrap(con, sql),
-      where = dplyr_sql("0 = 1")
-    )
-    qry <- dbSendQuery(con, sql)
-    on.exit(dbClearResult(qry))
-
-    res <- dbFetch(qry, 0)
-    return(names(res))
+#' @rdname backend_dbplyr
+#' @export
+sql_escape_string.AthenaConnection <- function(con, x) {
+  dplyr_sql <- pkg_method("sql", "dbplyr")
+  if (inherits(x, "SQL")) {
+    return(dplyr_sql(unclass(x)))
   }
-}
-
-#' @rdname backend_dbplyr_v1
-db_query_fields.AthenaConnection <- function(con, sql, ...) {
-  # check if sql is dbplyr schema
-  if (inherits(sql, "ident")) {
-    return(athena_query_fields_ident(con, sql))
-  } else {
-    # If a subquery, query Athena for the fields
-    # return dplyr methods
-    sql_query_select <- pkg_method("sql_query_select", "dbplyr")
-    sql_query_wrap <- pkg_method("sql_query_wrap", "dbplyr")
-    dplyr_sql <- pkg_method("sql", "dplyr")
-
-    sql <- sql_query_select(
-      con,
-      dplyr_sql("*"),
-      sql_query_wrap(con, sql),
-      where = dplyr_sql("0 = 1")
-    )
-    qry <- dbSendQuery(con, sql)
-    on.exit(dbClearResult(qry))
-
-    res <- dbFetch(qry, 0)
-    return(names(res))
-  }
+  dplyr_sql(dbQuoteString(con, x))
 }
