@@ -58,8 +58,10 @@ whether \code{noctua} should cache query ids locally and number of retries on a 
 \examples{
 library(noctua)
 
+\dontrun{
 # change file parser from default data.table to vroom
 noctua_options("vroom")
+}
 
 # cache queries locally
 noctua_options(cache_size = 5)

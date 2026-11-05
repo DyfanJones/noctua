@@ -60,6 +60,7 @@ method_2 <- "method"
 class(method_2) <- "athena_vroom"
 
 test_that("Check if json has been correctly parser under chunk method", {
+  skip_if_not_installed("vroom")
   size <- 1e5
   test_file <- tempfile()
   output_test_data(size, test_file)
@@ -93,6 +94,7 @@ test_that("Check if json has been correctly parser under chunk method", {
 })
 
 test_that("Binary and json conversion", {
+  skip_if_not_installed("vroom")
   size <- 1e1
   test_file <- tempfile()
   output_test_data(size, test_file)
@@ -134,6 +136,7 @@ test_that("Binary and json conversion", {
 
 
 test_that("Check in conversion is turned off", {
+  skip_if_not_installed("vroom")
   size <- 1e1
   test_file <- tempfile()
   output_test_data(size, test_file)
@@ -164,6 +167,7 @@ test_that("Check in conversion is turned off", {
 })
 
 test_that("Custom json parser", {
+  skip_if_not_installed("vroom")
   size <- 1e1
   test_file <- tempfile()
   output_test_data(size, test_file)
@@ -191,6 +195,7 @@ test_that("Custom json parser", {
 })
 
 test_that("Custom json parser", {
+  skip_if_not_installed("vroom")
   size <- 1e1
   test_file <- tempfile()
   output_test_data(size, test_file)

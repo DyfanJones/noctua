@@ -4,7 +4,7 @@ athena_option_env$file_parser <- "file_method"
 athena_option_env$cache_size <- 0
 class(athena_option_env$file_parser) <- "athena_data.table"
 
-cache_dt = data.table(
+cache_dt <- data.table(
   "QueryId" = character(),
   "Query" = character(),
   "State" = character(),
@@ -90,8 +90,10 @@ bit64_check <- function(value) {
 #' @examples
 #' library(noctua)
 #'
+#' \dontrun{
 #' # change file parser from default data.table to vroom
 #' noctua_options("vroom")
+#' }
 #'
 #' # cache queries locally
 #' noctua_options(cache_size = 5)
@@ -133,7 +135,7 @@ noctua_options <- function(
     verbose <- TRUE
   }
   if (!missing(file_parser)) {
-    file_parser = match.arg(file_parser, choices = c("data.table", "vroom"))
+    file_parser <- match.arg(file_parser, choices = c("data.table", "vroom"))
 
     if (!nzchar(system.file(package = file_parser))) {
       stop('Please install ', file_parser, ' package and try again', call. = F)
@@ -260,13 +262,13 @@ noctua_options <- function(
   invisible(as.list(athena_option_env))
 }
 
-missing_match = function(x, choices, env, var) {
+missing_match <- function(x, choices, env, var) {
   if (!missing(x)) {
     env[[var]] <- match.arg(x, choices)
   }
 }
 
-missing_expr = function(x, check, msg, expr) {
+missing_expr <- function(x, check, msg, expr) {
   if (!missing(x)) {
     if (!check(x)) {
       stop(msg, call. = F)

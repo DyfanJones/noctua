@@ -58,4 +58,4 @@ Collate:
     'sql_translate_env.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

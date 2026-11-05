@@ -479,7 +479,7 @@ delete_work_group(con, "demo_work_group")
 
   - `pyAthena` - A python wrapper of the python package `Boto3` using
     the sqlAlchemy framework:
-    <https://github.com/laughingman7743/PyAthena>
+    <https://github.com/pyathena-dev/PyAthena>
 
 ## R:
 

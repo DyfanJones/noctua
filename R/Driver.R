@@ -74,7 +74,6 @@ setMethod(
 #'
 #' \strong{NOTE:} If you have set any environmental variables in \code{.Renviron} please restart your R in order for the changes to take affect.
 #'
-#' @inheritParams DBI::dbConnect
 #' @param drv A object inheriting from [DBI::DBIDriver][DBI::DBIDriver-class].
 #' @param aws_access_key_id AWS access key ID
 #' @param aws_secret_access_key AWS secret access key
