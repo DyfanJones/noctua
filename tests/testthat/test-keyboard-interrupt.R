@@ -10,7 +10,13 @@ test_that("Check if Athena query has been successfully been cancelled", {
 
   con <- dbConnect(athena(), keyboard_interrupt = T)
 
-  res <- dbSendQuery(con, "SHOW TABLES IN default")
+  # long running query so it is still running when cancelled
+  res <- dbSendQuery(
+    con,
+    "SELECT count(*) FROM UNNEST(sequence(1, 10000)) a(x)
+       CROSS JOIN UNNEST(sequence(1, 10000)) b(y)
+       CROSS JOIN UNNEST(sequence(1, 10000)) c(z)"
+  )
   query_id <- res@info[["QueryExecutionId"]]
   err_msg <- sprintf(
     "Query '%s' has been cancelled by user.",
